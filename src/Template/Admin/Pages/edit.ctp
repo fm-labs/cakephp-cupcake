@@ -71,7 +71,7 @@ $this->assign('heading', __('Edit {0}', __('Page')));
             <div class="ui attached secondary segment form">
                 <?php
                 echo $this->Form->input('parent_id', ['options' => $treeList, 'empty' => 'Website Root']);
-                echo $this->Form->input('layout_template');
+                echo $this->Form->input('layout_template', ['options' => $layoutsAvailable]);
                 echo $this->Form->input('page_template');
                 ?>
             </div>

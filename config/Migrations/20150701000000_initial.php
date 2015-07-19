@@ -5,6 +5,34 @@ class Initial extends AbstractMigration
 {
     public function up()
     {
+        $table = $this->table('bc_content_modules');
+        $table
+            ->addColumn('refscope', 'string', [
+                'default' => null,
+                'limit' => 255,
+                'null' => false,
+            ])
+            ->addColumn('refid', 'integer', [
+                'default' => null,
+                'limit' => 10,
+                'null' => true,
+            ])
+            ->addColumn('module_id', 'integer', [
+                'default' => null,
+                'limit' => 10,
+                'null' => false,
+            ])
+            ->addColumn('section', 'string', [
+                'default' => null,
+                'limit' => 255,
+                'null' => true,
+            ])
+            ->addColumn('template', 'string', [
+                'default' => null,
+                'limit' => 255,
+                'null' => true,
+            ])
+            ->create();
         $table = $this->table('bc_modules');
         $table
             ->addColumn('name', 'string', [
@@ -27,24 +55,12 @@ class Initial extends AbstractMigration
                 'limit' => null,
                 'null' => true,
             ])
-            ->create();
-        $table = $this->table('bc_page_modules');
-        $table
-            ->addColumn('page_id', 'integer', [
-                'default' => null,
-                'limit' => 10,
-                'null' => true,
-            ])
-            ->addColumn('module_id', 'integer', [
-                'default' => null,
-                'limit' => 10,
-                'null' => false,
-            ])
-            ->addColumn('section', 'integer', [
-                'default' => null,
-                'limit' => 11,
-                'null' => true,
-            ])
+            ->addIndex(
+                [
+                    'name',
+                ],
+                ['unique' => true]
+            )
             ->create();
         $table = $this->table('bc_pages');
         $table
@@ -72,6 +88,21 @@ class Initial extends AbstractMigration
                 'default' => null,
                 'limit' => 255,
                 'null' => false,
+            ])
+            ->addColumn('type', 'string', [
+                'default' => null,
+                'limit' => 255,
+                'null' => true,
+            ])
+            ->addColumn('redirect_status', 'integer', [
+                'default' => null,
+                'limit' => 11,
+                'null' => true,
+            ])
+            ->addColumn('redirect_location', 'string', [
+                'default' => null,
+                'limit' => 255,
+                'null' => true,
             ])
             ->addColumn('layout_template', 'string', [
                 'default' => null,
@@ -108,6 +139,12 @@ class Initial extends AbstractMigration
                 'limit' => null,
                 'null' => true,
             ])
+            ->addIndex(
+                [
+                    'slug',
+                ],
+                ['unique' => true]
+            )
             ->create();
         $table = $this->table('bc_posts');
         $table
@@ -174,11 +211,18 @@ class Initial extends AbstractMigration
                 'limit' => 255,
                 'null' => false,
             ])
+            ->addIndex(
+                [
+                    'name',
+                ],
+                ['unique' => true]
+            )
             ->create();
     }
 
     public function down()
     {
+        $this->dropTable('bc_content_modules');
         $this->dropTable('bc_modules');
         $this->dropTable('bc_page_modules');
         $this->dropTable('bc_pages');

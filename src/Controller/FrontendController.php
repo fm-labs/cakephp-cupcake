@@ -8,6 +8,7 @@
 
 namespace Banana\Controller;
 
+use Cake\Core\Configure;
 use Cake\Event\Event;
 
 abstract class FrontendController extends AppController
@@ -35,6 +36,7 @@ abstract class FrontendController extends AppController
     protected function loadTheme($theme = null)
     {
         //@TODO load theme name from page or config
+        $this->theme = Configure::read('Settings.Banana.site.theme');
     }
 
     protected function loadLayout($layout = null)

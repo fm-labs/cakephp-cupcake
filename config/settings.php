@@ -10,6 +10,10 @@ return [
                 'type' => 'string',
                 'default' => 'BANANA:CAKE'
             ],
+            'site.theme' => [
+                'type' => 'string',
+                'default' => null
+            ],
             'session.timeout' => [
                 'type' => 'int',
                 'default' => 20

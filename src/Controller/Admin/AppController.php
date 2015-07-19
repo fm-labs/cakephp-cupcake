@@ -120,4 +120,69 @@ class AppController extends AbstractBackendController
         return $availableModules;
     }
 
+    protected function getModuleTemplatesAvailable()
+    {
+        $path = 'Template' . DS . 'Module';
+        $availableModules = [];
+
+        $modulesLoader = function ($dir, $plugin = null) use (&$availableModules) {
+            $folder = new Folder($dir);
+            list($namespaces,) = $folder->read();
+
+            foreach ($namespaces as $ns) {
+                $folder->cd($dir . DS . $ns);
+                $widgets = $folder->findRecursive();
+                array_walk($widgets, function ($val) use ($plugin, $dir, &$availableModules) {
+                    $val = substr($val, strlen($dir . DS));
+                    if (preg_match('/^(.*)\.ctp$/', $val, $matches)) {
+                        $availableModules[] = ($plugin) ? $plugin . "." . $matches[1] : $matches[1];
+                    }
+                });
+            }
+        };
+
+        // load app modules
+        $modulesLoader(APP . $path, null);
+        // load modules from loaded plugins
+        foreach (Plugin::loaded() as $plugin) {
+            $_path = Plugin::path($plugin) . 'src' . DS . $path;
+            $modulesLoader($_path, $plugin);
+        }
+
+        return array_combine($availableModules, $availableModules);
+    }
+
+    protected function getLayoutsAvailable()
+    {
+        $path = 'Template' . DS . 'Layout';
+        $availableLayouts = [];
+
+        $layoutLoader = function ($dir, $plugin = null) use (&$availableLayouts) {
+            $folder = new Folder($dir);
+            list($namespaces,) = $folder->read();
+
+            foreach ($namespaces as $ns) {
+                $folder->cd($dir . DS . $ns);
+                $layouts = $folder->find();
+                debug($layouts);
+                array_walk($layouts, function ($val) use ($plugin, $dir, &$availableLayouts) {
+                    //$val = substr($val, strlen($dir . DS));
+                    if (preg_match('/^(.*)\.ctp$/', $val, $matches)) {
+                        $availableLayouts[] = ($plugin) ? $plugin . "." . $matches[1] : $matches[1];
+                    }
+                });
+            }
+        };
+
+        // load app modules
+        $layoutLoader(APP . $path, null);
+        // load modules from loaded plugins
+        foreach (Plugin::loaded() as $plugin) {
+            $_path = Plugin::path($plugin) . 'src' . DS . $path;
+            $layoutLoader($_path, $plugin);
+        }
+
+        return $availableLayouts;
+    }
+
 }

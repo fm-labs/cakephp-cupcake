@@ -1,9 +1,3 @@
-<style>
-    .post p {
-        font-size: 24px;
-        line-height: 1.55em;
-    }
-</style>
 <div class="posts index">
     <?php foreach ($posts as $post): ?>
         <?php echo $this->element('Banana.Posts/post_item', ['post' => $post]); ?>

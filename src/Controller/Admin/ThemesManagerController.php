@@ -28,6 +28,8 @@ class ThemesManagerController extends AppController
         $dir = new Folder(THEMES);
         list($themeNames,) = $dir->read();
 
+        debug($themeNames);
+
         $themes = [];
         foreach ($themeNames as $theme) {
             $themes[] = [
@@ -38,10 +40,10 @@ class ThemesManagerController extends AppController
         $this->set('themesAvailable', $themes);
 
         // get installed themes from db
-        $this->loadModel("Themes");
+        //$this->loadModel("Themes");
 
-        $themes = $this->Themes->find()->all();
-        $this->set('themesInstalled', $themes);
+        //$themes = $this->Themes->find()->all();
+        //$this->set('themesInstalled', $themes);
     }
 
     public function details($themeName)

@@ -86,6 +86,7 @@ class ContentModulesController extends AppController
         }
         $modules = $this->ContentModules->Modules->find('list', ['limit' => 200]);
         $this->set(compact('contentModule', 'modules'));
+        //$this->set('templates', $this->getModuleTemplatesAvailable());
         $this->set('_serialize', ['contentModule']);
     }
 
