@@ -1,6 +1,7 @@
 <?php
 namespace Banana\Model\Behavior;
 
+use ArrayObject;
 use Cake\Event\Event;
 use Cake\ORM\Behavior;
 use Cake\ORM\Entity;
@@ -30,7 +31,6 @@ class SluggableBehavior extends Behavior
      */
     public function initialize(array $config)
     {
-        // no op
     }
 
     /**
@@ -62,6 +62,21 @@ class SluggableBehavior extends Behavior
 
         $entity->set($config['slug'], Inflector::slug($slug, $config['replacement']));
     }
+
+    /**
+     * Automatically slug when saving.
+     *
+     * @param Event $event The event
+     * @param Entity $entity The entity
+     * @param \ArrayObject $options
+     * @param $operation
+     * @return void
+     */
+    public function beforeRules(Event $event, Entity $entity, ArrayObject $options, $operation)
+    {
+        $this->slug($entity);
+    }
+
 
     /**
      * Automatically slug when saving.

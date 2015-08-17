@@ -14,6 +14,10 @@ return [
                 'type' => 'string',
                 'default' => null
             ],
+            'posts.theme' => [
+                'type' => 'string',
+                'default' => null
+            ],
             'session.timeout' => [
                 'type' => 'int',
                 'default' => 20

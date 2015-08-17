@@ -64,4 +64,9 @@ class FrontendView extends AppView
         return $this->cell('Banana.Section', $cellData, $cellOptions);
     }
 
+    public function render($view = NULL, $layout = NULL)
+    {
+        return parent::render($view, $layout);
+    }
+
 }

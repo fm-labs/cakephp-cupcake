@@ -159,6 +159,18 @@ class AppController extends AbstractBackendController
 
         $layoutLoader = function ($dir, $plugin = null) use (&$availableLayouts) {
             $folder = new Folder($dir);
+            list(,$layouts) = $folder->read();
+            array_walk($layouts, function ($val) use ($plugin, $dir, &$availableLayouts) {
+                //$val = substr($val, strlen($dir . DS));
+                $val = basename($val, '.ctp');
+                if (preg_match('/^frontend(\_(.*))?$/', $val, $matches)) {
+
+                    $availableLayouts[] = ($plugin) ? $plugin . "." . $val : $val;
+                }
+            });
+
+
+            /*
             list($namespaces,) = $folder->read();
 
             foreach ($namespaces as $ns) {
@@ -172,6 +184,7 @@ class AppController extends AbstractBackendController
                     }
                 });
             }
+            */
         };
 
         // load app modules
@@ -182,6 +195,7 @@ class AppController extends AbstractBackendController
             $layoutLoader($_path, $plugin);
         }
 
+        $availableLayouts = array_combine($availableLayouts, $availableLayouts);
         return $availableLayouts;
     }
 

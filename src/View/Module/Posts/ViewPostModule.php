@@ -4,6 +4,7 @@ namespace Banana\View\Module\Posts;
 use Banana\View\ViewModule;
 use Banana\Model\Table\PostsTable;
 use Cake\Form\Schema;
+use Cake\ORM\Entity;
 
 /**
  * Class ListPostsModule
@@ -11,33 +12,34 @@ use Cake\Form\Schema;
  *
  * @property PostsTable $Posts
  */
-class ListPostsModule  extends ViewModule
+class ViewPostModule  extends ViewModule
 {
     protected $subDir = "Posts/";
 
     protected $params = [
-        'limit' => 10,
-        'category_id' => null
+        'postId' => null,
+        //'post' => null,
     ];
 
     public function display($params = [])
     {
-        $this->loadModel('Banana.Posts');
+        $this->setParams($params);
 
-        $posts = $this->Posts->find()
-            ->contain(['ContentModules' => ['Modules']])
-            ->order(['Posts.id' => 'DESC'])
-            //->limit($this->params['limit']) // @TODO check limit boundaries min/max
-            ->all();
+        if (isset($this->params['post'])) {
+            $post = $this->params['post'];
+        } else {
+            $this->loadModel('Banana.Posts');
+            $post = $this->Posts->get($this->params['postId']);
+        }
 
-        $this->set('posts', $posts);
+        $this->set('post', $post);
     }
 
     public static function schema()
     {
         $schema = new Schema();
         $schema->addFields([
-            'limit' => [
+            'postId' => [
                 'type' => 'number'
             ],
         ]);
@@ -47,7 +49,7 @@ class ListPostsModule  extends ViewModule
     public static function inputs()
     {
         return [
-            'limit' => []
+            'postId' => []
         ];
     }
 }

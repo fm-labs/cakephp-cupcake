@@ -10,6 +10,7 @@ namespace Banana\Controller\Admin;
 
 use Banana\Model\Table\PagesTable;
 use Cake\Event\Event;
+use Tree\Controller\TreeSortControllerTrait;
 
 /**
  * Class PagesController
@@ -19,16 +20,19 @@ use Cake\Event\Event;
  */
 class PagesController extends ContentController
 {
+
+    use TreeSortControllerTrait;
+
     public $modelClass = "Banana.Pages";
 
     public function beforeRender(Event $event)
     {
         parent::beforeRender($event);
 
-        $treeList = $this->model()->find('treeList', [
+        $treeList = $this->Pages->find('treeList', [
             /*
             'valuePath' => function ($page) {
-                $path = $this->model()->find('path', ['for' => $page->id]);
+                $path = $this->Pages->find('path', ['for' => $page->id]);
 
                 $pathStr = "";
                 foreach ($path as $part) {
@@ -57,18 +61,72 @@ class PagesController extends ContentController
             'contain' => ['ParentPages']
         ];
 
-        $rootNode = $this->model()->find()->where(['parent_id IS NULL'])->first();
+        $rootNode = $this->Pages->find()->where(['parent_id IS NULL'])->first();
         $children = [];
 
         if ($rootNode) {
-            $children = $this->model()
+            $children = $this->Pages
                 ->find('children', ['for' => $rootNode->id])
                 ->find('threaded');
         }
 
 
-        $this->set('contents', $this->paginate($this->model()));
+        $this->set('contents', $this->paginate($this->Pages));
         $this->set('children', $children);
         $this->set('_serialize', ['contents']);
     }
+
+    public function add()
+    {
+        $content = $this->Pages->newEntity();
+        if ($this->request->is('post')) {
+            $content = $this->Pages->patchEntity($content, $this->request->data);
+            if ($this->Pages->save($content)) {
+                $this->Flash->success(__('The {0} has been saved.', __('content')));
+                return $this->redirect(['action' => 'edit', $content->id]);
+            } else {
+                $this->Flash->error(__('The {0} could not be saved. Please, try again.', __('content')));
+                debug($content->errors());
+            }
+        }
+        $this->set('types', $this->_getPageTypes());
+        $this->set(compact('content'));
+        $this->set('_serialize', ['content']);
+
+    }
+
+    public function edit($id = null)
+    {
+        $content = $this->Pages->get($id, [
+            'contain' => ['ContentModules' => ['Modules']]
+        ]);
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $content = $this->Pages->patchEntity($content, $this->request->data);
+            if ($this->Pages->save($content)) {
+                $this->Flash->success(__('The {0} has been saved.', __('content')));
+                return $this->redirect(['action' => 'edit', $content->id]);
+            } else {
+                $this->Flash->error(__('The {0} could not be saved. Please, try again.', __('content')));
+            }
+        }
+        $this->set('types', $this->_getPageTypes());
+        $this->set(compact('content'));
+        $this->set('_serialize', ['content']);
+    }
+
+    public function preview($id = null)
+    {
+        $this->redirect(['prefix' => false, 'plugin' => 'Banana', 'controller' => 'Pages', 'action' => 'view', $id]);
+    }
+
+    protected function _getPageTypes()
+    {
+        return [
+            'content' => 'Content',
+            'controller' => 'Controller',
+            'redirect' => 'Redirect',
+            'page' => 'Page'
+        ];
+    }
+
 }

@@ -1,5 +1,6 @@
-<div class="menu-list">
-    <?php echo $this->element('Banana.Menu/menu', ['menu' => $menu]); ?>
-</div>
-<?php //debug($tree); ?>
-<?php //debug($children); ?>
+<ul>
+    <?php foreach($menu as $menuItem): ?>
+    <?= $this->module('Banana.Menu/MenuItem', ['item' => $menuItem]); ?>
+    <?php endforeach; ?>
+</ul>
+<?php //debug($menu); ?>

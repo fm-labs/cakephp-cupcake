@@ -35,6 +35,9 @@ class PostsController extends FrontendController
      */
     public function view($id = null)
     {
+        if ($id === null && $this->request->query('id')) {
+            $id = $this->request->query('id');
+        }
         $post = $this->Posts->get($id, [
             'contain' => ['ContentModules' => ['Modules']]
         ]);

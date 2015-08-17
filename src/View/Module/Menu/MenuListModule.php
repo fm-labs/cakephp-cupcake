@@ -50,7 +50,7 @@ class MenuListModule extends ViewModule
         $menu = [];
         foreach ($children as $child) {
             $isActive = false;
-            $attr = ['class' => 'blaa '];
+            $attr = ['class' => ''];
             if ($this->request->param('page_id') == $child->id) {
                 $isActive = true;
 
@@ -72,7 +72,7 @@ class MenuListModule extends ViewModule
 
             $item = [
                 'title' => $child->title,
-                'url' => ['plugin' => 'Banana', 'controller' => 'Pages', 'action' => 'view', 'slug' => $child->slug, 'id' => $child->id],
+                'url' => $child->url,
                 'attr' => $attr,
                 '_children' => []
             ];

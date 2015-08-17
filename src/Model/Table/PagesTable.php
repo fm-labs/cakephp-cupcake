@@ -28,7 +28,7 @@ class PagesTable extends Table
         $this->displayField('title');
         $this->primaryKey('id');
         $this->addBehavior('Timestamp');
-        $this->addBehavior('Tree');
+        $this->addBehavior('Tree.Tree');
         $this->addBehavior('Banana.ContentModule', [
             'alias' => 'ContentModules',
             'scope' => 'Banana.Pages'
@@ -36,6 +36,7 @@ class PagesTable extends Table
         $this->addBehavior('Banana.Copyable', [
             'excludeFields' => ['lft', 'rght', 'slug']
         ]);
+        $this->addBehavior('Banana.Sluggable');
 
         $this->belongsTo('ParentPages', [
             'className' => 'Banana.Pages',
@@ -87,8 +88,8 @@ class PagesTable extends Table
             ->notEmpty('title');
             
         $validator
-            ->requirePresence('slug', 'create')
-            ->notEmpty('slug');
+            //->requirePresence('slug', 'create')
+            ->allowEmpty('slug');
 
         $validator
             ->allowEmpty('type');
@@ -99,6 +100,13 @@ class PagesTable extends Table
 
         $validator
             ->allowEmpty('redirect_location');
+
+        $validator
+            ->allowEmpty('redirect_controller');
+
+        $validator
+            ->add('redirect_page_id', 'valid', ['rule' => 'numeric'])
+            ->allowEmpty('redirect_page_id');
 
         $validator
             ->allowEmpty('layout_template');

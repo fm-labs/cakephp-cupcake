@@ -26,4 +26,13 @@ class Post extends Entity
         'publish_start_datetime' => true,
         'publish_end_datetime' => true,
     ];
+
+    protected function _getUrl()
+    {
+        return ['controller' => 'Posts', 'action' => 'view', 'id' => $this->id, 'slug' => $this->slug];
+    }
+
+    protected function _getPermaUrl() {
+        return '/?postid=' . $this->id;
+    }
 }

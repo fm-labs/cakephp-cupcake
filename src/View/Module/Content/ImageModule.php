@@ -7,9 +7,9 @@ use Banana\View\ViewModule;
 use Cake\Form\Schema;
 
 /**
- * Class HtmlPageModule
+ * Class Image
  *
- * A pre-configured HtmlModule with only a single html input field
+ * Display image with html
  *
  * @package Banana\View\Module\Pages
  */

@@ -13,13 +13,13 @@ Router::plugin('Banana', function ($routes) {
 });
 
 // Banana Pages
-Router::connect('/pages/:slug/:id', ['plugin' => 'Banana', 'controller' => 'Pages', 'action' => 'view'], ['pass' => ['id']]);
-Router::connect('/pages/:slug', ['plugin' => 'Banana', 'controller' => 'Pages', 'action' => 'view']);
+//Router::connect('/pages/:slug/:id', ['plugin' => 'Banana', 'controller' => 'Pages', 'action' => 'view'], ['pass' => ['id']]);
+//Router::connect('/pages/:slug', ['plugin' => 'Banana', 'controller' => 'Pages', 'action' => 'view']);
 
 // Banana Posts
-Router::connect('/posts', ['plugin' => 'Banana', 'controller' => 'Posts', 'action' => 'index']);
-Router::connect('/posts/:slug/:id', ['plugin' => 'Banana', 'controller' => 'Posts', 'action' => 'view'], ['pass' => ['id']]);
-Router::connect('/posts/:slug', ['plugin' => 'Banana', 'controller' => 'Posts', 'action' => 'view']);
+//Router::connect('/posts', ['plugin' => 'Banana', 'controller' => 'Posts', 'action' => 'index']);
+//Router::connect('/posts/:slug/:id', ['plugin' => 'Banana', 'controller' => 'Posts', 'action' => 'view'], ['pass' => ['id']]);
+//Router::connect('/posts/:slug', ['plugin' => 'Banana', 'controller' => 'Posts', 'action' => 'view']);
 
 // Banana SEO: robots.txt
 Router::connect('/robots.txt', ['plugin' => 'Banana', 'controller' => 'Seo', 'action' => 'robots']);

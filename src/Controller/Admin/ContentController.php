@@ -139,7 +139,7 @@ abstract class ContentController extends AppController
      */
     public function delete($id = null)
     {
-        $this->request->allowMethod(['content', 'delete']);
+        //$this->request->allowMethod(['post', 'delete']);
         $content = $this->model()->get($id);
         if ($this->model()->delete($content)) {
             $this->Flash->success(__('The {0} has been deleted.', __('content')));

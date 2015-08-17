@@ -104,6 +104,16 @@ class Initial extends AbstractMigration
                 'limit' => 255,
                 'null' => true,
             ])
+            ->addColumn('redirect_controller', 'string', [
+                'default' => null,
+                'limit' => 255,
+                'null' => true,
+            ])
+            ->addColumn('redirect_page_id', 'integer', [
+                'default' => null,
+                'limit' => 10,
+                'null' => true,
+            ])
             ->addColumn('layout_template', 'string', [
                 'default' => null,
                 'limit' => 255,

@@ -23,6 +23,8 @@ class Page extends Entity
         'type' => true,
         'redirect_status' => true,
         'redirect_location' => true,
+        'redirect_controller' => true,
+        'redirect_page_id' => true,
         'layout_template' => true,
         'page_template' => true,
         'is_published' => true,
@@ -31,4 +33,21 @@ class Page extends Entity
         'parent_page' => true,
         'child_pages' => true,
     ];
+
+    protected function _getUrl()
+    {
+        return [
+            'prefix' => false,
+            'plugin' => 'Banana',
+            'controller' => 'Pages',
+            'action' => 'view',
+            'pageid' => $this->id,
+            'slug' => $this->slug
+        ];
+    }
+
+    protected function _getPermaUrl() {
+        return '/?pageid=' . $this->id;
+    }
+
 }
