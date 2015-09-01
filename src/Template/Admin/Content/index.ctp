@@ -1,6 +1,6 @@
 <div class="contents form">
 
-    <!-- Toolbar -->
+    <!-- Toolbar
     <div class="be-toolbar">
         <?=
         $this->element('Backend.Menu/menu', [
@@ -9,6 +9,7 @@
         ]);
         ?>
     </div>
+    -->
 
 
     <!-- header -->

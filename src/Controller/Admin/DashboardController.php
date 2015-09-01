@@ -13,6 +13,6 @@ class DashboardController extends AppController
 {
     public function index()
     {
-
+        $this->Flash->success('Hi!');
     }
 } 

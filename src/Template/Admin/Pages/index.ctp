@@ -1,19 +1,13 @@
 <?php $this->Html->addCrumb(__('Pages')); ?>
 <?php $this->extend('/Admin/Content/index'); ?>
 <?php
-// EXTEND: TOOLBAR
-$toolbarMenu = [
-    'new' => [
-        'title' => __('New {0}', __('Page')),
-        'url' => ['action' => 'add'],
-        'attr' => ['icon' => 'add']
-    ]
-];
+// TOOLBAR
+$this->Toolbar->addLink(__('New {0}', __('Page')), ['action' => 'add'], ['icon' => 'add']);
 
-$this->set('toolbarMenu', $toolbarMenu);
-
-// EXTEND: HEADING
+// HEADING
 $this->assign('heading', __('Pages'));
+
+// CONTENT
 ?>
 <div class="pages index">
     <table class="ui sortable table" data-sort-url="<?= $this->Url->build(['action' => 'tree_sort']) ?>">

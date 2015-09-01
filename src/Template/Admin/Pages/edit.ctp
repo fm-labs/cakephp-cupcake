@@ -2,43 +2,20 @@
 $this->extend('/Admin/Content/edit');
 
 // EXTEND: TOOLBAR
-$toolbarMenu = [
-    'delete' => [
-        'title' => __('Delete'),
-        'url' => ['action' => 'delete', $content->id],
-        'attr' => ['icon' => 'remove', 'confirm' => __('Are you sure you want to delete # {0}?', $content->id)],
-        '_children' => [],
-    ],
-    'list' => [
-        'title' => __('List {0}', __('Pages')),
-        'url' => ['action' => 'index'],
-        'attr' => ['icon' => 'list']
-    ],
-    'add' => [
-        'title' => __('Add'),
-        'url' => false,
-        'attr' => [],
+$this->Toolbar->addLink(
+    __('Delete'),
+    ['action' => 'delete', $content->id],
+    ['icon' => 'remove', 'confirm' => __('Are you sure you want to delete # {0}?', $content->id)]
+);
+$this->Toolbar->addLink(__('List {0}', __('Pages')), ['action' => 'index'], ['icon' => 'list']);
+$this->Toolbar->addLink(__('New {0}', __('Content Module')), ['action' => 'add_module'], ['icon' => 'add']);
+$this->Toolbar->addLink(__('Preview'), ['action' => 'preview', $content->id], ['icon' => 'eye', 'target' => '_preview']);
 
-        '_children' => [
-            [
-                'title' => __('New {0}', __('Content Module')),
-                'url' => ['action' => 'add_module'],
-                'attr' => ['icon' => 'add']
-            ]
-        ]
 
-    ],
-    'preview' => [
-        'title' => __('Preview'),
-        'url' => ['action' => 'preview', $content->id],
-        'attr' => ['icon' => 'eye', 'target' => '_preview']
-    ],
-];
-$this->set('toolbarMenu', $toolbarMenu);
-
-// EXTEND: HEADING
-//$this->assign('heading', __('Edit {0}', __('Page')));
+// HEADING
 $this->assign('heading', __('Edit Page: {0}', $content->title));
+
+// CONTENT
 ?>
 <div class="pages">
     <?= $this->Form->create($content); ?>

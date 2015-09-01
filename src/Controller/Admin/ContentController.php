@@ -196,6 +196,11 @@ abstract class ContentController extends AppController
         $contentId = $this->request->query('content_id');
         $modulePath = $this->request->query('module');
         $isAjax = ($this->request->query('ajax') || $this->request->is('ajax'));
+        $isIframe = $this->request->query('iframe');
+
+        if ($isIframe || $isAjax) {
+            $this->layout = "iframe_module";
+        }
 
         $content = $this->model()->get($contentId);
         if (!$content) {
