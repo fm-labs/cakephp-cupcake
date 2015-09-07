@@ -124,8 +124,10 @@ class PagesController extends ContentController
         return [
             'content' => 'Content',
             'controller' => 'Controller',
+            'module' => 'Module',
+            'page' => 'Page',
             'redirect' => 'Redirect',
-            'page' => 'Page'
+            'root' => 'Website Root',
         ];
     }
 

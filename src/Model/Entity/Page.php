@@ -1,13 +1,17 @@
 <?php
 namespace Banana\Model\Entity;
 
+use Cake\Core\Configure;
 use Cake\ORM\Entity;
+use Cake\ORM\TableRegistry;
 
 /**
  * Page Entity.
  */
 class Page extends Entity
 {
+
+    private $__parentTheme;
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -25,6 +29,7 @@ class Page extends Entity
         'redirect_location' => true,
         'redirect_controller' => true,
         'redirect_page_id' => true,
+        'theme' => true,
         'layout_template' => true,
         'page_template' => true,
         'is_published' => true,
@@ -50,4 +55,23 @@ class Page extends Entity
         return '/?pageid=' . $this->id;
     }
 
+    protected function _getParentTheme()
+    {
+
+        if ($this->get('theme')) {
+            return $this->get('theme');
+        }
+
+        if ($this->__parentTheme) {
+            return $this->__parentTheme;
+        }
+
+        if ($this->get('parent_id')) {
+            $Parent = TableRegistry::get('Banana.Pages');
+            $parent = $Parent->get($this->get('parent_id'));
+            return $this->__parentTheme = $parent->parent_theme;
+        }
+
+        return Configure::read('Banana.frontend.theme');
+    }
 }

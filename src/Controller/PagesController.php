@@ -41,13 +41,22 @@ class PagesController extends FrontendController
 
     public function index()
     {
+        $host = env('HTTP_HOST');
+
         $rootPage = $this->Pages
             ->find()
-            ->where(['parent_id IS NULL'])
+            ->where(['parent_id IS NULL', 'type' => 'root', 'redirect_location' => $host])
             ->first();
 
         if (!$rootPage) {
-            throw new NotFoundException("No root page");
+            $rootPage = $this->Pages
+                ->find()
+                ->where(['parent_id IS NULL', 'type' => 'root', 'redirect_location' => '*'])
+                ->first();
+        }
+
+        if (!$rootPage) {
+            throw new NotFoundException(__("Root page missing for host {1}", $host));
         }
 
         $this->setAction('view', $rootPage->id);
@@ -55,18 +64,24 @@ class PagesController extends FrontendController
 
     public function view($id = null)
     {
-        $page = $this->Frontend->getPage($id);
+        if ($id !== null) {
+            $page = $this->Frontend->getPage($id);
+        } elseif ($this->request->param('slug')) {
+            $page = $this->Frontend->getPageBySlug($this->request->param('slug'));
+        }
+
         if (!$page) {
-            throw new NotFoundException();
+            throw new NotFoundException(__("Page {0} not found", strip_tags($id)));
         }
 
         switch ($page->type) {
             case 'redirect':
                 return $this->redirect($page->redirect_location, $page->redirect_status);
             case 'page':
+            case 'root':
                 return $this->redirect(['action' => 'view', $page->redirect_page_id], $page->redirect_status);
             case 'controller':
-                $controller = explode(':', $page->redirect_controller);
+                $controller = explode('::', $page->redirect_controller);
                 $action = 'index';
                 if (count($controller) == 2) {
                     list($controller, $action) = $controller;
@@ -79,6 +94,10 @@ class PagesController extends FrontendController
                 list($plugin, $controller) = pluginSplit($controller);
                 $url = ['plugin' => $plugin, 'controller' => $controller, 'action' => $action];
                 return $this->redirect($url, $page->redirect_status);
+            //case 'root':
+                //$children = $this->Pages->find('children', ['for' => $page->id]);
+                //debug($children);
+                break;
             case 'content':
             default:
                 break;

@@ -13,8 +13,18 @@ Router::plugin('Banana', function ($routes) {
 });
 
 // Banana Pages
-//Router::connect('/pages/:slug/:id', ['plugin' => 'Banana', 'controller' => 'Pages', 'action' => 'view'], ['pass' => ['id']]);
-//Router::connect('/pages/:slug', ['plugin' => 'Banana', 'controller' => 'Pages', 'action' => 'view']);
+Router::connect('/pages/:pageid/:slug',
+    ['plugin' => 'Banana', 'controller' => 'Pages', 'action' => 'view'],
+    ['pass' => ['pageid']]
+);
+Router::connect('/pages/:pageid',
+    ['plugin' => 'Banana', 'controller' => 'Pages', 'action' => 'view'],
+    ['pass' => ['pageid'], 'pageid' => '[0-9]+']
+);
+Router::connect('/pages/:slug',
+    ['plugin' => 'Banana', 'controller' => 'Pages', 'action' => 'view']);
+Router::connect('/pages/*',
+    ['plugin' => 'Banana', 'controller' => 'Pages', 'action' => 'view']);
 
 // Banana Posts
 //Router::connect('/posts', ['plugin' => 'Banana', 'controller' => 'Posts', 'action' => 'index']);

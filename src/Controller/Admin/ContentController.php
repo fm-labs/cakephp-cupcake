@@ -28,6 +28,7 @@ abstract class ContentController extends AppController
         $this->set('layoutsAvailable', $this->getLayoutsAvailable());
         $this->set('modulesAvailable', $this->getModulesAvailable());
         $this->set('moduleTemplatesAvailable', $this->getModuleTemplatesAvailable());
+        $this->set('themesAvailable', $this->getThemesAvailable());
     }
 
 

@@ -28,7 +28,7 @@ $this->assign('heading', __('Edit Page: {0}', $content->title));
                 echo $this->Form->input('type', ['id' => 'select-type']);
 
                 ?>
-                <div class="select-type select-type-redirect">
+                <div class="select-type select-type-redirect select-type-root">
                     <?php
                         echo $this->Form->input('redirect_location', [
                         ]);
@@ -40,17 +40,18 @@ $this->assign('heading', __('Edit Page: {0}', $content->title));
                         ]);
                     ?>
                 </div>
-                <div class="select-type select-type-page">
+                <div class="select-type select-type-page select-type-root">
                     <?php
                     echo $this->Form->input('redirect_page_id', [
                         'options' => $treeList
                     ]);
                     ?>
                 </div>
-                <div class="select-type select-type-redirect select-type-controller select-type-page">
+                <div class="select-type select-type-redirect select-type-controller select-type-page select-type-root">
                     <?php
                         echo $this->Form->input('redirect_status', [
-                            'options' => [301 => 'Permanent (301)', 302 => 'Temporary (302)']
+                            'options' => [301 => 'Permanent (301)', 302 => 'Temporary (302)'],
+                            'default' => 302
                         ]);
                     ?>
                 </div>
@@ -92,8 +93,11 @@ $this->assign('heading', __('Edit Page: {0}', $content->title));
             <h5 class="ui attached header">Layout</h5>
             <div class="ui attached secondary segment form">
                 <?php
-                echo $this->Form->input('parent_id', ['options' => $treeList, 'empty' => 'Website Root']);
-                echo $this->Form->input('layout_template', ['empty' => __('Default Template'), 'options' => $layoutsAvailable]);
+                echo $this->Form->input('parent_id', ['options' => $treeList, 'empty' => '- No Parent -']);
+                echo $this->Form->input('theme',
+                    ['empty' => __('- Parent Theme -'), 'options' => $themesAvailable]);
+                echo $this->Form->input('layout_template',
+                    ['empty' => __('- Parent Layout -'), 'options' => $layoutsAvailable]);
                 echo $this->Form->input('page_template');
                 ?>
             </div>

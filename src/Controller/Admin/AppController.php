@@ -43,6 +43,11 @@ class AppController extends AbstractBackendController
                         'url' => ['plugin' => 'Banana', 'controller' => 'Posts', 'action' => 'index'],
                         'icon' => 'edit'
                     ],
+                    'media' => [
+                        'title' => 'Media',
+                        'url' => ['plugin' => 'Banana', 'controller' => 'Media', 'action' => 'index'],
+                        'icon' => 'media'
+                    ],
                 ]
             ],
             'BananaAdvanced' => [
@@ -199,4 +204,31 @@ class AppController extends AbstractBackendController
         return $availableLayouts;
     }
 
+    protected  function getThemesAvailable()
+    {
+        $availableThemes = [];
+
+        $themesLoader = function ($dir, $plugin = null) use (&$availableThemes) {
+            $folder = new Folder($dir);
+            list($themes,) = $folder->read();
+            array_walk($themes, function ($val) use ($plugin, $dir, &$availableThemes) {
+                //$val = substr($val, strlen($dir . DS));
+                //$val = basename($val, '.ctp');
+                if (preg_match('/^Theme(.*)$/', $val, $matches)) {
+                    $availableThemes[] = ($plugin) ? $plugin . "." . $val : $val;
+                }
+            });
+        };
+
+        // load app modules
+        $themesLoader(THEMES, null);
+        // load modules from loaded plugins
+        //foreach (Plugin::loaded() as $plugin) {
+        //    $_path = Plugin::path($plugin) . 'src' . DS . $path;
+        //    $themesLoader($_path, $plugin);
+        //}
+
+        $availableThemes = array_combine($availableThemes, $availableThemes);
+        return $availableThemes;
+    }
 }

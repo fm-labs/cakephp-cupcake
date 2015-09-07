@@ -48,8 +48,14 @@ class FrontendComponent extends Component
     public function beforeRender(Event $event)
     {
         $controller = $this->_registry->getController();
-        $controller->theme = ($controller->theme) ? $controller->theme : $this->getTheme();
-        $controller->layout = ($controller->layout) ? $controller->layout : $this->getLayout();
+        if ($this->getTheme()) {
+            $controller->theme = $this->getTheme();
+        }
+        if ($this->getLayout()) {
+            $controller->layout = $this->getLayout();
+        }
+        //$controller->theme = ($controller->theme) ? $controller->theme : $this->getTheme();
+        //$controller->layout = ($controller->layout) ? $controller->layout : $this->getLayout();
     }
 
 
@@ -92,6 +98,11 @@ class FrontendComponent extends Component
         return $this->page;
     }
 
+    public function getPageBySlug($slug)
+    {
+        return $this->getPage(null, $slug);
+    }
+
     /**
      * Get Theme name from Page or fallback to config setting
      *
@@ -102,15 +113,14 @@ class FrontendComponent extends Component
     {
         if (!$this->theme || $theme !== null) {
             if ($theme) {
-                // All set
-            } elseif (($page = $this->getPage()) && $page->theme) {
+                $this->theme = $theme;
+            } elseif (($page = $this->getPage()) && $page->parent_theme) {
                 // Get theme from Page
-                $theme = $page->theme;
+                $this->theme = $page->parent_theme;
             } else {
                 // Fallback to configuration setting
-                $theme = Configure::read(static::$pageThemeSetting);
+                //$theme = Configure::read(static::$pageThemeSetting);
             }
-            $this->theme = $theme;
         }
         return $this->theme;
     }
@@ -119,15 +129,14 @@ class FrontendComponent extends Component
     {
         if (!$this->layout || $layout !== null) {
             if ($layout) {
-                // All set
+                $this->layout = $layout;
             } elseif (($page = $this->getPage()) && $page->layout_template) {
                 // Get theme from Page
-                $layout = $page->layout_template;
+                $this->layout = $page->layout_template;
             } else {
                 // Fallback to configuration setting
-                $layout = Configure::read(static::$pageLayoutSetting);
+                //$layout = Configure::read(static::$pageLayoutSetting);
             }
-            $this->layout = $layout;
         }
         return $this->layout;
     }

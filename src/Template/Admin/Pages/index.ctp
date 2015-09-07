@@ -48,7 +48,7 @@ $this->assign('heading', __('Pages'));
     </table>
     <?php debug($treeList); ?>
 </div>
-<?php echo $this->Html->script('Tree.tree-tablesort', ['block' => 'script-bottom', 'inline' => false]); ?>
+<?php //echo $this->Html->script('Tree.tree-tablesort', ['block' => 'script-bottom', 'inline' => false]); ?>
 
 <div id="modal-action-delete" class="ui basic modal">
     <i class="close icon"></i>
