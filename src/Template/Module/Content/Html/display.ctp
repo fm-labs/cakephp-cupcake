@@ -1,3 +1,2 @@
+<?= $this->Script->add('jquery'); ?>
 <?= $this->get('html'); ?>
-
-<?= $this->Backend->jquery(); ?>

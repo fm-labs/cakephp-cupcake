@@ -24,7 +24,7 @@ Router::connect('/pages/:pageid',
 Router::connect('/pages/:slug',
     ['plugin' => 'Banana', 'controller' => 'Pages', 'action' => 'view']);
 Router::connect('/pages/*',
-    ['plugin' => 'Banana', 'controller' => 'Pages', 'action' => 'view']);
+    ['plugin' => 'Banana', 'controller' => 'Pages', 'action' => 'display']);
 
 // Banana Posts
 //Router::connect('/posts', ['plugin' => 'Banana', 'controller' => 'Posts', 'action' => 'index']);

@@ -28,21 +28,30 @@ class MenuListModule extends ViewModule
     public function display($params = [])
     {
 
-        $this->loadModel('Banana.Pages');
+        $menu = (isset($params['menu'])) ? $params['menu'] : [];
+        $level = (isset($params['level'])) ? $params['level'] : 0;
 
-        $tree = $this->Pages->find('treeList')->toArray();
+        if (!$menu) {
+            $this->loadModel('Banana.Pages');
 
-        $this->_getStartNodeId();
-        $children = $this->Pages
-            ->find('children', ['for' => $this->startNodeId])
-            ->find('threaded')
-            ->toArray();
 
-        $menu = $this->_buildMenu($children);
+            $this->_getStartNodeId();
+            $children = $this->Pages
+                ->find('children', ['for' => $this->startNodeId])
+                ->find('threaded')
+                ->toArray();
 
-        $this->set('tree', $tree);
-        $this->set('children', $children);
+            $menu = $this->_buildMenu($children);
+        }
+
+
+        //$tree = $this->Pages->find('treeList')->toArray();
+        //$this->set('tree', $tree);
+        //$this->set('children', $children);
         $this->set('menu', $menu);
+        $this->set('level', $level);
+
+        //$this->render('other');
     }
 
     protected function _buildMenu($children)

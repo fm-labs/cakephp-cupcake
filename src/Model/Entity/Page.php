@@ -2,6 +2,7 @@
 namespace Banana\Model\Entity;
 
 use Cake\Core\Configure;
+use Cake\ORM\Behavior\Translate\TranslateTrait;
 use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
 
@@ -10,6 +11,7 @@ use Cake\ORM\TableRegistry;
  */
 class Page extends Entity
 {
+    use TranslateTrait;
 
     private $__parentTheme;
 

@@ -12,6 +12,7 @@ use Cake\Core\Configure;
 use Cake\Controller\Component;
 use Cake\Event\Event;
 use Banana\Model\Table\PagesTable;
+use Cake\I18n\I18n;
 
 /**
  * Class FrontendComponent
@@ -39,21 +40,46 @@ class FrontendComponent extends Component
     public function initialize(array $config)
     {
         $this->Pages = $this->_registry->getController()->loadModel(static::$pageModelClass);
+
     }
 
     public function beforeFilter(Event $event)
     {
+        $currentLocale = $requestLocale = I18n::locale();
+        if (isset($this->request->params['locale'])) {
+            $requestLocale = $this->request->params['locale'];
+        } elseif (isset($this->request->query['locale'])) {
+            $requestLocale = $this->request->query['locale'];
+        }
+        if ($currentLocale != $requestLocale) {
+            I18n::locale($requestLocale);
+        }
+
+        // set locale in session
+        /*
+        if (!$this->request->session()->check('Banana.locale')) {
+            $this->request->session()->write('Banana.locale', $locale);
+        } else {
+            //$this->request->session()->delete('Banana.locale');
+        }
+        debug("Locale: " . I18n::locale());
+        */
     }
 
     public function beforeRender(Event $event)
     {
         $controller = $this->_registry->getController();
-        if ($this->getTheme()) {
-            $controller->theme = $this->getTheme();
+
+        if (!isset($controller->helpers['Banana.Script'])) {
+            $controller->helpers['Banana.Script'] = [];
         }
-        if ($this->getLayout()) {
-            $controller->layout = $this->getLayout();
-        }
+
+        //if ($this->getTheme()) {
+        //    $controller->theme = $this->getTheme();
+        //}
+        //if ($this->getLayout()) {
+        //    $controller->layout = $this->getLayout();
+        //}
         //$controller->theme = ($controller->theme) ? $controller->theme : $this->getTheme();
         //$controller->layout = ($controller->layout) ? $controller->layout : $this->getLayout();
     }

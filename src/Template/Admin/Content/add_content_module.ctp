@@ -1,7 +1,7 @@
 <?php $this->Html->addCrumb('Module Builder', ['action' => 'index']) ?>
 
 <div class="form">
-    <h3>Add Module for Page: <?= h($content->title); ?> [<?= h($modulePath); ?>]</h3>
+    <h3>Add Module for Page: <?= h($content->title); ?> [<?= h($modulePath); ?>] in [<?= h($section); ?>]</h3>
     <?php
     echo $this->Form->create($moduleForm, ['class' => 'ui form']);
     //echo $this->Form->input('_path', ['value' => $modulePath]);

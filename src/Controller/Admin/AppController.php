@@ -10,11 +10,34 @@ namespace Banana\Controller\Admin;
 
 use Backend\Controller\Admin\AbstractBackendController;
 use Cake\Core\Plugin;
+use Cake\Event\Event;
 use Cake\Filesystem\Folder;
 
 class AppController extends AbstractBackendController
 {
     public $viewClass = "Banana.Banana";
+
+    public function beforeFilter(Event $event)
+    {
+        parent::beforeFilter($event);
+
+        $locale = $this->request->query('locale');
+        $this->locale = ($locale) ? $locale : Configure::read('Shop.defaultLocale');
+    }
+
+    public function beforeRender(Event $event)
+    {
+        parent::beforeRender($event);
+        $this->set('locale', $this->locale);
+    }
+
+    protected function _getGalleryList()
+    {
+        $list = [];
+        $mm = MediaManager::create('gallery');
+        $list = $mm->getSelectListRecursive();
+        return $list;
+    }
 
     public static function backendMenu()
     {

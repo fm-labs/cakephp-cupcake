@@ -109,6 +109,14 @@ class PagesController extends ContentController
                 $this->Flash->error(__('The {0} could not be saved. Please, try again.', __('content')));
             }
         }
+
+        $sections = ['top', 'bottom', 'before'];
+        $sections = array_combine($sections, $sections);
+
+        $sectionsModules = $this->Pages->ContentModules->find()->where(['refscope' => 'Banana.Pages', 'refid' => $id]);
+        debug($sectionsModules);
+
+        $this->set('sections', $sections);
         $this->set('types', $this->_getPageTypes());
         $this->set(compact('content'));
         $this->set('_serialize', ['content']);

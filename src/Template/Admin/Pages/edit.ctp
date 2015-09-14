@@ -62,8 +62,20 @@ $this->assign('heading', __('Edit Page: {0}', $content->title));
                 <h4 class="ui header">Contents</h4>
                 <?php echo $this->element(
                     'Banana.Admin/Content/list_content_modules_editable',
-                    ['contentModules' => $content->content_modules]);
+                    ['contentModules' => $content->content_modules, 'section' => '']);
                 ?>
+            </div>
+
+            <div>
+                <div class="ui divider"></div>
+                <?php foreach($sections as $section): ?>
+                    <h4 class="ui header">Section: <?= h($section); ?></h4>
+                    <?php echo $this->element(
+                        'Banana.Admin/Content/list_content_modules_editable',
+                        ['contentModules' => $content->content_modules, 'section' => $section]);
+                    ?>
+
+                <?php endforeach; ?>
             </div>
 
             <div class="">
@@ -72,6 +84,13 @@ $this->assign('heading', __('Edit Page: {0}', $content->title));
                         <li><?php
                             $url = ['action' => 'add_content_module', 'content_id' => $content->id, 'module' => $aModule];
                             echo $this->Ui->link(__('Add {0} Module', $aModule), $url, ['icon' => 'add']);
+
+                            foreach($sections as $section) {
+                                $url = ['action' => 'add_content_module', 'content_id' => $content->id, 'module' => $aModule, 'section' => $section];
+                                echo ' | ';
+                                echo $this->Ui->link($section, $url);
+                            }
+
                             ?></li>
                     <?php endforeach; ?>
                 </ul>

@@ -198,6 +198,7 @@ abstract class ContentController extends AppController
         $modulePath = $this->request->query('module');
         $isAjax = ($this->request->query('ajax') || $this->request->is('ajax'));
         $isIframe = $this->request->query('iframe');
+        $section = $this->request->query('section');
 
         if ($isIframe || $isAjax) {
             $this->layout = "iframe_module";
@@ -241,9 +242,10 @@ abstract class ContentController extends AppController
                 $contentModule->refid = $contentId;
                 $contentModule->content = $content;
                 $contentModule->module = $module;
+                $contentModule->section = $section;
 
                 if ($this->model()->ContentModules->save($contentModule)) {
-                    $this->Flash->success(__('Module {0} has been added to content {1}', $contentModule->module_id, $contentModule->content_id));
+                    $this->Flash->success(__('Module {0} has been added to Content with ID {1}', $contentModule->module, $contentModule->refid));
                     $this->redirect(['action' => 'edit', $content->id]);
                 } else {
                     $this->Flash->error('Ups. Something went wrong while creating the content module.');
@@ -266,6 +268,7 @@ abstract class ContentController extends AppController
         $this->set('moduleSchema', $moduleSchema);
         $this->set('moduleForm', $form);
         $this->set('moduleFormInputs', $moduleFormInputs);
+        $this->set('section', $section);
 
         $this->set('content', $content);
         $this->set('module', $module);

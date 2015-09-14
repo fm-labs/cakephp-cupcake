@@ -15,6 +15,16 @@ use Cake\Utility\Inflector;
 class Banana
 {
 
+    public static $version;
+
+    public static function version()
+    {
+        if (!isset(static::$version)) {
+            static::$version = @file_get_contents(Plugin::path('Banana') . DS . 'VERSION.txt');
+        }
+        return static::$version;
+    }
+
     public static function bootstrap()
     {
         $config = Configure::read('Banana');
