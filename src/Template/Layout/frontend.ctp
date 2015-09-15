@@ -3,7 +3,7 @@
 <head>
     <?= $this->Html->charset() ?>
     <title>
-        <?= $this->fetch('title') ?> | <?= \Cake\Core\Configure::read('Settings.Banana.site.title'); ?>
+        <?= $this->fetch('title') ?> | Banana
     </title>
 
     <meta name="description" content="">

@@ -66,10 +66,6 @@
             <td><?= h($page->slug) ?></td>
         </tr>
         <tr>
-            <td><?= __('Layout Template') ?></td>
-            <td><?= h($page->layout_template) ?></td>
-        </tr>
-        <tr>
             <td><?= __('Page Template') ?></td>
             <td><?= h($page->page_template) ?></td>
         </tr>
@@ -90,6 +86,10 @@
         <tr>
             <td><?= __('Parent Id') ?></td>
             <td><?= $this->Number->format($page->parent_id) ?></td>
+        </tr>
+        <tr>
+            <td><?= __('Page Layout Id') ?></td>
+            <td><?= $this->Number->format($page->page_layout_id) ?></td>
         </tr>
 
 
@@ -119,19 +119,21 @@
 <div class="related">
     <div class="">
     <h4><?= __('Related {0}', __('PageModules')) ?></h4>
-    <?php if (!empty($page->page_modules)): ?>
+    <?php if (!empty($page->content_modules)): ?>
     <table class="ui table">
         <tr>
             <th><?= __('Id') ?></th>
-            <th><?= __('Page Id') ?></th>
+            <th><?= __('Refscope') ?></th>
+            <th><?= __('Refid') ?></th>
             <th><?= __('Module Id') ?></th>
             <th><?= __('Section') ?></th>
             <th class="actions"><?= __('Actions') ?></th>
         </tr>
-        <?php foreach ($page->page_modules as $pageModules): ?>
+        <?php foreach ($page->content_modules as $pageModules): ?>
         <tr>
             <td><?= h($pageModules->id) ?></td>
-            <td><?= h($pageModules->page_id) ?></td>
+            <td><?= h($pageModules->refscope) ?></td>
+            <td><?= h($pageModules->refid) ?></td>
             <td><?= h($pageModules->module_id) ?></td>
             <td><?= h($pageModules->section) ?></td>
 

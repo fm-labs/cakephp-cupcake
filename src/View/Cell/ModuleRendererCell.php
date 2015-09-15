@@ -44,11 +44,22 @@ class ModuleRendererCell extends Cell
         $this->display($module);
     }
 
+    public function named($moduleName = null)
+    {
+        $this->loadModel("Banana.Modules");
+        $module = $this->Modules->find('first')->where(['name' => $moduleName]);
+
+        $this->template = 'display';
+        $this->display($module);
+    }
+
     public function display(Module $module = null, $template = null)
     {
         if (!$module) {
             throw new \LogicException("ModuleCell did not receive a module entity");
         }
+
+        //debug($template);
 
         $modulePath = $module->path;
         $moduleParams = $module->params;
@@ -57,8 +68,9 @@ class ModuleRendererCell extends Cell
         list($plugin, $moduleName) = pluginSplit($modulePath);
         $moduleName = join('-', explode('/', $moduleName));
         $moduleName = Inflector::dasherize($moduleName);
-        $moduleName = strtolower($moduleName);
-        $moduleHtmlClass = join(" ", ['module', 'mod-' . $moduleName]);
+        //$moduleName = strtolower($moduleName);
+        //$moduleHtmlClass = join(" ", ['module', 'mod-' . $moduleName]);
+        $moduleHtmlClass = "module";
 
         $this->set('module', $module);
         $this->set('moduleParams', $moduleParamsDecoded);

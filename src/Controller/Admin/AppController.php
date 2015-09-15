@@ -80,6 +80,11 @@ class AppController extends AbstractBackendController
                 'icon' => 'configure',
 
                 '_children' => [
+                    'page_layouts' => [
+                        'title' => 'Layouts',
+                        'url' => ['plugin' => 'Banana', 'controller' => 'PageLayouts', 'action' => 'index'],
+                        'icon' => 'file'
+                    ],
                     'module_builder' => [
                         'title' => 'Module Builder',
                         'url' => ['plugin' => 'Banana', 'controller' => 'ModuleBuilder', 'action' => 'index'],

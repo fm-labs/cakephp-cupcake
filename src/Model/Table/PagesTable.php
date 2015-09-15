@@ -7,11 +7,13 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Banana\Model\Table\PageModulesTable;
+use Banana\Model\Table\PageLayoutsTable;
 
 /**
  * Pages Model
  *
  * @property PageModulesTable $PageModules
+ * @property PageLayoutsTable $PageLayouts
  */
 class PagesTable extends Table
 {
@@ -45,6 +47,11 @@ class PagesTable extends Table
         $this->hasMany('ChildPages', [
             'className' => 'Banana.Pages',
             'foreignKey' => 'parent_id'
+        ]);
+
+        $this->belongsTo('PageLayouts', [
+            'className' => 'Banana.PageLayouts',
+            'foreignKey' => 'page_layout_id'
         ]);
 
         /*
@@ -111,8 +118,9 @@ class PagesTable extends Table
             ->allowEmpty('redirect_page_id');
 
         $validator
-            ->allowEmpty('layout_template');
-            
+            ->add('redirect_page_id', 'valid', ['rule' => 'numeric'])
+            ->allowEmpty('page_layout_id');
+
         $validator
             ->allowEmpty('page_template');
             
@@ -142,5 +150,26 @@ class PagesTable extends Table
     {
         $rules->add($rules->existsIn(['parent_id'], 'ParentPages'));
         return $rules;
+    }
+
+    public function getPageLayoutFor($page)
+    {
+        if (is_numeric($page)) {
+            $page = $this->get($page, ['contain' => 'PageLayouts']);
+        }
+
+        if ($page->page_layout) {
+            return $page->page_layout;
+        }
+
+        if ($page->page_layout_id) {
+            return $this->PageLayouts->get($page->page_layout_id);
+        }
+
+        if ($page->parent_id) {
+            return $this->getPageLayoutFor($page->parent_id);
+        }
+
+        return null;
     }
 }

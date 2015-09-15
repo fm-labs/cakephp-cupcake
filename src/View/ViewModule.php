@@ -122,10 +122,13 @@ abstract class ViewModule extends Cell
         }
 
         $render = function () use ($template) {
+            list($plugin, $template) = pluginSplit($template);
+
             $className = explode('\\', get_class($this));
             $className = array_pop($className);
             $name = substr($className, 0, strrpos($className, 'Module')); // extract widget name
             $this->View->subDir = 'Module' . DS . $this->subDir . $name; // apply sub dir
+            //debug($template . " - " . $className . " - " . $name . " - " . $this->View->subDir);
 
             try {
                 return $this->View->render($template);

@@ -10,6 +10,7 @@ namespace Banana\Lib;
 
 use Cake\Core\Configure;
 use Cake\Core\Plugin;
+use Cake\ORM\TableRegistry;
 use Cake\Utility\Inflector;
 
 class Banana
@@ -57,5 +58,36 @@ class Banana
                 }
             }
         }
+    }
+
+    public static function getAvailablePageLayouts()
+    {
+        $PageLayouts = TableRegistry::get('Banana.PageLayouts');
+        return $PageLayouts->find('list')->all();
+    }
+
+    public static function getAvailablePageTemplates()
+    {
+        return [];
+    }
+
+    public static function getAvailablePageTypes()
+    {
+        return [
+            'content' => 'Content',
+            'controller' => 'Controller',
+            'cell' => 'Cell',
+            'module' => 'Module',
+            'page' => 'Page',
+            'redirect' => 'Redirect',
+            'root' => 'Website Root',
+        ];
+    }
+
+    public static function getDefaultPageLayout()
+    {
+        $PageLayouts = TableRegistry::get('Banana.PageLayouts');
+        $pageLayout = $PageLayouts->find('first')->where(['is_default' => true]);
+        return $pageLayout;
     }
 }

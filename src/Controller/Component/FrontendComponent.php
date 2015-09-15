@@ -8,6 +8,8 @@
 
 namespace Banana\Controller\Component;
 
+use Banana\Model\Entity\Page;
+use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\Controller\Component;
 use Cake\Event\Event;
@@ -20,31 +22,52 @@ use Cake\I18n\I18n;
  */
 class FrontendComponent extends Component
 {
+    public static $defaultViewClass = 'Banana.Frontend';
+
     public static $pageModelClass = 'Banana.Pages';
 
-    public static $pageThemeSetting = 'Settings.Banana.site.theme';
+    //public static $pageThemeSetting = 'Settings.Banana.site.theme';
 
-    public static $pageLayoutSetting = 'Settings.Banana.site.layout';
+    //public static $pageLayoutSetting = 'Settings.Banana.site.layout';
+
+    /**
+     * @var Controller
+     */
+    public $controller;
 
     /**
      * @var PagesTable
      */
-    protected $Pages;
+    public $Pages;
 
-    protected $page;
+    protected $_page;
 
-    protected $layout;
+    protected $_theme;
 
-    protected $theme;
+    protected $_layout;
 
     public function initialize(array $config)
     {
-        $this->Pages = $this->_registry->getController()->loadModel(static::$pageModelClass);
+        $this->controller = $this->_registry->getController();
+
+        $this->Pages = $this->controller->loadModel(static::$pageModelClass);
+
+        if (!$this->controller->viewClass) {
+            $this->controller->viewClass = static::$defaultViewClass;
+        }
+        //if (!$controller->theme) {
+        //    $controller->theme = null;
+        //}
+        if (!$this->controller->layout) {
+            $this->controller->layout = 'frontend';
+        }
 
     }
 
     public function beforeFilter(Event $event)
     {
+        // Frontend locale switch
+        //@TODO Setting: locale switch
         $currentLocale = $requestLocale = I18n::locale();
         if (isset($this->request->params['locale'])) {
             $requestLocale = $this->request->params['locale'];
@@ -64,6 +87,7 @@ class FrontendComponent extends Component
         }
         debug("Locale: " . I18n::locale());
         */
+
     }
 
     public function beforeRender(Event $event)
@@ -74,96 +98,48 @@ class FrontendComponent extends Component
             $controller->helpers['Banana.Script'] = [];
         }
 
-        //if ($this->getTheme()) {
-        //    $controller->theme = $this->getTheme();
-        //}
-        //if ($this->getLayout()) {
-        //    $controller->layout = $this->getLayout();
-        //}
-        //$controller->theme = ($controller->theme) ? $controller->theme : $this->getTheme();
-        //$controller->layout = ($controller->layout) ? $controller->layout : $this->getLayout();
-    }
+        $this->detectPage();
 
-
-
-    /**
-     * Get the Page entity from database
-     * If no Id or slug is given, check the request parameters
-     * for 'pageid' and/or 'page' keys
-     *
-     * @param null $id Page Id
-     * @param null $slug Page Slug
-     * @return \Banana\Model\Entity\Page
-     */
-    public function getPage($id = null, $slug = null)
-    {
-        if (!$this->page || $id !== null || $slug !== null) {
-            if (!$id && !$slug) {
-                if ($this->request->param('pageid')) {
-                    $id = $this->request->param('pageid');
-                } elseif ($this->request->query('pageid')) {
-                    $id = $this->request->query('pageid');
-                } elseif ($slug !== null) {
-                    // do nothing
-                } elseif ($this->request->param('slug')) {
-                    $slug = $this->request->param('slug');
-                } elseif ($this->request->query('slug')) {
-                    $slug = $this->request->query('slug');
-                }
-            }
-
-            $page = null;
-            if ($id) {
-                $page = $this->Pages->get($id);
-            } elseif ($slug) {
-                $page = $this->Pages->find()->where(['slug' => $slug])->first();
-            }
-            $this->page = $page;
+        if (!$controller->theme && $this->_theme) {
+            $controller->theme = $this->_theme;
         }
-
-        return $this->page;
+        if (!$controller->layout && $this->_layout) {
+            $controller->layout = $this->_layout;
+        }
     }
 
-    public function getPageBySlug($slug)
+    public function detectPage()
     {
-        return $this->getPage(null, $slug);
-    }
-
-    /**
-     * Get Theme name from Page or fallback to config setting
-     *
-     * @param null $theme
-     * @return string
-     */
-    public function getTheme($theme = null)
-    {
-        if (!$this->theme || $theme !== null) {
-            if ($theme) {
-                $this->theme = $theme;
-            } elseif (($page = $this->getPage()) && $page->parent_theme) {
-                // Get theme from Page
-                $this->theme = $page->parent_theme;
-            } else {
-                // Fallback to configuration setting
-                //$theme = Configure::read(static::$pageThemeSetting);
+        if (!$this->_page) {
+            $pageId = null;
+            if ($this->request->param('page_id')) {
+                $pageId = $this->request->param('page_id');
+            }
+            elseif ($this->request->query('page_id')) {
+                $pageId = $this->request->query('page_id');
+            }
+            if ($pageId) {
+                $page = $this->Pages->get($pageId);
+                $this->setPage($page);
             }
         }
-        return $this->theme;
     }
 
-    public function getLayout($layout = null)
+    public function setPage(Page $page)
     {
-        if (!$this->layout || $layout !== null) {
-            if ($layout) {
-                $this->layout = $layout;
-            } elseif (($page = $this->getPage()) && $page->layout_template) {
-                // Get theme from Page
-                $this->layout = $page->layout_template;
-            } else {
-                // Fallback to configuration setting
-                //$layout = Configure::read(static::$pageLayoutSetting);
-            }
+        $this->_page = $page;
+
+        $pageLayout = $this->Pages->getPageLayoutFor($page->id);
+        if ($pageLayout) {
+            $this->_theme = $pageLayout->theme;
+            $this->_layout = $pageLayout->layout;
         }
-        return $this->layout;
+
+        $this->controller->set('page', $page);
+        $this->controller->set('pageId', $page->id);
+        $this->controller->set('pageTitle', $page->title);
+
+        $this->request->params['page_id'] = $page->id;
     }
-} 
+
+}

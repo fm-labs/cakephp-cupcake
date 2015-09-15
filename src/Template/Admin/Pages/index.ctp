@@ -14,7 +14,7 @@ $this->assign('heading', __('Pages'));
         <tbody>
         <?php foreach ($contents as $content): ?>
             <tr data-id="<?= h($content->id) ?>">
-                <td><?= $this->Html->link($treeList[$content->id], ['action' => 'edit', $content->id]); ?></td>
+                <td><?= $this->Html->link($pagesTree[$content->id], ['action' => 'edit', $content->id]); ?></td>
                 <td><?= h($content->type); ?></td>
                 <td><?= h($content->layout_template); ?></td>
                 <td><?= $this->Url->build($content->url); ?></td>
@@ -46,7 +46,7 @@ $this->assign('heading', __('Pages'));
         <?php endforeach; ?>
         </tbody>
     </table>
-    <?php debug($treeList); ?>
+    <?php debug($pagesTree); ?>
 </div>
 <?php //echo $this->Html->script('Tree.tree-tablesort', ['block' => 'script-bottom', 'inline' => false]); ?>
 

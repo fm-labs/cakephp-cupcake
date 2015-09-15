@@ -8,6 +8,7 @@
 
 namespace Banana\Controller\Admin;
 
+use Banana\Lib\Banana;
 use Banana\Model\Table\PagesTable;
 use Cake\Event\Event;
 use Tree\Controller\TreeSortControllerTrait;
@@ -28,26 +29,6 @@ class PagesController extends ContentController
     public function beforeRender(Event $event)
     {
         parent::beforeRender($event);
-
-        $treeList = $this->Pages->find('treeList', [
-            /*
-            'valuePath' => function ($page) {
-                $path = $this->Pages->find('path', ['for' => $page->id]);
-
-                $pathStr = "";
-                foreach ($path as $part) {
-                    $pathStr .= $part->slug . '/';
-                }
-
-                return $pathStr;
-            },
-            */
-            'spacer' => '_'
-        ]);
-        $parentPages = $this->Pages->ParentPages->find('list', ['limit' => 200]);
-
-        $this->set('parentPages', $parentPages);
-        $this->set('treeList', $treeList->toArray());
     }
 
     /**
@@ -58,21 +39,14 @@ class PagesController extends ContentController
     public function index()
     {
         $this->paginate = [
-            'contain' => ['ParentPages']
+            'contain' => ['ParentPages'],
+            'order' => ['Pages.lft ASC']
         ];
 
-        $rootNode = $this->Pages->find()->where(['parent_id IS NULL'])->first();
-        $children = [];
-
-        if ($rootNode) {
-            $children = $this->Pages
-                ->find('children', ['for' => $rootNode->id])
-                ->find('threaded');
-        }
-
+        $pagesTree = $this->Pages->find('treeList')->toArray();
+        $this->set('pagesTree', $pagesTree);
 
         $this->set('contents', $this->paginate($this->Pages));
-        $this->set('children', $children);
         $this->set('_serialize', ['contents']);
     }
 
@@ -98,7 +72,7 @@ class PagesController extends ContentController
     public function edit($id = null)
     {
         $content = $this->Pages->get($id, [
-            'contain' => ['ContentModules' => ['Modules']]
+            'contain' => ['ContentModules' => ['Modules'], 'PageLayouts']
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $content = $this->Pages->patchEntity($content, $this->request->data);
@@ -110,16 +84,39 @@ class PagesController extends ContentController
             }
         }
 
+        //@TODO Read custom sections from page layout
         $sections = ['top', 'bottom', 'before'];
         $sections = array_combine($sections, $sections);
+        $this->set('sections', $sections);
+
+        $pagesTree = $this->Pages->find('treeList')->toArray();
+        $this->set('pagesTree', $pagesTree);
 
         $sectionsModules = $this->Pages->ContentModules->find()->where(['refscope' => 'Banana.Pages', 'refid' => $id]);
-        debug($sectionsModules);
+        //debug($sectionsModules);
 
-        $this->set('sections', $sections);
-        $this->set('types', $this->_getPageTypes());
-        $this->set(compact('content'));
+        $this->set('types', Banana::getAvailablePageTypes());
+        $this->set('pageLayouts', Banana::getAvailablePageLayouts());
+        $this->set('pageTemplates', Banana::getAvailablePageTemplates());
+        $this->set('content', $content);
         $this->set('_serialize', ['content']);
+    }
+
+
+    /**
+     * View method
+     *
+     * @param string|null $id Post id.
+     * @return void
+     * @throws \Cake\Network\Exception\NotFoundException When record not found.
+     */
+    public function view($id = null)
+    {
+        $content = $this->model()->get($id, [
+            'contain' => ['ContentModules']
+        ]);
+        $this->set('page', $content);
+        $this->set('_serialize', ['page']);
     }
 
     public function preview($id = null)
@@ -127,16 +124,12 @@ class PagesController extends ContentController
         $this->redirect(['prefix' => false, 'plugin' => 'Banana', 'controller' => 'Pages', 'action' => 'view', $id]);
     }
 
+    /**
+     * @deprecated Use Banana::getPageTypes() instead
+     */
     protected function _getPageTypes()
     {
-        return [
-            'content' => 'Content',
-            'controller' => 'Controller',
-            'module' => 'Module',
-            'page' => 'Page',
-            'redirect' => 'Redirect',
-            'root' => 'Website Root',
-        ];
+        return Banana::getAvailablePageTypes();
     }
 
 }

@@ -6,7 +6,7 @@ $moduleHtmlClass = $this->get('moduleHtmlClass');
 $moduleTemplate = $this->get('moduleTemplate');
 ?>
 <div class="<?= $moduleHtmlClass; ?>">
-    Module: <?= h($module->title) ?> [<?= h($module->path); ?>#<?= h($module->name); ?>]
+    <!-- Module: <?= h($module->title) ?> [<?= h($module->path); ?>#<?= h($module->name); ?>#<?= h($moduleTemplate); ?>]  -->
     <?php
     $module = $this->module($modulePath, [], ['params' => $moduleParams]);
     $module->template = ($moduleTemplate) ? $moduleTemplate : 'display';

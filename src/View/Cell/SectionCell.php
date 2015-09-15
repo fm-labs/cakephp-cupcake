@@ -64,7 +64,7 @@ class SectionCell extends Cell
     protected function loadPageModules()
     {
         if (!isset($this->request->params['page_id'])) {
-            //debug("ContentModules skipped for section " . $this->name . ": No pageId set");
+            debug("ContentModules skipped for section " . $this->name . ": No pageId set");
             $this->pageModules = [];
             return;
         }

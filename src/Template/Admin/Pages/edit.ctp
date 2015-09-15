@@ -34,7 +34,7 @@ $this->assign('heading', __('Edit Page: {0}', $content->title));
                         ]);
                     ?>
                 </div>
-                <div class="select-type select-type-controller">
+                <div class="select-type select-type-controller select-type-module select-type-cell">
                     <?php
                         echo $this->Form->input('redirect_controller', [
                         ]);
@@ -43,7 +43,7 @@ $this->assign('heading', __('Edit Page: {0}', $content->title));
                 <div class="select-type select-type-page select-type-root">
                     <?php
                     echo $this->Form->input('redirect_page_id', [
-                        'options' => $treeList
+                        'options' => $pagesTree
                     ]);
                     ?>
                 </div>
@@ -109,20 +109,26 @@ $this->assign('heading', __('Edit Page: {0}', $content->title));
                 echo $this->Form->input('publish_end_date');
                 ?>
             </div>
+            <h5 class="ui attached header">Structure</h5>
+            <div class="ui attached secondary segment form">
+                <?php
+                echo $this->Form->input('parent_id',
+                    ['options' => $pagesTree, 'empty' => '- Root Node -']);
+                ?>
+            </div>
             <h5 class="ui attached header">Layout</h5>
             <div class="ui attached secondary segment form">
                 <?php
-                echo $this->Form->input('parent_id', ['options' => $treeList, 'empty' => '- No Parent -']);
-                echo $this->Form->input('theme',
-                    ['empty' => __('- Parent Theme -'), 'options' => $themesAvailable]);
-                echo $this->Form->input('layout_template',
-                    ['empty' => __('- Parent Layout -'), 'options' => $layoutsAvailable]);
-                echo $this->Form->input('page_template');
+                echo $this->Form->input('page_layout_id',
+                    ['empty' => __('- Default Layout -'), 'options' => $pageLayouts]);
+
+                if ($content->page_layout_id) {
+                    echo $this->Html->link('Edit Layout', '#');
+                }
                 ?>
-            </div>
-            <h5 class="ui attached header">Layout Modules</h5>
-            <div class="ui attached segment form">
                 <?php
+                echo $this->Form->input('page_template',
+                    ['empty' => __('- Default Template -'), 'options' => $pageTemplates]);
                 ?>
             </div>
         </div>

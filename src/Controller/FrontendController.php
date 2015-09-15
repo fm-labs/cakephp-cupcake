@@ -21,28 +21,11 @@ abstract class FrontendController extends AppController
     {
         parent::initialize();
         $this->loadComponent('Flash');
-        $this->viewClass = $this->_getViewClass();
-        $this->theme = $this->_getTheme();
-        $this->layout = $this->_getLayout();
+        $this->theme = Configure::read('Banana.frontend.theme');
     }
 
     public function beforeFilter(Event $event)
     {
         parent::beforeFilter($event);
-    }
-
-    protected function _getTheme()
-    {
-        return Configure::read('Banana.frontend.theme');
-    }
-
-    protected function _getViewClass()
-    {
-        return 'Banana.Frontend';
-    }
-
-    protected function _getLayout()
-    {
-        return 'frontend';
     }
 } 

@@ -64,12 +64,7 @@ class PagesController extends FrontendController
 
     public function view($id = null)
     {
-        if ($id !== null) {
-            $page = $this->Frontend->getPage($id);
-        } elseif ($this->request->param('slug')) {
-            $page = $this->Frontend->getPageBySlug($this->request->param('slug'));
-        }
-
+        $page = $this->Pages->get($id);
         if (!$page) {
             throw new NotFoundException(__("Page {0} not found", strip_tags($id)));
         }
@@ -81,32 +76,31 @@ class PagesController extends FrontendController
             case 'root':
                 return $this->redirect(['action' => 'view', $page->redirect_page_id], $page->redirect_status);
             case 'controller':
-                $controller = explode('::', $page->redirect_controller);
-                $action = 'index';
-                if (count($controller) == 2) {
-                    list($controller, $action) = $controller;
-                } elseif (count($controller) == 1) {
-                    $controller = $controller[0];
-                } else {
-                    throw new Exception("Malformed controller route");
-                }
-
-                list($plugin, $controller) = pluginSplit($controller);
-                $url = ['plugin' => $plugin, 'controller' => $controller, 'action' => $action];
-                return $this->redirect($url, $page->redirect_status);
+                return $this->redirect($page->redirect_controller_url, $page->redirect_status);
             //case 'root':
                 //$children = $this->Pages->find('children', ['for' => $page->id]);
                 //debug($children);
                 break;
+
+            case 'cell':
+                $cellName = $page->redirect_controller;
+                $this->setAction('cell', $cellName);
+                $this->Frontend->setPage($page);
+                break;
+
+            case 'module':
+                $moduleName = $page->redirect_controller;
+                $this->setAction('module', $moduleName);
+                $this->Frontend->setPage($page);
+                break;
+
             case 'content':
             default:
+                $this->Frontend->setPage($page);
                 break;
         }
 
-        $this->set('title', $page->title);
-        $this->set('page', $page);
-        $this->set('pageId', $page->id);
-        $this->request->params['page_id'] = $page->id;
+
     }
 
     /**
@@ -142,6 +136,17 @@ class PagesController extends FrontendController
             }
             throw new NotFoundException();
         }
+    }
+
+    protected function module($moduleName)
+    {
+        $this->set('moduleName', $moduleName);
+        $this->set('moduleTemplate', null);
+    }
+
+    protected function cell($cellName)
+    {
+        $this->set('cellName', $cellName);
     }
 
 }
