@@ -9,6 +9,7 @@
 namespace Banana\Controller\Admin;
 
 use Backend\Controller\Admin\AbstractBackendController;
+use Cake\Core\Configure;
 use Cake\Core\Plugin;
 use Cake\Event\Event;
 use Cake\Filesystem\Folder;

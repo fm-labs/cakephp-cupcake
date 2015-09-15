@@ -5,5 +5,5 @@ use Cake\Core\Configure;
 Configure::load('banana');
 
 Banana::bootstrap();
-Banana::bootstrapConfigs();
+//Banana::bootstrapConfigs();
 Banana::bootstrapPlugins();

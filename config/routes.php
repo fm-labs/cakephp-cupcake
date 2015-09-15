@@ -11,7 +11,7 @@ Router::plugin('Banana', function ($routes) {
     //$routes->connect('/:controller/sitemap.xml', ['action' => 'sitemap']);
     $routes->fallbacks();
 });
-
+/*
 // Banana Pages
 Router::connect('/pages/:pageid/:slug',
     ['plugin' => 'Banana', 'controller' => 'Pages', 'action' => 'view'],
@@ -25,6 +25,7 @@ Router::connect('/pages/:slug',
     ['plugin' => 'Banana', 'controller' => 'Pages', 'action' => 'view']);
 Router::connect('/pages/*',
     ['plugin' => 'Banana', 'controller' => 'Pages', 'action' => 'display']);
+*/
 
 // Banana Posts
 //Router::connect('/posts', ['plugin' => 'Banana', 'controller' => 'Posts', 'action' => 'index']);
