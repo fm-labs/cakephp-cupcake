@@ -66,27 +66,6 @@ class FrontendComponent extends Component
 
     public function beforeFilter(Event $event)
     {
-        // Frontend locale switch
-        //@TODO Setting: locale switch
-        $currentLocale = $requestLocale = I18n::locale();
-        if (isset($this->request->params['locale'])) {
-            $requestLocale = $this->request->params['locale'];
-        } elseif (isset($this->request->query['locale'])) {
-            $requestLocale = $this->request->query['locale'];
-        }
-        if ($currentLocale != $requestLocale) {
-            I18n::locale($requestLocale);
-        }
-
-        // set locale in session
-        /*
-        if (!$this->request->session()->check('Banana.locale')) {
-            $this->request->session()->write('Banana.locale', $locale);
-        } else {
-            //$this->request->session()->delete('Banana.locale');
-        }
-        debug("Locale: " . I18n::locale());
-        */
 
     }
 
