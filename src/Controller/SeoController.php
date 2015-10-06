@@ -25,11 +25,19 @@ class SeoController extends AppController
      */
     public function robots()
     {
-        //@TODO Disallow backend urls
-        //@TODO Fetch rules from database
         $robots = [
             'User-agent: *',
-            'Disallow:'
+            'Disallow: /tmp/',
+            'Disallow: /wp-admin/',
+            'Disallow: /admin/',
+            'Disallow: /adm/',
+            'Disallow: /backend/',
+            'Disallow: /private/',
+            'Disallow: /login/',
+            'Disallow: /user/',
+            'Disallow: /usr/',
+            'Disallow: /hate/',
+            'Disallow: /racism/',
         ];
         $this->response->type('text/plain');
         $this->response->body(join("\n", $robots));

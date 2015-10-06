@@ -33,7 +33,7 @@ Router::connect('/pages/*',
 //Router::connect('/posts/:slug', ['plugin' => 'Banana', 'controller' => 'Posts', 'action' => 'view']);
 
 // Banana SEO: robots.txt
-Router::connect('/robots.txt', ['plugin' => 'Banana', 'controller' => 'Seo', 'action' => 'robots']);
+//Router::connect('/robots.txt', ['plugin' => 'Banana', 'controller' => 'Seo', 'action' => 'robots']);
 
 // Banana SEO: sitemap.xml
 //Router::connect('/sitemap.posts.xml', ['plugin' => 'Banana', 'controller' => 'Posts', 'action' => 'sitemap']);
