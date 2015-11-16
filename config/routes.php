@@ -11,6 +11,7 @@ Router::plugin('Banana', function ($routes) {
     //$routes->connect('/:controller/sitemap.xml', ['action' => 'sitemap']);
     $routes->fallbacks();
 });
+
 /*
 // Banana Pages
 Router::connect('/pages/:pageid/:slug',

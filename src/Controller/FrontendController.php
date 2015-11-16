@@ -13,7 +13,7 @@ use Cake\Event\Event;
 
 abstract class FrontendController extends AppController
 {
-    public $components = ['Banana.Frontend'];
+    //public $components = ['Banana.Frontend'];
 
     public $viewClass = 'Banana.Frontend';
 
@@ -21,7 +21,7 @@ abstract class FrontendController extends AppController
     {
         parent::initialize();
         $this->loadComponent('Flash');
-        $this->theme = Configure::read('Banana.frontend.theme');
+        $this->viewBuilder()->theme(Configure::read('Banana.frontend.theme'));
     }
 
     public function beforeFilter(Event $event)

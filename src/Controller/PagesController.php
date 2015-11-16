@@ -14,6 +14,7 @@ use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\NotFoundException;
 use Banana\Model\Table\PagesTable;
 use Cake\Core\Configure;
+use Cake\Network\Response;
 use Cake\View\Exception\MissingTemplateException;
 use Banana\Controller\Component\FrontendComponent;
 
@@ -28,6 +29,8 @@ class PagesController extends FrontendController
 {
 
     public $modelClass = 'Banana.Pages';
+
+    public $viewClass = 'Banana.Page';
 
     public function beforeFilter(Event $event)
     {
@@ -62,6 +65,12 @@ class PagesController extends FrontendController
         $this->setAction('view', $rootPage->id);
     }
 
+    /**
+     * @param null $id
+     * @return \Cake\Network\Response|void
+     *
+     * @deprecated Use 'display' method instead
+     */
     public function view($id = null)
     {
         $page = $this->Pages->get($id);
@@ -126,7 +135,7 @@ class PagesController extends FrontendController
         if (!empty($path[1])) {
             $subpage = $path[1];
         }
-        $this->set(compact('page', 'subpage'));
+        $this->set(compact('path', 'page', 'subpage'));
 
         try {
             $this->render(implode('/', $path));
@@ -137,6 +146,40 @@ class PagesController extends FrontendController
             throw new NotFoundException();
         }
     }
+
+
+    /**
+     * Instantiates the correct view class, hands it its data, and uses it to render the view output.
+     *
+     * @param string $view View to use for rendering
+     * @param string $layout Layout to use
+     * @return \Cake\Network\Response A response object containing the rendered view.
+     * @link http://book.cakephp.org/3.0/en/controllers.html#rendering-a-view
+     */
+    public function render($view = null, $layout = null)
+    {
+        parent::render($view, $layout);
+        /*
+        if (!empty($this->request->params['bare'])) {
+            $this->getView()->autoLayout = false;
+        }
+
+        $event = $this->dispatchEvent('Controller.beforeRender');
+        if ($event->result instanceof Response) {
+            $this->autoRender = false;
+            return $event->result;
+        }
+        if ($event->isStopped()) {
+            $this->autoRender = false;
+            return $this->response;
+        }
+
+        $this->autoRender = false;
+        $this->response->body($this->getView()->render($view, $layout));
+        return $this->response;
+        */
+    }
+
 
     protected function module($moduleName)
     {
