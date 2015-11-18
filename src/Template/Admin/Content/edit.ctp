@@ -8,7 +8,7 @@
     <!-- content -->
     <?= $this->fetch('content'); ?>
 
-    <!-- available modules -->
+    <!-- available modules
     <div class="ui hidden divider"></div>
     <div class="ui segment">
         <ul>
@@ -20,6 +20,7 @@
             <?php endforeach; ?>
         </ul>
     </div>
+     -->
 
     <?php debug($content); ?>
 </div>

@@ -3,6 +3,8 @@ namespace Banana\Controller\Admin;
 
 use Banana\Form\ModuleParamsForm;
 use Banana\View\ViewModule;
+use Cake\Core\App;
+use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
 use Cake\Core\Plugin;
 use Banana\Model\Table\ModulesTable;
@@ -84,5 +86,40 @@ class ModuleBuilderController extends AppController
 
         $this->set('modulePath', $path);
         $this->set('moduleParams', $params);
+    }
+
+
+    public function build()
+    {
+        $class = $this->request->query('class');
+
+        $className = App::className($class, 'View/Module', 'Module');
+        if (!$class || !class_exists($className)) {
+            throw new Exception(sprintf("Module '%s' not found", $className));
+        }
+
+        $module = new $className();
+
+        if ($this->request->is('post') || $this->request->is('put')) {
+
+        }
+
+        $this->set('className', $className);
+        $this->set('module', $module);
+    }
+
+    public function view()
+    {
+        $class = $this->request->query('class');
+
+        $this->Modules->entityClass($class);
+        $module = $this->Modules->newEntity();
+
+        if ($this->request->is('post') || $this->request->is('put')) {
+            $module->config($this->request->data());
+        }
+        $this->set('module', $module);
+        $this->set('class', $class);
+        $this->set('data', $this->request->data());
     }
 }

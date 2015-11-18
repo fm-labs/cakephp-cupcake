@@ -2,6 +2,8 @@
 namespace Banana\Model\Table;
 
 use Banana\Model\Entity\Post;
+use Cake\Core\Plugin;
+use Cake\Log\Log;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -32,13 +34,18 @@ class PostsTable extends Table
             'scope' => 'Banana.Posts',
             'concat' => 'body_html'
         ]);
-        $this->addBehavior('Attachment.Attachment', [
-            'dataDir' => WWW_ROOT . 'attachments' . DS . 'posts' . DS,
-            'dataUrl' => '/attachments/posts/',
-            'fields' => [
-                'image_file' => ['uploadConfig' => 'posts_images']
-            ]
-        ]);
+
+        if (Plugin::loaded('Attachment')) {
+            $this->addBehavior('Attachment.Attachment', [
+                'dataDir' => WWW_ROOT . 'attachments' . DS . 'posts' . DS,
+                'dataUrl' => '/attachments/posts/',
+                'fields' => [
+                    'image_file' => ['uploadConfig' => 'posts_images']
+                ]
+            ]);
+        } else {
+            Log::warning('Attachment plugin is not loaded');
+        }
     }
 
     /**

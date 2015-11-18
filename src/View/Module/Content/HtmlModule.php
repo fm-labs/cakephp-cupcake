@@ -44,7 +44,8 @@ class HtmlModule extends BaseHtmlModule
     {
         return [
             'html' => [
-                'class' => 'htmleditor tinymce'
+                'type' => 'htmleditor'
+                //'class' => 'htmleditor tinymce'
             ],
         ];
     }

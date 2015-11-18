@@ -63,6 +63,10 @@ class PagesController extends ContentController
                 debug($content->errors());
             }
         }
+
+        $pagesTree = $this->Pages->find('treeList')->toArray();
+        $this->set('pagesTree', $pagesTree);
+
         $this->set('types', $this->_getPageTypes());
         $this->set(compact('content'));
         $this->set('_serialize', ['content']);

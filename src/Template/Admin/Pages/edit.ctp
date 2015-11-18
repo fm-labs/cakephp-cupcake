@@ -43,7 +43,8 @@ $this->assign('heading', __('Edit Page: {0}', $content->title));
                 <div class="select-type select-type-page select-type-root">
                     <?php
                     echo $this->Form->input('redirect_page_id', [
-                        'options' => $pagesTree
+                        'options' => $pagesTree,
+                        'empty' => __('No selection')
                     ]);
                     ?>
                 </div>
@@ -136,7 +137,7 @@ $this->assign('heading', __('Edit Page: {0}', $content->title));
     <?= $this->Form->end() ?>
 </div>
 
-<?php $this->append('script-bottom'); ?>
+<?php $this->append('scriptBottom'); ?>
     <script>
         $(document).ready(function() {
             $('.select-type').hide();

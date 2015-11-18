@@ -10,7 +10,7 @@ $this->assign('heading', __('Add {0}', __('Page')));
     <div class="users ui segment">
         <div class="ui form">
             <?php
-                echo $this->Form->input('parent_id', ['options' => $treeList, 'empty' => '- No parent -']);
+                echo $this->Form->input('parent_id', ['options' => $pagesTree, 'empty' => '- No parent -']);
                 echo $this->Form->input('title');
                 echo $this->Form->hidden('slug');
                 echo $this->Form->input('type', ['id' => 'select-type']);

@@ -16,7 +16,7 @@ use Cake\Filesystem\Folder;
 
 class AppController extends AbstractBackendController
 {
-    public $viewClass = "Banana.Banana";
+    //public $viewClass = "Banana.Banana";
 
     public function beforeFilter(Event $event)
     {
