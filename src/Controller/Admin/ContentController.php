@@ -85,6 +85,11 @@ abstract class ContentController extends AppController
         $this->set('_serialize', ['content']);
     }
 
+    public function preview($id = null)
+    {
+        $this->redirect(['prefix' => false, 'plugin' => 'Banana', 'controller' => 'Posts', 'action' => 'view', $id]);
+    }
+
     /**
      * Add method
      *

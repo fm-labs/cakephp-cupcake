@@ -8,60 +8,21 @@
 
 namespace Banana\Model\Entity\Module;
 
+use Cake\ORM\Entity;
+
 class TextHtmlModule extends BaseModule
 {
-    protected $_defaultConfig = [
+    protected $_defaultParams = [
         'textHtml' => '<h1>Put your HTML here</h1>'
     ];
 
-    public function getFormElement()
+    protected function _getViewPath()
     {
-        return 'Banana.Modules/Text/htmlForm';
+        return 'Banana.Modules/Text/Html';
     }
 
-    public function getFormElementData()
+    public function processForm(Entity $entity, array $formData)
     {
-        $this->set($this->config());
-        return [
-            'module' => $this
-        ];
-    }
-
-    public function getFormElementOptions()
-    {
-        return [];
-    }
-
-    public function getViewElement()
-    {
-        return 'Banana.Modules/Text/html';
-    }
-
-    public function getViewElementData()
-    {
-        $this->set($this->config());
-        return [
-            'module' => $this
-        ];
-    }
-
-    public function getViewElementOptions()
-    {
-
-    }
-
-    public function processFormSubmission($entity, $data)
-    {
-
-    }
-
-    protected function _getRealParams()
-    {
-
-    }
-
-    protected function _setRealParams($value = null)
-    {
-
+        // TODO: Implement processForm() method.
     }
 }

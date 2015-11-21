@@ -18,7 +18,7 @@ use Cake\View\View;
  */
 class FrontendView extends AppView
 {
-    use ModuleTrait;
+    //use ModuleTrait;
 
     /**
      * @param Request $request

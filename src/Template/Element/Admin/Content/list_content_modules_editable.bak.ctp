@@ -7,7 +7,6 @@
         <?= $this->Html->link('Remove', ['action' => 'remove_module', $module->id]); ?>
     </div>
     <div class="ui bottom attached segment">
-        <?php //echo $this->cell('Banana.ModuleRenderer', ['module' => $module]); ?>
-        <?php debug($module); ?>
+        <?php echo $this->cell('Banana.ModuleRenderer', ['module' => $module]); ?>
     </div>
 <?php endforeach; ?>

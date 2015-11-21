@@ -48,7 +48,7 @@
                         <div class="menu">
                             <?= $this->Ui->link(
                                 __('Edit'),
-                                ['action' => 'edit', $module->id],
+                                ['controller' => 'ModuleBuilder', 'action' => 'edit', $module->id],
                                 ['class' => 'item', 'icon' => 'edit']
                             ) ?>
                             <?= $this->Ui->postLink(

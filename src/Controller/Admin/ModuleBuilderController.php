@@ -10,6 +10,7 @@ use Cake\Core\Plugin;
 use Banana\Model\Table\ModulesTable;
 use Cake\Filesystem\Folder;
 use Banana\Model\Entity\Module;
+use Cake\Network\Exception\NotFoundException;
 
 /**
  * Class ModuleBuilderController
@@ -89,37 +90,44 @@ class ModuleBuilderController extends AppController
     }
 
 
-    public function build()
-    {
-        $class = $this->request->query('class');
 
-        $className = App::className($class, 'View/Module', 'Module');
-        if (!$class || !class_exists($className)) {
-            throw new Exception(sprintf("Module '%s' not found", $className));
+    public function build($id = null)
+    {
+        if (!$id) {
+            $class = $this->request->query('class');
+            $className = App::className($class, 'Model/Entity/Module', 'Module');
+
+            $this->Modules->entityClass($className);
+            $module = $this->Modules->newEntity();
+            $module->path = $class;
+        } else {
+            $module = $this->Modules->get($id);
+            $module = $this->Modules->modularize($module);
+            $class = $module->path;
+            $className = get_class($module);
         }
 
-        $module = new $className();
-
-        if ($this->request->is('post') || $this->request->is('put')) {
-
+        if (!$module) {
+            throw new NotFoundException('Module not found');
         }
 
-        $this->set('className', $className);
-        $this->set('module', $module);
-    }
-
-    public function view()
-    {
-        $class = $this->request->query('class');
-
-        $this->Modules->entityClass($class);
-        $module = $this->Modules->newEntity();
-
         if ($this->request->is('post') || $this->request->is('put')) {
-            $module->config($this->request->data());
+            $module->accessible('_save', true);
+            $module = $this->Modules->patchEntity($module, $this->request->data());
+            if ($module->_save == true && $module = $this->Modules->save($module)) {
+                $this->Flash->success(__('Module has been saved with ID {0}', $module->id));
+            } elseif ($module->_save == true) {
+                debug($module->errors());
+            }
         }
         $this->set('module', $module);
         $this->set('class', $class);
+        $this->set('className', $className);
         $this->set('data', $this->request->data());
+    }
+
+    public function edit($id = null)
+    {
+        $this->setAction('build', $id);
     }
 }

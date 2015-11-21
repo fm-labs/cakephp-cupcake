@@ -43,17 +43,14 @@ $this->assign('heading', __('Edit {0}', __('Post')));
                 echo $this->Form->input('title');
                 echo $this->Form->input('slug');
                 echo $this->Form->input('subheading');
-                echo $this->Form->input('teaser');
-                //echo $this->Form->input('body_html', ['class' => 'tinymce']);
+                echo $this->Form->input('teaser_html', ['type' => 'htmleditor']);
+                echo $this->Form->input('teaser_link_caption');
+                echo $this->Form->input('teaser_link_href');
+                echo $this->Form->input('body_html', ['type' => 'htmleditor']);
                 ?>
             </div>
 
-            <div class="ui divider"></div>
-            <h4 class="ui header">Contents</h4>
-            <?php echo $this->element(
-                'Banana.Admin/Content/list_content_modules_editable',
-                ['contentModules' => $content->content_modules]);
-            ?>
+
         </div>
         <div class="four wide column">
             <!--
@@ -63,23 +60,24 @@ $this->assign('heading', __('Edit {0}', __('Post')));
                 <?= $this->Form->button(__('Save Changes'), ['class' => 'ui positive fluid button']) ?>
             </div>
             <h5 class="ui attached header">Publish</h5>
-            <div class="ui attached secondary segment form">
+            <div class="ui attached segment form">
                 <?php
                 echo $this->Form->input('is_published');
-                echo $this->Form->input('publish_start_date');
-                echo $this->Form->input('publish_end_date');
+                echo $this->Form->input('publish_start_date', ['type' => 'datepicker']);
+                echo $this->Form->input('publish_end_date', ['type' => 'datepicker']);
                 ?>
             </div>
             <h5 class="ui attached header">Layout</h5>
-            <div class="ui attached secondary segment form">
+            <div class="ui attached segment form">
                 <?php
-                echo $this->Form->input('layout_template');
-                echo $this->Form->input('page_template');
+                echo $this->Form->input('template');
+                echo $this->Form->input('cssclass');
+                echo $this->Form->input('cssid');
                 ?>
             </div>
 
             <h5 class="ui attached header">Image</h5>
-            <div class="ui attached secondary segment form">
+            <div class="ui attached segment form">
                 <?php
                 if ($content->image_file) {
                     echo h($content->image_file) . '<br />';

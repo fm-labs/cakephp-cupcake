@@ -9,6 +9,7 @@
 namespace Banana\Controller\Admin;
 
 use Backend\Controller\Admin\AbstractBackendController;
+use Banana\Lib\Banana;
 use Cake\Core\Configure;
 use Cake\Core\Plugin;
 use Cake\Event\Event;
@@ -121,143 +122,35 @@ class AppController extends AbstractBackendController
         ];
     }
 
-
+    /**
+     * @deprecated
+     */
     protected function getModulesAvailable()
     {
-        $path = 'View' . DS . 'Module';
-        $availableModules = [];
-
-        $modulesLoader = function ($dir, $plugin = null) use (&$availableModules) {
-            $folder = new Folder($dir);
-            list($namespaces,) = $folder->read();
-
-            foreach ($namespaces as $ns) {
-                $folder->cd($dir . DS . $ns);
-                $widgets = $folder->findRecursive();
-                array_walk($widgets, function ($val) use ($plugin, $dir, &$availableModules) {
-                    $val = substr($val, strlen($dir . DS));
-                    if (preg_match('/^(.*)Module\.php$/', $val, $matches)) {
-                        $availableModules[] = ($plugin) ? $plugin . "." . $matches[1] : $matches[1];
-                    }
-                });
-            }
-        };
-
-        // load app modules
-        $modulesLoader(APP . $path, null);
-        // load modules from loaded plugins
-        foreach (Plugin::loaded() as $plugin) {
-            $_path = Plugin::path($plugin) . 'src' . DS . $path;
-            $modulesLoader($_path, $plugin);
-        }
-
-        return $availableModules;
+        return Banana::getModuleCellsAvailable();
     }
 
+    /**
+     * @deprecated
+     */
     protected function getModuleTemplatesAvailable()
     {
-        $path = 'Template' . DS . 'Module';
-        $availableModules = [];
-
-        $modulesLoader = function ($dir, $plugin = null) use (&$availableModules) {
-            $folder = new Folder($dir);
-            list($namespaces,) = $folder->read();
-
-            foreach ($namespaces as $ns) {
-                $folder->cd($dir . DS . $ns);
-                $widgets = $folder->findRecursive();
-                array_walk($widgets, function ($val) use ($plugin, $dir, &$availableModules) {
-                    $val = substr($val, strlen($dir . DS));
-                    if (preg_match('/^(.*)\.ctp$/', $val, $matches)) {
-                        $availableModules[] = ($plugin) ? $plugin . "." . $matches[1] : $matches[1];
-                    }
-                });
-            }
-        };
-
-        // load app modules
-        $modulesLoader(APP . $path, null);
-        // load modules from loaded plugins
-        foreach (Plugin::loaded() as $plugin) {
-            $_path = Plugin::path($plugin) . 'src' . DS . $path;
-            $modulesLoader($_path, $plugin);
-        }
-
-        return array_combine($availableModules, $availableModules);
+        return Banana::getModuleCellTemplatesAvailable();
     }
 
+    /**
+     * @deprecated
+     */
     protected function getLayoutsAvailable()
     {
-        $path = 'Template' . DS . 'Layout';
-        $availableLayouts = [];
-
-        $layoutLoader = function ($dir, $plugin = null) use (&$availableLayouts) {
-            $folder = new Folder($dir);
-            list(,$layouts) = $folder->read();
-            array_walk($layouts, function ($val) use ($plugin, $dir, &$availableLayouts) {
-                //$val = substr($val, strlen($dir . DS));
-                $val = basename($val, '.ctp');
-                if (preg_match('/^frontend(\_(.*))?$/', $val, $matches)) {
-
-                    $availableLayouts[] = ($plugin) ? $plugin . "." . $val : $val;
-                }
-            });
-
-
-            /*
-            list($namespaces,) = $folder->read();
-
-            foreach ($namespaces as $ns) {
-                $folder->cd($dir . DS . $ns);
-                $layouts = $folder->find();
-                debug($layouts);
-                array_walk($layouts, function ($val) use ($plugin, $dir, &$availableLayouts) {
-                    //$val = substr($val, strlen($dir . DS));
-                    if (preg_match('/^(.*)\.ctp$/', $val, $matches)) {
-                        $availableLayouts[] = ($plugin) ? $plugin . "." . $matches[1] : $matches[1];
-                    }
-                });
-            }
-            */
-        };
-
-        // load app modules
-        $layoutLoader(APP . $path, null);
-        // load modules from loaded plugins
-        foreach (Plugin::loaded() as $plugin) {
-            $_path = Plugin::path($plugin) . 'src' . DS . $path;
-            $layoutLoader($_path, $plugin);
-        }
-
-        $availableLayouts = array_combine($availableLayouts, $availableLayouts);
-        return $availableLayouts;
+        return Banana::getLayoutsAvailable();
     }
 
-    protected  function getThemesAvailable()
+    /**
+     * @deprecated
+     */
+    protected function getThemesAvailable()
     {
-        $availableThemes = [];
-
-        $themesLoader = function ($dir, $plugin = null) use (&$availableThemes) {
-            $folder = new Folder($dir);
-            list($themes,) = $folder->read();
-            array_walk($themes, function ($val) use ($plugin, $dir, &$availableThemes) {
-                //$val = substr($val, strlen($dir . DS));
-                //$val = basename($val, '.ctp');
-                if (preg_match('/^Theme(.*)$/', $val, $matches)) {
-                    $availableThemes[] = ($plugin) ? $plugin . "." . $val : $val;
-                }
-            });
-        };
-
-        // load app modules
-        $themesLoader(THEMES, null);
-        // load modules from loaded plugins
-        //foreach (Plugin::loaded() as $plugin) {
-        //    $_path = Plugin::path($plugin) . 'src' . DS . $path;
-        //    $themesLoader($_path, $plugin);
-        //}
-
-        $availableThemes = array_combine($availableThemes, $availableThemes);
-        return $availableThemes;
+        return Banana::getLayoutsAvailable();
     }
 }

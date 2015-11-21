@@ -19,5 +19,8 @@ class Module extends Entity
         'title' => true,
         'path' => true,
         'params' => true,
+        'params_arr' => true,
+        'template' => true, //@TODO add field in database
     ];
+
 }

@@ -22,6 +22,7 @@ abstract class FrontendController extends AppController
         parent::initialize();
         $this->loadComponent('Flash');
         $this->viewBuilder()->theme(Configure::read('Banana.frontend.theme'));
+        $this->viewBuilder()->layout('frontend');
     }
 
     public function beforeFilter(Event $event)

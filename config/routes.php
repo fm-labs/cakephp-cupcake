@@ -5,11 +5,11 @@ use Cake\Routing\Router;
 Router::plugin('Banana', function ($routes) {
     $routes->prefix('admin', function ($routes) {
         $routes->connect('/:controller');
-        $routes->fallbacks();
+        $routes->fallbacks('DashedRoute');
     });
 
     //$routes->connect('/:controller/sitemap.xml', ['action' => 'sitemap']);
-    $routes->fallbacks();
+    $routes->fallbacks('DashedRoute');
 });
 
 /*

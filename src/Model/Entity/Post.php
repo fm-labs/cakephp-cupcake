@@ -15,10 +15,11 @@ class Post extends Entity
      * @var array
      */
     protected $_accessible = [
+        '*' => true, //@todo Define accessible fields
         'title' => true,
         'slug' => true,
         'subheading' => true,
-        'teaser' => true,
+        'teaser_html' => true,
         'body_html' => true,
         'image_file' => true,
         'image_file_upload' => true,
@@ -27,12 +28,28 @@ class Post extends Entity
         'publish_end_datetime' => true,
     ];
 
+    /**
+     * @deprecated Use _getViewUrl() instead
+     */
     protected function _getUrl()
     {
-        return ['controller' => 'Posts', 'action' => 'view', 'id' => $this->id, 'slug' => $this->slug];
+        return $this->_getViewUrl();
     }
 
     protected function _getPermaUrl() {
         return '/?postid=' . $this->id;
+    }
+
+    protected function _getViewUrl()
+    {
+        return ['prefix' => false, 'plugin' => 'Banana', 'controller' => 'Posts', 'action' => 'view',  $this->id];
+    }
+
+    protected function _getTeaserLinkUrl()
+    {
+        #if (isset($this->_properties['teaser_link_href'])) {
+        #    return $this->_properties['teaser_link_href'];
+        #}
+        return $this->_getViewUrl();
     }
 }

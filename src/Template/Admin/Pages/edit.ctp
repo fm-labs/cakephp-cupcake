@@ -103,11 +103,11 @@ $this->assign('heading', __('Edit Page: {0}', $content->title));
                 <?= $this->Form->button(__('Save Changes'), ['class' => 'ui positive fluid button']) ?>
             </div>
             <h5 class="ui attached header">Publish</h5>
-            <div class="ui attached secondary segment form">
+            <div class="ui attached segment form">
                 <?php
                 echo $this->Form->input('is_published');
-                echo $this->Form->input('publish_start_date');
-                echo $this->Form->input('publish_end_date');
+                echo $this->Form->input('publish_start_date', ['type' => 'datepicker']);
+                echo $this->Form->input('publish_end_date', ['type' => 'datepicker']);
                 ?>
             </div>
             <h5 class="ui attached header">Structure</h5>
@@ -118,7 +118,7 @@ $this->assign('heading', __('Edit Page: {0}', $content->title));
                 ?>
             </div>
             <h5 class="ui attached header">Layout</h5>
-            <div class="ui attached secondary segment form">
+            <div class="ui attached segment form">
                 <?php
                 echo $this->Form->input('page_layout_id',
                     ['empty' => __('- Default Layout -'), 'options' => $pageLayouts]);
@@ -129,7 +129,9 @@ $this->assign('heading', __('Edit Page: {0}', $content->title));
                 ?>
                 <?php
                 echo $this->Form->input('page_template',
-                    ['empty' => __('- Default Template -'), 'options' => $pageTemplates]);
+                    ['type' => 'text']
+                    //['empty' => __('- Default Template -'), 'options' => $pageTemplates]
+                );
                 ?>
             </div>
         </div>

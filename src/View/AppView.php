@@ -13,5 +13,5 @@ use Banana\View\ModuleTrait;
 
 class AppView extends View
 {
-    use ModuleTrait;
+    //use ModuleTrait;
 }

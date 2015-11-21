@@ -12,6 +12,8 @@ use Cake\Network\Exception\NotFoundException;
 class ModulesController extends AppController
 {
 
+    public $modelClass = 'Banana.Modules';
+
     /**
      * Index method
      *
@@ -35,8 +37,19 @@ class ModulesController extends AppController
         $module = $this->Modules->get($id, [
             'contain' => []
         ]);
+
+        //$module = $this->Modules->find()->where(['id' => $id])->all();
+        //$module = $this->Modules->find('expanded')->where(['id' => $id])->first();
+
+        $module = $this->Modules->modularize($module);
+
         $this->set('module', $module);
         $this->set('_serialize', ['module']);
+    }
+
+    public function preview($id = null)
+    {
+        $this->redirect(['prefix' => false, 'plugin' => 'Banana', 'controller' => 'Modules', 'action' => 'view', $id]);
     }
 
     /**

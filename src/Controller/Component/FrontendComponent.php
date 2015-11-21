@@ -46,6 +46,7 @@ class FrontendComponent extends Component
 
     protected $_layout;
 
+    /*
     public function initialize(array $config)
     {
         $this->controller = $this->_registry->getController();
@@ -120,5 +121,6 @@ class FrontendComponent extends Component
 
         $this->request->params['page_id'] = $page->id;
     }
+    */
 
 }

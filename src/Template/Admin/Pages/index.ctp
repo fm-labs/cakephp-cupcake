@@ -29,6 +29,11 @@ $this->assign('heading', __('Pages'));
                             <i class="dropdown icon"></i>
                             <div class="menu">
                                 <?= $this->Ui->link(
+                                    __('Preview'),
+                                    ['action' => 'preview', $content->id],
+                                    ['class' => 'item', 'icon' => 'view']
+                                ) ?>
+                                <?= $this->Ui->link(
                                     __('Duplicate'),
                                     ['action' => 'duplicate', $content->id],
                                     ['class' => 'item', 'icon' => 'edit']

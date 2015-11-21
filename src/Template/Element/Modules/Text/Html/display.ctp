@@ -5,5 +5,4 @@
  * Simply outputs the html text
  */
 ?>
-<pre>Html Text:
-<?= $module->config('textHtml'); ?></pre>
+<?= $module->textHtml; ?>

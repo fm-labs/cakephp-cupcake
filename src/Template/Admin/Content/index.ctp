@@ -1,17 +1,5 @@
 <div class="contents form">
 
-    <!-- Toolbar
-    <div class="be-toolbar">
-        <?=
-        $this->element('Backend.Menu/menu', [
-            'menu' => $this->get('toolbarMenu'),
-            'class' => 'ui secondary pointing menu toolbar actions'
-        ]);
-        ?>
-    </div>
-    -->
-
-
     <!-- header -->
     <h2 class="ui header">
         <?= $this->fetch('heading', "Add / Edit Content"); ?>

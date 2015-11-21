@@ -48,8 +48,9 @@ class Page extends Entity
             'plugin' => 'Banana',
             'controller' => 'Pages',
             'action' => 'view',
-            'pageid' => $this->id,
-            'slug' => $this->slug
+            //'pageid' => $this->id,
+            //'slug' => $this->slug
+            $this->id
         ];
 
         switch ($this->type) {

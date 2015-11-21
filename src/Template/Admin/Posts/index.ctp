@@ -2,15 +2,7 @@
 <?php $this->extend('/Admin/Content/index'); ?>
 <?php
 // EXTEND: TOOLBAR
-$toolbarMenu = [
-    'new' => [
-        'title' => __('New {0}', __('Post')),
-        'url' => ['action' => 'add'],
-        'attr' => ['icon' => 'add']
-    ]
-];
-
-$this->set('toolbarMenu', $toolbarMenu);
+$this->Toolbar->addLink(__('New {0}', __('Post')), ['action' => 'add'], ['icon' => 'add']);
 
 // EXTEND: HEADING
 $this->assign('heading', __('Posts'));
@@ -32,13 +24,18 @@ $this->assign('heading', __('Posts'));
             <td><?= $this->Html->link($content->title, ['action' => 'edit', $content->id]) ?></td>
             <td><?= h($content->is_published) ?></td>
             <td class="actions">
-                <div class="ui basic small buttons">
+                <div class="ui basic tiny buttons">
                     <div class="ui button">
-                        <?= $this->Html->link(__('View'), ['action' => 'view', $content->id]) ?>
+                        <?= $this->Html->link(__('Preview'), ['action' => 'preview', $content->id], ['target' => 'preview']) ?>
                     </div>
                     <div class="ui floating dropdown icon button">
                         <i class="dropdown icon"></i>
                         <div class="menu">
+                            <?= $this->Ui->link(
+                                __('View'),
+                                ['action' => 'view', $content->id],
+                                ['class' => 'item', 'icon' => 'view']
+                            ) ?>
                             <?= $this->Ui->link(
                                 __('Edit'),
                                 ['action' => 'edit', $content->id],

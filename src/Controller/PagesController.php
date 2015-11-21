@@ -30,11 +30,12 @@ class PagesController extends FrontendController
 
     public $modelClass = 'Banana.Pages';
 
-    public $viewClass = 'Banana.Page';
+    public $viewClass = 'Banana.Frontend';
 
     public function beforeFilter(Event $event)
     {
         parent::beforeFilter($event);
+        $this->autoRender = false;
     }
 
     public function beforeRender(Event $event)
@@ -73,10 +74,13 @@ class PagesController extends FrontendController
      */
     public function view($id = null)
     {
-        $page = $this->Pages->get($id);
+        $page = $this->Pages->get($id, [
+            //'contain' => ['ContentModules' => ['Modules']]
+        ]);
         if (!$page) {
             throw new NotFoundException(__("Page {0} not found", strip_tags($id)));
         }
+        $this->set('page', $page);
 
         switch ($page->type) {
             case 'redirect':
@@ -94,22 +98,23 @@ class PagesController extends FrontendController
             case 'cell':
                 $cellName = $page->redirect_controller;
                 $this->setAction('cell', $cellName);
-                $this->Frontend->setPage($page);
+                //$this->Frontend->setPage($page);
                 break;
 
             case 'module':
                 $moduleName = $page->redirect_controller;
                 $this->setAction('module', $moduleName);
-                $this->Frontend->setPage($page);
+                //$this->Frontend->setPage($page);
                 break;
 
+            case 'static':
             case 'content':
             default:
-                $this->Frontend->setPage($page);
+                //$this->Frontend->setPage($page);
                 break;
         }
 
-
+        return $this->render($page->page_template);
     }
 
     /**
