@@ -126,8 +126,51 @@ class ModuleBuilderController extends AppController
         $this->set('data', $this->request->data());
     }
 
+
+    public function build2($id = null)
+    {
+        if (!$id) {
+            $class = $this->request->query('mod');
+
+            $module = $this->Modules->newEntity();
+            $module->path = $class;
+        } else {
+            $module = $this->Modules->get($id);
+            $class = $module->path;
+        }
+
+        if (!$module) {
+            throw new NotFoundException('Module not found');
+        }
+        if (!$module->path) {
+            throw new NotFoundException('Module path not set');
+        }
+
+        $class = $module->path;
+        $className = App::className($class, 'View/Cell', 'ModuleCell');
+
+        $formInputs = $className::inputs();
+        $formDefaults = $className::defaults();
+        $module->accessible(array_keys($formDefaults), true);
+        $module->accessible('_save', true);
+        $module->setDefaults($formDefaults);
+
+        if ($this->request->is('post') || $this->request->is('put')) {
+            $module = $this->Modules->patchEntity($module, $this->request->data());
+            if ($module->_save == true && $module = $this->Modules->save($module)) {
+                $this->Flash->success(__('Module has been saved with ID {0}', $module->id));
+            } elseif ($module->_save == true) {
+                debug($module->errors());
+            }
+        }
+        $this->set('module', $module);
+        $this->set('formInputs', $formInputs);
+        $this->set('data', $this->request->data());
+        $this->set('class', $class);
+    }
+
     public function edit($id = null)
     {
-        $this->setAction('build', $id);
+        $this->setAction('build2', $id);
     }
 }

@@ -15,6 +15,7 @@
             <tr>
                 <td><?= $this->Html->link($moduleClass, ['action' => 'build', 'class' => $moduleInfo['class']]); ?></td>
                 <td><?= $this->Html->link('Build', ['action' => 'build', 'class' => $moduleInfo['class']]); ?></td>
+                <td><?= $this->Html->link('Build2', ['action' => 'build2', 'mod' => $moduleInfo['class']]); ?></td>
                 <td><?= $this->Html->link('View (default)', ['action' => 'view', 'class' => $moduleInfo['class']]); ?></td>
             </tr>
         <?php endforeach; ?>

@@ -19,7 +19,7 @@ $this->assign('heading', __('Pages'));
                 <td><?= h($content->layout_template); ?></td>
                 <td><?= $this->Url->build($content->url); ?></td>
                 <td class="actions">
-                    <div class="ui basic small buttons">
+                    <div class="ui basic tiny buttons">
 
 
                         <div class="ui button">

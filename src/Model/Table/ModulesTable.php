@@ -67,8 +67,8 @@ class ModulesTable extends Table
     public function beforeMarshal(Event $event, \ArrayObject $data, \ArrayObject $options)
     {
         if (isset($data['path'])) {
-            $entityClass = self::moduleEntityClass($data['path']);
-            $this->entityClass($entityClass);
+            //$entityClass = self::moduleEntityClass($data['path']);
+            //$this->entityClass($entityClass);
         }
     }
 
