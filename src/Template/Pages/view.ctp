@@ -2,13 +2,19 @@
 $this->assign('title', $page->title);
 ?>
 <div class="page view">
-    <div class="page-debug">
+    <div class="debug">
         Page: <?= h($page->title); ?> [ID <?= h($page->id); ?>]<br />
         Type: <?= h($page->type); ?><br />
         Published: <?= h($page->is_published); ?><br />
     </div>
 
-    <div class="page-modules">
-        <?php echo $this->cell('Banana.PageModules', ['page' => $page->id]); ?>
+    <div class="modules">
+        <?php foreach ($page->content_modules as $contentModule): ?>
+        <?= $this->element('Banana.Content/content_module', ['contentModule' => $contentModule]); ?>
+        <?php endforeach; ?>
+    </div>
+
+    <div class="debug">
+        <?php debug($page); ?>
     </div>
 </div>

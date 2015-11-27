@@ -14,16 +14,15 @@ use Cake\View\Cell;
 use Banana\Model\Table\PagesTable;
 
 
-class FlexSliderCell extends Cell
+class FlexSliderModuleCell extends ModuleCell
 {
     public $modelClass = "Banana.Pages";
 
-    protected $params = [
-        'source' => 'folder', // folder|posts
+    public static $defaultParams = [
+        'source' => 'folder', // folder|images
+        'media_config' => '',
+        'media_folder' => '',
+        'media_images' => ''
     ];
 
-    public function display($params = [])
-    {
-        $params = array_merge($this->params, $params);
-    }
 }

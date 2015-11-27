@@ -75,7 +75,7 @@ class PagesController extends FrontendController
     public function view($id = null)
     {
         $page = $this->Pages->get($id, [
-            //'contain' => ['ContentModules' => ['Modules']]
+            'contain' => ['ContentModules' => ['Modules']]
         ]);
         if (!$page) {
             throw new NotFoundException(__("Page {0} not found", strip_tags($id)));

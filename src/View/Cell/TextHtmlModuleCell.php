@@ -14,19 +14,11 @@ use Cake\View\Cell;
 use Banana\Model\Table\PagesTable;
 
 
-class TextHtmlModuleCell extends Cell
+class TextHtmlModuleCell extends ModuleCell
 {
     public static $defaultParams = [
         'textHtml' => '<h1>Put your HTML here</h1>'
     ];
-
-    public function display($module = null)
-    {
-        $params = array_merge(static::$defaultParams, $module->params_arr);
-
-        $this->set($params);
-        $this->set('module', $module);
-    }
 
     public static function inputs()
     {

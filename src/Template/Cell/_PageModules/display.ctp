@@ -4,7 +4,7 @@
  *
  */
 ?>
-<?php foreach ($contentModules as $contentModule): ?>
+<?php foreach ($page->content_modules as $contentModule): ?>
     <?php
     /**
      * Kinda dirty workaround to inject custom module template from content module

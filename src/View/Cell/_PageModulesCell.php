@@ -32,15 +32,15 @@ class PageModulesCell extends Cell
             ->first();
 
 
+        /*
         $contentModules = [];
         $ModulesTable = TableRegistry::get('Banana.Modules');
         array_walk($page->content_modules, function ($contentModule) use (&$ModulesTable, &$contentModules) {
             $contentModule->module = $ModulesTable->modularize($contentModule->module);
             $contentModules[] = $contentModule;
         });
+        */
 
         $this->set('page', $page);
-        $this->set('contentModules', $contentModules);
-        $this->set('title', $page->title);
     }
 }
