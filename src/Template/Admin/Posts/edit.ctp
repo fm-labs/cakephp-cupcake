@@ -3,35 +3,18 @@
 <?php $this->extend('/Admin/Content/edit'); ?>
 <?php
 // TOOLBAR
-$toolbarMenu = [
-    'delete' => [
-        'title' => __('Delete'),
-        'url' => ['action' => 'delete', $content->id],
-        'attr' => ['icon' => 'remove', 'confirm' => __('Are you sure you want to delete # {0}?', $content->id)],
-        '_children' => [],
-    ],
-    'list' => [
-        'title' => __('List {0}', __('Posts')),
-        'url' => ['action' => 'index'],
-        'attr' => ['icon' => 'list']
-    ],
-    'add' => [
-        'title' => __('Add'),
-        'url' => false,
-        'attr' => [],
 
-        '_children' => [
-            [
-                'title' => __('New {0}', __('Content Module')),
-                'url' => ['action' => 'add_module'],
-                'attr' => ['icon' => 'add']
-            ]
-        ]
+$this->Toolbar->addPostLink([
+    'title' => __('Delete'),
+    'url' => ['action' => 'delete', $content->id],
+    'attr' => ['icon' => 'remove', 'confirm' => __('Are you sure you want to delete # {0}?', $content->id)],
+]);
+$this->Toolbar->addLink([
+    'title' => __('List {0}', __('Posts')),
+    'url' => ['action' => 'index'],
+    'attr' => ['icon' => 'list']
+]);
 
-    ]
-];
-
-$this->set('toolbarMenu', $toolbarMenu);
 $this->assign('heading', __('Edit {0}', __('Post')));
 ?>
 <div class="posts">
@@ -43,10 +26,16 @@ $this->assign('heading', __('Edit {0}', __('Post')));
                 echo $this->Form->input('title');
                 echo $this->Form->input('slug');
                 echo $this->Form->input('subheading');
-                echo $this->Form->input('teaser_html', ['type' => 'htmleditor']);
+                echo $this->Form->input('teaser_html', ['type' => 'htmltext']);
                 echo $this->Form->input('teaser_link_caption');
                 echo $this->Form->input('teaser_link_href');
-                echo $this->Form->input('body_html', ['type' => 'htmleditor']);
+                echo $this->Form->input('body_html', [
+                    'type' => 'htmleditor',
+                    'editor' => [
+                        'image_list_url' => ['controller' => 'Data', 'action' => 'editorImageList'],
+                        'link_list_url' => ['controller' => 'Data', 'action' => 'editorLinkList'],
+                    ]
+                ]);
                 ?>
             </div>
 

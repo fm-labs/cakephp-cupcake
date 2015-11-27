@@ -5,6 +5,7 @@
         <?= $this->fetch('heading', "Edit Content"); ?>
     </h2>
 
+
     <!-- content -->
     <?= $this->fetch('content'); ?>
 

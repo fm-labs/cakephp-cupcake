@@ -16,7 +16,7 @@ use Cake\View\View;
  *
  * @package App\View
  */
-class FrontendView extends AppView
+class FrontendView extends View
 {
     //use ModuleTrait;
 

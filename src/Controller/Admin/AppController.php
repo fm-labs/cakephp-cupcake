@@ -17,7 +17,7 @@ use Cake\Filesystem\Folder;
 
 class AppController extends AbstractBackendController
 {
-    //public $viewClass = "Banana.Banana";
+    public $viewClass = "Banana.Backend";
 
     public function beforeFilter(Event $event)
     {
@@ -36,7 +36,7 @@ class AppController extends AbstractBackendController
     protected function _getGalleryList()
     {
         $list = [];
-        $mm = MediaManager::create('gallery');
+        $mm = MediaManager::get('gallery');
         $list = $mm->getSelectListRecursive();
         return $list;
     }

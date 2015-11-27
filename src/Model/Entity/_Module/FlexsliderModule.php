@@ -60,7 +60,7 @@ class FlexsliderModule extends BaseModule
                 if (!$this->media_config) {
                     throw new \InvalidArgumentException('Flexslider: Source folder path not specified');
                 }
-                $mm = MediaManager::create($this->media_config);
+                $mm = MediaManager::get($this->media_config);
                 $mm->open($this->media_folder);
 
                 $images = $mm->listFileUrls();

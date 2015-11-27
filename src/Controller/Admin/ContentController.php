@@ -60,7 +60,7 @@ abstract class ContentController extends AppController
             $content = $this->model()->patchEntity($content, $this->request->data);
             if ($this->model()->save($content)) {
                 $this->Flash->success(__('The {0} has been saved.', __('content')));
-                return $this->redirect(['action' => 'edit', $content->id]);
+                //return $this->redirect(['action' => 'edit', $content->id]);
             } else {
                 $this->Flash->error(__('The {0} could not be saved. Please, try again.', __('content')));
             }

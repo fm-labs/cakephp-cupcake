@@ -5,7 +5,7 @@
         <?=
         $this->element('Backend.Menu/menu', [
             'menu' => $this->get('toolbarMenu'),
-            'class' => 'ui secondary pointing menu toolbar actions'
+            'class' => 'ui pointing menu toolbar actions'
         ]);
         ?>
     </div>
