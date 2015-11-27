@@ -43,7 +43,8 @@ class PostsViewModuleCell extends ModuleCell
             $Posts = TableRegistry::get('Banana.Posts');
             $post = $Posts->find()
                 ->where(['id' => $postId])
-                ->contain(['ContentModules' => ['Modules']])
+                //->contain(['ContentModules' => ['Modules']])
+                ->contain([])
                 ->first();
             $this->set('post', $post);
         }
