@@ -9,7 +9,7 @@ $this->assign('title', $page->title);
     </div>
 
     <div class="modules">
-        <?php foreach ($page->content_modules as $contentModule): ?>
+        <?php foreach ($contentModules as $contentModule): ?>
         <?= $this->element('Banana.Content/content_module', ['contentModule' => $contentModule]); ?>
         <?php endforeach; ?>
     </div>

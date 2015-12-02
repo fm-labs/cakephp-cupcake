@@ -59,25 +59,24 @@ $this->assign('heading', __('Edit Page: {0}', $content->title));
             </div>
             <div class="ui divider"></div>
 
-            <div class="select-type select-type-content">
-                <h4 class="ui header">Contents</h4>
-                <?php echo $this->element(
-                    'Banana.Admin/Content/list_content_modules_editable',
-                    ['contentModules' => $content->content_modules, 'section' => '']);
-                ?>
-            </div>
-
-            <div>
-                <div class="ui divider"></div>
+            <div class="content-modules">
+                <div class="ui top attached tabular menu">
+                    <?php foreach($sections as $section): ?>
+                        <a class="item" data-tab="tab-<?= $section ?>"><?= \Cake\Utility\Inflector::humanize($section); ?></a>
+                    <?php endforeach; ?>
+                </div>
                 <?php foreach($sections as $section): ?>
-                    <h4 class="ui header">Section: <?= h($section); ?></h4>
-                    <?php echo $this->element(
-                        'Banana.Admin/Content/list_content_modules_editable',
-                        ['contentModules' => $content->content_modules, 'section' => $section]);
-                    ?>
-
+                    <div class="ui bottom attached tab segment" data-tab="tab-<?= $section; ?>">
+                        <?php echo $this->element(
+                            'Banana.Admin/Content/list_content_modules_editable',
+                            ['contentModules' => $content->content_modules, 'section' => $section]);
+                        ?>
+                    </div>
                 <?php endforeach; ?>
             </div>
+
+
+
 
             <div class="">
                 <ul>
@@ -137,11 +136,54 @@ $this->assign('heading', __('Edit Page: {0}', $content->title));
         </div>
     </div>
     <?= $this->Form->end() ?>
+
+    <hr />
+    <h4>Add a new module</h4>
+    <?= $this->Html->link('Add a new module to this page', [
+        'action' => 'createContentModule',
+        'refscope' => 'Banana.Pages',
+        'refid' => $content->id
+    ], ['class' => 'ui button']); ?>
+
+    <?= $this->Html->link('Build a new module to this page', [
+        'controller' => 'ModuleBuilder',
+        'action' => 'build2',
+        'refscope' => 'Banana.Pages',
+        'refid' => $content->id
+    ], ['class' => 'ui button', 'target' => '_blank']); ?>
+
+    <?= $this->Html->link('Create a post for this page', [
+        'action' => 'addPost', $content->id
+    ], ['class' => 'ui button', 'target' => '_blank']); ?>
+
+    <hr />
+    <h4>Add existing module</h4>
+    <?= $this->Html->link('Link existing module to this page', [
+        'action' => 'addContentModule',
+        'refscope' => 'Banana.Pages',
+        'refid' => $content->id
+    ], ['class' => 'ui button']); ?>
+    <div class="ui form">
+        <?= $this->Form->create(null, ['url' => ['action' => 'addContentModule', $content->id]]); ?>
+        <?= $this->Form->input('id'); ?>
+        <?= $this->Form->input('refscope', ['value' => 'Banana.Pages']); ?>
+        <?= $this->Form->input('refid', ['value' => $content->id]); ?>
+        <?= $this->Form->input('module_id', ['options' => $availableModules]); ?>
+        <?= $this->Form->input('section', ['options' => $sections]); ?>
+        <?= $this->Form->submit('Add content module'); ?>
+        <?= $this->Form->end(); ?>
+    </div>
 </div>
 
 <?php $this->append('scriptBottom'); ?>
     <script>
         $(document).ready(function() {
+
+            //$('.content-modules .menu .item:first-child').addClass('active');
+            //$('.content-modules .tab:first-child').addClass('active');
+            $('.content-modules .menu .item').tab();
+            $('.content-modules .menu .item:first-child').trigger('click');
+
             $('.select-type').hide();
             $('#select-type').change(function() {
                 var type = $(this).val();

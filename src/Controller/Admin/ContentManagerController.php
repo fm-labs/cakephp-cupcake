@@ -19,7 +19,20 @@ class ContentManagerController extends AppController
 
     public function index()
     {
-        $this->set('tabs', $this->tabs);
+        $this->paginate = [
+            'contain' => ['ParentPages'],
+            'order' => ['Pages.lft ASC']
+        ];
+
+        $this->loadModel('Banana.Pages');
+        $pagesTree = $this->Pages->find('treeList')->toArray();
+        $this->set('pagesTree', $pagesTree);
+
+        $this->set('contents', $this->paginate($this->Pages));
+        $this->set('_serialize', ['contents']);
+
+        //$this->set('tabs', $this->tabs);
+
     }
 
     public function tab($id = null)

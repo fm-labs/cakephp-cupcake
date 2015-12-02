@@ -69,21 +69,30 @@ $this->assign('heading', __('Edit {0}', __('Post')));
             <div class="ui attached segment form">
                 <?php
                 if ($content->image_file) {
-                    echo h($content->image_file) . '<br />';
-                    echo $this->Html->image($content->image_file->url, ['width' => 200]);
+                    echo $this->Html->image($content->image_file->url, ['width' => 200]) . '<br />';
+                    echo h($content->image_file->basename) . '<br />';
                 }
-                //echo $this->Form->input('image_file');
+                /*
+                echo $this->Form->input('image_file', [
+                    'type' => 'imageselect',
+                    'options' => $imageFiles
+                ]);
+                */
+                ?>
+
+
+                <?php
                 echo $this->Html->link(
-                    __('Change image'),
+                    __('Set Image'),
                     [
-                        'controller' => 'Attachments',
-                        'action' => 'select',
-                        'refmodel' => 'Banana.Posts',
-                        'refid' => $content->id,
-                        'scope' => 'image'
+                        'action' => 'setImage',
+                        $content->id,
+                        'scope' => 'image',
+                        'iframe' => true,
                     ],
                     [
-                        'class' => 'modal attachment-select'
+                        'class' => '',
+                        'id' => 'set-image'
                     ]
                 );
                 ?>
@@ -92,26 +101,52 @@ $this->assign('heading', __('Edit {0}', __('Post')));
     </div>
     <?= $this->Form->end() ?>
 
-    <div class="ui hidden divider"></div>
-    <div class="upload form">
-        <h4 class="ui top attached header">Primary Image</h4>
-        <div class="ui attached segment">
-            <?= $this->Form->create($content, ['type' => 'file']); ?>
-            <?php
-
-            if ($content->image_file) {
-                echo h($content->image_file) . '<br />';
-                echo $this->Html->image($content->image_file->url, ['width' => 200]);
-            }
-            echo $this->Form->input('image_file_upload', ['type' => 'file', 'label' => false]);
-
-            //$this->Form->addWidget('upload', ['Banana\\View\\Widget\\UploadWidget', 'html', 'form']);
-            //echo $this->Form->input('image_upload', ['type' => 'upload']);
-            ?>
-            <?= $this->Form->button(__('Upload image')) ?>
-            <?= $this->Form->end() ?>
-        </div>
-    </div>
-
 
 </div>
+
+<div class="ui modal" id="imagepicker-modal">
+    <i class="close icon"></i>
+    <div class="header">
+        Select image
+    </div>
+    <div class="content" style="overflow: scroll; max-height: 500px;">
+    </div>
+    <div class="actions">
+        <div class="ui black deny button">
+            <?= __('Cancel'); ?>
+        </div>
+        <div class="ui approve button">
+            <?= __('Ok'); ?>
+        </div>
+    </div>
+</div>
+
+<?php $this->append('scriptBottom'); ?>
+<script>
+    /*
+    $('#set-image').click(function (e) {
+        e.preventDefault();
+        $('#imagepicker-modal .content')
+            .html(
+                $('<iframe>', { src: $(this).attr('href'), id: 'imagepicker-iframe' })
+            );
+
+        $('#imagepicker-modal')
+            .modal({
+                closable: false,
+                onVisible: function() {
+                    $('#imagepicker-iframe').height('500px').width($('#imagepicker-modal').width());
+                },
+                onDeny: function() {
+                    console.log("denied");
+                },
+                onApprove: function(el) {
+                    console.log("approved");
+                }
+            })
+            .modal('show')
+        ;
+    });
+    */
+</script>
+<?php $this->end(); ?>

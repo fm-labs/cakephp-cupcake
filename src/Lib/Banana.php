@@ -98,6 +98,7 @@ class Banana
         return Configure::read('Banana.modules');
     }
 
+
     /**
      * @return array
      * @todo Refactor for module elements instead of module cells
@@ -239,6 +240,15 @@ class Banana
 
         $availableThemes = array_combine($availableThemes, $availableThemes);
         return $availableThemes;
+    }
+
+    public static function listContentSections()
+    {
+        return [
+            'main' => 'Main',
+            'top' => 'Top',
+            'bottom' => 'Bottom',
+        ];
     }
 
 }

@@ -14,7 +14,8 @@ use Cake\ORM\TableRegistry;
 class PostsViewModuleCell extends ModuleCell
 {
     public static $defaultParams = [
-        'post_id' => null
+        'post_id' => null,
+        'show_teaser' => false,
     ];
 
     public static function inputs()
@@ -23,7 +24,8 @@ class PostsViewModuleCell extends ModuleCell
         $posts = $Posts->find('list');
 
         return [
-            'post_id' => ['type' => 'select', 'options' => $posts]
+            'post_id' => ['type' => 'select', 'options' => $posts],
+            'show_teaser' => ['type' => 'checkbox']
         ];
     }
 

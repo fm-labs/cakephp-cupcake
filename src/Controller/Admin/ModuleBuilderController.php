@@ -25,6 +25,12 @@ class ModuleBuilderController extends AppController
     public function index()
     {
         $this->set('modulesAvailable', $this->getModulesAvailable());
+
+        $refscope = $this->request->query('refscope');
+        $refid = $this->request->query('refid');
+
+        $this->set('refscope', $this->request->query('refscope'));
+        $this->set('refid', $this->request->query('refid'));
     }
 
     public function create()
@@ -129,25 +135,30 @@ class ModuleBuilderController extends AppController
 
     public function build2($id = null)
     {
+        $refscope = $this->request->query('refscope');
+        $refid = $this->request->query('refid');
+        $class = $this->request->query('path');
+        $section = $this->request->query('section');
+
         if (!$id) {
-            $class = $this->request->query('mod');
+            $className = App::className($class, 'View/Cell', 'ModuleCell');
 
             $module = $this->Modules->newEntity();
             $module->path = $class;
         } else {
             $module = $this->Modules->get($id);
-            $class = $module->path;
+            $className = App::className($module->path, 'View/Cell', 'ModuleCell');
         }
+
 
         if (!$module) {
             throw new NotFoundException('Module not found');
         }
-        if (!$module->path) {
-            throw new NotFoundException('Module path not set');
-        }
 
-        $class = $module->path;
-        $className = App::className($class, 'View/Cell', 'ModuleCell');
+        if (!$className) {
+            $this->Flash->error('Module class path not set or not set');
+            return $this->redirect(['action' => 'index', 'refscope' => $refscope, 'refid' => $refid]);
+        }
 
         $formInputs = $className::inputs();
         $formDefaults = $className::defaults();
@@ -159,14 +170,43 @@ class ModuleBuilderController extends AppController
             $module = $this->Modules->patchEntity($module, $this->request->data());
             if ($module->_save == true && $module = $this->Modules->save($module)) {
                 $this->Flash->success(__('Module has been saved with ID {0}', $module->id));
+
+                if ($refscope && $refid) {
+                    $this->loadModel('Banana.ContentModules');
+                    $contentModule = $this->ContentModules->newEntity();
+                    $contentModule->refscope = $refscope;
+                    $contentModule->refid = $refid;
+                    $contentModule->module_id = $module->id;
+                    $contentModule->section = ($section) ?: 'main';
+
+                    if ($contentModule = $this->ContentModules->save($contentModule)) {
+                        $this->Flash->success(__('Module has been saved with ID {0} and linked to content {1} #{2} with ID {3}',
+                            $module->id,
+                            $refscope,
+                            $refid,
+                            $contentModule->id
+                        ));
+                    } else {
+                        $this->Flash->error(__('Module has been saved with ID {0} but not linked to content {1}',
+                            $module->id,
+                            $class
+                        ));
+                    }
+                }
+
             } elseif ($module->_save == true) {
                 debug($module->errors());
             }
         }
+
+        $this->set('class', $class);
+        $this->set('refscope', $this->request->query('refscope'));
+        $this->set('refid', $this->request->query('refid'));
+        $this->set('section', $section);
+
         $this->set('module', $module);
         $this->set('formInputs', $formInputs);
         $this->set('data', $this->request->data());
-        $this->set('class', $class);
     }
 
     public function edit($id = null)

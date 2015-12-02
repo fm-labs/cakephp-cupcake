@@ -21,5 +21,8 @@ class ContentModule extends Entity
         'section' => true,
         'module' => true,
         'template' => true,
+        'cssid' => true,
+        'cssclass' => true,
+        'priority' => true,
     ];
 }

@@ -5,8 +5,11 @@ use Banana\Form\ModuleParamsForm;
 use Banana\View\ViewModule;
 use Cake\Core\Exception\Exception;
 use Cake\Event\Event;
+use Cake\Form\Form;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\Table;
+use Banana\Lib\Banana;
+use Media\Lib\Media\MediaManager;
 
 abstract class ContentController extends AppController
 {
@@ -65,6 +68,11 @@ abstract class ContentController extends AppController
                 $this->Flash->error(__('The {0} could not be saved. Please, try again.', __('content')));
             }
         }
+
+
+        $mm = MediaManager::get('default');
+        $this->set('image_files', $mm->getSelectListRecursive());
+
         $this->set(compact('content'));
         $this->set('_serialize', ['content']);
     }
@@ -197,13 +205,26 @@ abstract class ContentController extends AppController
         $this->set('_serialize', ['content', 'module']);
     }
 
-    public function add_content_module()
+    public function addPost($contentId = null)
     {
-        $contentId = $this->request->query('content_id');
-        $modulePath = $this->request->query('module');
+        $this->redirect([
+            'controller' => 'Posts',
+            'action' => 'add',
+            'refscope' => 'Banana.Pages',
+            'refid' => $contentId,
+            'link' => true
+        ]);
+    }
+
+
+    public function addContentModule($contentId = null)
+    {
+        if (!$contentId) {
+            $contentId = $this->request->query('content_id');
+        }
+
         $isAjax = ($this->request->query('ajax') || $this->request->is('ajax'));
         $isIframe = $this->request->query('iframe');
-        $section = $this->request->query('section');
 
         if ($isIframe || $isAjax) {
             $this->layout = "iframe_module";
@@ -214,21 +235,39 @@ abstract class ContentController extends AppController
             throw new NotFoundException("Page with ID %s not found", $contentId);
         }
 
-        $class = ViewModule::className($modulePath);
-        if (!$class || !class_exists($class)) {
-            throw new Exception(sprintf("Module class '%s' not found", $class));
+        $this->loadModel('Banana.ContentModules');
+        $contentModule = $this->ContentModules->newEntity();
+
+
+        if ($this->request->is('post')) {
+            $contentModule = $this->ContentModules->patchEntity($contentModule, $this->request->data);
+            debug($contentModule);
+            if ($this->ContentModules->save($contentModule)) {
+                $this->Flash->success(__('Module {0} has been added to Content with ID {1}', $contentModule->module, $contentModule->refid));
+                //$this->redirect(['action' => 'edit', $content->id]);
+            } else {
+                debug($contentModule->errors());
+                $this->Flash->error('Ups. Something went wrong while creating the content module.');
+            }
+        } else {
+            $contentModule->refid = ($contentModule->refid) ?: $contentId;
         }
 
-        $moduleClass = $class;
-        $moduleSchema = $class::schema();
-        $moduleFormInputs = $class::inputs();
-        $moduleParams = [];
+        $this->set('availableModules', $this->ContentModules->Modules->find('list'));
+        $this->set('sections', Banana::listContentSections());
 
-        $form = new ModuleParamsForm();
-        $form->schema($moduleSchema);
+        $this->set('contentModule', $contentModule);
+    }
 
-        $this->loadModel('Banana.Modules');
+    public function createModule($contentId)
+    {
+        $content = $this->model()->get($contentId);
+
+        $form = new Form();
+
         $module = $this->Modules->newEntity();
+        $modulePath = 'Banana.Text/Html';
+        $moduleParams = [];
 
         if ($this->request->is('post')) {
             // verify module params form
@@ -237,11 +276,11 @@ abstract class ContentController extends AppController
                 // now create content module
                 $moduleParams = $this->request->data();
                 $module = $this->Modules->patchEntity($module, [
-                    'name' => sprintf('contents.%s.%s', $content->id, uniqid()),
+                    'name' => sprintf('Module for Content %s [%s]', $content->id, uniqid()),
                     'path' => $modulePath,
                     'params' => json_encode($moduleParams),
                 ]);
-
+                /*
                 $contentModule = $this->model()->ContentModules->newEntity();
                 $contentModule->refscope = $this->modelClass;
                 $contentModule->refid = $contentId;
@@ -255,6 +294,7 @@ abstract class ContentController extends AppController
                 } else {
                     $this->Flash->error('Ups. Something went wrong while creating the content module.');
                 }
+                */
 
             } else {
                 $this->Flash->error('Please check your module params.');
@@ -262,23 +302,7 @@ abstract class ContentController extends AppController
         } else {
             $this->request->data = $moduleParams;
         }
-
-        if ($isAjax) {
-            $this->layout = "Banana.ajax";
-        }
-
-        $this->set('moduleClass', $moduleClass);
-        $this->set('modulePath', $modulePath);
-        $this->set('moduleParams', $moduleParams);
-        $this->set('moduleSchema', $moduleSchema);
-        $this->set('moduleForm', $form);
-        $this->set('moduleFormInputs', $moduleFormInputs);
-        $this->set('section', $section);
-
-        $this->set('content', $content);
-        $this->set('module', $module);
     }
-    
 
     /**
      * Subclasses can override this method and return the primary model used in the controller

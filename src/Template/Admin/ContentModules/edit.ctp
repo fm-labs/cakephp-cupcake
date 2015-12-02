@@ -51,6 +51,9 @@
                 echo $this->Form->input('template');
                 echo $this->Form->input('module_id', ['options' => $modules]);
                 echo $this->Form->input('section');
+                echo $this->Form->input('cssid');
+                echo $this->Form->input('cssclass');
+                echo $this->Form->input('priority');
         ?>
         </div>
     </div>

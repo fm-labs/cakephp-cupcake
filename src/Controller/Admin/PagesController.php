@@ -89,15 +89,18 @@ class PagesController extends ContentController
         }
 
         //@TODO Read custom sections from page layout
-        $sections = ['top', 'bottom', 'before'];
+        $sections = ['main', 'top', 'bottom', 'before'];
         $sections = array_combine($sections, $sections);
         $this->set('sections', $sections);
 
         $pagesTree = $this->Pages->find('treeList')->toArray();
         $this->set('pagesTree', $pagesTree);
 
-        $sectionsModules = $this->Pages->ContentModules->find()->where(['refscope' => 'Banana.Pages', 'refid' => $id]);
+        //$sectionsModules = $this->Pages->ContentModules->find()->where(['refscope' => 'Banana.Pages', 'refid' => $id]);
         //debug($sectionsModules);
+
+        $availableModules = $this->Pages->ContentModules->Modules->find('list');
+        $this->set('availableModules', $availableModules);
 
         $this->set('types', Banana::getAvailablePageTypes());
         $this->set('pageLayouts', Banana::getAvailablePageLayouts());

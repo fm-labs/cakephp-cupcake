@@ -26,7 +26,7 @@ class PostsController extends FrontendController
         $this->set('_serialize', ['posts']);
     }
 
-    /**d-not-a-lot-of-text-in-it-as-its-intended-to-check-a-lenghty-title/2
+    /**
      * View method
      *
      * @param string|null $id Post id.
@@ -39,14 +39,34 @@ class PostsController extends FrontendController
             $id = $this->request->query('id');
         }
         $post = $this->Posts->get($id, [
-            'contain' => ['ContentModules' => ['Modules']]
         ]);
+
         $this->set('post', $post);
         $this->set('_serialize', ['post']);
 
-        debug($post->template);
-
         $this->render($post->template);
+    }
+
+    /**
+     * View method
+     *
+     * @param string|null $id Post id.
+     * @return void
+     * @throws \Cake\Network\Exception\NotFoundException When record not found.
+     */
+    public function teaser($id = null)
+    {
+        if ($id === null && $this->request->query('id')) {
+            $id = $this->request->query('id');
+        }
+        $post = $this->Posts->get($id, [
+            'contain' => []
+        ]);
+
+        $this->set('post', $post);
+        $this->set('_serialize', ['post']);
+
+        $this->render();
     }
 
     public function sitemap()

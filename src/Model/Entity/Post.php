@@ -52,4 +52,21 @@ class Post extends Entity
         #}
         return $this->_getViewUrl();
     }
+
+
+    protected function _getRealTeaserLinkCaption()
+    {
+        if (!empty($this->_properties['teaser_link_caption'])) {
+            return $this->_properties['teaser_link_caption'];
+        }
+        return __('Continue');
+    }
+
+    protected function _getRealTeaserLinkHref()
+    {
+        if (!empty($this->_properties['teaser_link_href'])) {
+            return $this->_properties['teaser_link_href'];
+        }
+        return $this->viewUrl;
+    }
 }

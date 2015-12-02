@@ -22,6 +22,10 @@ abstract class ModuleCell extends Cell
 
     public static function inputs()
     {
-        return array_keys(static::$defaultParams);
+        $inputs = [];
+        array_walk(static::$defaultParams, function ($val, $idx) use (&$inputs) {
+            $inputs[$idx] = ['default' => $val];
+        });
+        return $inputs;
     }
 }

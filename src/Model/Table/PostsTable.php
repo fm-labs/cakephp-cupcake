@@ -35,6 +35,18 @@ class PostsTable extends Table
             'concat' => 'body_html'
         ]);
 
+
+        if (Plugin::loaded('Media')) {
+            $this->addBehavior('Media.Media', [
+                'fields' => [
+                    'image_file'
+                ]
+            ]);
+        } else {
+            Log::warning('Attachment plugin is not loaded');
+        }
+
+        /*
         if (Plugin::loaded('Attachment')) {
             $this->addBehavior('Attachment.Attachment', [
                 'dataDir' => WWW_ROOT . 'attachments' . DS . 'posts' . DS,
@@ -46,6 +58,7 @@ class PostsTable extends Table
         } else {
             Log::warning('Attachment plugin is not loaded');
         }
+        */
     }
 
     /**

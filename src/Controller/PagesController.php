@@ -75,12 +75,19 @@ class PagesController extends FrontendController
     public function view($id = null)
     {
         $page = $this->Pages->get($id, [
-            'contain' => ['ContentModules' => ['Modules']]
+            'contain' => []
         ]);
+
         if (!$page) {
             throw new NotFoundException(__("Page {0} not found", strip_tags($id)));
         }
-        $this->set('page', $page);
+
+        $contentModules = $this->Pages->ContentModules
+            ->find()
+            ->order(['ContentModules.priority' => 'DESC'])
+            ->where(['ContentModules.refid' => $page->id, 'ContentModules.refscope' => 'Banana.Pages'])
+            ->contain(['Modules'])
+            ->all();
 
         switch ($page->type) {
             case 'redirect':
@@ -113,6 +120,9 @@ class PagesController extends FrontendController
                 //$this->Frontend->setPage($page);
                 break;
         }
+
+        $this->set('contentModules', $contentModules);
+        $this->set('page', $page);
 
         return $this->render($page->page_template);
     }
