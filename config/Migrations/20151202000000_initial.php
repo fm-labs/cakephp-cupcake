@@ -1,10 +1,11 @@
 <?php
-use Phinx\Migration\AbstractMigration;
+use Migrations\AbstractMigration;
 
 class Initial extends AbstractMigration
 {
     public function up()
     {
+
         $table = $this->table('bc_content_modules');
         $table
             ->addColumn('refscope', 'string', [
@@ -32,7 +33,23 @@ class Initial extends AbstractMigration
                 'limit' => 255,
                 'null' => true,
             ])
+            ->addColumn('priority', 'integer', [
+                'default' => 0,
+                'limit' => 11,
+                'null' => true,
+            ])
+            ->addColumn('cssclass', 'string', [
+                'default' => null,
+                'limit' => 255,
+                'null' => true,
+            ])
+            ->addColumn('cssid', 'string', [
+                'default' => null,
+                'limit' => 255,
+                'null' => true,
+            ])
             ->create();
+
         $table = $this->table('bc_modules');
         $table
             ->addColumn('name', 'string', [
@@ -62,6 +79,31 @@ class Initial extends AbstractMigration
                 ['unique' => true]
             )
             ->create();
+
+        $table = $this->table('bc_page_layouts');
+        $table
+            ->addColumn('name', 'string', [
+                'default' => null,
+                'limit' => 255,
+                'null' => false,
+            ])
+            ->addColumn('template', 'string', [
+                'default' => null,
+                'limit' => 255,
+                'null' => true,
+            ])
+            ->addColumn('sections', 'text', [
+                'default' => null,
+                'limit' => null,
+                'null' => true,
+            ])
+            ->addColumn('is_default', 'boolean', [
+                'default' => 0,
+                'limit' => null,
+                'null' => true,
+            ])
+            ->create();
+
         $table = $this->table('bc_pages');
         $table
             ->addColumn('lft', 'integer', [
@@ -114,9 +156,9 @@ class Initial extends AbstractMigration
                 'limit' => 10,
                 'null' => true,
             ])
-            ->addColumn('layout_template', 'string', [
+            ->addColumn('page_layout_id', 'integer', [
                 'default' => null,
-                'limit' => 255,
+                'limit' => 10,
                 'null' => true,
             ])
             ->addColumn('page_template', 'string', [
@@ -156,8 +198,29 @@ class Initial extends AbstractMigration
                 ['unique' => true]
             )
             ->create();
+
         $table = $this->table('bc_posts');
         $table
+            ->addColumn('refscope', 'string', [
+                'default' => null,
+                'limit' => 45,
+                'null' => true,
+            ])
+            ->addColumn('refid', 'string', [
+                'default' => null,
+                'limit' => 45,
+                'null' => true,
+            ])
+            ->addColumn('parent_id', 'string', [
+                'default' => null,
+                'limit' => 45,
+                'null' => true,
+            ])
+            ->addColumn('type', 'integer', [
+                'default' => null,
+                'limit' => 4,
+                'null' => true,
+            ])
             ->addColumn('title', 'string', [
                 'default' => null,
                 'limit' => 255,
@@ -173,9 +236,24 @@ class Initial extends AbstractMigration
                 'limit' => 255,
                 'null' => true,
             ])
-            ->addColumn('teaser', 'text', [
+            ->addColumn('teaser_html', 'text', [
                 'default' => null,
                 'limit' => null,
+                'null' => true,
+            ])
+            ->addColumn('teaser_link_href', 'string', [
+                'default' => null,
+                'limit' => 255,
+                'null' => true,
+            ])
+            ->addColumn('teaser_link_caption', 'string', [
+                'default' => null,
+                'limit' => 255,
+                'null' => true,
+            ])
+            ->addColumn('teaser_image_file', 'string', [
+                'default' => null,
+                'limit' => 255,
                 'null' => true,
             ])
             ->addColumn('body_html', 'text', [
@@ -186,6 +264,51 @@ class Initial extends AbstractMigration
             ->addColumn('image_file', 'string', [
                 'default' => null,
                 'limit' => 255,
+                'null' => true,
+            ])
+            ->addColumn('image_link_href', 'string', [
+                'default' => null,
+                'limit' => 255,
+                'null' => true,
+            ])
+            ->addColumn('image_link_target', 'string', [
+                'default' => null,
+                'limit' => 255,
+                'null' => true,
+            ])
+            ->addColumn('image_desc', 'text', [
+                'default' => null,
+                'limit' => null,
+                'null' => true,
+            ])
+            ->addColumn('image_files', 'text', [
+                'default' => null,
+                'limit' => null,
+                'null' => true,
+            ])
+            ->addColumn('template', 'string', [
+                'default' => null,
+                'limit' => 255,
+                'null' => true,
+            ])
+            ->addColumn('cssclass', 'string', [
+                'default' => null,
+                'limit' => 255,
+                'null' => true,
+            ])
+            ->addColumn('cssid', 'string', [
+                'default' => null,
+                'limit' => 255,
+                'null' => true,
+            ])
+            ->addColumn('meta_description', 'text', [
+                'default' => null,
+                'limit' => null,
+                'null' => true,
+            ])
+            ->addColumn('meta_keywords', 'text', [
+                'default' => null,
+                'limit' => null,
                 'null' => true,
             ])
             ->addColumn('is_published', 'boolean', [
@@ -203,17 +326,18 @@ class Initial extends AbstractMigration
                 'limit' => null,
                 'null' => true,
             ])
-            ->addColumn('created', 'datetime', [
-                'default' => null,
-                'limit' => null,
-                'null' => true,
-            ])
             ->addColumn('modified', 'datetime', [
                 'default' => null,
                 'limit' => null,
                 'null' => true,
             ])
+            ->addColumn('created', 'datetime', [
+                'default' => null,
+                'limit' => null,
+                'null' => true,
+            ])
             ->create();
+
         $table = $this->table('bc_tags');
         $table
             ->addColumn('name', 'string', [
@@ -234,7 +358,7 @@ class Initial extends AbstractMigration
     {
         $this->dropTable('bc_content_modules');
         $this->dropTable('bc_modules');
-        $this->dropTable('bc_page_modules');
+        $this->dropTable('bc_page_layouts');
         $this->dropTable('bc_pages');
         $this->dropTable('bc_posts');
         $this->dropTable('bc_tags');
