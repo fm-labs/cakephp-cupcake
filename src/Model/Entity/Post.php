@@ -2,6 +2,8 @@
 namespace Banana\Model\Entity;
 
 use Cake\ORM\Entity;
+use Cake\ORM\TableRegistry;
+use Cake\Utility\Inflector;
 
 /**
  * Post Entity.
@@ -55,7 +57,6 @@ class Post extends Entity
         return $this->_getViewUrl();
     }
 
-
     protected function _getRealTeaserLinkCaption()
     {
         if (!empty($this->_properties['teaser_link_caption'])) {
@@ -71,6 +72,32 @@ class Post extends Entity
         }
         return $this->viewUrl;
     }
+
+    protected function _getReftitle()
+    {
+        if (!$this->refscope) {
+            return null;
+        }
+
+        $ref = pluginSplit($this->refscope);
+
+        //$refmodel = TableRegistry::get($this->refscope);
+        //$ref = $refmodel->get($this->refid);
+
+        return __("{0} with ID {1}", Inflector::singularize($ref[1]), $this->refid);
+    }
+
+    protected function _getRefurl()
+    {
+        if (!$this->refscope) {
+            return;
+        }
+
+        $ref = pluginSplit($this->refscope);
+
+        return ['plugin' => $ref[0], 'controller' => $ref[1], 'action' => 'edit', $this->refid];
+    }
+
 
     /*
     protected function _getImageFiles()

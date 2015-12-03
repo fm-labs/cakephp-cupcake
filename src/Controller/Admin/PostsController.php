@@ -21,8 +21,7 @@ class PostsController extends ContentController
      */
     public function add()
     {
-
-        $content = $this->Posts->newEntity();
+        $content = $this->Posts->newEntity([], ['validate' => false]);
         if ($this->request->is('post')) {
             $content = $this->Posts->patchEntity($content, $this->request->data);
             if ($this->Posts->save($content)) {
@@ -61,7 +60,7 @@ class PostsController extends ContentController
                 $this->Flash->error(__('The {0} could not be saved. Please, try again.', __('content')));
             }
         } else {
-            $this->Posts->patchEntity($content, $this->request->query);
+            $this->Posts->patchEntity($content, $this->request->query, ['validate' => false]);
         }
 
 

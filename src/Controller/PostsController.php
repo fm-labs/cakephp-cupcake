@@ -68,7 +68,9 @@ class PostsController extends FrontendController
         $this->set('post', $post);
         $this->set('_serialize', ['post']);
 
-        $this->render();
+        $view = ($post->teaser_template) ?: null;
+
+        $this->render($view);
     }
 
     public function sitemap()

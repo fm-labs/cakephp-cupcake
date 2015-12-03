@@ -15,13 +15,7 @@ $this->assign('heading', __('Add {0}', __('Post')));
             echo $this->Form->hidden('refscope');
             echo $this->Form->hidden('refid');
             echo $this->Form->hidden('slug');
-            echo $this->Form->hidden('subheading');
-            echo $this->Form->hidden('teaser');
-            echo $this->Form->hidden('body_html');
-            echo $this->Form->hidden('image_file');
             echo $this->Form->hidden('is_published', ['value' => 0]);
-            echo $this->Form->hidden('publish_start_datetime');
-            echo $this->Form->hidden('publish_end_datetime');
         ?>
         </div>
     </div>

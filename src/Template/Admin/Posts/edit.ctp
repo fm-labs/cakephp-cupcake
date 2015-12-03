@@ -18,6 +18,12 @@ $this->Toolbar->addLink([
 $this->assign('heading', __('Edit {0}', __('Post')));
 ?>
 <div class="posts">
+    <?php if (isset($content->refscope)): ?>
+    <div class="ref" style="margin: 0.5em 0;">
+        <?= $this->Html->link(__('This post is linked to {0}', $content->reftitle), $content->refurl); ?>
+    </div>
+    <?php endif; ?>
+
     <?= $this->Form->create($content); ?>
     <div class="ui grid">
         <div class="twelve wide column">
@@ -59,10 +65,43 @@ $this->assign('heading', __('Edit {0}', __('Post')));
             <h5 class="ui attached header">Layout</h5>
             <div class="ui attached segment form">
                 <?php
+                echo $this->Form->input('teaser_template');
                 echo $this->Form->input('template');
-                echo $this->Form->input('cssclass');
-                echo $this->Form->input('cssid');
                 ?>
+            </div>
+
+            <h5 class="ui attached header">Teaser Image</h5>
+            <div class="ui attached segment form">
+                <?php
+                if ($content->teaser_image_file) {
+                    echo $this->Html->image($content->teaser_image_file->url, ['width' => 200]) . '<br />';
+                    echo h($content->teaser_image_file->basename) . '<br />';
+                }
+
+                /*
+                echo $this->Form->input('teaser_image_file', [
+                    'type' => 'imageselect', 'options' => '@default'
+                ]);
+                */
+
+                ?>
+                <?php
+                echo $this->Html->link(
+                    __('Set Image'),
+                    [
+                        'action' => 'setImage',
+                        $content->id,
+                        'scope' => 'teaser_image_file',
+                        'iframe' => true,
+                    ],
+                    [
+                        'class' => '',
+                        'id' => ''
+                    ]
+                );
+                ?>
+
+
             </div>
 
             <h5 class="ui attached header">Primary Image</h5>
@@ -91,7 +130,7 @@ $this->assign('heading', __('Edit {0}', __('Post')));
                     ],
                     [
                         'class' => '',
-                        'id' => 'set-image'
+                        'id' => ''
                     ]
                 );
                 ?>
@@ -128,12 +167,23 @@ $this->assign('heading', __('Edit {0}', __('Post')));
                     ],
                     [
                         'class' => '',
-                        'id' => 'set-image'
+                        'id' => ''
                     ]
                 );
                 ?>
 
 
+            </div>
+
+
+            <h5 class="ui attached header">Advanced</h5>
+            <div class="ui attached segment form">
+                <?php
+                echo $this->Form->input('refscope');
+                echo $this->Form->input('refid');
+                echo $this->Form->input('cssclass');
+                echo $this->Form->input('cssid');
+                ?>
             </div>
         </div>
     </div>
