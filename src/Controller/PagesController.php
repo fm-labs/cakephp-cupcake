@@ -124,7 +124,10 @@ class PagesController extends FrontendController
         $this->set('contentModules', $contentModules);
         $this->set('page', $page);
 
-        return $this->render($page->page_template);
+        $view = ($page->page_template) ?: null;
+        $layout = null;
+
+        return $this->render($view, $layout);
     }
 
     /**

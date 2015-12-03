@@ -98,7 +98,7 @@ class MenuCell extends Cell
         } else {
             $rootNode = $this->Pages->find()->where(['parent_id IS NULL'])->first();
             if (!$rootNode) {
-                throw new Exception('MenuListModule: No root node found');
+                throw new \Exception('MenuListModule: No root node found');
             }
             $nodeId = $rootNode->id;
         }
