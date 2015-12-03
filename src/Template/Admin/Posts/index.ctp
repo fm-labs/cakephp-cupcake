@@ -12,6 +12,8 @@ $this->assign('heading', __('Posts'));
     <thead>
         <tr>
             <th><?= $this->Paginator->sort('id') ?></th>
+            <th><?= $this->Paginator->sort('refscope') ?></th>
+            <th><?= $this->Paginator->sort('refid') ?></th>
             <th><?= $this->Paginator->sort('title') ?></th>
             <th><?= $this->Paginator->sort('is_published') ?></th>
             <th class="actions"><?= __('Actions') ?></th>
@@ -21,6 +23,8 @@ $this->assign('heading', __('Posts'));
     <?php foreach ($contents as $content): ?>
         <tr>
             <td><?= $this->Number->format($content->id) ?></td>
+            <td><?= h($content->refscope) ?></td>
+            <td><?= h($content->refid) ?></td>
             <td><?= $this->Html->link($content->title, ['action' => 'edit', $content->id]) ?></td>
             <td><?= h($content->is_published) ?></td>
             <td class="actions">
