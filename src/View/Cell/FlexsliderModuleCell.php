@@ -8,6 +8,7 @@
 
 namespace Banana\View\Cell;
 
+use Cake\Database\Schema\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Inflector;
 use Cake\View\Cell;
@@ -19,25 +20,16 @@ class FlexsliderModuleCell extends ModuleCell
     public $modelClass = "Banana.Pages";
 
     public static $defaultParams = [
-        'source' => 'files', // folder|files
-        'media_config' => 'default',
-        'media_folder' => '',
-        'media_images' => '',
-        'desc_html' => ''
+        'gallery_id' => null,
     ];
 
 
     public static function inputs()
     {
+        $galleries = TableRegistry::get('Banana.Galleries')->find('list');
+
         return [
-            'source' => ['options' => [
-                'files' => 'Files',
-                'folder' => 'Folder'
-            ]],
-            'media_config' => [],
-            'media_folder' => [],
-            'media_files' => ['type' => 'imagemodal'],
-            'desc_html' => ['type' => 'htmleditor']
+            'gallery_id' => ['type' => 'select', 'options' => $galleries]
         ];
     }
 }

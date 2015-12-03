@@ -69,6 +69,12 @@ class PagesTable extends Table
         ]);
         */
 
+        $this->hasMany('Posts', [
+            'className' => 'Banana.Posts',
+            'foreignKey' => 'refid',
+            'conditions' => ['refscope' => 'Banana.Pages']
+        ]);
+
         $this->addBehavior('Translate', ['fields' => ['title', 'slug']]);
     }
 

@@ -12,6 +12,8 @@ $this->assign('heading', __('Add {0}', __('Post')));
         <div class="ui form">
         <?php
             echo $this->Form->input('title');
+            echo $this->Form->hidden('refscope');
+            echo $this->Form->hidden('refid');
             echo $this->Form->hidden('slug');
             echo $this->Form->hidden('subheading');
             echo $this->Form->hidden('teaser');

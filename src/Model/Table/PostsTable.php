@@ -3,6 +3,7 @@ namespace Banana\Model\Table;
 
 use Banana\Model\Entity\Post;
 use Cake\Core\Plugin;
+use Cake\Form\Schema;
 use Cake\Log\Log;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
@@ -39,7 +40,10 @@ class PostsTable extends Table
         if (Plugin::loaded('Media')) {
             $this->addBehavior('Media.Media', [
                 'fields' => [
-                    'image_file'
+                    'image_file',
+                    'image_files' => [
+                        'multiple' => true
+                    ]
                 ]
             ]);
         } else {
@@ -59,6 +63,12 @@ class PostsTable extends Table
             Log::warning('Attachment plugin is not loaded');
         }
         */
+    }
+
+    protected function _initializeSchema(\Cake\Database\Schema\Table $schema)
+    {
+        $schema->columnType('image_files', 'media_file');
+        return $schema;
     }
 
     /**

@@ -50,7 +50,9 @@
             <td><?= h($contentModule->refscope) ?></td>
             <td><?= $this->Number->format($contentModule->refid) ?></td>
             <td>
-                <?= $contentModule->has('module') ? $this->Html->link($contentModule->module->name, ['controller' => 'Modules', 'action' => 'view', $contentModule->module->id]) : '' ?>
+                <?= $contentModule->has('module')
+                    ? $this->Html->link($contentModule->module->name, ['controller' => 'ModuleBuilder', 'action' => 'edit', $contentModule->module->id])
+                    : '' ?>
             </td>
             <td><?= h($contentModule->section) ?></td>
             <td><?= h($contentModule->template) ?></td>

@@ -75,7 +75,7 @@ class PagesController extends FrontendController
     public function view($id = null)
     {
         $page = $this->Pages->get($id, [
-            'contain' => []
+            'contain' => ['Posts']
         ]);
 
         if (!$page) {
@@ -123,6 +123,7 @@ class PagesController extends FrontendController
 
         $this->set('contentModules', $contentModules);
         $this->set('page', $page);
+        $this->set('page_id', $page->id);
 
         $view = ($page->page_template) ?: null;
         $layout = null;

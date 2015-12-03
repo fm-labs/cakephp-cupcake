@@ -1,12 +1,13 @@
 <div class="ui form">
 <?= $this->Form->create($content); ?>
     <?php
-    echo $this->Form->input('image_file', [
+    echo $this->Form->input($scope, [
         'type' => 'imageselect',
+        'multiple' => $multiple,
         'options' => $imageFiles,
         'class' => 'grouped',
         'id' => 'imagepicker-select',
-        'value' => $content->image_file->path
+        'empty' => true,
     ]); ?>
 
 <?= $this->Form->submit('Save'); ?>
@@ -18,7 +19,7 @@
 <script>
 
 $('#imagepicker-select').imagepicker({
-    show_label: false,
+    show_label: true,
     initialized: function() {
 
         $(this)[0].picker.addClass('grouped');

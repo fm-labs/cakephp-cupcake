@@ -65,29 +65,28 @@ $this->assign('heading', __('Edit {0}', __('Post')));
                 ?>
             </div>
 
-            <h5 class="ui attached header">Image</h5>
+            <h5 class="ui attached header">Primary Image</h5>
             <div class="ui attached segment form">
                 <?php
                 if ($content->image_file) {
                     echo $this->Html->image($content->image_file->url, ['width' => 200]) . '<br />';
                     echo h($content->image_file->basename) . '<br />';
                 }
+
                 /*
                 echo $this->Form->input('image_file', [
-                    'type' => 'imageselect',
-                    'options' => $imageFiles
+                    'type' => 'imageselect', 'options' => '@default'
                 ]);
                 */
+
                 ?>
-
-
                 <?php
                 echo $this->Html->link(
                     __('Set Image'),
                     [
                         'action' => 'setImage',
                         $content->id,
-                        'scope' => 'image',
+                        'scope' => 'image_file',
                         'iframe' => true,
                     ],
                     [
@@ -96,6 +95,45 @@ $this->assign('heading', __('Edit {0}', __('Post')));
                     ]
                 );
                 ?>
+
+
+            </div>
+
+            <h5 class="ui attached header">Additional Images</h5>
+            <div class="ui attached segment form">
+                <?php
+                if ($content->image_files) {
+                    foreach ($content->image_files as $imageFile) {
+                        echo $this->Html->image($imageFile->url, ['width' => 200]) . '<br />';
+                        echo h($imageFile->basename) . '<br />';
+                    }
+                }
+
+                /*
+                echo $this->Form->input('image_files', [
+                    'type' => 'imageselect', 'options' => '@default'
+                ]);
+                */
+
+                ?>
+                <?php
+                echo $this->Html->link(
+                    __('Set Image'),
+                    [
+                        'action' => 'setImage',
+                        $content->id,
+                        'scope' => 'image_files',
+                        'multiple' => true,
+                        'iframe' => true,
+                    ],
+                    [
+                        'class' => '',
+                        'id' => 'set-image'
+                    ]
+                );
+                ?>
+
+
             </div>
         </div>
     </div>

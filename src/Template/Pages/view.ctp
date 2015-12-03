@@ -8,11 +8,12 @@ $this->assign('title', $page->title);
         Published: <?= h($page->is_published); ?><br />
     </div>
 
-    <div class="modules">
-        <?php foreach ($contentModules as $contentModule): ?>
-        <?= $this->element('Banana.Content/content_module', ['contentModule' => $contentModule]); ?>
+    <div class="posts">
+        <?php foreach($page->posts as $post): ?>
+        <?= $this->element('Banana.Posts/view', ['post' => $post]); ?>
         <?php endforeach; ?>
     </div>
+
 
     <div class="debug">
         <?php debug($page); ?>

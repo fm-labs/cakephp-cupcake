@@ -21,10 +21,6 @@ class PostsController extends ContentController
      */
     public function add()
     {
-        $refid = $this->request->query('refid');
-        $refscope = $this->request->query('refscope');
-        $link = $this->request->query('link');
-
 
         $content = $this->Posts->newEntity();
         if ($this->request->is('post')) {
@@ -32,6 +28,7 @@ class PostsController extends ContentController
             if ($this->Posts->save($content)) {
                 $this->Flash->success(__('The {0} has been saved.', __('content')));
 
+                /*
                 if ($link == true && $refid && $refscope) {
                     $this->loadModel('Banana.Modules');
                     $module = $this->Modules->newEntity([
@@ -57,11 +54,14 @@ class PostsController extends ContentController
                         debug($module->errors());
                     }
                 }
+                */
 
                 return $this->redirect(['action' => 'edit', $content->id]);
             } else {
                 $this->Flash->error(__('The {0} could not be saved. Please, try again.', __('content')));
             }
+        } else {
+            $this->Posts->patchEntity($content, $this->request->query);
         }
 
 
@@ -100,23 +100,31 @@ class PostsController extends ContentController
     {
         //$this->viewBuilder()->layout('Backend.iframe');
 
+        $scope = $this->request->query('scope');
+        $multiple = $this->request->query('multiple');
+
+        $this->Posts->behaviors()->unload('Media');
         $content = $this->Posts->get($id, [
             'contain' => []
         ]);
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $content = $this->Posts->patchEntity($content, $this->request->data);
+            //$content->$scope = $this->request->data[$scope];
             if ($this->Posts->save($content)) {
                 $this->Flash->success(__('The {0} has been saved.', __('content')));
                 return $this->redirect(['action' => 'edit', $content->id]);
             } else {
                 $this->Flash->error(__('The {0} could not be saved. Please, try again.', __('content')));
             }
+        } else {
         }
 
         $mm = MediaManager::get('default');
         $files = $mm->getSelectListRecursiveGrouped();
         $this->set('imageFiles', $files);
+        $this->set('scope', $scope);
+        $this->set('multiple', $multiple);
 
         $this->set(compact('content'));
         $this->set('_serialize', ['content']);

@@ -22,7 +22,9 @@ class Post extends Entity
         'teaser_html' => true,
         'body_html' => true,
         'image_file' => true,
-        'image_file_upload' => true,
+        //'image_file_upload' => true,
+        'image_files' => true,
+        //'image_files_upload' => true,
         'is_published' => true,
         'publish_start_datetime' => true,
         'publish_end_datetime' => true,
@@ -69,4 +71,24 @@ class Post extends Entity
         }
         return $this->viewUrl;
     }
+
+    /*
+    protected function _getImageFiles()
+    {
+        if (is_string($this->_properties['image_files'])) {
+            $this->_properties['image_files'] = explode(',', $this->_properties['image_files']);
+        }
+
+        return $this->_properties['image_files'];
+    }
+
+    protected function _setImageFiles($val)
+    {
+        if (is_array($val)) {
+            $val = join(',', $val);
+        }
+
+        return $val;
+    }
+    */
 }

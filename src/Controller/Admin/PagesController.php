@@ -76,7 +76,7 @@ class PagesController extends ContentController
     public function edit($id = null)
     {
         $content = $this->Pages->get($id, [
-            'contain' => ['ContentModules' => ['Modules'], 'PageLayouts']
+            'contain' => ['ContentModules' => ['Modules'], 'PageLayouts', 'Posts']
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $content = $this->Pages->patchEntity($content, $this->request->data);
@@ -89,7 +89,7 @@ class PagesController extends ContentController
         }
 
         //@TODO Read custom sections from page layout
-        $sections = ['main', 'top', 'bottom', 'before'];
+        $sections = ['top', 'bottom', 'before', 'after', 'left', 'right'];
         $sections = array_combine($sections, $sections);
         $this->set('sections', $sections);
 

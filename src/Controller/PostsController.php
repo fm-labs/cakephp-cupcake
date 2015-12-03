@@ -44,7 +44,9 @@ class PostsController extends FrontendController
         $this->set('post', $post);
         $this->set('_serialize', ['post']);
 
-        $this->render($post->template);
+        $view = ($post->template) ?: null;
+
+        $this->render($view);
     }
 
     /**

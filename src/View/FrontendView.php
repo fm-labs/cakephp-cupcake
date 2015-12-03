@@ -37,19 +37,7 @@ class FrontendView extends View
         $this->helpers()->load('Banana.Frontend', []);
     }
 
-
-    public function __section($name)
-    {
-        //@TODO
-        return sprintf("[SECTION: %s]", $name);
-
-        // legacy
-        //@TODO section cell caching
-
-
-    }
-
-    public function section($name)
+    public function section($name, $cellData = [], $cellOptions = [])
     {
         // a view block with contents will be preferred
         $content = $this->fetch($name);
@@ -57,9 +45,13 @@ class FrontendView extends View
             return $content;
         }
 
-        // otherwise render section cell
-        $cellData = [];
-        $cellOptions = ['name' => $name];
+        $cellData = ['foo', 'bar'];
+
+        $cellOptions += [
+            'name' => $name,
+            'page_id' => $this->get('page_id')
+        ];
+
 
         return $this->cell('Banana.Section', $cellData, $cellOptions);
     }

@@ -16,16 +16,18 @@ use Banana\Model\Table\ContentModulesTable;
  */
 class SectionCell extends Cell
 {
-    protected $_validCellOptions = ['name'];
+    protected $_validCellOptions = ['name', 'page_id'];
 
     /**
-     * @var string Section name. Can be passed as cell option. Defaults to __MAIN__
+     * @var string Section name. Can be passed as cell option.
      */
-    protected $name;
+    public $name;
 
-    protected $layoutModules = [];
+    public $page_id;
 
-    protected $pageModules = [];
+    protected $_layoutModules = [];
+
+    protected $_pageModules = [];
 
     /**
      * Constructor.
@@ -47,38 +49,36 @@ class SectionCell extends Cell
 
     public function display()
     {
-
         $this->loadModel('Banana.ContentModules');
 
-        $this->loadPageModules();
-        if (count($this->pageModules) < 1) {
-            $this->loadLayoutModules();
+        $this->_loadPageModules();
+        if (count($this->_pageModules) < 1) {
+            $this->_loadLayoutModules();
         }
-
-
+        
         $this->set('section', $this->name);
-        $this->set('layout_modules', $this->layoutModules);
-        $this->set('page_modules', $this->pageModules);
+        $this->set('layout_modules', $this->_layoutModules);
+        $this->set('page_modules', $this->_pageModules);
     }
 
-    protected function loadPageModules()
+    protected function _loadPageModules()
     {
-        if (!isset($this->request->params['page_id'])) {
+        if (!isset($this->page_id)) {
             debug("ContentModules skipped for section " . $this->name . ": No pageId set");
-            $this->pageModules = [];
+            $this->_pageModules = [];
             return;
         }
 
-        $pageId = $this->request->params['page_id'];
-        $this->pageModules = $this->ContentModules->find()
+        $pageId = $this->page_id;
+        $this->_pageModules = $this->ContentModules->find()
             ->where(['section' => $this->name, 'refscope' => 'Banana.Pages', 'refid' => $pageId])
             ->contain(['Modules'])
             ->all();
     }
 
-    protected function loadLayoutModules()
+    protected function _loadLayoutModules()
     {
-        $this->layoutModules = $this->ContentModules->find()
+        $this->_layoutModules = $this->ContentModules->find()
             ->where(['section' => $this->name, 'refscope' => 'Banana.Pages', 'refid IS NULL'])
             ->contain(['Modules'])
             ->all();

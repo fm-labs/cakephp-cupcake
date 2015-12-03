@@ -6,7 +6,7 @@
 
 <div class="module-builder ui grid">
     <div class="row">
-        <div class="build-container ten wide column">
+        <div class="build-container six wide column">
             <h2>- build -</h2>
             <div class="ui form">
                 <?= $this->Form->create($module, ['url' => [
@@ -33,7 +33,7 @@
 
             </div>
         </div>
-        <div class="preview-container six wide column">
+        <div class="preview-container ten wide column">
             <h2>- preview -</h2>
 
             <?= $this->cell($module->path . 'Module', [$module]) ?>

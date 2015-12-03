@@ -59,6 +59,27 @@ $this->assign('heading', __('Edit Page: {0}', $content->title));
             </div>
             <div class="ui divider"></div>
 
+            <h3>Related Posts</h3>
+            <table class="ui table">
+                <tr>
+                    <th>Title</th>
+                    <th class="actions">Actions</th>
+                </tr>
+                <?php foreach($content->posts as $post): ?>
+                    <tr>
+                        <td><?= h($post->title); ?></td>
+                        <td class="actions">
+                            <?= $this->Html->link('Edit', ['controller' => 'Posts', 'action' => 'edit', $post->id]); ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </table>
+            <div class="actions">
+                <?= $this->Html->link('Add Post', ['controller' => 'Posts', 'action' => 'add', 'refid' => $content->id, 'refscope' => 'Banana.Pages']); ?>
+            </div>
+
+
+            <div class="ui divider"></div>
             <div class="content-modules">
                 <div class="ui top attached tabular menu">
                     <?php foreach($sections as $section): ?>
@@ -77,7 +98,7 @@ $this->assign('heading', __('Edit Page: {0}', $content->title));
 
 
 
-
+            <!--
             <div class="">
                 <ul>
                     <?php foreach ($this->get('modulesAvailable') as $aModule): ?>
@@ -95,6 +116,7 @@ $this->assign('heading', __('Edit Page: {0}', $content->title));
                     <?php endforeach; ?>
                 </ul>
             </div>
+            -->
 
         </div>
         <div class="four wide column">
@@ -137,6 +159,7 @@ $this->assign('heading', __('Edit Page: {0}', $content->title));
     </div>
     <?= $this->Form->end() ?>
 
+    <!--
     <hr />
     <h4>Add a new module</h4>
     <?= $this->Html->link('Add a new module to this page', [
@@ -173,6 +196,8 @@ $this->assign('heading', __('Edit Page: {0}', $content->title));
         <?= $this->Form->submit('Add content module'); ?>
         <?= $this->Form->end(); ?>
     </div>
+
+    -->
 </div>
 
 <?php $this->append('scriptBottom'); ?>
