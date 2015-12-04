@@ -49,6 +49,14 @@ class Post extends Entity
         return ['prefix' => false, 'plugin' => 'Banana', 'controller' => 'Posts', 'action' => 'view',  $this->id];
     }
 
+    protected function _getTeaserImageFile()
+    {
+        if (!empty($this->_properties['teaser_image_file'])) {
+            return $this->_properties['teaser_image_file'];
+        }
+        return $this->image_file;
+    }
+
     protected function _getTeaserLinkUrl()
     {
         #if (isset($this->_properties['teaser_link_href'])) {
