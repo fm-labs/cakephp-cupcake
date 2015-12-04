@@ -25,5 +25,9 @@ class GalleriesController extends FrontendController
         ]);
         $this->set('gallery', $gallery);
         $this->set('_serialize', ['gallery']);
+
+        $view = ($gallery->view_template) ?: null;
+
+        $this->render($view);
     }
 }

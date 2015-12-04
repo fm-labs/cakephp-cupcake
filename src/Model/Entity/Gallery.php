@@ -2,6 +2,7 @@
 namespace Banana\Model\Entity;
 
 use Cake\ORM\Entity;
+use Media\Lib\Media\MediaManager;
 
 /**
  * Gallery Entity.
@@ -26,4 +27,37 @@ class Gallery extends Entity
         '*' => true,
         'id' => false,
     ];
+
+    protected function _getImages()
+    {
+        switch ($this->_properties['source']) {
+            case "folder":
+                return $this->_loadImagesFromFolder();
+
+            default:
+                return $this->_loadImagesFromPosts();
+        }
+    }
+
+    protected function _loadImagesFromFolder()
+    {
+        $folder = $this->_properties['source_folder'];
+
+        $mm = MediaManager::get('default');
+        $mm->open($folder);
+
+        $files = $mm->listFiles();
+        $images = [];
+
+        array_walk($files, function($val) use (&$images, &$mm) {
+            $images[] = $mm->getFileUrl($val);
+        });
+
+        return $images;
+    }
+
+    protected function _loadImagesFromPosts()
+    {
+
+    }
 }
