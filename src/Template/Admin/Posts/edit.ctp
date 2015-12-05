@@ -87,17 +87,14 @@ $this->assign('heading', __('Edit {0}', __('Post')));
                 ?>
                 <?php
                 echo $this->Html->link(
-                    __('Set Image'),
-                    [
-                        'action' => 'setImage',
-                        $content->id,
-                        'scope' => 'teaser_image_file',
-                        'iframe' => true,
-                    ],
-                    [
-                        'class' => '',
-                        'id' => ''
-                    ]
+                    __('Select Image'),
+                    ['action' => 'setImage', $content->id, 'scope' => 'teaser_image_file' ]
+                );
+                ?>
+                <?php
+                echo $this->Html->link(
+                    __('Remove Image'),
+                    ['action' => 'deleteImage', $content->id, 'scope' => 'teaser_image_file' ]
                 );
                 ?>
 
@@ -121,17 +118,14 @@ $this->assign('heading', __('Edit {0}', __('Post')));
                 ?>
                 <?php
                 echo $this->Html->link(
-                    __('Set Image'),
-                    [
-                        'action' => 'setImage',
-                        $content->id,
-                        'scope' => 'image_file',
-                        'iframe' => true,
-                    ],
-                    [
-                        'class' => '',
-                        'id' => ''
-                    ]
+                    __('Select Image'),
+                    ['action' => 'setImage', $content->id, 'scope' => 'image_file' ]
+                );
+                ?>
+                <?php
+                echo $this->Html->link(
+                    __('Remove Image'),
+                    ['action' => 'deleteImage', $content->id, 'scope' => 'image_file' ]
                 );
                 ?>
 
@@ -157,18 +151,14 @@ $this->assign('heading', __('Edit {0}', __('Post')));
                 ?>
                 <?php
                 echo $this->Html->link(
-                    __('Set Image'),
-                    [
-                        'action' => 'setImage',
-                        $content->id,
-                        'scope' => 'image_files',
-                        'multiple' => true,
-                        'iframe' => true,
-                    ],
-                    [
-                        'class' => '',
-                        'id' => ''
-                    ]
+                    __('Select Images'),
+                    ['action' => 'setImage', $content->id, 'scope' => 'image_files', 'multiple' => true ]
+                );
+                ?>
+                <?php
+                echo $this->Html->link(
+                    __('Remove Images'),
+                    ['action' => 'deleteImage', $content->id, 'scope' => 'image_files' ]
                 );
                 ?>
 

@@ -2,6 +2,7 @@
 namespace Banana\Controller\Admin;
 
 use Banana\Controller\Admin\AppController;
+use Cake\Network\Exception\BadRequestException;
 use Cake\ORM\Table;
 use Media\Lib\Media\MediaManager;
 
@@ -95,7 +96,7 @@ class PostsController extends ContentController
         $this->set('_serialize', ['content']);
     }
 
-    public function setImage($id)
+    public function setImage($id = null)
     {
         //$this->viewBuilder()->layout('Backend.iframe');
 
@@ -127,5 +128,29 @@ class PostsController extends ContentController
 
         $this->set(compact('content'));
         $this->set('_serialize', ['content']);
+    }
+
+    public function deleteImage($id = null)
+    {
+        $scope = $this->request->query('scope');
+
+        $this->Posts->behaviors()->unload('Media');
+        $content = $this->Posts->get($id, [
+            'contain' => []
+        ]);
+
+        if (!in_array($scope, ['teaser_image_file', 'image_file', 'image_files'])) {
+            throw new BadRequestException('Invalid scope');
+        }
+
+        $content->accessible($scope, true);
+        $content->set($scope, '');
+
+        if ($this->Posts->save($content)) {
+            $this->Flash->success(__('The {0} has been saved.', __('content')));
+        } else {
+            $this->Flash->error(__('The {0} could not be saved. Please, try again.', __('content')));
+        }
+        return $this->redirect(['action' => 'edit', $content->id]);
     }
 }
