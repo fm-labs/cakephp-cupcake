@@ -80,38 +80,43 @@ $this->assign('heading', __('Edit Page: {0}', $content->title));
             </div>
             <div class="ui divider"></div>
 
-            <h2>Related Posts</h2>
-            <table class="ui compact table">
-                <thead>
-                <tr>
-                    <th>Title</th>
-                    <th class="actions">Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                <?php foreach($content->posts as $post): ?>
+            <!-- RELATED POSTS -->
+            <h3>Related Posts</h3>
+            <div class="related posts">
+                <table class="ui compact table">
+                    <thead>
                     <tr>
-                        <td><?= h($post->title); ?></td>
-                        <td class="actions">
-                            <?= $this->Ui->link('Edit',
-                                ['controller' => 'Posts', 'action' => 'edit', $post->id],
-                                ['class' => 'ui mini button', 'icon' => 'edit']
-                            ); ?>
-                        </td>
+                        <th>Title</th>
+                        <th class="actions">Actions</th>
                     </tr>
-                <?php endforeach; ?>
-                </tbody>
-            </table>
-            <div class="actions">
-                <?= $this->Html->link('Add Post',
-                    ['controller' => 'Posts', 'action' => 'add', 'refid' => $content->id, 'refscope' => 'Banana.Pages'],
-                    ['class' => 'ui primary button']
-                ); ?>
+                    </thead>
+                    <tbody>
+                    <?php foreach($content->posts as $post): ?>
+                        <tr>
+                            <td><?= h($post->title); ?></td>
+                            <td class="actions">
+                                <?= $this->Ui->link('Edit',
+                                    ['controller' => 'Posts', 'action' => 'edit', $post->id],
+                                    ['class' => 'ui mini button', 'icon' => 'edit']
+                                ); ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+                <div class="actions">
+                    <?= $this->Ui->link('Add Post',
+                        ['controller' => 'Posts', 'action' => 'add', 'refid' => $content->id, 'refscope' => 'Banana.Pages'],
+                        ['class' => 'ui button', 'icon' => 'add']
+                    ); ?>
+                </div>
+
             </div>
-
-
             <div class="ui divider"></div>
+
+            <!-- RELATED CONTENT MODULES -->
             <div class="content-modules">
+                <h3>Related content modules</h3>
                 <div class="ui top attached tabular menu">
                     <?php foreach($sections as $section): ?>
                         <a class="item" data-tab="tab-<?= $section ?>"><?= \Cake\Utility\Inflector::humanize($section); ?></a>
@@ -125,8 +130,15 @@ $this->assign('heading', __('Edit Page: {0}', $content->title));
                         ?>
                     </div>
                 <?php endforeach; ?>
-            </div>
+                <br />
+                <?= $this->Ui->link('Build a new module for this page', [
+                    'controller' => 'ModuleBuilder',
+                    'action' => 'build2',
+                    'refscope' => 'Banana.Pages',
+                    'refid' => $content->id
+                ], ['class' => 'ui button', 'icon' => 'add']); ?>
 
+            </div>
 
 
             <!--
@@ -193,45 +205,20 @@ $this->assign('heading', __('Edit Page: {0}', $content->title));
     </div>
     <?= $this->Form->end() ?>
 
-    <!--
-    <hr />
-    <h4>Add a new module</h4>
-    <?= $this->Html->link('Add a new module to this page', [
-        'action' => 'createContentModule',
-        'refscope' => 'Banana.Pages',
-        'refid' => $content->id
-    ], ['class' => 'ui button']); ?>
+    <div class="ui divider"></div>
 
-    <?= $this->Html->link('Build a new module to this page', [
-        'controller' => 'ModuleBuilder',
-        'action' => 'build2',
-        'refscope' => 'Banana.Pages',
-        'refid' => $content->id
-    ], ['class' => 'ui button', 'target' => '_blank']); ?>
-
-    <?= $this->Html->link('Create a post for this page', [
-        'action' => 'addPost', $content->id
-    ], ['class' => 'ui button', 'target' => '_blank']); ?>
-
-    <hr />
-    <h4>Add existing module</h4>
-    <?= $this->Html->link('Link existing module to this page', [
-        'action' => 'addContentModule',
-        'refscope' => 'Banana.Pages',
-        'refid' => $content->id
-    ], ['class' => 'ui button']); ?>
+    <h3>Link existing module</h3>
     <div class="ui form">
-        <?= $this->Form->create(null, ['url' => ['action' => 'addContentModule', $content->id]]); ?>
-        <?= $this->Form->input('id'); ?>
-        <?= $this->Form->input('refscope', ['value' => 'Banana.Pages']); ?>
-        <?= $this->Form->input('refid', ['value' => $content->id]); ?>
+        <?= $this->Form->create(null, ['url' => ['action' => 'linkModule', $content->id]]); ?>
+        <?= $this->Form->input('refscope', ['default' => 'Banana.Pages']); ?>
+        <?= $this->Form->input('refid', ['default' => $content->id]); ?>
         <?= $this->Form->input('module_id', ['options' => $availableModules]); ?>
-        <?= $this->Form->input('section', ['options' => $sections]); ?>
-        <?= $this->Form->submit('Add content module'); ?>
+        <?= $this->Form->input('section'); ?>
+        <?= $this->Form->submit('Link module'); ?>
         <?= $this->Form->end(); ?>
     </div>
 
-    -->
+
 </div>
 
 <?php $this->append('scriptBottom'); ?>

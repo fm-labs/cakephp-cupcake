@@ -3,7 +3,10 @@
     <?php $module = $contentModule->module; ?>
     <?php if ($contentModule->section != $section) continue; ?>
     <div class="ui top attached segment">
-        [<?= h($contentModule->section); ?>] <?= h($module->path); ?>
+        [<?= h($contentModule->section); ?>]
+        [<?= h($module->path); ?>]
+        <?= h($module->name); ?>
+
         <?= $this->Ui->link('Edit', [
             'controller' => 'ModuleBuilder',
             'action' => 'edit',
@@ -19,7 +22,7 @@
     </div>
 <?php endforeach; ?>
 <?php endif; ?>
-
+<!--
 <hr />
 <h2>Add content module</h2>
 - List of available modules -
@@ -29,4 +32,5 @@
 - Create a new module (and link with this page) -
 <br />
 <?= $this->Html->link(__('Add a new content module to section {0}', $section), ['action' => 'add_module', $content->id]); ?>
+-->
 

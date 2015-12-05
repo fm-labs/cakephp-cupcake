@@ -73,6 +73,23 @@ class PagesController extends ContentController
 
     }
 
+    public function linkModule($id = null)
+    {
+        $contentModule = $this->Pages->ContentModules->newEntity(
+            ['refscope' => 'Banana.Pages', 'refid' => $id],
+            ['validate' => false]
+        );
+        if ($this->request->is(['post', 'put'])) {
+            $this->Pages->ContentModules->patchEntity($contentModule, $this->request->data);
+            if ($this->Pages->ContentModules->save($contentModule)) {
+                $this->Flash->success(__('The content module has been saved for Page {0}.', $id));
+            } else {
+                $this->Flash->error(__('The content module could not be saved for Page {0}.', $id));
+            }
+            return $this->redirect(['action' => 'edit', $id]);
+        }
+    }
+
     public function edit($id = null)
     {
         $content = $this->Pages->get($id, [
