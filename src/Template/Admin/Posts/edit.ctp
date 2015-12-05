@@ -86,15 +86,17 @@ $this->assign('heading', __('Edit {0}', __('Post')));
 
                 ?>
                 <?php
-                echo $this->Html->link(
+                echo $this->Ui->link(
                     __('Select Image'),
-                    ['action' => 'setImage', $content->id, 'scope' => 'teaser_image_file' ]
+                    ['action' => 'setImage', $content->id, 'scope' => 'teaser_image_file' ],
+                    ['class' => 'iframe-modal', 'icon' => 'folder open outline']
                 );
                 ?>
                 <?php
-                echo $this->Html->link(
+                echo $this->Ui->link(
                     __('Remove Image'),
-                    ['action' => 'deleteImage', $content->id, 'scope' => 'teaser_image_file' ]
+                    ['action' => 'deleteImage', $content->id, 'scope' => 'teaser_image_file' ],
+                    ['icon' => 'remove circle']
                 );
                 ?>
 
@@ -117,15 +119,17 @@ $this->assign('heading', __('Edit {0}', __('Post')));
 
                 ?>
                 <?php
-                echo $this->Html->link(
+                echo $this->Ui->link(
                     __('Select Image'),
-                    ['action' => 'setImage', $content->id, 'scope' => 'image_file' ]
+                    ['action' => 'setImage', $content->id, 'scope' => 'image_file' ],
+                    ['class' => 'iframe-modal', 'icon' => 'folder open outline']
                 );
                 ?>
                 <?php
-                echo $this->Html->link(
+                echo $this->Ui->link(
                     __('Remove Image'),
-                    ['action' => 'deleteImage', $content->id, 'scope' => 'image_file' ]
+                    ['action' => 'deleteImage', $content->id, 'scope' => 'image_file' ],
+                    ['icon' => 'remove circle']
                 );
                 ?>
 
@@ -150,15 +154,17 @@ $this->assign('heading', __('Edit {0}', __('Post')));
 
                 ?>
                 <?php
-                echo $this->Html->link(
+                echo $this->Ui->link(
                     __('Select Images'),
-                    ['action' => 'setImage', $content->id, 'scope' => 'image_files', 'multiple' => true ]
+                    ['action' => 'setImage', $content->id, 'scope' => 'image_files', 'multiple' => true ],
+                    ['class' => 'iframe-modal', 'icon' => 'folder open outline']
                 );
                 ?>
                 <?php
-                echo $this->Html->link(
+                echo $this->Ui->link(
                     __('Remove Images'),
-                    ['action' => 'deleteImage', $content->id, 'scope' => 'image_files' ]
+                    ['action' => 'deleteImage', $content->id, 'scope' => 'image_files' ],
+                    ['icon' => 'remove circle']
                 );
                 ?>
 

@@ -1,5 +1,10 @@
 <div class="ui form">
-<?= $this->Form->create($content); ?>
+<?= $this->Form->create($content, ['url' => [
+    'action' => 'setImage',
+    'iframe' => $this->request->is('iframe'),
+    'scope' => $scope,
+    'multiple' => $multiple
+]]); ?>
     <?php
     echo $this->Form->input($scope, [
         'type' => 'imageselect',
@@ -7,7 +12,7 @@
         'options' => $imageFiles,
         'class' => 'grouped',
         'id' => 'imagepicker-select',
-        'empty' => true,
+        'empty' => __('- No image selected -'),
     ]); ?>
 
 <?= $this->Form->submit('Save'); ?>
@@ -18,7 +23,7 @@
 <?php $this->append('scriptBottom'); ?>
 <script>
 
-$('#imagepicker-select').imagepicker({
+$('#___imagepicker-select').imagepicker({
     show_label: true,
     initialized: function() {
 

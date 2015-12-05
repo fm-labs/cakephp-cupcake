@@ -98,8 +98,6 @@ class PostsController extends ContentController
 
     public function setImage($id = null)
     {
-        //$this->viewBuilder()->layout('Backend.iframe');
-
         $scope = $this->request->query('scope');
         $multiple = $this->request->query('multiple');
 
@@ -113,7 +111,10 @@ class PostsController extends ContentController
             //$content->$scope = $this->request->data[$scope];
             if ($this->Posts->save($content)) {
                 $this->Flash->success(__('The {0} has been saved.', __('content')));
-                return $this->redirect(['action' => 'edit', $content->id]);
+
+                if (!$this->request->is('iframe')) {
+                    return $this->redirect(['action' => 'edit', $content->id]);
+                }
             } else {
                 $this->Flash->error(__('The {0} could not be saved. Please, try again.', __('content')));
             }
