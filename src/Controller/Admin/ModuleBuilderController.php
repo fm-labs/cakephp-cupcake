@@ -2,6 +2,7 @@
 namespace Banana\Controller\Admin;
 
 use Banana\Form\ModuleParamsForm;
+use Banana\Lib\Banana;
 use Banana\View\ViewModule;
 use Cake\Core\App;
 use Cake\Core\Configure;
@@ -24,7 +25,7 @@ class ModuleBuilderController extends AppController
 
     public function index()
     {
-        $this->set('modulesAvailable', $this->getModulesAvailable());
+        $this->set('availableModules', Banana::getModulesAvailable());
 
         $refscope = $this->request->query('refscope');
         $refid = $this->request->query('refid');
@@ -33,6 +34,7 @@ class ModuleBuilderController extends AppController
         $this->set('refid', $this->request->query('refid'));
     }
 
+    /*
     public function create()
     {
         $modulePath = $this->request->query('path');
@@ -72,6 +74,7 @@ class ModuleBuilderController extends AppController
 
         $this->set('module', $module);
     }
+    */
 
     public function preview()
     {
@@ -96,7 +99,7 @@ class ModuleBuilderController extends AppController
     }
 
 
-
+    /*
     public function build($id = null)
     {
         if (!$id) {
@@ -131,6 +134,7 @@ class ModuleBuilderController extends AppController
         $this->set('className', $className);
         $this->set('data', $this->request->data());
     }
+    */
 
 
     public function build2($id = null)
@@ -139,6 +143,7 @@ class ModuleBuilderController extends AppController
         $refid = $this->request->query('refid');
         $class = $this->request->query('path');
         $section = $this->request->query('section');
+        $page_id = $this->request->query('page_id'); // for testing
 
         if (!$id) {
             $className = App::className($class, 'View/Cell', 'ModuleCell');
@@ -203,6 +208,7 @@ class ModuleBuilderController extends AppController
         $this->set('refscope', $this->request->query('refscope'));
         $this->set('refid', $this->request->query('refid'));
         $this->set('section', $section);
+        $this->set('page_id',$page_id);
 
         $this->set('module', $module);
         $this->set('formInputs', $formInputs);

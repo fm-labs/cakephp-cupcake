@@ -1,12 +1,18 @@
 <?php
+use Cake\Core\Configure;
+
 $this->assign('title', $page->title);
 ?>
 <div class="page view">
+    <?php if (Configure::read('debug')): ?>
     <div class="debug">
         Page: <?= h($page->title); ?> [ID <?= h($page->id); ?>]<br />
         Type: <?= h($page->type); ?><br />
         Published: <?= h($page->is_published); ?><br />
     </div>
+    <?php endif; ?>
+
+    <h1 class="title"><?= h($page->title); ?></h1>
 
     <div class="posts">
         <?php foreach($page->posts as $post): ?>

@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: flow
- * Date: 5/24/15
- * Time: 5:27 PM
- */
-
 namespace Banana\View\Cell;
 
 use Cake\ORM\TableRegistry;
@@ -14,42 +7,46 @@ use Cake\View\Cell;
 use Banana\Model\Table\PagesTable;
 
 
-class MenuCell extends Cell
+class PagesMenuModuleCell extends ModuleCell
 {
     public $modelClass = "Banana.Pages";
 
-    protected $params = [
-        'menu' => null,
+    public static $defaultParams = [
+        'menu' => [],
         'start_node' => 0,
         'depth' => 1,
         'level' => 0,
-        'class' => ''
+        'class' => '',
+        'element_path' => null
     ];
 
-    public function display($params = [])
+    public function display()
     {
-
-        $params = array_merge($this->params, $params);
-
-        if (!$params['menu']) {
+        if (empty($this->params['menu'])) {
             $this->loadModel('Banana.Pages');
 
+            $startNodeId = $this->_getStartNodeId();
+            if ($startNodeId) {
+                $children = $this->Pages
+                    ->find('children', ['for' => $startNodeId])
+                    ->find('threaded')
+                    ->toArray();
 
-            $this->_getStartNodeId();
-            $children = $this->Pages
-                ->find('children', ['for' => $this->startNodeId])
-                ->find('threaded')
-                ->toArray();
-
-            $params['menu'] = $this->_buildMenu($children);
+                $this->params['menu'] = $this->_buildMenu($children);
+            } else {
+                debug("Start node not found");
+                $this->params['menu'] = [];
+            }
         }
 
+        $this->params['element_path'] = ($this->params['element_path']) ?: 'Banana.Modules/PagesMenu/menu_list';
 
         //$tree = $this->Pages->find('treeList')->toArray();
         //$this->set('tree', $tree);
         //$this->set('children', $children);
-        $this->set($params);
+        //$this->set($params);
         //$this->render('other');
+        $this->set('params', $this->params);
     }
 
     protected function _buildMenu($children)
@@ -58,10 +55,7 @@ class MenuCell extends Cell
         foreach ($children as $child) {
             $isActive = false;
             $attr = ['class' => ''];
-            if ($child->hide_in_nav === true) {
-                continue;
-
-            } elseif ($this->request->param('page_id') == $child->id) {
+            if ($this->request->param('page_id') == $child->id) {
                 $isActive = true;
 
             } elseif ($child->type == 'controller') {
@@ -98,6 +92,8 @@ class MenuCell extends Cell
     {
         if ($this->params['start_node'] > 0) {
             $nodeId = $this->params['start_node'];
+        } elseif ($this->params['start_node'] < 0) {
+            $nodeId = $this->page_id;
         } else {
             //@TODO: Use custom finder to find root node (Pages->findRootNode())
             $rootNode = $this->Pages->find()->where(['parent_id IS NULL'])->first();
@@ -106,6 +102,6 @@ class MenuCell extends Cell
             }
             $nodeId = $rootNode->id;
         }
-        return $this->startNodeId = $nodeId;
+        return $nodeId;
     }
 }

@@ -2,40 +2,27 @@
 <div class="index">
     <h1>Module Builder</h1>
 
-
     <table class="ui table striped">
         <thead>
         <tr>
-            <th>Class</th>
-            <th>Build</th>
-            <th>View</th>
+            <th>Module</th>
+            <th>Actions</th>
         </tr>
         </thead>
-        <?php foreach (\Cake\Core\Configure::read('Banana.modules') as $moduleClass => $moduleInfo): ?>
+        <?php foreach ($availableModules as $moduleClass => $moduleInfo): ?>
             <tr>
-                <td><?= $this->Html->link($moduleClass, ['action' => 'build', 'class' => $moduleInfo['class']]); ?></td>
-                <td><?= $this->Html->link('Build', ['action' => 'build', 'class' => $moduleInfo['class']]); ?></td>
-                <td><?= $this->Html->link('Build2', [
+                <td><?= h($moduleClass); ?></td>
+                <td class="actions">
+                    <?= $this->Html->link('Create new module', [
                         'action' => 'build2',
                         'path' => $moduleInfo['class'],
                         'refscope' => $refscope,
                         'refid' => $refid
-                    ]); ?></td>
-                <td><?= $this->Html->link('View (default)', ['action' => 'view', 'class' => $moduleInfo['class']]); ?></td>
-            </tr>
-        <?php endforeach; ?>
-    </table>
-
-    <h3>Legacy</h3>
-    <table class="ui table striped">
-        <thead>
-        <tr>
-            <th>Class</th>
-        </tr>
-        </thead>
-        <?php foreach ($modulesAvailable as $moduleClass): ?>
-            <tr>
-                <td><?= $this->Html->link($moduleClass, ['action' => 'create', 'path' => $moduleClass]); ?></td>
+                    ], ['class' => 'ui small button']); ?>
+                    <!--
+                    <?= $this->Html->link('View', ['action' => 'view', 'class' => $moduleInfo['class']]); ?>
+                    -->
+                </td>
             </tr>
         <?php endforeach; ?>
     </table>

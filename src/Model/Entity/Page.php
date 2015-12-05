@@ -22,6 +22,7 @@ class Page extends Entity
      * @var array
      */
     protected $_accessible = [
+        '*' => true, //@TODO define accessible fields
         'lft' => true,
         'rght' => true,
         'parent_id' => true,

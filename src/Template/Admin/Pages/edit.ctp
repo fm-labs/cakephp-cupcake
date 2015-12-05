@@ -8,8 +8,9 @@ $this->Toolbar->addLink(
     ['icon' => 'remove', 'confirm' => __('Are you sure you want to delete # {0}?', $content->id)]
 );
 $this->Toolbar->addLink(__('List {0}', __('Pages')), ['action' => 'index'], ['icon' => 'list']);
-$this->Toolbar->addLink(__('New {0}', __('Content Module')), ['action' => 'add_module'], ['icon' => 'add']);
+$this->Toolbar->addLink(__('Add {0}', __('Content Module')), ['action' => 'add_module'], ['icon' => 'add']);
 $this->Toolbar->addLink(__('Preview'), ['action' => 'preview', $content->id], ['icon' => 'eye', 'target' => '_preview']);
+$this->Toolbar->addLink(__('New {0}', __('Page')), ['action' => 'add'], ['icon' => 'add']);
 
 
 // HEADING
@@ -56,26 +57,56 @@ $this->assign('heading', __('Edit Page: {0}', $content->title));
                         ]);
                     ?>
                 </div>
+
+                <fieldset class="collapsed">
+                    <legend>Meta</legend>
+                    <div>
+                        <?= $this->Form->input('meta_desc'); ?>
+                        <?= $this->Form->input('meta_keywords'); ?>
+                        <?= $this->Form->input('meta_lang'); ?>
+                        <?= $this->Form->input('meta_robots'); ?>
+                    </div>
+                </fieldset>
+
+
+                <fieldset class="collapsed">
+                    <legend>Navigation</legend>
+                    <div>
+                        <?= $this->Form->input('hide_in_nav'); ?>
+                        <?= $this->Form->input('hide_in_sitemap'); ?>
+                    </div>
+                </fieldset>
+
             </div>
             <div class="ui divider"></div>
 
-            <h3>Related Posts</h3>
-            <table class="ui table">
+            <h2>Related Posts</h2>
+            <table class="ui compact table">
+                <thead>
                 <tr>
                     <th>Title</th>
                     <th class="actions">Actions</th>
                 </tr>
+                </thead>
+                <tbody>
                 <?php foreach($content->posts as $post): ?>
                     <tr>
                         <td><?= h($post->title); ?></td>
                         <td class="actions">
-                            <?= $this->Html->link('Edit', ['controller' => 'Posts', 'action' => 'edit', $post->id]); ?>
+                            <?= $this->Ui->link('Edit',
+                                ['controller' => 'Posts', 'action' => 'edit', $post->id],
+                                ['class' => 'ui mini button', 'icon' => 'edit']
+                            ); ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>
+                </tbody>
             </table>
             <div class="actions">
-                <?= $this->Html->link('Add Post', ['controller' => 'Posts', 'action' => 'add', 'refid' => $content->id, 'refscope' => 'Banana.Pages']); ?>
+                <?= $this->Html->link('Add Post',
+                    ['controller' => 'Posts', 'action' => 'add', 'refid' => $content->id, 'refscope' => 'Banana.Pages'],
+                    ['class' => 'ui primary button']
+                ); ?>
             </div>
 
 
@@ -132,7 +163,7 @@ $this->assign('heading', __('Edit Page: {0}', $content->title));
                 ?>
             </div>
             <h5 class="ui attached header">Structure</h5>
-            <div class="ui attached secondary segment form">
+            <div class="ui attached segment form">
                 <?php
                 echo $this->Form->input('parent_id',
                     ['options' => $pagesTree, 'empty' => '- Root Node -']);
@@ -154,7 +185,10 @@ $this->assign('heading', __('Edit Page: {0}', $content->title));
                     //['empty' => __('- Default Template -'), 'options' => $pageTemplates]
                 );
                 ?>
+                <?= $this->Form->input('cssid'); ?>
+                <?= $this->Form->input('cssclass'); ?>
             </div>
+
         </div>
     </div>
     <?= $this->Form->end() ?>

@@ -49,18 +49,18 @@ class PagesController extends FrontendController
 
         $rootPage = $this->Pages
             ->find()
-            ->where(['parent_id IS NULL', 'type' => 'root', 'redirect_location' => $host])
+            ->where(['parent_id IS NULL', 'type' => 'root', 'title' => $host])
             ->first();
 
         if (!$rootPage) {
             $rootPage = $this->Pages
                 ->find()
-                ->where(['parent_id IS NULL', 'type' => 'root', 'redirect_location' => '*'])
+                ->where(['parent_id IS NULL', 'type' => 'root'])
                 ->first();
         }
 
         if (!$rootPage) {
-            throw new NotFoundException(__("Root page missing for host {1}", $host));
+            throw new NotFoundException(__("Root page missing for host {0}", $host));
         }
 
         $this->setAction('view', $rootPage->id);

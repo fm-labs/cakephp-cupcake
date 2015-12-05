@@ -36,7 +36,7 @@
         <div class="preview-container ten wide column">
             <h2>- preview -</h2>
 
-            <?= $this->cell($module->path . 'Module', [$module]) ?>
+            <?= $this->cell($module->path . 'Module', [], ['module' => $module, 'section' => $section, 'page_id' => $page_id]) ?>
             <hr />
         </div>
     </div>

@@ -50,6 +50,9 @@ class Gallery extends Entity
         $images = [];
 
         array_walk($files, function($val) use (&$images, &$mm) {
+            if (preg_match('/^_/', basename($val))) {
+                return;
+            }
             $images[] = $mm->getFileUrl($val);
         });
 

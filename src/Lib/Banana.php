@@ -95,7 +95,35 @@ class Banana
 
     public static function getModulesAvailable()
     {
-        return Configure::read('Banana.modules');
+        $modules =  [
+            'PostsList' => [
+                'class' => 'Banana.PostsList'
+            ],
+            'PostsView' => [
+                'class' => 'Banana.PostsView'
+            ],
+            'TextHtml' => [
+                'class' => 'Banana.TextHtml'
+            ],
+            'Flexslider' => [
+                'class' => 'Banana.Flexslider'
+            ],
+            'PagesMenu' => [
+                'class' => 'Banana.PagesMenu'
+            ],
+            'PagesSubmenu' => [
+                'class' => 'Banana.PagesSubmenu'
+            ],
+            'Image' => [
+                'class' => 'Banana.Image'
+            ]
+        ];
+
+        if (Configure::check('Banana.modules')) {
+            $modules = array_merge($modules, Configure::read('Banana.modules'));
+        }
+
+        return $modules;
     }
 
 

@@ -52,10 +52,11 @@ class SectionCell extends Cell
         $this->loadModel('Banana.ContentModules');
 
         $this->_loadPageModules();
-        if (count($this->_pageModules) < 1) {
+        //if (count($this->_pageModules) < 1) {
             $this->_loadLayoutModules();
-        }
-        
+        //}
+
+        $this->set('page_id', $this->page_id);
         $this->set('section', $this->name);
         $this->set('layout_modules', $this->_layoutModules);
         $this->set('page_modules', $this->_pageModules);
