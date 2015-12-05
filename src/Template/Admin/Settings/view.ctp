@@ -12,7 +12,7 @@
             <?= $this->Ui->postLink(
                 __('Delete {0}', __('Setting')),
                 ['action' => 'delete', $setting->id],
-                ['class' => 'item', 'icon' => 'remove', 'confirm' => __('Are you sure you want to delete # {0}?', $setting->id)]) ?>
+                ['class' => 'item', 'icon' => 'trash', 'confirm' => __('Are you sure you want to delete # {0}?', $setting->id)]) ?>
 
             <?= $this->Ui->link(
                 __('List {0}', __('Settings')),

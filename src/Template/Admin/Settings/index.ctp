@@ -59,7 +59,7 @@
                                     <?= $this->Ui->postLink(
                                         __('Reset to default'),
                                         ['action' => 'delete', $setting->id],
-                                        ['class' => 'item', 'icon' => 'remove', 'confirm' => __('Are you sure you want to reset # {0}?', $key)]
+                                        ['class' => 'item', 'icon' => 'trash', 'confirm' => __('Are you sure you want to reset # {0}?', $key)]
                                     ) ?>
                                 </div>
                             </div>

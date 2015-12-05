@@ -54,7 +54,7 @@
                             <?= $this->Ui->postLink(
                                 __('Delete'),
                                 ['action' => 'delete', $module->id],
-                                ['class' => 'item', 'icon' => 'remove', 'confirm' => __('Are you sure you want to delete # {0}?', $module->id)]
+                                ['class' => 'item', 'icon' => 'trash', 'confirm' => __('Are you sure you want to delete # {0}?', $module->id)]
                             ) ?>
                         </div>
                     </div>

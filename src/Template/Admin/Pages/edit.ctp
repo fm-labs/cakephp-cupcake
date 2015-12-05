@@ -5,7 +5,7 @@ $this->extend('/Admin/Content/edit');
 $this->Toolbar->addLink(
     __('Delete'),
     ['action' => 'delete', $content->id],
-    ['icon' => 'remove', 'confirm' => __('Are you sure you want to delete # {0}?', $content->id)]
+    ['icon' => 'trash', 'confirm' => __('Are you sure you want to delete # {0}?', $content->id)]
 );
 $this->Toolbar->addLink(__('List {0}', __('Pages')), ['action' => 'index'], ['icon' => 'list']);
 $this->Toolbar->addLink(__('Add {0}', __('Content Module')), ['action' => 'add_module'], ['icon' => 'add']);

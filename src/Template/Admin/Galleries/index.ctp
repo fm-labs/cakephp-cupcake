@@ -26,20 +26,19 @@
     <?php foreach ($galleries as $gallery): ?>
         <tr>
             <td><?= $this->Number->format($gallery->id) ?></td>
-            <td><?= $this->Html->link($gallery->title, ['action' => 'view', $gallery->id]) ?></td>
+            <td><?= $this->Html->link($gallery->title, ['action' => 'edit', $gallery->id]) ?></td>
             <td><?= h($gallery->view_template) ?></td>
             <td><?= h($gallery->source) ?></td>
             <td class="actions">
                 <?php
                 $menu = new Backend\Lib\Menu\Menu();
-                $menu->add(__('View'), ['action' => 'view', $gallery->id]);
-
-                $dropdown = $menu->add('Dropdown');
-                $dropdown->getChildren()->add(
+                $menu->add(
                     __('Edit'),
                     ['action' => 'edit', $gallery->id],
                     ['icon' => 'edit']
                 );
+
+                $dropdown = $menu->add('Dropdown');
                 $dropdown->getChildren()->add(
                     __('Add Item'),
                     ['action' => 'addItem', $gallery->id],
@@ -48,7 +47,7 @@
                 $dropdown->getChildren()->add(
                     __('Delete'),
                     ['action' => 'delete', $gallery->id],
-                    ['icon' => 'remove', 'confirm' => __('Are you sure you want to delete # {0}?', $gallery->id)]
+                    ['icon' => 'trash', 'confirm' => __('Are you sure you want to delete # {0}?', $gallery->id)]
                 );
                 ?>
                 <?= $this->element('Backend.Table/table_row_actions', ['menu' => $menu]); ?>

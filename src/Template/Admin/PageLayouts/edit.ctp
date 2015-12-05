@@ -3,7 +3,7 @@
 <?= $this->Toolbar->addPostLink(
     __('Delete'),
     ['action' => 'delete', $pageLayout->id],
-    ['icon' => 'remove', 'confirm' => __('Are you sure you want to delete # {0}?', $pageLayout->id)]
+    ['icon' => 'trash', 'confirm' => __('Are you sure you want to delete # {0}?', $pageLayout->id)]
 )
 ?>
 <?= $this->Toolbar->addLink(

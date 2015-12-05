@@ -121,6 +121,12 @@ abstract class ContentController extends AppController
 
     public function duplicate($id = null)
     {
+        $this->setAction('copy', $id);
+    }
+
+
+    public function copy($id = null)
+    {
         $content = $this->model()->get($id);
         if (!$content) {
             throw new NotFoundException();

@@ -11,7 +11,7 @@
             'refscope' => $contentModule->refscope,
             'refid' => $contentModule->refid
         ], ['icon' => 'edit', 'target' => '_blank']); ?>
-        <?= $this->Ui->link('Remove', ['action' => 'remove_module', $module->id], ['icon' => 'remove']); ?>
+        <?= $this->Ui->link('Remove', ['action' => 'remove_module', $module->id], ['icon' => 'trash']); ?>
     </div>
     <div class="ui bottom attached segment">
         <?php //echo $this->cell('Banana.ModuleRenderer', ['module' => $module]); ?>

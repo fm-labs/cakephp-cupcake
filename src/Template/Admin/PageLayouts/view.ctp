@@ -8,7 +8,7 @@
 <?= $this->Toolbar->addLink(
     __('Delete {0}', __('Page Layout')),
     ['action' => 'delete', $pageLayout->id],
-    ['icon' => 'remove', 'confirm' => __('Are you sure you want to delete # {0}?', $pageLayout->id)]) ?>
+    ['icon' => 'trash', 'confirm' => __('Are you sure you want to delete # {0}?', $pageLayout->id)]) ?>
 
 <?= $this->Toolbar->addLink(
     __('List {0}', __('Page Layouts')),

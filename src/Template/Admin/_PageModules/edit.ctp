@@ -8,7 +8,7 @@
                 <?= $this->Ui->postLink(
                 __('Delete'),
                 ['action' => 'delete', $pageModule->id],
-                ['class' => 'item', 'icon' => 'remove', 'confirm' => __('Are you sure you want to delete # {0}?', $pageModule->id)]
+                ['class' => 'item', 'icon' => 'trash', 'confirm' => __('Are you sure you want to delete # {0}?', $pageModule->id)]
             )
             ?>
                     <?= $this->Ui->link(

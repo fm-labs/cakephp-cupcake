@@ -8,7 +8,7 @@
 <?= $this->Toolbar->addLink(
     __('Delete {0}', __('Gallery')),
     ['action' => 'delete', $gallery->id],
-    ['icon' => 'remove', 'confirm' => __('Are you sure you want to delete # {0}?', $gallery->id)]) ?>
+    ['icon' => 'trash', 'confirm' => __('Are you sure you want to delete # {0}?', $gallery->id)]) ?>
 
 <?= $this->Toolbar->addLink(
     __('List {0}', __('Galleries')),
@@ -56,12 +56,12 @@
         </tr>
         <tr>
             <td><?= __('Source') ?></td>
-            <td><?= h($gallery->view_template) ?></td>
+            <td><?= h($gallery->source) ?></td>
         </tr>
 
         <tr>
             <td><?= __('Source Folder') ?></td>
-            <td><?= h($gallery->view_template) ?></td>
+            <td><?= h($gallery->source_folder) ?></td>
         </tr>
 
 
@@ -84,70 +84,29 @@
     <table class="ui table">
         <tr>
             <th><?= __('Id') ?></th>
-            <th><?= __('Refscope') ?></th>
-            <th><?= __('Refid') ?></th>
-            <th><?= __('Parent Id') ?></th>
-            <th><?= __('Type') ?></th>
             <th><?= __('Title') ?></th>
-            <th><?= __('Slug') ?></th>
-            <th><?= __('Subheading') ?></th>
-            <th><?= __('Teaser Html') ?></th>
-            <th><?= __('Teaser Link Href') ?></th>
-            <th><?= __('Teaser Link Caption') ?></th>
-            <th><?= __('Teaser Image File') ?></th>
-            <th><?= __('Body Html') ?></th>
             <th><?= __('Image File') ?></th>
-            <th><?= __('Image Link Href') ?></th>
-            <th><?= __('Image Link Target') ?></th>
-            <th><?= __('Image Desc') ?></th>
-            <th><?= __('Image Files') ?></th>
             <th><?= __('Template') ?></th>
             <th><?= __('Cssclass') ?></th>
             <th><?= __('Cssid') ?></th>
-            <th><?= __('Meta Description') ?></th>
-            <th><?= __('Meta Keywords') ?></th>
-            <th><?= __('Is Published') ?></th>
-            <th><?= __('Publish Start Datetime') ?></th>
-            <th><?= __('Publish End Datetime') ?></th>
-            <th><?= __('Modified') ?></th>
-            <th><?= __('Created') ?></th>
+            <th><?= __('Published') ?></th>
             <th class="actions"><?= __('Actions') ?></th>
         </tr>
         <?php foreach ($gallery->posts as $posts): ?>
         <tr>
             <td><?= h($posts->id) ?></td>
-            <td><?= h($posts->refscope) ?></td>
-            <td><?= h($posts->refid) ?></td>
-            <td><?= h($posts->parent_id) ?></td>
-            <td><?= h($posts->type) ?></td>
             <td><?= h($posts->title) ?></td>
-            <td><?= h($posts->slug) ?></td>
-            <td><?= h($posts->subheading) ?></td>
-            <td><?= h($posts->teaser_html) ?></td>
-            <td><?= h($posts->teaser_link_href) ?></td>
-            <td><?= h($posts->teaser_link_caption) ?></td>
-            <td><?= h($posts->teaser_image_file) ?></td>
-            <td><?= h($posts->body_html) ?></td>
             <td><?= h($posts->image_file) ?></td>
-            <td><?= h($posts->image_link_href) ?></td>
-            <td><?= h($posts->image_link_target) ?></td>
-            <td><?= h($posts->image_desc) ?></td>
-            <td><?= h($posts->image_files) ?></td>
             <td><?= h($posts->template) ?></td>
             <td><?= h($posts->cssclass) ?></td>
             <td><?= h($posts->cssid) ?></td>
-            <td><?= h($posts->meta_description) ?></td>
-            <td><?= h($posts->meta_keywords) ?></td>
             <td><?= h($posts->is_published) ?></td>
-            <td><?= h($posts->publish_start_datetime) ?></td>
-            <td><?= h($posts->publish_end_datetime) ?></td>
-            <td><?= h($posts->modified) ?></td>
-            <td><?= h($posts->created) ?></td>
 
             <td class="actions">
                 <?= $this->Html->link(__('View'), ['controller' => 'Posts', 'action' => 'view', $posts->id]) ?>
 
                 <?= $this->Html->link(__('Edit'), ['controller' => 'Posts', 'action' => 'edit', $posts->id]) ?>
+                <?= $this->Html->link(__('Copy'), ['controller' => 'Posts', 'action' => 'copy', $posts->id]) ?>
 
                 <?= $this->Form->postLink(__('Delete'), ['controller' => 'Posts', 'action' => 'delete', $posts->id], ['confirm' => __('Are you sure you want to delete # {0}?', $posts->id)]) ?>
 
@@ -161,4 +120,6 @@
 
     <?= $this->Html->link(__('Add Item'), ['action' => 'addItem', $gallery->id]) ?>
     </div>
+
+    <?php debug($gallery); ?>
 </div>

@@ -8,7 +8,7 @@
 <?= $this->Toolbar->addPostLink(
     __('Delete {0}', __('Module')),
     ['action' => 'delete', $module->id],
-    ['icon' => 'remove', 'confirm' => __('Are you sure you want to delete # {0}?', $module->id)]) ?>
+    ['icon' => 'trash', 'confirm' => __('Are you sure you want to delete # {0}?', $module->id)]) ?>
 
 <?= $this->Toolbar->addLink(
     __('List {0}', __('Modules')),

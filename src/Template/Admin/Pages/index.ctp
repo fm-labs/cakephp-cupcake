@@ -41,7 +41,7 @@ $this->assign('heading', __('Pages'));
                                 <?= $this->Ui->deleteLink(
                                     __('Delete'),
                                     ['action' => 'delete', $content->id],
-                                    ['class' => 'item action-delete', 'icon' => 'remove', 'confirm' => __('Are you sure you want to delete # {0}?', $content->id)]
+                                    ['class' => 'item action-delete', 'icon' => 'trash', 'confirm' => __('Are you sure you want to delete # {0}?', $content->id)]
                                 ) ?>
                             </div>
                         </div>

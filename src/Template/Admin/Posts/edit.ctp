@@ -7,7 +7,7 @@
 $this->Toolbar->addPostLink([
     'title' => __('Delete'),
     'url' => ['action' => 'delete', $content->id],
-    'attr' => ['icon' => 'remove', 'confirm' => __('Are you sure you want to delete # {0}?', $content->id)],
+    'attr' => ['icon' => 'trash', 'confirm' => __('Are you sure you want to delete # {0}?', $content->id)],
 ]);
 $this->Toolbar->addLink([
     'title' => __('List {0}', __('Posts')),

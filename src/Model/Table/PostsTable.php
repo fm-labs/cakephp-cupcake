@@ -36,6 +36,9 @@ class PostsTable extends Table
             'concat' => 'body_html'
         ]);
 
+        $this->addBehavior('Banana.Copyable', [
+            'excludeFields' => ['is_published']
+        ]);
 
         if (Plugin::loaded('Media')) {
             $this->addBehavior('Media.Media', [

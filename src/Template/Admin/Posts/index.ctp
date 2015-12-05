@@ -48,7 +48,7 @@ $this->assign('heading', __('Posts'));
                             <?= $this->Ui->postLink(
                                 __('Delete'),
                                 ['action' => 'delete', $content->id],
-                                ['class' => 'item', 'icon' => 'remove', 'confirm' => __('Are you sure you want to delete # {0}?', $content->id)]
+                                ['class' => 'item', 'icon' => 'trash', 'confirm' => __('Are you sure you want to delete # {0}?', $content->id)]
                             ) ?>
                         </div>
                     </div>
