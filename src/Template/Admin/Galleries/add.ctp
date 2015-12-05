@@ -26,9 +26,11 @@
     <div class="users ui basic segment">
         <div class="ui form">
         <?php
-                echo $this->Form->input('title');
-                echo $this->Form->input('desc_html');
-                echo $this->Form->input('view_template');
+        echo $this->Form->input('title');
+        echo $this->Form->input('desc_html');
+        echo $this->Form->input('view_template');
+        echo $this->Form->input('source');
+        echo $this->Form->input('source_folder');
         ?>
         </div>
     </div>

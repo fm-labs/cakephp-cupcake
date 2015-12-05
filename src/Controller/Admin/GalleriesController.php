@@ -50,7 +50,7 @@ class GalleriesController extends AppController
             $gallery = $this->Galleries->patchEntity($gallery, $this->request->data);
             if ($this->Galleries->save($gallery)) {
                 $this->Flash->success(__('The gallery has been saved.'));
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['action' => 'edit', $gallery->id]);
             } else {
                 $this->Flash->error(__('The gallery could not be saved. Please, try again.'));
             }
