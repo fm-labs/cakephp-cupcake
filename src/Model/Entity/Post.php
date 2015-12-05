@@ -54,6 +54,11 @@ class Post extends Entity
         return $this->image_file;
     }
 
+    protected function _getImages()
+    {
+        return $this->image_files;
+    }
+
     protected function _getTeaserImage()
     {
         if (!empty($this->_properties['teaser_image_file'])) {
