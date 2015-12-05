@@ -32,7 +32,7 @@ $this->assign('heading', __('Edit {0}', __('Post')));
                 echo $this->Form->input('title');
                 echo $this->Form->input('slug');
                 echo $this->Form->input('subheading');
-                echo $this->Form->input('teaser_html', ['type' => 'htmltext']);
+                echo $this->Form->input('teaser_html', ['type' => 'htmleditor']);
                 echo $this->Form->input('teaser_link_caption');
                 echo $this->Form->input('teaser_link_href');
                 echo $this->Form->input('body_html', [
