@@ -1,7 +1,7 @@
-<div class="posts view teaser">
+<div class="posts teaser">
     <div class="image">
-        <?php if ($post->teaser_image_file): ?>
-        <?= $this->Html->image($post->teaser_image_file->url); ?>
+        <?php if ($post->teaser_image): ?>
+        <?= $this->Html->image($post->teaser_image->url); ?>
         <?php endif; ?>
     </div>
     <h2 class="heading">
