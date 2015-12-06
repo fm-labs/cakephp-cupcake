@@ -82,7 +82,9 @@ class Banana
             'page' => 'Page',
             'redirect' => 'Redirect',
             'root' => 'Website Root',
-            'static' => 'Static'
+            'static' => 'Static',
+            'shop_category' => 'ShopCategory',
+            'shop_product' => 'ShopProduct'
         ];
     }
 

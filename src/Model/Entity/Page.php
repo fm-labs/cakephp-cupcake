@@ -6,6 +6,7 @@ use Cake\Core\Exception\Exception;
 use Cake\ORM\Behavior\Translate\TranslateTrait;
 use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
+use Cake\Routing\Router;
 
 /**
  * Page Entity.
@@ -49,14 +50,18 @@ class Page extends Entity
             'plugin' => 'Banana',
             'controller' => 'Pages',
             'action' => 'view',
-            //'pageid' => $this->id,
-            //'slug' => $this->slug
+            'page_id' => $this->id,
+            'slug' => $this->slug,
             $this->id
         ];
 
         switch ($this->type) {
             case "controller":
                 $url = $this->_getRedirectControllerUrl();
+                break;
+            case "shop_category":
+                $catId = $this->_properties['redirect_location'];
+                $url = Router::url(TableRegistry::get('Shop.ShopCategories')->get($catId)->url). '&page_id=' . $this->id;
                 break;
             case "cell":
             case "module":
@@ -65,6 +70,37 @@ class Page extends Entity
         }
 
         return $url;
+    }
+
+    protected function _getChildren()
+    {
+        switch ($this->type) {
+            /*
+            case "shop_category":
+                $catId = $this->_properties['redirect_location'];
+                $children = TableRegistry::get('Shop.ShopCategories')->find('children', ['for' => $catId]);
+
+                // generate Page entity for ShopCategory
+                $Pages = TableRegistry::get('Banana.Pages');
+                $pages = [];
+                foreach ($children as $child) {
+                    $page = $Pages->newEntity([
+                        'id' => $this->id,
+                        'title' => $child->name,
+                        'type' => 'shop_category',
+                        'slug' => $child->slug,
+                        'redirect_location' => $child->id,
+                        'is_published' => $child->id
+                    ], ['validate' => false]);
+                    $pages[] = $page;
+                }
+
+                return $pages;
+            */
+            default:
+                return TableRegistry::get('Banana.Pages')->find('children', ['for' => $this->id])->all();
+        }
+
     }
 
     protected function _getRedirectControllerUrl()

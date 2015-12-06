@@ -223,6 +223,7 @@ $this->assign('heading', __('Edit Page: {0}', $content->title));
 
 <?php $this->append('scriptBottom'); ?>
     <script>
+        /*
         $(document).ready(function() {
 
             //$('.content-modules .menu .item:first-child').addClass('active');
@@ -237,5 +238,6 @@ $this->assign('heading', __('Edit Page: {0}', $content->title));
                 $('.select-type-' + type).fadeIn();
             }).trigger('change');
         })
+        */
     </script>
 <?php $this->end(); ?>

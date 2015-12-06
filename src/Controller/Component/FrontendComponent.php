@@ -22,14 +22,6 @@ use Cake\I18n\I18n;
  */
 class FrontendComponent extends Component
 {
-    public static $defaultViewClass = 'Banana.Frontend';
-
-    public static $pageModelClass = 'Banana.Pages';
-
-    //public static $pageThemeSetting = 'Settings.Banana.site.theme';
-
-    //public static $pageLayoutSetting = 'Settings.Banana.site.layout';
-
     /**
      * @var Controller
      */
@@ -40,52 +32,65 @@ class FrontendComponent extends Component
      */
     public $Pages;
 
+    protected $_defaultConfig = [
+        'viewClass' => 'Banana.Frontend',
+        'theme' => null,
+        'layout' => null
+    ];
+
     protected $_page;
 
-    protected $_theme;
-
-    protected $_layout;
-
-    /*
     public function initialize(array $config)
     {
         $this->controller = $this->_registry->getController();
 
-        $this->Pages = $this->controller->loadModel(static::$pageModelClass);
+        if (is_null($this->_config['theme'])) {
+            $this->_config['theme'] = Configure::read('Banana.frontend.theme');
+        }
 
-        if (!$this->controller->viewClass) {
-            $this->controller->viewClass = static::$defaultViewClass;
+        if (is_null($this->_config['layout'])) {
+            $this->_config['layout'] = 'frontend';
         }
-        //if (!$controller->theme) {
-        //    $controller->theme = null;
-        //}
-        if (!$this->controller->layout) {
-            $this->controller->layout = 'frontend';
+
+        $this->controller->loadComponent('Flash');
+        $this->controller->viewBuilder()->className($this->_config['viewClass']);
+        $this->controller->viewBuilder()->theme($this->_config['theme']);
+        $this->controller->viewBuilder()->layout($this->_config['layout']);
+
+    }
+
+    public function setPageId($pageId)
+    {
+        debug("Set pageId #".$pageId);
+        /*
+        $this->controller->loadModel('Banana.Pages');
+        try {
+            $page = $this->controller->Pages->get($pageId);
+        } catch (\Exception $ex) {
+            debug('FrontendComponent: Failed to set pageId: #'.$pageId.': ' . $ex->getMessage());
+            return;
         }
+        $this->_page = $page;
+        */
+        $this->controller->set('page_id', $pageId);
 
     }
 
     public function beforeFilter(Event $event)
     {
-
+        $this->detectPage();
     }
 
     public function beforeRender(Event $event)
     {
-        $controller = $this->_registry->getController();
-
-        if (!isset($controller->helpers['Banana.Script'])) {
-            $controller->helpers['Banana.Script'] = [];
-        }
-
-        $this->detectPage();
-
+        /*
         if (!$controller->theme && $this->_theme) {
             $controller->theme = $this->_theme;
         }
         if (!$controller->layout && $this->_layout) {
             $controller->layout = $this->_layout;
         }
+        */
     }
 
     public function detectPage()
@@ -98,13 +103,12 @@ class FrontendComponent extends Component
             elseif ($this->request->query('page_id')) {
                 $pageId = $this->request->query('page_id');
             }
-            if ($pageId) {
-                $page = $this->Pages->get($pageId);
-                $this->setPage($page);
-            }
+
+            $this->setPageId($pageId);
         }
     }
 
+    /*
     public function setPage(Page $page)
     {
         $this->_page = $page;

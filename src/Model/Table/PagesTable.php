@@ -30,7 +30,9 @@ class PagesTable extends Table
         $this->displayField('title');
         $this->primaryKey('id');
         $this->addBehavior('Timestamp');
-        $this->addBehavior('Tree.Tree');
+        $this->addBehavior('Tree.Tree', [
+            'level' => 'level'
+        ]);
         $this->addBehavior('Banana.ContentModule', [
             'alias' => 'ContentModules',
             'scope' => 'Banana.Pages'

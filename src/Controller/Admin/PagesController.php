@@ -40,7 +40,8 @@ class PagesController extends ContentController
     {
         $this->paginate = [
             'contain' => ['ParentPages'],
-            'order' => ['Pages.lft ASC']
+            'order' => ['Pages.lft ASC'],
+            'limit' => 100
         ];
 
         $pagesTree = $this->Pages->find('treeList')->toArray();
@@ -106,7 +107,7 @@ class PagesController extends ContentController
         }
 
         //@TODO Read custom sections from page layout
-        $sections = ['top', 'bottom', 'before', 'after', 'left', 'right'];
+        $sections = ['main', 'top', 'bottom', 'before', 'after', 'left', 'right'];
         $sections = array_combine($sections, $sections);
         $this->set('sections', $sections);
 
