@@ -3,6 +3,7 @@
 <?php
 // TOOLBAR
 $this->Toolbar->addLink(__('New {0}', __('Page')), ['action' => 'add'], ['icon' => 'add']);
+$this->Toolbar->addLink(__('Repair'), ['action' => 'repair'], ['icon' => 'configure']);
 
 // HEADING
 $this->assign('heading', __('Pages'));
@@ -37,6 +38,16 @@ $this->assign('heading', __('Pages'));
                                     __('Duplicate'),
                                     ['action' => 'duplicate', $content->id],
                                     ['class' => 'item', 'icon' => 'edit']
+                                ) ?>
+                                <?= $this->Ui->link(
+                                    __('Move Up'),
+                                    ['action' => 'moveUp', $content->id],
+                                    ['class' => 'item', 'icon' => 'arrow up']
+                                ) ?>
+                                <?= $this->Ui->link(
+                                    __('Move Down'),
+                                    ['action' => 'moveDown', $content->id],
+                                    ['class' => 'item', 'icon' => 'arrow down']
                                 ) ?>
                                 <?= $this->Ui->deleteLink(
                                     __('Delete'),

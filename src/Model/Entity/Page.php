@@ -72,7 +72,7 @@ class Page extends Entity
         return $url;
     }
 
-    protected function _getChildren()
+    protected function _____getChildren()
     {
         switch ($this->type) {
             /*

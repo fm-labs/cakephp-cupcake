@@ -157,4 +157,33 @@ class PagesController extends ContentController
         return Banana::getAvailablePageTypes();
     }
 
+    public function moveUp($id = null) {
+        $page = $this->Pages->get($id, ['contain' => []]);
+
+        if ($this->Pages->moveUp($page)) {
+            $this->Flash->success(__('The {0} has been moved up.', __('page')));
+        } else {
+            $this->Flash->error(__('The {0} could not be moved. Please, try again.', __('page')));
+        }
+        $this->redirect($this->referer(['action' => 'index']));
+    }
+
+    public function moveDown($id = null) {
+        $page = $this->Pages->get($id, ['contain' => []]);
+
+        if ($this->Pages->moveDown($page)) {
+            $this->Flash->success(__('The {0} has been moved down.', __('page')));
+        } else {
+            $this->Flash->error(__('The {0} could not be moved. Please, try again.', __('page')));
+        }
+        $this->redirect($this->referer(['action' => 'index']));
+    }
+
+    public function repair()
+    {
+        $this->Pages->recover();
+        $this->Flash->success(__('Shop Category tree recovery has been executed'));
+        $this->redirect($this->referer(['action' => 'index']));
+    }
+
 }
