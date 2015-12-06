@@ -61,7 +61,7 @@ class FrontendComponent extends Component
 
     public function setPageId($pageId)
     {
-        debug("Set pageId #".$pageId);
+        //debug("Set pageId #".$pageId);
         /*
         $this->controller->loadModel('Banana.Pages');
         try {
