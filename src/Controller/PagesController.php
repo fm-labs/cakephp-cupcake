@@ -89,6 +89,8 @@ class PagesController extends FrontendController
             ->contain(['Modules'])
             ->all();
 
+        $this->Frontend->setRefId($id);
+
         switch ($page->type) {
             case 'redirect':
                 return $this->redirect($page->redirect_location, $page->redirect_status);
@@ -123,7 +125,6 @@ class PagesController extends FrontendController
 
         $this->set('contentModules', $contentModules);
         $this->set('page', $page);
-        $this->set('page_id', $page->id);
 
         $view = ($page->page_template) ?: null;
         $layout = null;

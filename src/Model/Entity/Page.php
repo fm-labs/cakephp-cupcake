@@ -61,7 +61,7 @@ class Page extends Entity
                 break;
             case "shop_category":
                 $catId = $this->_properties['redirect_location'];
-                $url = Router::url(TableRegistry::get('Shop.ShopCategories')->get($catId)->url). '&page_id=' . $this->id;
+                $url = Router::url(TableRegistry::get('Shop.ShopCategories')->get($catId)->url); //. '&page_id=' . $this->id;
                 break;
             case "cell":
             case "module":

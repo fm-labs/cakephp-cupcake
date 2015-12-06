@@ -16,7 +16,7 @@ use Banana\Model\Table\ContentModulesTable;
  */
 class SectionCell extends Cell
 {
-    protected $_validCellOptions = ['name', 'page_id'];
+    protected $_validCellOptions = ['name', 'page_id', 'refscope', 'refid'];
 
     /**
      * @var string Section name. Can be passed as cell option.
@@ -24,6 +24,10 @@ class SectionCell extends Cell
     public $name;
 
     public $page_id;
+
+    public $refscope = 'Banana.Pages';
+
+    public $refid;
 
     protected $_layoutModules = [];
 
@@ -56,7 +60,8 @@ class SectionCell extends Cell
             $this->_loadLayoutModules();
         //}
 
-        $this->set('page_id', $this->page_id);
+        $this->set('refscope', $this->refscope);
+        $this->set('refid', $this->refid);
         $this->set('section', $this->name);
         $this->set('layout_modules', $this->_layoutModules);
         $this->set('page_modules', $this->_pageModules);
@@ -64,15 +69,14 @@ class SectionCell extends Cell
 
     protected function _loadPageModules()
     {
-        if (!isset($this->page_id)) {
-            debug("ContentModules skipped for section " . $this->name . ": No pageId set");
+        if (!isset($this->refid)) {
+            debug("ContentModules skipped for section " . $this->name . ": No refid set");
             $this->_pageModules = [];
             return;
         }
 
-        $pageId = $this->page_id;
         $this->_pageModules = $this->ContentModules->find()
-            ->where(['section' => $this->name, 'refscope' => 'Banana.Pages', 'refid' => $pageId])
+            ->where(['section' => $this->name, 'refscope' => $this->refscope, 'refid' => $this->refid])
             ->contain(['Modules'])
             ->all();
     }
@@ -80,7 +84,7 @@ class SectionCell extends Cell
     protected function _loadLayoutModules()
     {
         $this->_layoutModules = $this->ContentModules->find()
-            ->where(['section' => $this->name, 'refscope' => 'Banana.Pages', 'refid IS NULL'])
+            ->where(['section' => $this->name, 'refscope' => $this->refscope, 'refid IS NULL'])
             ->contain(['Modules'])
             ->all();
     }

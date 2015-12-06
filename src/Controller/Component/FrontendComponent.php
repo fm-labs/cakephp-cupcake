@@ -59,6 +59,16 @@ class FrontendComponent extends Component
 
     }
 
+    public function setRefScope($scope)
+    {
+        $this->controller->set('refscope', $scope);
+    }
+
+    public function setRefId($id)
+    {
+        $this->controller->set('refid', $id);
+    }
+
     public function setPageId($pageId)
     {
         //debug("Set pageId #".$pageId);
@@ -73,7 +83,7 @@ class FrontendComponent extends Component
         $this->_page = $page;
         */
         $this->controller->set('page_id', $pageId);
-
+        $this->setRefId($pageId);
     }
 
     public function beforeFilter(Event $event)

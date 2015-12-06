@@ -49,7 +49,8 @@ class FrontendView extends View
 
         $cellOptions += [
             'name' => $name,
-            'page_id' => $this->get('page_id')
+            'refscope' => $this->get('refscope'),
+            'refid' => $this->get('refid')
         ];
 
 
