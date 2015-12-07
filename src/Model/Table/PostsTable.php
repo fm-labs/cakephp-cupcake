@@ -43,9 +43,14 @@ class PostsTable extends Table
         if (Plugin::loaded('Media')) {
             $this->addBehavior('Media.Media', [
                 'fields' => [
-                    'teaser_image_file',
-                    'image_file',
+                    'teaser_image_file' => [
+                        'config' => 'images'
+                    ],
+                    'image_file' => [
+                        'config' => 'images'
+                    ],
                     'image_files' => [
+                        'config' => 'images',
                         'multiple' => true
                     ]
                 ]
