@@ -121,7 +121,7 @@ class PostsController extends ContentController
         } else {
         }
 
-        $mm = MediaManager::get('default');
+        $mm = MediaManager::get('images');
         $files = $mm->getSelectListRecursiveGrouped();
         $this->set('imageFiles', $files);
         $this->set('scope', $scope);
