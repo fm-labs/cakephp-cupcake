@@ -59,6 +59,12 @@ class PostsTable extends Table
             Log::warning('Attachment plugin is not loaded');
         }
 
+
+        $this->addBehavior('Translate', [
+            'fields' => ['title', 'slug', 'teaser_html', 'teaser_link_caption', 'body_html'],
+            'translationTable' => 'bc_i18n'
+        ]);
+
         /*
         if (Plugin::loaded('Attachment')) {
             $this->addBehavior('Attachment.Attachment', [

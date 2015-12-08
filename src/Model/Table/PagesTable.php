@@ -77,7 +77,10 @@ class PagesTable extends Table
             'conditions' => ['refscope' => 'Banana.Pages']
         ]);
 
-        $this->addBehavior('Translate', ['fields' => ['title', 'slug']]);
+        $this->addBehavior('Translate', [
+            'fields' => ['title', 'slug'],
+            'translationTable' => 'bc_i18n'
+        ]);
     }
 
     /**
