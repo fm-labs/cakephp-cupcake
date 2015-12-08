@@ -69,7 +69,7 @@ class Page extends Entity
                 default:
                     $url = $defaultUrl;
             }
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             $url = $defaultUrl;
         }
 
