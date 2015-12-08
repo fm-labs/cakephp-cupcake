@@ -3,7 +3,7 @@ use Cake\Core\Configure;
 
 $this->assign('title', $page->title);
 ?>
-<div class="page view">
+<div class="page view <?= $page->cssclass ?>" id="<?= $page->cssid; ?>">
     <?php if (Configure::read('debug')): ?>
     <div class="debug">
         Page: <?= h($page->title); ?> [ID <?= h($page->id); ?>]<br />
