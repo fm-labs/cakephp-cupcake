@@ -55,18 +55,22 @@ class Page extends Entity
             $this->id
         ];
 
-        switch ($this->type) {
-            case "controller":
-                $url = $this->_getRedirectControllerUrl();
-                break;
-            case "shop_category":
-                $catId = $this->_properties['redirect_location'];
-                $url = Router::url(TableRegistry::get('Shop.ShopCategories')->get($catId)->url); //. '&page_id=' . $this->id;
-                break;
-            case "cell":
-            case "module":
-            default:
-                $url = $defaultUrl;
+        try {
+            switch ($this->type) {
+                case "controller":
+                    $url = $this->_getRedirectControllerUrl();
+                    break;
+                case "shop_category":
+                    $catId = $this->_properties['redirect_location'];
+                    $url = Router::url(TableRegistry::get('Shop.ShopCategories')->get($catId)->url); //. '&page_id=' . $this->id;
+                    break;
+                case "cell":
+                case "module":
+                default:
+                    $url = $defaultUrl;
+            }
+        } catch (Exception $ex) {
+            $url = $defaultUrl;
         }
 
         return $url;
