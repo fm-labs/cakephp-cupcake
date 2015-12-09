@@ -12,12 +12,21 @@ $this->assign('heading', __('Pages'));
 ?>
 <div class="pages index">
     <table class="ui sortable compact table" data-sort-url="<?= $this->Url->build(['action' => 'tree_sort']) ?>">
+        <thead>
+        <tr>
+            <th><?= h('id') ?></th>
+            <th><?= h('title') ?></th>
+            <th><?= h('type') ?></th>
+            <th><?= h('url') ?></th>
+            <th class="actions"><?= __('Actions') ?></th>
+        </tr>
+        </thead>
         <tbody>
         <?php foreach ($contents as $content): ?>
             <tr data-id="<?= h($content->id) ?>">
+                <td><?= h($content->id); ?></td>
                 <td><?= $this->Html->link($pagesTree[$content->id], ['action' => 'edit', $content->id]); ?></td>
                 <td><?= h($content->type); ?></td>
-                <td><?= h($content->layout_template); ?></td>
                 <td><?= $this->Url->build($content->url); ?></td>
                 <td class="actions">
                     <div class="ui basic tiny buttons">

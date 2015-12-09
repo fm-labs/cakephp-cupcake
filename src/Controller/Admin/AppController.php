@@ -19,6 +19,10 @@ class AppController extends AbstractBackendController
 {
     public $viewClass = "Banana.Backend";
 
+    public $paginate = [
+        'limit' => 100,
+    ];
+
     public function beforeFilter(Event $event)
     {
         parent::beforeFilter($event);

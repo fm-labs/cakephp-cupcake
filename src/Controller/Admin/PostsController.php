@@ -16,6 +16,23 @@ class PostsController extends ContentController
     public $modelClass = 'Banana.Posts';
 
     /**
+     * Index method
+     *
+     * @return void
+     */
+    public function index()
+    {
+        $this->paginate = [
+            'contain' => [],
+            'order' => ['Posts.created DESC',],
+            'limit' => 100
+        ];
+
+        $this->set('contents', $this->paginate($this->Posts));
+        $this->set('_serialize', ['contents']);
+    }
+
+    /**
      * Add method
      *
      * @return void Redirects on successful add, renders view otherwise.
