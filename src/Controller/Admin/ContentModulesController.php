@@ -99,7 +99,7 @@ class ContentModulesController extends AppController
      */
     public function delete($id = null)
     {
-        $this->request->allowMethod(['post', 'delete']);
+        //$this->request->allowMethod(['post', 'delete']);
         $contentModule = $this->ContentModules->get($id);
         if ($this->ContentModules->delete($contentModule)) {
             $this->Flash->success(__('The {0} has been deleted.', __('content module')));
