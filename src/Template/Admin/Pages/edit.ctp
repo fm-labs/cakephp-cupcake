@@ -115,7 +115,7 @@ $this->assign('heading', __('Edit Page: {0}', $content->title));
             <div class="ui divider"></div>
 
             <!-- RELATED CONTENT MODULES -->
-            <div class="content-modules">
+            <div class="content-modules be-tabs">
                 <h3>Related content modules</h3>
                 <div class="ui top attached tabular menu">
                     <?php foreach($sections as $section): ?>

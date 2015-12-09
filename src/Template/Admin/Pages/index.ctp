@@ -11,7 +11,7 @@ $this->assign('heading', __('Pages'));
 // CONTENT
 ?>
 <div class="pages index">
-    <table class="ui sortable table" data-sort-url="<?= $this->Url->build(['action' => 'tree_sort']) ?>">
+    <table class="ui sortable compact table" data-sort-url="<?= $this->Url->build(['action' => 'tree_sort']) ?>">
         <tbody>
         <?php foreach ($contents as $content): ?>
             <tr data-id="<?= h($content->id) ?>">

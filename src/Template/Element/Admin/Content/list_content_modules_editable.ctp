@@ -6,19 +6,30 @@
         [<?= h($contentModule->section); ?>]
         [<?= h($module->path); ?>]
         <?= h($module->name); ?>
+        <br />
 
-        <?= $this->Ui->link('Edit', [
+        <?= $this->Ui->link('Edit Module', [
             'controller' => 'ModuleBuilder',
             'action' => 'edit',
             $module->id,
             'refscope' => $contentModule->refscope,
             'refid' => $contentModule->refid
-        ], ['icon' => 'edit', 'target' => '_blank']); ?>
-        <?= $this->Ui->link('Remove', ['action' => 'remove_module', $module->id], ['icon' => 'trash']); ?>
+        ], ['icon' => 'edit', 'target' => '_blank']); ?> |
+
+        <?= $this->Ui->link('Edit Content Module',
+            [ 'controller' => 'ContentModules', 'action' => 'edit', $contentModule->id ],
+            ['icon' => 'edit', 'target' => '_blank']); ?>
+        <?= $this->Ui->link('Remove Content Module',
+            [ 'controller' => 'ContentModules', 'action' => 'delete', $contentModule->id ],
+            ['icon' => 'trash']); ?>
     </div>
     <div class="ui bottom attached segment">
-        <?php //echo $this->cell('Banana.ModuleRenderer', ['module' => $module]); ?>
-        <?php debug($module->params_arr); ?>
+        <h4>Module Params</h4>
+        <ul>
+        <?php foreach($module->params_arr as $k => $v): ?>
+            <li><?= h($k) ?>:<?= (is_array($v)) ? '[Array]' : $v; ?></li>
+        <?php endforeach; ?>
+        </ul>
     </div>
 <?php endforeach; ?>
 <?php endif; ?>

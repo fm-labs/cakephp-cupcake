@@ -8,7 +8,7 @@ $this->Toolbar->addLink(__('New {0}', __('Post')), ['action' => 'add'], ['icon' 
 $this->assign('heading', __('Posts'));
 ?>
 <div class="posts index">
-    <table class="ui table striped">
+    <table class="ui table compact striped">
     <thead>
         <tr>
             <th><?= $this->Paginator->sort('id') ?></th>

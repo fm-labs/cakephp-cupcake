@@ -12,7 +12,7 @@
     ['icon' => 'add']
 ) ?>
 <div class="galleries index">
-    <table class="ui table striped">
+    <table class="ui table compact striped">
     <thead>
         <tr>
             <th><?= $this->Paginator->sort('id') ?></th>
