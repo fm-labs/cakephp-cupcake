@@ -42,7 +42,7 @@
         <div class="item">
             <div class="content">
                 <span class="header"><?= __('Password') ?></span>
-                <div class="description"><?= h($user->password) ?></div>
+                <div class="description"><?= '' // h($user->password) ?></div>
             </div>
         </div>
 

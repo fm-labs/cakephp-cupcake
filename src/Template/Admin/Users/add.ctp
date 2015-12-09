@@ -25,7 +25,7 @@
     <?= $this->Form->create($user); ?>
     <?php
         echo $this->Form->input('username');
-        echo $this->Form->input('password');
+        //echo $this->Form->input('password');
         echo $this->Form->input('is_login_allowed');
     ?>
     <?= $this->Form->button(__('Submit')) ?>
