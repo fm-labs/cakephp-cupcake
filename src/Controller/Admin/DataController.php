@@ -8,17 +8,17 @@ use Media\Lib\Media\MediaManager;
 
 class DataController extends AppController
 {
-    public function editorImageList($media = 'gallery')
+    public function editorImageList($media = 'images')
     {
         $this->viewClass = 'Json';
 
         $list = [];
         try {
             $mm = MediaManager::get($media);
-            $files = $mm->listFilesRecursive();
+            $files = $mm->getSelectListRecursive();
 
-            array_walk($files, function($filename) use (&$list, &$mm) {
-                $list[] = ['title' => $filename, 'value' => $mm->getFileUrl($filename)];
+            array_walk($files, function($filename, $idx) use (&$list, &$mm) {
+                $list[] = ['title' => $idx, 'value' => $filename];
             });
         } catch (\Exception $ex) {
             Log::critical('DataController::editorImageList: ' . $ex->getMessage());
