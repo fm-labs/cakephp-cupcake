@@ -28,7 +28,12 @@
             <td><?= $this->Number->format($gallery->id) ?></td>
             <td><?= $this->Html->link($gallery->title, ['action' => 'edit', $gallery->id]) ?></td>
             <td><?= h($gallery->view_template) ?></td>
-            <td><?= h($gallery->source) ?></td>
+            <td><?= h($gallery->source) ?>
+                <?php if ($gallery->source == 'folder') {
+                    echo '<br /><small>' . h($gallery->source_folder) . '</small>';
+                }
+                ?>
+            </td>
             <td class="actions">
                 <?php
                 $menu = new Backend\Lib\Menu\Menu();

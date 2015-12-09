@@ -18,6 +18,9 @@ class GalleriesController extends AppController
      */
     public function index()
     {
+        $this->paginate['limit'] = 100;
+        $this->paginate['order'] = ['Galleries.title' => 'ASC'];
+
         $this->set('galleries', $this->paginate($this->Galleries));
         $this->set('_serialize', ['galleries']);
     }
@@ -116,7 +119,7 @@ class GalleriesController extends AppController
      */
     public function delete($id = null)
     {
-        $this->request->allowMethod(['post', 'delete']);
+        //$this->request->allowMethod(['post', 'delete']);
         $gallery = $this->Galleries->get($id);
         if ($this->Galleries->delete($gallery)) {
             $this->Flash->success(__('The gallery has been deleted.'));
