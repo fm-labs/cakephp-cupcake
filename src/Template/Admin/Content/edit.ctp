@@ -1,3 +1,4 @@
+<?php $this->loadHelper('Backend.Tabs'); ?>
 <div class="contents form">
 
     <!-- header -->

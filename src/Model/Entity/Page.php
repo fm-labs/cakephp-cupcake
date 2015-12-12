@@ -52,7 +52,7 @@ class Page extends Entity
             'action' => 'view',
             'page_id' => $this->id,
             'slug' => $this->slug,
-            $this->id
+            //$this->id
         ];
 
         try {

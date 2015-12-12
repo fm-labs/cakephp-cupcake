@@ -1,5 +1,4 @@
 <?php
-$this->loadHelper('Backend.Tabs');
 $this->extend('/Admin/Content/edit');
 
 // EXTEND: TOOLBAR
@@ -128,65 +127,79 @@ $this->assign('heading', __('Edit Page: {0}', $content->title));
     <div class="ui divider"></div>
 
 
-    <?php $this->Tabs->start(); ?>
-    <?php $this->Tabs->add(__('Related Posts')); ?>
 
-    <h3>Related Posts</h3>
-    <table class="ui compact table">
-        <thead>
-        <tr>
-            <th>Title</th>
-            <th class="actions">Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <?php foreach($content->posts as $post): ?>
-            <tr>
-                <td><?= h($post->title); ?></td>
-                <td class="actions">
-                    <?= $this->Ui->link('Edit',
-                        ['controller' => 'Posts', 'action' => 'edit', $post->id],
-                        ['class' => 'ui mini button', 'icon' => 'edit']
-                    ); ?>
-                </td>
-            </tr>
-        <?php endforeach; ?>
-        </tbody>
-    </table>
-    <div class="actions">
-        <?= $this->Ui->link('Add Post',
-            ['controller' => 'Posts', 'action' => 'add', 'refid' => $content->id, 'refscope' => 'Banana.Pages'],
-            ['class' => 'ui button', 'icon' => 'add']
-        ); ?>
-    </div>
+    <div class="be-tabs">
 
-
-    <?php $this->Tabs->add('Related Content Modules'); ?>
-    <!-- RELATED CONTENT MODULES -->
-        <h3>Related content modules</h3>
-        <?= $this->element('Banana.Admin/Content/related_content_modules', compact('content', 'sections')); ?>
-        <br />
-        <?= $this->Ui->link('Build a new module for this page', [
-            'controller' => 'ModuleBuilder',
-            'action' => 'build2',
-            'refscope' => 'Banana.Pages',
-            'refid' => $content->id
-        ], ['class' => 'ui button', 'icon' => 'add']); ?>
-
-
-    <?php $this->Tabs->add('Link existing module'); ?>
-        <h3>Link existing module</h3>
-        <div class="ui form">
-            <?= $this->Form->create(null, ['url' => ['action' => 'linkModule', $content->id]]); ?>
-            <?= $this->Form->input('refscope', ['default' => 'Banana.Pages']); ?>
-            <?= $this->Form->input('refid', ['default' => $content->id]); ?>
-            <?= $this->Form->input('module_id', ['options' => $availableModules]); ?>
-            <?= $this->Form->input('section'); ?>
-            <?= $this->Form->submit('Link module'); ?>
-            <?= $this->Form->end(); ?>
+        <div class="ui top attached tabular menu">
+            <a class="item" data-tab="tab-posts"><?= __('Related Posts'); ?></a>
+            <a class="item" data-tab="tab-content-modules"><?= __('Related content modules'); ?></a>
+            <a class="item" data-tab="tab-link-module"><?= __('Link existing module'); ?></a>
         </div>
 
-    <?php echo $this->Tabs->render(); ?>
+        <!-- RELATED POSTS -->
+        <div class="tabs">
+            <div class="ui bottom attached segment tab related posts" data-tab="tab-posts">
+                <h3>Related Posts</h3>
+                <table class="ui compact table">
+                    <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th class="actions">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach($content->posts as $post): ?>
+                        <tr>
+                            <td><?= h($post->title); ?></td>
+                            <td class="actions">
+                                <?= $this->Ui->link('Edit',
+                                    ['controller' => 'Posts', 'action' => 'edit', $post->id],
+                                    ['class' => 'ui mini button', 'icon' => 'edit']
+                                ); ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+                <div class="actions">
+                    <?= $this->Ui->link('Add Post',
+                        ['controller' => 'Posts', 'action' => 'add', 'refid' => $content->id, 'refscope' => 'Banana.Pages'],
+                        ['class' => 'ui button', 'icon' => 'add']
+                    ); ?>
+                </div>
+
+            </div>
+
+            <!-- RELATED CONTENT MODULES -->
+            <div class="ui bottom attached segment tab related content-modules" data-tab="tab-content-modules">
+                <h3>Related content modules</h3>
+                <?= $this->element('Banana.Admin/Content/related_content_modules', compact('content', 'sections')); ?>
+                <br />
+                <?= $this->Ui->link('Build a new module for this page', [
+                    'controller' => 'ModuleBuilder',
+                    'action' => 'build2',
+                    'refscope' => 'Banana.Pages',
+                    'refid' => $content->id
+                ], ['class' => 'ui button', 'icon' => 'add']); ?>
+
+            </div>
+
+
+            <div class="ui bottom attached segment tab link-module" data-tab="tab-link-module">
+                <h3>Link existing module</h3>
+                <div class="ui form">
+                    <?= $this->Form->create(null, ['url' => ['action' => 'linkModule', $content->id]]); ?>
+                    <?= $this->Form->input('refscope', ['default' => 'Banana.Pages']); ?>
+                    <?= $this->Form->input('refid', ['default' => $content->id]); ?>
+                    <?= $this->Form->input('module_id', ['options' => $availableModules]); ?>
+                    <?= $this->Form->input('section'); ?>
+                    <?= $this->Form->submit('Link module'); ?>
+                    <?= $this->Form->end(); ?>
+                </div>
+            </div>
+
+        </div>
+    </div>
 
 </div>
 
