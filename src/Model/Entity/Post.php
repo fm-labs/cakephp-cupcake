@@ -32,7 +32,41 @@ class Post extends Entity
         'publish_end_datetime' => true,
     ];
 
+
     /**
+     * Get Teaser Link Url.
+     * Fallback to view url, if body is set.
+     *
+     * @return array|null
+     */
+    protected function _getTeaserLinkUrl()
+    {
+        // customer teaser link
+        if (!empty($this->_properties['teaser_link_href'])) {
+            debug("ID $this->id has a custom teaser url");
+            return $this->_properties['teaser_link_href'];
+        }
+
+        if (!empty($this->_properties['body_html'])) {
+            return $this->_getViewUrl();
+        }
+
+        return null;
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function _getTeaserLinkTitle()
+    {
+        if (!empty($this->_properties['teaser_link_caption'])) {
+            return $this->_properties['teaser_link_caption'];
+        }
+        return __('Read more');
+    }
+
+    /**
+     * Virtual Field 'url'
      * @deprecated Use _getViewUrl() instead
      */
     protected function _getUrl()
@@ -40,55 +74,55 @@ class Post extends Entity
         return $this->_getViewUrl();
     }
 
+    /**
+     * Virtual Field 'perma_url'
+     * @return string
+     */
     protected function _getPermaUrl() {
         return '/?postid=' . $this->id;
     }
 
+    /**
+     * Virtual Field 'view_url'
+     * @return array
+     */
     protected function _getViewUrl()
     {
-        return ['prefix' => false, 'plugin' => 'Banana', 'controller' => 'Posts', 'action' => 'view',  $this->id];
+        return [
+            'prefix' => false, 'plugin' => 'Banana', 'controller' => 'Posts',
+            'action' => 'view',  $this->id
+        ];
     }
 
+    /**
+     * Virtual field 'image'. Wrapper for 'image_file'
+     * @return mixed
+     */
     protected function _getImage()
     {
         return $this->image_file;
     }
 
+    /**
+     * Virtual field 'images'. Wrapper for 'image_files'
+     * @return mixed
+     */
     protected function _getImages()
     {
         return $this->image_files;
     }
 
+    /**
+     * Virtual field 'teaser_image'. Wrapper for 'teaser_image_file'
+     * Fallback to 'image_file'
+     * @return mixed
+     */
     protected function _getTeaserImage()
     {
         if (!empty($this->_properties['teaser_image_file'])) {
             return $this->_properties['teaser_image_file'];
         }
         return $this->image_file;
-    }
-
-    protected function _getTeaserLinkUrl()
-    {
-        #if (isset($this->_properties['teaser_link_href'])) {
-        #    return $this->_properties['teaser_link_href'];
-        #}
-        return $this->_getViewUrl();
-    }
-
-    protected function _getRealTeaserLinkCaption()
-    {
-        if (!empty($this->_properties['teaser_link_caption'])) {
-            return $this->_properties['teaser_link_caption'];
-        }
-        return __('Continue');
-    }
-
-    protected function _getRealTeaserLinkHref()
-    {
-        if (!empty($this->_properties['teaser_link_href'])) {
-            return $this->_properties['teaser_link_href'];
-        }
-        return $this->viewUrl;
     }
 
     protected function _getReftitle()
