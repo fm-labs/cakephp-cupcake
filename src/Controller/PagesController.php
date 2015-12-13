@@ -96,7 +96,8 @@ class PagesController extends FrontendController
                 return $this->redirect($page->redirect_location, $page->redirect_status);
             case 'page':
             case 'root':
-                return $this->redirect(['action' => 'view', $page->redirect_page_id], $page->redirect_status);
+                $page = $this->Pages->get($page->redirect_page_id, ['contain' => []]);
+                return $this->redirect($page->url, $page->redirect_status);
             case 'controller':
                 return $this->redirect($page->redirect_controller_url, $page->redirect_status);
             //case 'root':
@@ -127,7 +128,7 @@ class PagesController extends FrontendController
         $this->set('page', $page);
 
         $view = ($page->page_template) ?: null;
-        $layout = null;
+        $layout = ($page->page_layout) ? $page->page_layout->template : null;
 
         return $this->render($view, $layout);
     }

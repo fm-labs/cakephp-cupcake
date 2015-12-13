@@ -43,7 +43,6 @@ class Post extends Entity
     {
         // customer teaser link
         if (!empty($this->_properties['teaser_link_href'])) {
-            debug("ID $this->id has a custom teaser url");
             return $this->_properties['teaser_link_href'];
         }
 
