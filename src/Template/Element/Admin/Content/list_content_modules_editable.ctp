@@ -9,6 +9,7 @@
         <br />
 
         <?= $this->Ui->link('Edit Module', [
+            'plugin' => 'Banana',
             'controller' => 'ModuleBuilder',
             'action' => 'edit',
             $module->id,
@@ -17,10 +18,10 @@
         ], ['icon' => 'edit', 'target' => '_blank']); ?> |
 
         <?= $this->Ui->link('Edit Content Module',
-            [ 'controller' => 'ContentModules', 'action' => 'edit', $contentModule->id ],
+            ['plugin' => 'Banana', 'controller' => 'ContentModules', 'action' => 'edit', $contentModule->id ],
             ['icon' => 'edit', 'target' => '_blank']); ?>
         <?= $this->Ui->link('Remove Content Module',
-            [ 'controller' => 'ContentModules', 'action' => 'delete', $contentModule->id ],
+            ['plugin' => 'Banana',  'controller' => 'ContentModules', 'action' => 'delete', $contentModule->id ],
             ['icon' => 'trash']); ?>
     </div>
     <div class="ui bottom attached segment">
