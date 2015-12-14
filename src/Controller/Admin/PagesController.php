@@ -146,7 +146,8 @@ class PagesController extends ContentController
 
     public function preview($id = null)
     {
-        $this->redirect(['prefix' => false, 'plugin' => 'Banana', 'controller' => 'Pages', 'action' => 'view', $id]);
+        $page = $this->Pages->get($id);
+        $this->redirect($page->url);
     }
 
     /**
