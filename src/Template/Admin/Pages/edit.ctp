@@ -20,6 +20,11 @@ $this->assign('heading', __d('banana','Edit Page: {0}', $content->title));
 // CONTENT
 ?>
 <div class="pages">
+
+
+    <?php $this->Tabs->start(); ?>
+    <?php $this->Tabs->add(__('Page')); ?>
+
     <?= $this->Form->create($content); ?>
     <div class="ui grid">
         <div class="twelve wide column">
@@ -128,7 +133,6 @@ $this->assign('heading', __d('banana','Edit Page: {0}', $content->title));
     <div class="ui divider"></div>
 
 
-    <?php $this->Tabs->start(); ?>
     <?php $this->Tabs->add(__d('banana','Related Posts')); ?>
 
     <h3>Related Posts</h3>

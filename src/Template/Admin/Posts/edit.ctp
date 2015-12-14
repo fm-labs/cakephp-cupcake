@@ -1,6 +1,7 @@
 <?php $this->Html->addCrumb(__d('banana','Posts'), ['action' => 'index']); ?>
 <?php $this->Html->addCrumb(__d('banana','Edit {0}', __d('banana','Post'))); ?>
 <?php $this->extend('/Admin/Content/edit'); ?>
+<?php $this->loadHelper('Backend.Tabs'); ?>
 <?php
 // TOOLBAR
 
@@ -23,6 +24,9 @@ $this->assign('heading', __d('banana','Edit {0}', __d('banana','Post')));
         <?= $this->Html->link(__d('banana','This post is linked to {0}', $content->reftitle), $content->refurl); ?>
     </div>
     <?php endif; ?>
+
+    <?php $this->Tabs->start(); ?>
+    <?php $this->Tabs->add(__('Post')); ?>
 
     <?= $this->Form->create($content); ?>
     <div class="ui grid">
@@ -191,6 +195,7 @@ $this->assign('heading', __d('banana','Edit {0}', __d('banana','Post')));
     </div>
     <?= $this->Form->end() ?>
 
+    <?php echo $this->Tabs->render(); ?>
 
 </div>
 
