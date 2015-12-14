@@ -1,38 +1,38 @@
-<?php $this->Html->addCrumb(__('Content Modules'), ['action' => 'index']); ?>
+<?php $this->Html->addCrumb(__d('banana','Content Modules'), ['action' => 'index']); ?>
 <?php $this->Html->addCrumb($contentModule->id); ?>
 <div class="be-toolbar actions">
     <div class="ui secondary menu">
         <div class="item"></div>
         <div class="right menu">
             <?= $this->Ui->link(
-                __('Edit {0}', __('Content Module')),
+                __d('banana','Edit {0}', __d('banana','Content Module')),
                 ['action' => 'edit', $contentModule->id],
                 ['class' => 'item', 'icon' => 'edit']
             ) ?>
             <?= $this->Ui->postLink(
-                __('Delete {0}', __('Content Module')),
+                __d('banana','Delete {0}', __d('banana','Content Module')),
                 ['action' => 'delete', $contentModule->id],
-                ['class' => 'item', 'icon' => 'trash', 'confirm' => __('Are you sure you want to delete # {0}?', $contentModule->id)]) ?>
+                ['class' => 'item', 'icon' => 'trash', 'confirm' => __d('banana','Are you sure you want to delete # {0}?', $contentModule->id)]) ?>
 
             <?= $this->Ui->link(
-                __('List {0}', __('Content Modules')),
+                __d('banana','List {0}', __d('banana','Content Modules')),
                 ['action' => 'index'],
                 ['class' => 'item', 'icon' => 'list']
             ) ?>
             <?= $this->Ui->link(
-                __('New {0}', __('Content Module')),
+                __d('banana','New {0}', __d('banana','Content Module')),
                 ['action' => 'add'],
                 ['class' => 'item', 'icon' => 'add']
             ) ?>
             <div class="ui item dropdown">
                 <div class="menu">
                     <?= $this->Ui->link(
-                        __('List {0}', __('Modules')),
+                        __d('banana','List {0}', __d('banana','Modules')),
                         ['controller' => 'Modules', 'action' => 'index'],
                         ['class' => 'item', 'icon' => 'list']
                     ) ?>
                     <?= $this->Ui->link(
-                        __('New {0}', __('Module')),
+                        __d('banana','New {0}', __d('banana','Module')),
                         ['controller' => 'Modules', 'action' => 'add'],
                         ['class' => 'item', 'icon' => 'add']
                     ) ?>
@@ -51,32 +51,32 @@
         <!--
         <thead>
         <tr>
-            <th><?= __('Label'); ?></th>
-            <th><?= __('Value'); ?></th>
+            <th><?= __d('banana','Label'); ?></th>
+            <th><?= __d('banana','Value'); ?></th>
         </tr>
         </thead>
         -->
 
         <tr>
-            <td><?= __('Refscope') ?></td>
+            <td><?= __d('banana','Refscope') ?></td>
             <td><?= h($contentModule->refscope) ?></td>
         </tr>
         <tr>
-            <td><?= __('Module') ?></td>
+            <td><?= __d('banana','Module') ?></td>
             <td><?= $contentModule->has('module') ? $this->Html->link($contentModule->module->name, ['controller' => 'Modules', 'action' => 'view', $contentModule->module->id]) : '' ?></td>
         </tr>
         <tr>
-            <td><?= __('Section') ?></td>
+            <td><?= __d('banana','Section') ?></td>
             <td><?= h($contentModule->section) ?></td>
         </tr>
 
 
         <tr>
-            <td><?= __('Id') ?></td>
+            <td><?= __d('banana','Id') ?></td>
             <td><?= $this->Number->format($contentModule->id) ?></td>
         </tr>
         <tr>
-            <td><?= __('Refid') ?></td>
+            <td><?= __d('banana','Refid') ?></td>
             <td><?= $this->Number->format($contentModule->refid) ?></td>
         </tr>
 

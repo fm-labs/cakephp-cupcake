@@ -60,7 +60,7 @@ class PagesController extends FrontendController
         }
 
         if (!$rootPage) {
-            throw new NotFoundException(__("Root page missing for host {0}", $host));
+            throw new NotFoundException(__d('banana',"Root page missing for host {0}", $host));
         }
 
         $this->setAction('view', $rootPage->id);
@@ -97,7 +97,7 @@ class PagesController extends FrontendController
         }
 
         if (!$page) {
-            throw new NotFoundException(__("Page {0} not found", strip_tags($id)));
+            throw new NotFoundException(__d('banana',"Page {0} not found", strip_tags($id)));
         }
 
         $this->Frontend->setRefId($page->id);

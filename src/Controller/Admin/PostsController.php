@@ -43,7 +43,7 @@ class PostsController extends ContentController
         if ($this->request->is('post')) {
             $content = $this->Posts->patchEntity($content, $this->request->data);
             if ($this->Posts->save($content)) {
-                $this->Flash->success(__('The {0} has been saved.', __('content')));
+                $this->Flash->success(__d('banana','The {0} has been saved.', __d('banana','content')));
 
                 /*
                 if ($link == true && $refid && $refscope) {
@@ -63,7 +63,7 @@ class PostsController extends ContentController
                         $contentModule->section = 'main';
 
                         if ($this->ContentModules->save($contentModule)) {
-                            $this->Flash->success(__('Content module has been created for post {0}', $content->id));
+                            $this->Flash->success(__d('banana','Content module has been created for post {0}', $content->id));
                         } else {
                             debug($contentModule->errors());
                         }
@@ -75,7 +75,7 @@ class PostsController extends ContentController
 
                 return $this->redirect(['action' => 'edit', $content->id]);
             } else {
-                $this->Flash->error(__('The {0} could not be saved. Please, try again.', __('content')));
+                $this->Flash->error(__d('banana','The {0} could not be saved. Please, try again.', __d('banana','content')));
             }
         } else {
             $this->Posts->patchEntity($content, $this->request->query, ['validate' => false]);
@@ -102,10 +102,10 @@ class PostsController extends ContentController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $content = $this->Posts->patchEntity($content, $this->request->data);
             if ($this->Posts->save($content)) {
-                $this->Flash->success(__('The {0} has been saved.', __('content')));
+                $this->Flash->success(__d('banana','The {0} has been saved.', __d('banana','content')));
                 //return $this->redirect(['action' => 'edit', $content->id]);
             } else {
-                $this->Flash->error(__('The {0} could not be saved. Please, try again.', __('content')));
+                $this->Flash->error(__d('banana','The {0} could not be saved. Please, try again.', __d('banana','content')));
             }
         }
 
@@ -127,13 +127,13 @@ class PostsController extends ContentController
             $content = $this->Posts->patchEntity($content, $this->request->data);
             //$content->$scope = $this->request->data[$scope];
             if ($this->Posts->save($content)) {
-                $this->Flash->success(__('The {0} has been saved.', __('content')));
+                $this->Flash->success(__d('banana','The {0} has been saved.', __d('banana','content')));
 
                 if (!$this->request->is('iframe')) {
                     return $this->redirect(['action' => 'edit', $content->id]);
                 }
             } else {
-                $this->Flash->error(__('The {0} could not be saved. Please, try again.', __('content')));
+                $this->Flash->error(__d('banana','The {0} could not be saved. Please, try again.', __d('banana','content')));
             }
         } else {
         }
@@ -165,9 +165,9 @@ class PostsController extends ContentController
         $content->set($scope, '');
 
         if ($this->Posts->save($content)) {
-            $this->Flash->success(__('The {0} has been saved.', __('content')));
+            $this->Flash->success(__d('banana','The {0} has been saved.', __d('banana','content')));
         } else {
-            $this->Flash->error(__('The {0} could not be saved. Please, try again.', __('content')));
+            $this->Flash->error(__d('banana','The {0} could not be saved. Please, try again.', __d('banana','content')));
         }
         return $this->redirect(['action' => 'edit', $content->id]);
     }

@@ -62,10 +62,10 @@ abstract class ContentController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $content = $this->model()->patchEntity($content, $this->request->data);
             if ($this->model()->save($content)) {
-                $this->Flash->success(__('The {0} has been saved.', __('content')));
+                $this->Flash->success(__d('banana','The {0} has been saved.', __d('banana','content')));
                 //return $this->redirect(['action' => 'edit', $content->id]);
             } else {
-                $this->Flash->error(__('The {0} could not be saved. Please, try again.', __('content')));
+                $this->Flash->error(__d('banana','The {0} could not be saved. Please, try again.', __d('banana','content')));
             }
         }
 
@@ -109,10 +109,10 @@ abstract class ContentController extends AppController
         if ($this->request->is('post')) {
             $content = $this->model()->patchEntity($content, $this->request->data);
             if ($this->model()->save($content)) {
-                $this->Flash->success(__('The {0} has been saved.', __('content')));
+                $this->Flash->success(__d('banana','The {0} has been saved.', __d('banana','content')));
                 return $this->redirect(['action' => 'edit', $content->id]);
             } else {
-                $this->Flash->error(__('The {0} could not be saved. Please, try again.', __('content')));
+                $this->Flash->error(__d('banana','The {0} could not be saved. Please, try again.', __d('banana','content')));
             }
         }
         $this->set(compact('content'));
@@ -137,10 +137,10 @@ abstract class ContentController extends AppController
             $duplicate = $this->model()->patchEntity($duplicate, $this->request->data);
 
             if ($this->model()->save($duplicate)) {
-                $this->Flash->success(__('The {0} has been duplicated.', __('content')));
+                $this->Flash->success(__d('banana','The {0} has been duplicated.', __d('banana','content')));
                 return $this->redirect(['action' => 'edit', $duplicate->id]);
             } else {
-                $this->Flash->error(__('The {0} could not be duplicated. Please, try again.', __('content')));
+                $this->Flash->error(__d('banana','The {0} could not be duplicated. Please, try again.', __d('banana','content')));
                 return $this->redirect($this->referer(['action' => 'index']));
             }
         }
@@ -162,9 +162,9 @@ abstract class ContentController extends AppController
         //$this->request->allowMethod(['post', 'delete']);
         $content = $this->model()->get($id);
         if ($this->model()->delete($content)) {
-            $this->Flash->success(__('The {0} has been deleted.', __('content')));
+            $this->Flash->success(__d('banana','The {0} has been deleted.', __d('banana','content')));
         } else {
-            $this->Flash->error(__('The {0} could not be deleted. Please, try again.', __('content')));
+            $this->Flash->error(__d('banana','The {0} could not be deleted. Please, try again.', __d('banana','content')));
         }
         return $this->redirect(['action' => 'index']);
     }
@@ -178,10 +178,10 @@ abstract class ContentController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $content = $this->model()->patchEntity($content, $this->request->data);
             if ($this->model()->save($content)) {
-                $this->Flash->success(__('The {0} has been saved.', __('content')));
+                $this->Flash->success(__d('banana','The {0} has been saved.', __d('banana','content')));
                 return $this->redirect(['action' => 'index']);
             } else {
-                $this->Flash->error(__('The {0} could not be saved. Please, try again.', __('content')));
+                $this->Flash->error(__d('banana','The {0} could not be saved. Please, try again.', __d('banana','content')));
             }
         }
         $parentPages = $this->model()->ParentPages->find('list', ['limit' => 200]);
@@ -200,10 +200,10 @@ abstract class ContentController extends AppController
             $params = json_encode($this->request->data);
             $module = $this->Modules->patchEntity($module, ['params' => $params]);
             if ($this->Modules->save($module)) {
-                $this->Flash->success(__('The {0} has been saved.', __('module')));
+                $this->Flash->success(__d('banana','The {0} has been saved.', __d('banana','module')));
                 $this->redirect(['action' => 'edit_module', $moduleId]);
             } else {
-                $this->Flash->error(__('The {0} could not be saved. Please, try again.', __('content')));
+                $this->Flash->error(__d('banana','The {0} could not be saved. Please, try again.', __d('banana','content')));
             }
         }
 
@@ -249,7 +249,7 @@ abstract class ContentController extends AppController
             $contentModule = $this->ContentModules->patchEntity($contentModule, $this->request->data);
             debug($contentModule);
             if ($this->ContentModules->save($contentModule)) {
-                $this->Flash->success(__('Module {0} has been added to Content with ID {1}', $contentModule->module, $contentModule->refid));
+                $this->Flash->success(__d('banana','Module {0} has been added to Content with ID {1}', $contentModule->module, $contentModule->refid));
                 //$this->redirect(['action' => 'edit', $content->id]);
             } else {
                 debug($contentModule->errors());
@@ -295,7 +295,7 @@ abstract class ContentController extends AppController
                 $contentModule->section = $section;
 
                 if ($this->model()->ContentModules->save($contentModule)) {
-                    $this->Flash->success(__('Module {0} has been added to Content with ID {1}', $contentModule->module, $contentModule->refid));
+                    $this->Flash->success(__d('banana','Module {0} has been added to Content with ID {1}', $contentModule->module, $contentModule->refid));
                     $this->redirect(['action' => 'edit', $content->id]);
                 } else {
                     $this->Flash->error('Ups. Something went wrong while creating the content module.');

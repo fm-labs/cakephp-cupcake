@@ -17,9 +17,9 @@
     <!--
     <div class="paginator">
         <div class="ui pagination menu">
-            <?= $this->Paginator->prev(__('previous')) ?>
+            <?= $this->Paginator->prev(__d('banana','previous')) ?>
             <?= $this->Paginator->numbers() ?>
-            <?= $this->Paginator->next(__('next')) ?>
+            <?= $this->Paginator->next(__d('banana','next')) ?>
 
             <div class="item">
                 <?= $this->Paginator->counter() ?>

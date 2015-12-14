@@ -42,6 +42,6 @@
 <br /><br />
 - Create a new module (and link with this page) -
 <br />
-<?= $this->Html->link(__('Add a new content module to section {0}', $section), ['action' => 'add_module', $content->id]); ?>
+<?= $this->Html->link(__d('banana','Add a new content module to section {0}', $section), ['action' => 'add_module', $content->id]); ?>
 -->
 

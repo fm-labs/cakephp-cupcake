@@ -52,10 +52,10 @@ class GalleriesController extends AppController
         if ($this->request->is('post')) {
             $gallery = $this->Galleries->patchEntity($gallery, $this->request->data);
             if ($this->Galleries->save($gallery)) {
-                $this->Flash->success(__('The gallery has been saved.'));
+                $this->Flash->success(__d('banana','The gallery has been saved.'));
                 return $this->redirect(['action' => 'edit', $gallery->id]);
             } else {
-                $this->Flash->error(__('The gallery could not be saved. Please, try again.'));
+                $this->Flash->error(__d('banana','The gallery could not be saved. Please, try again.'));
             }
         }
         $this->set(compact('gallery'));
@@ -75,10 +75,10 @@ class GalleriesController extends AppController
         if ($this->request->is('post')) {
             $item = $this->Galleries->Posts->patchEntity($item, $this->request->data);
             if ($this->Galleries->Posts->save($item)) {
-                $this->Flash->success(__('The gallery item has been saved.'));
+                $this->Flash->success(__d('banana','The gallery item has been saved.'));
                 return $this->redirect(['action' => 'edit', $item->id]);
             } else {
-                $this->Flash->error(__('The gallery could not be saved. Please, try again.'));
+                $this->Flash->error(__d('banana','The gallery could not be saved. Please, try again.'));
             }
         }
         $this->set(compact('item'));
@@ -100,10 +100,10 @@ class GalleriesController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $gallery = $this->Galleries->patchEntity($gallery, $this->request->data);
             if ($this->Galleries->save($gallery)) {
-                $this->Flash->success(__('The gallery has been saved.'));
+                $this->Flash->success(__d('banana','The gallery has been saved.'));
                 return $this->redirect(['action' => 'edit', $gallery->id]);
             } else {
-                $this->Flash->error(__('The gallery could not be saved. Please, try again.'));
+                $this->Flash->error(__d('banana','The gallery could not be saved. Please, try again.'));
             }
         }
         $this->set(compact('gallery'));
@@ -122,9 +122,9 @@ class GalleriesController extends AppController
         //$this->request->allowMethod(['post', 'delete']);
         $gallery = $this->Galleries->get($id);
         if ($this->Galleries->delete($gallery)) {
-            $this->Flash->success(__('The gallery has been deleted.'));
+            $this->Flash->success(__d('banana','The gallery has been deleted.'));
         } else {
-            $this->Flash->error(__('The gallery could not be deleted. Please, try again.'));
+            $this->Flash->error(__d('banana','The gallery could not be deleted. Please, try again.'));
         }
         return $this->redirect(['action' => 'index']);
     }

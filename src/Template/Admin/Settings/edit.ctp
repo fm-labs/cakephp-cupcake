@@ -1,18 +1,18 @@
-<?php $this->Html->addCrumb(__('Settings'), ['action' => 'index']); ?>
-<?php $this->Html->addCrumb(__('Edit {0}', __('Setting'))); ?>
+<?php $this->Html->addCrumb(__d('banana','Settings'), ['action' => 'index']); ?>
+<?php $this->Html->addCrumb(__d('banana','Edit {0}', __d('banana','Setting'))); ?>
 <div class="settings">
     <div class="be-toolbar actions">
         <div class="ui secondary menu">
             <div class="item"></div>
             <div class="right menu">
                 <?= $this->Ui->postLink(
-                __('Delete'),
+                __d('banana','Delete'),
                 ['action' => 'delete', $setting->id],
-                ['class' => 'item', 'icon' => 'trash', 'confirm' => __('Are you sure you want to delete # {0}?', $setting->id)]
+                ['class' => 'item', 'icon' => 'trash', 'confirm' => __d('banana','Are you sure you want to delete # {0}?', $setting->id)]
             )
             ?>
                     <?= $this->Ui->link(
-                    __('List {0}', __('Settings')),
+                    __d('banana','List {0}', __d('banana','Settings')),
                     ['action' => 'index'],
                     ['class' => 'item', 'icon' => 'list']
                 ) ?>
@@ -30,7 +30,7 @@
 
     <?= $this->Form->create($setting); ?>
     <h2 class="ui top attached header">
-        <?= __('Edit {0}', __('Setting')) ?>
+        <?= __d('banana','Edit {0}', __d('banana','Setting')) ?>
     </h2>
     <div class="users ui attached segment">
         <div class="ui form">
@@ -51,7 +51,7 @@
         </div>
     </div>
     <div class="ui bottom attached segment">
-        <?= $this->Form->button(__('Submit')) ?>
+        <?= $this->Form->button(__d('banana','Submit')) ?>
     </div>
     <?= $this->Form->end() ?>
 

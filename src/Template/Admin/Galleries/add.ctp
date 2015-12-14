@@ -1,26 +1,26 @@
-<?php $this->Html->addCrumb(__('Galleries'), ['action' => 'index']); ?>
-<?php $this->Html->addCrumb(__('New {0}', __('Gallery'))); ?>
+<?php $this->Html->addCrumb(__d('banana','Galleries'), ['action' => 'index']); ?>
+<?php $this->Html->addCrumb(__d('banana','New {0}', __d('banana','Gallery'))); ?>
 <?= $this->Toolbar->addLink(
-    __('List {0}', __('Galleries')),
+    __d('banana','List {0}', __d('banana','Galleries')),
     ['action' => 'index'],
     ['icon' => 'list']
 ) ?>
 <?php $this->Toolbar->startGroup('More'); ?>
 <?= $this->Toolbar->addLink(
-    __('List {0}', __('Posts')),
+    __d('banana','List {0}', __d('banana','Posts')),
     ['controller' => 'Posts', 'action' => 'index'],
     ['icon' => 'list']
 ) ?>
 
 <?= $this->Toolbar->addLink(
-    __('New {0}', __('Post')),
+    __d('banana','New {0}', __d('banana','Post')),
     ['controller' => 'Posts', 'action' => 'add'],
     ['icon' => 'add']
 ) ?>
 <?php $this->Toolbar->endGroup(); ?>
 <div class="form">
     <h2 class="ui header">
-        <?= __('Add {0}', __('Gallery')) ?>
+        <?= __d('banana','Add {0}', __d('banana','Gallery')) ?>
     </h2>
     <?= $this->Form->create($gallery); ?>
     <div class="users ui basic segment">
@@ -41,7 +41,7 @@
         </div>
     </div>
     <div class="ui bottom attached segment">
-        <?= $this->Form->button(__('Submit')) ?>
+        <?= $this->Form->button(__d('banana','Submit')) ?>
     </div>
     <?= $this->Form->end() ?>
 

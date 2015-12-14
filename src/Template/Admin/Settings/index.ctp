@@ -1,10 +1,10 @@
-<?php $this->Html->addCrumb(__('Settings')); ?>
+<?php $this->Html->addCrumb(__d('banana','Settings')); ?>
 <div class="be-toolbar actions">
     <div class="ui secondary menu">
         <div class="item"></div>
         <div class="right menu">
             <?= $this->Ui->link(
-                __('New {0}', __('Setting')),
+                __d('banana','New {0}', __d('banana','Setting')),
                 ['action' => 'add'],
                 ['class' => 'item', 'icon' => 'add']
             ) ?>
@@ -35,7 +35,7 @@
                 <th><?= h('name') ?></th>
                 <th><?= h('value') ?></th>
                 <th><?= h('default') ?></th>
-                <th class="actions"><?= __('Actions') ?></th>
+                <th class="actions"><?= __d('banana','Actions') ?></th>
             </tr>
         </thead>
         <tbody>
@@ -51,21 +51,21 @@
                     <div class="ui basic small buttons">
                         <?php if (isset($setting->id)): ?>
                             <div class="ui button">
-                                <?= $this->Html->link(__('Edit'), ['action' => 'edit', $setting->id]) ?>
+                                <?= $this->Html->link(__d('banana','Edit'), ['action' => 'edit', $setting->id]) ?>
                             </div>
                             <div class="ui floating dropdown icon button">
                                 <i class="dropdown icon"></i>
                                 <div class="menu">
                                     <?= $this->Ui->postLink(
-                                        __('Reset to default'),
+                                        __d('banana','Reset to default'),
                                         ['action' => 'delete', $setting->id],
-                                        ['class' => 'item', 'icon' => 'trash', 'confirm' => __('Are you sure you want to reset # {0}?', $key)]
+                                        ['class' => 'item', 'icon' => 'trash', 'confirm' => __d('banana','Are you sure you want to reset # {0}?', $key)]
                                     ) ?>
                                 </div>
                             </div>
                         <?php else: ?>
                             <div class="ui button">
-                                <?= $this->Html->link(__('Add'), [
+                                <?= $this->Html->link(__d('banana','Add'), [
                                     'action' => 'add',
                                     'ref' => $setting->ref,
                                     'key' => $key,
@@ -73,7 +73,7 @@
                                 ]) ?>
                             </div>
                             <div class="ui button">
-                                <?= $this->Html->link(__('Edit'), [
+                                <?= $this->Html->link(__d('banana','Edit'), [
                                     'action' => 'add',
                                     'ref' => $setting->ref,
                                     'scope' => $setting->scope,

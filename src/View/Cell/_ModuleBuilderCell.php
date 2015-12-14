@@ -41,7 +41,7 @@ class ModuleBuilderCell extends Cell
             $module->accessible('_save', true);
             $module = $this->Modules->patchEntity($module, $this->request->data());
             if ($module->_save == true && $module = $this->Modules->save($module)) {
-                $this->Flash->success(__('Module has been saved with ID {0}', $module->id));
+                $this->Flash->success(__d('banana','Module has been saved with ID {0}', $module->id));
             } elseif ($module->_save == true) {
                 debug($module->errors());
             }

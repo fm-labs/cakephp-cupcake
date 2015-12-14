@@ -13,7 +13,7 @@
         //$this->Form->addWidget('upload', ['Banana\\View\\Widget\\UploadWidget', 'html', 'form']);
         //echo $this->Form->input('image_upload', ['type' => 'upload']);
         ?>
-        <?= $this->Form->button(__('Upload image')) ?>
+        <?= $this->Form->button(__d('banana','Upload image')) ?>
         <?= $this->Form->end() ?>
     </div>
 </div>

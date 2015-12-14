@@ -1,13 +1,13 @@
-<?php $this->Html->addCrumb(__('Page Layouts'), ['action' => 'index']); ?>
-<?php $this->Html->addCrumb(__('Edit {0}', __('Page Layout'))); ?>
+<?php $this->Html->addCrumb(__d('banana','Page Layouts'), ['action' => 'index']); ?>
+<?php $this->Html->addCrumb(__d('banana','Edit {0}', __d('banana','Page Layout'))); ?>
 <?= $this->Toolbar->addPostLink(
-    __('Delete'),
+    __d('banana','Delete'),
     ['action' => 'delete', $pageLayout->id],
-    ['icon' => 'trash', 'confirm' => __('Are you sure you want to delete # {0}?', $pageLayout->id)]
+    ['icon' => 'trash', 'confirm' => __d('banana','Are you sure you want to delete # {0}?', $pageLayout->id)]
 )
 ?>
 <?= $this->Toolbar->addLink(
-    __('List {0}', __('Page Layouts')),
+    __d('banana','List {0}', __d('banana','Page Layouts')),
     ['action' => 'index'],
     ['icon' => 'list']
 ) ?>
@@ -15,7 +15,7 @@
 <?php $this->Toolbar->endGroup(); ?>
 <div class="form">
     <h2 class="ui header">
-        <?= __('Edit {0}', __('Page Layout')) ?>
+        <?= __d('banana','Edit {0}', __d('banana','Page Layout')) ?>
     </h2>
     <?= $this->Form->create($pageLayout); ?>
     <div class="users ui basic segment">
@@ -29,7 +29,7 @@
         </div>
     </div>
     <div class="ui bottom attached segment">
-        <?= $this->Form->button(__('Submit')) ?>
+        <?= $this->Form->button(__d('banana','Submit')) ?>
     </div>
     <?= $this->Form->end() ?>
 

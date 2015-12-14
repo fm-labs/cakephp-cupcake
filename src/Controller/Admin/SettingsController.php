@@ -89,10 +89,10 @@ class SettingsController extends AppController
             $setting = $this->Settings->newEntity();
             $setting = $this->Settings->patchEntity($setting, $this->request->data);
             if ($this->Settings->save($setting)) {
-                $this->Flash->success(__('The {0} has been saved.', __('setting')));
+                $this->Flash->success(__d('banana','The {0} has been saved.', __d('banana','setting')));
                 return $this->redirect(['action' => 'index']);
             } else {
-                $this->Flash->error(__('The {0} could not be saved. Please, try again.', __('setting')));
+                $this->Flash->error(__d('banana','The {0} could not be saved. Please, try again.', __d('banana','setting')));
             }
         } else {
             if ($this->request->query('key')) {
@@ -130,10 +130,10 @@ class SettingsController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $setting = $this->Settings->patchEntity($setting, $this->request->data);
             if ($this->Settings->save($setting)) {
-                $this->Flash->success(__('The {0} has been saved.', __('setting')));
+                $this->Flash->success(__d('banana','The {0} has been saved.', __d('banana','setting')));
                 return $this->redirect(['action' => 'index']);
             } else {
-                $this->Flash->error(__('The {0} could not be saved. Please, try again.', __('setting')));
+                $this->Flash->error(__d('banana','The {0} could not be saved. Please, try again.', __d('banana','setting')));
             }
         }
         $this->set(compact('setting'));
@@ -153,9 +153,9 @@ class SettingsController extends AppController
         $this->request->allowMethod(['post', 'delete']);
         $setting = $this->Settings->get($id);
         if ($this->Settings->delete($setting)) {
-            $this->Flash->success(__('The {0} has been deleted.', __('setting')));
+            $this->Flash->success(__d('banana','The {0} has been deleted.', __d('banana','setting')));
         } else {
-            $this->Flash->error(__('The {0} could not be deleted. Please, try again.', __('setting')));
+            $this->Flash->error(__d('banana','The {0} could not be deleted. Please, try again.', __d('banana','setting')));
         }
         return $this->redirect(['action' => 'index']);
     }

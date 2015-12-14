@@ -49,10 +49,10 @@ class PageLayoutsController extends AppController
         if ($this->request->is('post')) {
             $pageLayout = $this->PageLayouts->patchEntity($pageLayout, $this->request->data);
             if ($this->PageLayouts->save($pageLayout)) {
-                $this->Flash->success(__('The {0} has been saved.', __('page layout')));
+                $this->Flash->success(__d('banana','The {0} has been saved.', __d('banana','page layout')));
                 return $this->redirect(['action' => 'index']);
             } else {
-                $this->Flash->error(__('The {0} could not be saved. Please, try again.', __('page layout')));
+                $this->Flash->error(__d('banana','The {0} could not be saved. Please, try again.', __d('banana','page layout')));
             }
         }
         $this->set(compact('pageLayout'));
@@ -74,10 +74,10 @@ class PageLayoutsController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $pageLayout = $this->PageLayouts->patchEntity($pageLayout, $this->request->data);
             if ($this->PageLayouts->save($pageLayout)) {
-                $this->Flash->success(__('The {0} has been saved.', __('page layout')));
+                $this->Flash->success(__d('banana','The {0} has been saved.', __d('banana','page layout')));
                 return $this->redirect(['action' => 'index']);
             } else {
-                $this->Flash->error(__('The {0} could not be saved. Please, try again.', __('page layout')));
+                $this->Flash->error(__d('banana','The {0} could not be saved. Please, try again.', __d('banana','page layout')));
             }
         }
         $this->set(compact('pageLayout'));
@@ -96,9 +96,9 @@ class PageLayoutsController extends AppController
         $this->request->allowMethod(['post', 'delete']);
         $pageLayout = $this->PageLayouts->get($id);
         if ($this->PageLayouts->delete($pageLayout)) {
-            $this->Flash->success(__('The {0} has been deleted.', __('page layout')));
+            $this->Flash->success(__d('banana','The {0} has been deleted.', __d('banana','page layout')));
         } else {
-            $this->Flash->error(__('The {0} could not be deleted. Please, try again.', __('page layout')));
+            $this->Flash->error(__d('banana','The {0} could not be deleted. Please, try again.', __d('banana','page layout')));
         }
         return $this->redirect(['action' => 'index']);
     }

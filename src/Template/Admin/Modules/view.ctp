@@ -1,27 +1,27 @@
-<?php $this->Html->addCrumb(__('Modules'), ['action' => 'index']); ?>
+<?php $this->Html->addCrumb(__d('banana','Modules'), ['action' => 'index']); ?>
 <?php $this->Html->addCrumb($module->name); ?>
 <?= $this->Toolbar->addLink(
-    __('Edit {0}', __('Module')),
+    __d('banana','Edit {0}', __d('banana','Module')),
     ['action' => 'edit', $module->id],
     ['icon' => 'edit']
 ) ?>
 <?= $this->Toolbar->addPostLink(
-    __('Delete {0}', __('Module')),
+    __d('banana','Delete {0}', __d('banana','Module')),
     ['action' => 'delete', $module->id],
-    ['icon' => 'trash', 'confirm' => __('Are you sure you want to delete # {0}?', $module->id)]) ?>
+    ['icon' => 'trash', 'confirm' => __d('banana','Are you sure you want to delete # {0}?', $module->id)]) ?>
 
 <?= $this->Toolbar->addLink(
-    __('List {0}', __('Modules')),
+    __d('banana','List {0}', __d('banana','Modules')),
     ['action' => 'index'],
     ['icon' => 'list']
 ) ?>
 <?= $this->Toolbar->addLink(
-    __('New {0}', __('Module')),
+    __d('banana','New {0}', __d('banana','Module')),
     ['action' => 'add'],
     ['icon' => 'add']
 ) ?>
 <?= $this->Toolbar->addLink(
-    __('Preview {0}', __('Module')),
+    __d('banana','Preview {0}', __d('banana','Module')),
     ['action' => 'preview', $module->id],
     ['icon' => 'add', 'target' => 'preview']
 ) ?>
@@ -34,44 +34,44 @@
         <!--
         <thead>
         <tr>
-            <th><?= __('Label'); ?></th>
-            <th><?= __('Value'); ?></th>
+            <th><?= __d('banana','Label'); ?></th>
+            <th><?= __d('banana','Value'); ?></th>
         </tr>
         </thead>
         -->
 
         <tr>
-            <td><?= __('Name') ?></td>
+            <td><?= __d('banana','Name') ?></td>
             <td><?= h($module->name) ?></td>
         </tr>
         <tr>
-            <td><?= __('Title') ?></td>
+            <td><?= __d('banana','Title') ?></td>
             <td><?= h($module->title) ?></td>
         </tr>
         <tr>
-            <td><?= __('Path') ?></td>
+            <td><?= __d('banana','Path') ?></td>
             <td><?= h($module->path) ?></td>
         </tr>
         <tr>
-            <td><?= __('Entity Class') ?></td>
+            <td><?= __d('banana','Entity Class') ?></td>
             <td><?= h(get_class($module)) ?></td>
         </tr>
 
 
         <tr>
-            <td><?= __('Id') ?></td>
+            <td><?= __d('banana','Id') ?></td>
             <td><?= $this->Number->format($module->id) ?></td>
         </tr>
 
 
         <tr class="text">
 
-            <td><?= __('Params') ?></td>
+            <td><?= __d('banana','Params') ?></td>
             <td><?= $this->Text->autoParagraph(h($module->params)); ?></td>
         </tr>
 
         <tr class="text">
-            <td><?= __('Params ARR') ?></td>
+            <td><?= __d('banana','Params ARR') ?></td>
             <td><?= debug($module->params_arr); ?></td>
         </tr>
     </table>

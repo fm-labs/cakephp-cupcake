@@ -1,5 +1,5 @@
-<?php $this->Html->addCrumb(__('Galleries'), ['action' => 'index']); ?>
-<?php $this->Html->addCrumb(__('New {0}', __('Gallery Item'))); ?>
+<?php $this->Html->addCrumb(__d('banana','Galleries'), ['action' => 'index']); ?>
+<?php $this->Html->addCrumb(__d('banana','New {0}', __d('banana','Gallery Item'))); ?>
 <div class="posts">
     <?= $this->Form->create($item); ?>
     <div class="users ui top attached segment">
@@ -15,7 +15,7 @@
         </div>
     </div>
     <div class="ui bottom attached segment">
-        <?= $this->Form->button(__('Continue')) ?>
+        <?= $this->Form->button(__d('banana','Continue')) ?>
     </div>
     <?= $this->Form->end() ?>
 

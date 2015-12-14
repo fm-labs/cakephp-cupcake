@@ -52,10 +52,10 @@ class PageModulesController extends AppController
         if ($this->request->is('post')) {
             $pageModule = $this->PageModules->patchEntity($pageModule, $this->request->data);
             if ($this->PageModules->save($pageModule)) {
-                $this->Flash->success(__('The {0} has been saved.', __('page module')));
+                $this->Flash->success(__d('banana','The {0} has been saved.', __d('banana','page module')));
                 return $this->redirect(['action' => 'index']);
             } else {
-                $this->Flash->error(__('The {0} could not be saved. Please, try again.', __('page module')));
+                $this->Flash->error(__d('banana','The {0} could not be saved. Please, try again.', __d('banana','page module')));
             }
         }
         $pages = $this->PageModules->Pages->find('list', ['limit' => 200]);
@@ -79,10 +79,10 @@ class PageModulesController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $pageModule = $this->PageModules->patchEntity($pageModule, $this->request->data);
             if ($this->PageModules->save($pageModule)) {
-                $this->Flash->success(__('The {0} has been saved.', __('page module')));
+                $this->Flash->success(__d('banana','The {0} has been saved.', __d('banana','page module')));
                 return $this->redirect(['action' => 'index']);
             } else {
-                $this->Flash->error(__('The {0} could not be saved. Please, try again.', __('page module')));
+                $this->Flash->error(__d('banana','The {0} could not be saved. Please, try again.', __d('banana','page module')));
             }
         }
         $pages = $this->PageModules->Pages->find('list', ['limit' => 200]);
@@ -103,9 +103,9 @@ class PageModulesController extends AppController
         $this->request->allowMethod(['post', 'delete']);
         $pageModule = $this->PageModules->get($id);
         if ($this->PageModules->delete($pageModule)) {
-            $this->Flash->success(__('The {0} has been deleted.', __('page module')));
+            $this->Flash->success(__d('banana','The {0} has been deleted.', __d('banana','page module')));
         } else {
-            $this->Flash->error(__('The {0} could not be deleted. Please, try again.', __('page module')));
+            $this->Flash->error(__d('banana','The {0} could not be deleted. Please, try again.', __d('banana','page module')));
         }
         return $this->redirect(['action' => 'index']);
     }

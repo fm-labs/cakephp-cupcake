@@ -124,7 +124,7 @@ class ModuleBuilderController extends AppController
             $module->accessible('_save', true);
             $module = $this->Modules->patchEntity($module, $this->request->data());
             if ($module->_save == true && $module = $this->Modules->save($module)) {
-                $this->Flash->success(__('Module has been saved with ID {0}', $module->id));
+                $this->Flash->success(__d('banana','Module has been saved with ID {0}', $module->id));
             } elseif ($module->_save == true) {
                 debug($module->errors());
             }
@@ -174,7 +174,7 @@ class ModuleBuilderController extends AppController
         if ($this->request->is('post') || $this->request->is('put')) {
             $module = $this->Modules->patchEntity($module, $this->request->data());
             if ($module->_save == true && $module = $this->Modules->save($module)) {
-                $this->Flash->success(__('Module has been saved with ID {0}', $module->id));
+                $this->Flash->success(__d('banana','Module has been saved with ID {0}', $module->id));
 
                 if ($refscope && $refid) {
                     $this->loadModel('Banana.ContentModules');
@@ -185,14 +185,14 @@ class ModuleBuilderController extends AppController
                     $contentModule->section = ($section) ?: 'main';
 
                     if ($contentModule = $this->ContentModules->save($contentModule)) {
-                        $this->Flash->success(__('Module has been saved with ID {0} and linked to content {1} #{2} with ID {3}',
+                        $this->Flash->success(__d('banana','Module has been saved with ID {0} and linked to content {1} #{2} with ID {3}',
                             $module->id,
                             $refscope,
                             $refid,
                             $contentModule->id
                         ));
                     } else {
-                        $this->Flash->error(__('Module has been saved with ID {0} but not linked to content {1}',
+                        $this->Flash->error(__d('banana','Module has been saved with ID {0} but not linked to content {1}',
                             $module->id,
                             $class
                         ));

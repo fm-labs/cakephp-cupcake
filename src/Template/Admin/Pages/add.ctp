@@ -1,9 +1,9 @@
-<?php $this->Html->addCrumb(__('Pages'), ['action' => 'index']); ?>
-<?php $this->Html->addCrumb(__('New {0}', __('Page'))); ?>
+<?php $this->Html->addCrumb(__d('banana','Pages'), ['action' => 'index']); ?>
+<?php $this->Html->addCrumb(__d('banana','New {0}', __d('banana','Page'))); ?>
 <?php
 $this->extend('/Admin/Content/add');
 // EXTEND: HEADING
-$this->assign('heading', __('Add {0}', __('Page')));
+$this->assign('heading', __d('banana','Add {0}', __d('banana','Page')));
 ?>
 <div class="pages">
     <?= $this->Form->create($content); ?>
@@ -25,7 +25,7 @@ $this->assign('heading', __('Add {0}', __('Page')));
         </div>
     </div>
     <div class="ui bottom attached segment">
-        <?= $this->Form->button(__('Submit')) ?>
+        <?= $this->Form->button(__d('banana','Submit')) ?>
     </div>
     <?= $this->Form->end() ?>
 </div>

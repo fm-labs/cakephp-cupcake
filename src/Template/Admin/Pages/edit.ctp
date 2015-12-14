@@ -4,18 +4,18 @@ $this->extend('/Admin/Content/edit');
 
 // EXTEND: TOOLBAR
 $this->Toolbar->addLink(
-    __('Delete'),
+    __d('banana','Delete'),
     ['action' => 'delete', $content->id],
-    ['icon' => 'trash', 'confirm' => __('Are you sure you want to delete # {0}?', $content->id)]
+    ['icon' => 'trash', 'confirm' => __d('banana','Are you sure you want to delete # {0}?', $content->id)]
 );
-$this->Toolbar->addLink(__('List {0}', __('Pages')), ['action' => 'index'], ['icon' => 'list']);
-$this->Toolbar->addLink(__('Add {0}', __('Content Module')), ['action' => 'add_module'], ['icon' => 'add']);
-$this->Toolbar->addLink(__('Preview'), ['action' => 'preview', $content->id], ['icon' => 'eye', 'target' => '_preview']);
-$this->Toolbar->addLink(__('New {0}', __('Page')), ['action' => 'add'], ['icon' => 'add']);
+$this->Toolbar->addLink(__d('banana','List {0}', __d('banana','Pages')), ['action' => 'index'], ['icon' => 'list']);
+$this->Toolbar->addLink(__d('banana','Add {0}', __d('banana','Content Module')), ['action' => 'add_module'], ['icon' => 'add']);
+$this->Toolbar->addLink(__d('banana','Preview'), ['action' => 'preview', $content->id], ['icon' => 'eye', 'target' => '_preview']);
+$this->Toolbar->addLink(__d('banana','New {0}', __d('banana','Page')), ['action' => 'add'], ['icon' => 'add']);
 
 
 // HEADING
-$this->assign('heading', __('Edit Page: {0}', $content->title));
+$this->assign('heading', __d('banana','Edit Page: {0}', $content->title));
 
 // CONTENT
 ?>
@@ -46,7 +46,7 @@ $this->assign('heading', __('Edit Page: {0}', $content->title));
                     <?php
                     echo $this->Form->input('redirect_page_id', [
                         'options' => $pagesTree,
-                        'empty' => __('No selection')
+                        'empty' => __d('banana','No selection')
                     ]);
                     ?>
                 </div>
@@ -84,7 +84,7 @@ $this->assign('heading', __('Edit Page: {0}', $content->title));
         </div>
         <div class="four wide column">
             <div class="ui attached basic right aligned segment form">
-                <?= $this->Form->button(__('Save Changes'), ['class' => 'ui positive fluid button']) ?>
+                <?= $this->Form->button(__d('banana','Save Changes'), ['class' => 'ui positive fluid button']) ?>
             </div>
             <h5 class="ui attached header">Publish</h5>
             <div class="ui attached segment form">
@@ -105,7 +105,7 @@ $this->assign('heading', __('Edit Page: {0}', $content->title));
             <div class="ui attached segment form">
                 <?php
                 echo $this->Form->input('page_layout_id',
-                    ['empty' => __('- Default Layout -'), 'options' => $pageLayouts]);
+                    ['empty' => __d('banana','- Default Layout -'), 'options' => $pageLayouts]);
 
                 if ($content->page_layout_id) {
                     echo $this->Html->link('Edit Layout', '#');
@@ -114,7 +114,7 @@ $this->assign('heading', __('Edit Page: {0}', $content->title));
                 <?php
                 echo $this->Form->input('page_template',
                     ['type' => 'text']
-                    //['empty' => __('- Default Template -'), 'options' => $pageTemplates]
+                    //['empty' => __d('banana','- Default Template -'), 'options' => $pageTemplates]
                 );
                 ?>
                 <?= $this->Form->input('cssid'); ?>
@@ -129,7 +129,7 @@ $this->assign('heading', __('Edit Page: {0}', $content->title));
 
 
     <?php $this->Tabs->start(); ?>
-    <?php $this->Tabs->add(__('Related Posts')); ?>
+    <?php $this->Tabs->add(__d('banana','Related Posts')); ?>
 
     <h3>Related Posts</h3>
     <table class="ui compact table">

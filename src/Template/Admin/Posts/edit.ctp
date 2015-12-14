@@ -1,26 +1,26 @@
-<?php $this->Html->addCrumb(__('Posts'), ['action' => 'index']); ?>
-<?php $this->Html->addCrumb(__('Edit {0}', __('Post'))); ?>
+<?php $this->Html->addCrumb(__d('banana','Posts'), ['action' => 'index']); ?>
+<?php $this->Html->addCrumb(__d('banana','Edit {0}', __d('banana','Post'))); ?>
 <?php $this->extend('/Admin/Content/edit'); ?>
 <?php
 // TOOLBAR
 
 $this->Toolbar->addPostLink([
-    'title' => __('Delete'),
+    'title' => __d('banana','Delete'),
     'url' => ['action' => 'delete', $content->id],
-    'attr' => ['icon' => 'trash', 'confirm' => __('Are you sure you want to delete # {0}?', $content->id)],
+    'attr' => ['icon' => 'trash', 'confirm' => __d('banana','Are you sure you want to delete # {0}?', $content->id)],
 ]);
 $this->Toolbar->addLink([
-    'title' => __('List {0}', __('Posts')),
+    'title' => __d('banana','List {0}', __d('banana','Posts')),
     'url' => ['action' => 'index'],
     'attr' => ['icon' => 'list']
 ]);
 
-$this->assign('heading', __('Edit {0}', __('Post')));
+$this->assign('heading', __d('banana','Edit {0}', __d('banana','Post')));
 ?>
 <div class="posts">
     <?php if (isset($content->refscope)): ?>
     <div class="ref" style="margin: 0.5em 0;">
-        <?= $this->Html->link(__('This post is linked to {0}', $content->reftitle), $content->refurl); ?>
+        <?= $this->Html->link(__d('banana','This post is linked to {0}', $content->reftitle), $content->refurl); ?>
     </div>
     <?php endif; ?>
 
@@ -58,7 +58,7 @@ $this->assign('heading', __('Edit {0}', __('Post')));
             <h5 class="ui top attached header">Actions</h5>
             -->
             <div class="ui attached basic right aligned segment form">
-                <?= $this->Form->button(__('Save Changes'), ['class' => 'ui positive fluid button']) ?>
+                <?= $this->Form->button(__d('banana','Save Changes'), ['class' => 'ui positive fluid button']) ?>
             </div>
             <h5 class="ui attached header">Publish</h5>
             <div class="ui attached segment form">
@@ -93,14 +93,14 @@ $this->assign('heading', __('Edit {0}', __('Post')));
                 ?>
                 <?php
                 echo $this->Ui->link(
-                    __('Select Image'),
+                    __d('banana','Select Image'),
                     ['action' => 'setImage', $content->id, 'scope' => 'teaser_image_file' ],
                     ['class' => 'iframe-modal', 'icon' => 'folder open outline']
                 );
                 ?>
                 <?php
                 echo $this->Ui->link(
-                    __('Remove Image'),
+                    __d('banana','Remove Image'),
                     ['action' => 'deleteImage', $content->id, 'scope' => 'teaser_image_file' ],
                     ['icon' => 'remove circle']
                 );
@@ -126,14 +126,14 @@ $this->assign('heading', __('Edit {0}', __('Post')));
                 ?>
                 <?php
                 echo $this->Ui->link(
-                    __('Select Image'),
+                    __d('banana','Select Image'),
                     ['action' => 'setImage', $content->id, 'scope' => 'image_file' ],
                     ['class' => 'iframe-modal', 'icon' => 'folder open outline']
                 );
                 ?>
                 <?php
                 echo $this->Ui->link(
-                    __('Remove Image'),
+                    __d('banana','Remove Image'),
                     ['action' => 'deleteImage', $content->id, 'scope' => 'image_file' ],
                     ['icon' => 'remove circle']
                 );
@@ -161,14 +161,14 @@ $this->assign('heading', __('Edit {0}', __('Post')));
                 ?>
                 <?php
                 echo $this->Ui->link(
-                    __('Select Images'),
+                    __d('banana','Select Images'),
                     ['action' => 'setImage', $content->id, 'scope' => 'image_files', 'multiple' => true ],
                     ['class' => 'iframe-modal', 'icon' => 'folder open outline']
                 );
                 ?>
                 <?php
                 echo $this->Ui->link(
-                    __('Remove Images'),
+                    __d('banana','Remove Images'),
                     ['action' => 'deleteImage', $content->id, 'scope' => 'image_files' ],
                     ['icon' => 'remove circle']
                 );
@@ -203,10 +203,10 @@ $this->assign('heading', __('Edit {0}', __('Post')));
     </div>
     <div class="actions">
         <div class="ui black deny button">
-            <?= __('Cancel'); ?>
+            <?= __d('banana','Cancel'); ?>
         </div>
         <div class="ui approve button">
-            <?= __('Ok'); ?>
+            <?= __d('banana','Ok'); ?>
         </div>
     </div>
 </div>

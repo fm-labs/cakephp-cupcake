@@ -61,7 +61,7 @@ class Post extends Entity
         if (!empty($this->_properties['teaser_link_caption'])) {
             return $this->_properties['teaser_link_caption'];
         }
-        return __('Read more');
+        return __d('banana','Read more');
     }
 
     /**
@@ -135,7 +135,7 @@ class Post extends Entity
         //$refmodel = TableRegistry::get($this->refscope);
         //$ref = $refmodel->get($this->refid);
 
-        return __("{0} with ID {1}", Inflector::singularize($ref[1]), $this->refid);
+        return __d('banana',"{0} with ID {1}", Inflector::singularize($ref[1]), $this->refid);
     }
 
     protected function _getRefurl()

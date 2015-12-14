@@ -57,10 +57,10 @@ class PagesController extends ContentController
         if ($this->request->is('post')) {
             $content = $this->Pages->patchEntity($content, $this->request->data);
             if ($this->Pages->save($content)) {
-                $this->Flash->success(__('The {0} has been saved.', __('content')));
+                $this->Flash->success(__d('banana','The {0} has been saved.', __d('banana','content')));
                 return $this->redirect(['action' => 'edit', $content->id]);
             } else {
-                $this->Flash->error(__('The {0} could not be saved. Please, try again.', __('content')));
+                $this->Flash->error(__d('banana','The {0} could not be saved. Please, try again.', __d('banana','content')));
                 debug($content->errors());
             }
         }
@@ -83,9 +83,9 @@ class PagesController extends ContentController
         if ($this->request->is(['post', 'put'])) {
             $this->Pages->ContentModules->patchEntity($contentModule, $this->request->data);
             if ($this->Pages->ContentModules->save($contentModule)) {
-                $this->Flash->success(__('The content module has been saved for Page {0}.', $id));
+                $this->Flash->success(__d('banana','The content module has been saved for Page {0}.', $id));
             } else {
-                $this->Flash->error(__('The content module could not be saved for Page {0}.', $id));
+                $this->Flash->error(__d('banana','The content module could not be saved for Page {0}.', $id));
             }
             return $this->redirect(['action' => 'edit', $id]);
         }
@@ -99,10 +99,10 @@ class PagesController extends ContentController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $content = $this->Pages->patchEntity($content, $this->request->data);
             if ($this->Pages->save($content)) {
-                $this->Flash->success(__('The {0} has been saved.', __('content')));
+                $this->Flash->success(__d('banana','The {0} has been saved.', __d('banana','content')));
                 return $this->redirect(['action' => 'edit', $content->id]);
             } else {
-                $this->Flash->error(__('The {0} could not be saved. Please, try again.', __('content')));
+                $this->Flash->error(__d('banana','The {0} could not be saved. Please, try again.', __d('banana','content')));
             }
         }
 
@@ -161,9 +161,9 @@ class PagesController extends ContentController
         $page = $this->Pages->get($id, ['contain' => []]);
 
         if ($this->Pages->moveUp($page)) {
-            $this->Flash->success(__('The {0} has been moved up.', __('page')));
+            $this->Flash->success(__d('banana','The {0} has been moved up.', __d('banana','page')));
         } else {
-            $this->Flash->error(__('The {0} could not be moved. Please, try again.', __('page')));
+            $this->Flash->error(__d('banana','The {0} could not be moved. Please, try again.', __d('banana','page')));
         }
         $this->redirect($this->referer(['action' => 'index']));
     }
@@ -172,9 +172,9 @@ class PagesController extends ContentController
         $page = $this->Pages->get($id, ['contain' => []]);
 
         if ($this->Pages->moveDown($page)) {
-            $this->Flash->success(__('The {0} has been moved down.', __('page')));
+            $this->Flash->success(__d('banana','The {0} has been moved down.', __d('banana','page')));
         } else {
-            $this->Flash->error(__('The {0} could not be moved. Please, try again.', __('page')));
+            $this->Flash->error(__d('banana','The {0} could not be moved. Please, try again.', __d('banana','page')));
         }
         $this->redirect($this->referer(['action' => 'index']));
     }
@@ -182,7 +182,7 @@ class PagesController extends ContentController
     public function repair()
     {
         $this->Pages->recover();
-        $this->Flash->success(__('Shop Category tree recovery has been executed'));
+        $this->Flash->success(__d('banana','Shop Category tree recovery has been executed'));
         $this->redirect($this->referer(['action' => 'index']));
     }
 

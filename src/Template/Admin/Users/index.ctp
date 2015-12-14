@@ -1,11 +1,11 @@
-<?php $this->Html->addCrumb(__('Users')); ?>
+<?php $this->Html->addCrumb(__d('banana','Users')); ?>
 <div class="actions">
     <div class="ui secondary menu">
         <div class="item"></div>
         <div class="right menu">
             <div class="item">
                 <i class="add icon"></i>
-                <?= $this->Html->link(__('New {0}', __('User')), ['action' => 'add']) ?>
+                <?= $this->Html->link(__d('banana','New {0}', __d('banana','User')), ['action' => 'add']) ?>
             </div>
             <div class="ui dropdown item">
                 <i class="dropdown icon"></i>
@@ -26,7 +26,7 @@
             <th><?= $this->Paginator->sort('id') ?></th>
             <th><?= $this->Paginator->sort('username') ?></th>
             <th><?= $this->Paginator->sort('is_login_allowed') ?></th>
-            <th class="actions"><?= __('Actions') ?></th>
+            <th class="actions"><?= __d('banana','Actions') ?></th>
         </tr>
     </thead>
     <tbody>
@@ -38,19 +38,19 @@
             <td class="actions">
                 <div class="ui basic mini buttons">
                     <div class="ui button">
-                        <?= $this->Html->link(__('View'), ['action' => 'view', $user->id]) ?>
+                        <?= $this->Html->link(__d('banana','View'), ['action' => 'view', $user->id]) ?>
                     </div>
                     <div class="ui floating dropdown icon button">
                         <i class="dropdown icon"></i>
                         <div class="menu">
                             <div class="item"><i class="edit icon"></i>
-                                <?= $this->Html->link(__('Edit'), ['action' => 'edit', $user->id]) ?>
+                                <?= $this->Html->link(__d('banana','Edit'), ['action' => 'edit', $user->id]) ?>
                             </div>
                             <div class="item"><i class="delete icon"></i>
                                 <?= $this->Form->postLink(
-                                    __('Delete'),
+                                    __d('banana','Delete'),
                                     ['action' => 'delete', $user->id],
-                                    ['confirm' => __('Are you sure you want to delete # {0}?', $user->id)]
+                                    ['confirm' => __d('banana','Are you sure you want to delete # {0}?', $user->id)]
                                 ) ?>
                             </div>
                         </div>
@@ -64,9 +64,9 @@
     </table>
     <div class="paginator">
         <div class="ui pagination menu">
-            <?= $this->Paginator->prev(__('previous')) ?>
+            <?= $this->Paginator->prev(__d('banana','previous')) ?>
             <?= $this->Paginator->numbers() ?>
-            <?= $this->Paginator->next(__('next')) ?>
+            <?= $this->Paginator->next(__d('banana','next')) ?>
 
             <div class="item">
                 <?= $this->Paginator->counter() ?>

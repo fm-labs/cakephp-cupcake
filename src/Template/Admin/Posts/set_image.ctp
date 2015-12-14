@@ -27,7 +27,7 @@
         'options' => $imageFiles,
         'class' => 'grouped',
         'id' => 'imagepicker-select',
-        'empty' => __('- Choose Image -'),
+        'empty' => __d('banana','- Choose Image -'),
     ]); ?>
 
 <?= $this->Form->submit('Save'); ?>

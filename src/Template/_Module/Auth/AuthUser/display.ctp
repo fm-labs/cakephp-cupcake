@@ -1,7 +1,7 @@
 <?php if ($user): ?>
 <div>
-    <?= __('Logged in as {0}', $user['name']); ?>
+    <?= __d('banana','Logged in as {0}', $user['name']); ?>
 </div>
 <?php else: ?>
-    <?= __('Not logged in'); ?>
+    <?= __d('banana','Not logged in'); ?>
 <?php endif; ?>

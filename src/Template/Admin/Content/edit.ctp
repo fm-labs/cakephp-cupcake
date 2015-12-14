@@ -17,7 +17,7 @@
             <?php foreach ($this->get('modulesAvailable') as $aModule): ?>
                 <li><?php
                     $url = ['action' => 'add_content_module', 'content_id' => $content->id, 'module' => $aModule];
-                    echo $this->Ui->link(__('Add {0} Module', $aModule), $url, ['icon' => 'add']);
+                    echo $this->Ui->link(__d('banana','Add {0} Module', $aModule), $url, ['icon' => 'add']);
                     ?></li>
             <?php endforeach; ?>
         </ul>

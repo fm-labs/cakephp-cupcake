@@ -1,13 +1,13 @@
-<?php $this->Html->addCrumb(__('Galleries')); ?>
+<?php $this->Html->addCrumb(__d('banana','Galleries')); ?>
 
-<?php $this->Toolbar->addLink(__('New {0}', __('Gallery')), ['action' => 'add'], ['icon' => 'add']); ?>
+<?php $this->Toolbar->addLink(__d('banana','New {0}', __d('banana','Gallery')), ['action' => 'add'], ['icon' => 'add']); ?>
 <?= $this->Toolbar->addLink(
-    __('List {0}', __('Posts')),
+    __d('banana','List {0}', __d('banana','Posts')),
     ['controller' => 'Posts', 'action' => 'index'],
     ['icon' => 'list']
 ) ?>
 <?= $this->Toolbar->addLink(
-    __('New {0}', __('Post')),
+    __d('banana','New {0}', __d('banana','Post')),
     ['controller' => 'Posts', 'action' => 'add'],
     ['icon' => 'add']
 ) ?>
@@ -19,7 +19,7 @@
             <th><?= $this->Paginator->sort('title') ?></th>
             <th><?= $this->Paginator->sort('view_template') ?></th>
             <th><?= $this->Paginator->sort('source') ?></th>
-            <th class="actions"><?= __('Actions') ?></th>
+            <th class="actions"><?= __d('banana','Actions') ?></th>
         </tr>
     </thead>
     <tbody>
@@ -38,21 +38,21 @@
                 <?php
                 $menu = new Backend\Lib\Menu\Menu();
                 $menu->add(
-                    __('Edit'),
+                    __d('banana','Edit'),
                     ['action' => 'edit', $gallery->id],
                     ['icon' => 'edit']
                 );
 
                 $dropdown = $menu->add('Dropdown');
                 $dropdown->getChildren()->add(
-                    __('Add Item'),
+                    __d('banana','Add Item'),
                     ['action' => 'addItem', $gallery->id],
                     ['icon' => 'plus']
                 );
                 $dropdown->getChildren()->add(
-                    __('Delete'),
+                    __d('banana','Delete'),
                     ['action' => 'delete', $gallery->id],
-                    ['icon' => 'trash', 'confirm' => __('Are you sure you want to delete # {0}?', $gallery->id)]
+                    ['icon' => 'trash', 'confirm' => __d('banana','Are you sure you want to delete # {0}?', $gallery->id)]
                 );
                 ?>
                 <?= $this->element('Backend.Table/table_row_actions', ['menu' => $menu]); ?>

@@ -1,10 +1,10 @@
-<?php $this->Html->addCrumb(__('Pages')); ?>
+<?php $this->Html->addCrumb(__d('banana','Pages')); ?>
 <div class="actions">
     <div class="ui secondary menu">
         <div class="item"></div>
         <div class="right menu">
             <?= $this->Ui->link(
-                __('New {0}', __('Page')),
+                __d('banana','New {0}', __d('banana','Page')),
                 ['action' => 'add'],
                 ['class' => 'item', 'icon' => 'add']
             ) ?>
@@ -30,21 +30,21 @@
             <div class="ui basic small buttons">
 
                 <?= $this->Ui->link(
-                    __('Edit'),
+                    __d('banana','Edit'),
                     ['action' => 'edit', $page->id],
                     ['class' => 'ui button', 'icon' => 'edit']
                 ) ?>
 
                 <div class="ui button">
-                    <?= $this->Html->link(__('View'), ['action' => 'view', $page->id]) ?>
+                    <?= $this->Html->link(__d('banana','View'), ['action' => 'view', $page->id]) ?>
                 </div>
                 <div class="ui floating dropdown icon button">
                     <i class="dropdown icon"></i>
                     <div class="menu">
                         <?= $this->Ui->postLink(
-                            __('Delete'),
+                            __d('banana','Delete'),
                             ['action' => 'delete', $page->id],
-                            ['class' => 'item', 'icon' => 'trash', 'confirm' => __('Are you sure you want to delete # {0}?', $page->id)]
+                            ['class' => 'item', 'icon' => 'trash', 'confirm' => __d('banana','Are you sure you want to delete # {0}?', $page->id)]
                         ) ?>
                     </div>
                 </div>

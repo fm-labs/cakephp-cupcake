@@ -1,48 +1,48 @@
-<?php $this->Html->addCrumb(__('Page Modules'), ['action' => 'index']); ?>
+<?php $this->Html->addCrumb(__d('banana','Page Modules'), ['action' => 'index']); ?>
 <?php $this->Html->addCrumb($pageModule->id); ?>
 <div class="be-toolbar actions">
     <div class="ui secondary menu">
         <div class="item"></div>
         <div class="right menu">
             <?= $this->Ui->link(
-                __('Edit {0}', __('Page Module')),
+                __d('banana','Edit {0}', __d('banana','Page Module')),
                 ['action' => 'edit', $pageModule->id],
                 ['class' => 'item', 'icon' => 'edit']
             ) ?>
             <?= $this->Ui->postLink(
-                __('Delete {0}', __('Page Module')),
+                __d('banana','Delete {0}', __d('banana','Page Module')),
                 ['action' => 'delete', $pageModule->id],
-                ['class' => 'item', 'icon' => 'trash', 'confirm' => __('Are you sure you want to delete # {0}?', $pageModule->id)]) ?>
+                ['class' => 'item', 'icon' => 'trash', 'confirm' => __d('banana','Are you sure you want to delete # {0}?', $pageModule->id)]) ?>
 
             <?= $this->Ui->link(
-                __('List {0}', __('Page Modules')),
+                __d('banana','List {0}', __d('banana','Page Modules')),
                 ['action' => 'index'],
                 ['class' => 'item', 'icon' => 'list']
             ) ?>
             <?= $this->Ui->link(
-                __('New {0}', __('Page Module')),
+                __d('banana','New {0}', __d('banana','Page Module')),
                 ['action' => 'add'],
                 ['class' => 'item', 'icon' => 'add']
             ) ?>
             <div class="ui item dropdown">
                 <div class="menu">
                     <?= $this->Ui->link(
-                        __('List {0}', __('Pages')),
+                        __d('banana','List {0}', __d('banana','Pages')),
                         ['controller' => 'Pages', 'action' => 'index'],
                         ['class' => 'item', 'icon' => 'list']
                     ) ?>
                     <?= $this->Ui->link(
-                        __('New {0}', __('Page')),
+                        __d('banana','New {0}', __d('banana','Page')),
                         ['controller' => 'Pages', 'action' => 'add'],
                         ['class' => 'item', 'icon' => 'add']
                     ) ?>
                     <?= $this->Ui->link(
-                        __('List {0}', __('Modules')),
+                        __d('banana','List {0}', __d('banana','Modules')),
                         ['controller' => 'Modules', 'action' => 'index'],
                         ['class' => 'item', 'icon' => 'list']
                     ) ?>
                     <?= $this->Ui->link(
-                        __('New {0}', __('Module')),
+                        __d('banana','New {0}', __d('banana','Module')),
                         ['controller' => 'Modules', 'action' => 'add'],
                         ['class' => 'item', 'icon' => 'add']
                     ) ?>
@@ -61,28 +61,28 @@
         <!--
         <thead>
         <tr>
-            <th><?= __('Label'); ?></th>
-            <th><?= __('Value'); ?></th>
+            <th><?= __d('banana','Label'); ?></th>
+            <th><?= __d('banana','Value'); ?></th>
         </tr>
         </thead>
         -->
 
         <tr>
-            <td><?= __('Page') ?></td>
+            <td><?= __d('banana','Page') ?></td>
             <td><?= $pageModule->has('page') ? $this->Html->link($pageModule->page->title, ['controller' => 'Pages', 'action' => 'view', $pageModule->page->id]) : '' ?></td>
         </tr>
         <tr>
-            <td><?= __('Module') ?></td>
+            <td><?= __d('banana','Module') ?></td>
             <td><?= $pageModule->has('module') ? $this->Html->link($pageModule->module->name, ['controller' => 'Modules', 'action' => 'view', $pageModule->module->id]) : '' ?></td>
         </tr>
         <tr>
-            <td><?= __('Section') ?></td>
+            <td><?= __d('banana','Section') ?></td>
             <td><?= h($pageModule->section) ?></td>
         </tr>
 
 
         <tr>
-            <td><?= __('Id') ?></td>
+            <td><?= __d('banana','Id') ?></td>
             <td><?= $this->Number->format($pageModule->id) ?></td>
         </tr>
 

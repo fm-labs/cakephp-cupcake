@@ -1,11 +1,11 @@
-<?php $this->Html->addCrumb(__('Posts')); ?>
+<?php $this->Html->addCrumb(__d('banana','Posts')); ?>
 <?php $this->extend('/Admin/Content/index'); ?>
 <?php
 // EXTEND: TOOLBAR
-$this->Toolbar->addLink(__('New {0}', __('Post')), ['action' => 'add'], ['icon' => 'add']);
+$this->Toolbar->addLink(__d('banana','New {0}', __d('banana','Post')), ['action' => 'add'], ['icon' => 'add']);
 
 // EXTEND: HEADING
-$this->assign('heading', __('Posts'));
+$this->assign('heading', __d('banana','Posts'));
 ?>
 <div class="posts index">
     <table class="ui table compact striped">
@@ -17,7 +17,7 @@ $this->assign('heading', __('Posts'));
             <th><?= $this->Paginator->sort('is_published') ?></th>
             <th><?= $this->Paginator->sort('refscope') ?></th>
             <th><?= $this->Paginator->sort('refid') ?></th>
-            <th class="actions"><?= __('Actions') ?></th>
+            <th class="actions"><?= __d('banana','Actions') ?></th>
         </tr>
     </thead>
     <tbody>
@@ -32,25 +32,25 @@ $this->assign('heading', __('Posts'));
             <td class="actions">
                 <div class="ui basic tiny buttons">
                     <div class="ui button">
-                        <?= $this->Html->link(__('Preview'), ['action' => 'preview', $content->id], ['target' => 'preview']) ?>
+                        <?= $this->Html->link(__d('banana','Preview'), ['action' => 'preview', $content->id], ['target' => 'preview']) ?>
                     </div>
                     <div class="ui floating dropdown icon button">
                         <i class="dropdown icon"></i>
                         <div class="menu">
                             <?= $this->Ui->link(
-                                __('View'),
+                                __d('banana','View'),
                                 ['action' => 'view', $content->id],
                                 ['class' => 'item', 'icon' => 'view']
                             ) ?>
                             <?= $this->Ui->link(
-                                __('Edit'),
+                                __d('banana','Edit'),
                                 ['action' => 'edit', $content->id],
                                 ['class' => 'item', 'icon' => 'edit']
                             ) ?>
                             <?= $this->Ui->postLink(
-                                __('Delete'),
+                                __d('banana','Delete'),
                                 ['action' => 'delete', $content->id],
-                                ['class' => 'item', 'icon' => 'trash', 'confirm' => __('Are you sure you want to delete # {0}?', $content->id)]
+                                ['class' => 'item', 'icon' => 'trash', 'confirm' => __d('banana','Are you sure you want to delete # {0}?', $content->id)]
                             ) ?>
                         </div>
                     </div>

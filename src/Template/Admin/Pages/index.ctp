@@ -1,12 +1,12 @@
-<?php $this->Html->addCrumb(__('Pages')); ?>
+<?php $this->Html->addCrumb(__d('banana','Pages')); ?>
 <?php $this->extend('/Admin/Content/index'); ?>
 <?php
 // TOOLBAR
-$this->Toolbar->addLink(__('New {0}', __('Page')), ['action' => 'add'], ['icon' => 'add']);
-$this->Toolbar->addLink(__('Repair'), ['action' => 'repair'], ['icon' => 'configure']);
+$this->Toolbar->addLink(__d('banana','New {0}', __d('banana','Page')), ['action' => 'add'], ['icon' => 'add']);
+$this->Toolbar->addLink(__d('banana','Repair'), ['action' => 'repair'], ['icon' => 'configure']);
 
 // HEADING
-$this->assign('heading', __('Pages'));
+$this->assign('heading', __d('banana','Pages'));
 
 // CONTENT
 ?>
@@ -18,7 +18,7 @@ $this->assign('heading', __('Pages'));
             <th><?= h('title') ?></th>
             <th><?= h('type') ?></th>
             <th><?= h('url') ?></th>
-            <th class="actions"><?= __('Actions') ?></th>
+            <th class="actions"><?= __d('banana','Actions') ?></th>
         </tr>
         </thead>
         <tbody>
@@ -33,35 +33,35 @@ $this->assign('heading', __('Pages'));
 
 
                         <div class="ui button">
-                            <?= $this->Html->link(__('View'), ['action' => 'view', $content->id]) ?>
+                            <?= $this->Html->link(__d('banana','View'), ['action' => 'view', $content->id]) ?>
                         </div>
                         <div class="ui floating dropdown icon button">
                             <i class="dropdown icon"></i>
                             <div class="menu">
                                 <?= $this->Ui->link(
-                                    __('Preview'),
+                                    __d('banana','Preview'),
                                     ['action' => 'preview', $content->id],
                                     ['class' => 'item', 'icon' => 'view']
                                 ) ?>
                                 <?= $this->Ui->link(
-                                    __('Duplicate'),
+                                    __d('banana','Duplicate'),
                                     ['action' => 'duplicate', $content->id],
                                     ['class' => 'item', 'icon' => 'edit']
                                 ) ?>
                                 <?= $this->Ui->link(
-                                    __('Move Up'),
+                                    __d('banana','Move Up'),
                                     ['action' => 'moveUp', $content->id],
                                     ['class' => 'item', 'icon' => 'arrow up']
                                 ) ?>
                                 <?= $this->Ui->link(
-                                    __('Move Down'),
+                                    __d('banana','Move Down'),
                                     ['action' => 'moveDown', $content->id],
                                     ['class' => 'item', 'icon' => 'arrow down']
                                 ) ?>
                                 <?= $this->Ui->deleteLink(
-                                    __('Delete'),
+                                    __d('banana','Delete'),
                                     ['action' => 'delete', $content->id],
-                                    ['class' => 'item action-delete', 'icon' => 'trash', 'confirm' => __('Are you sure you want to delete # {0}?', $content->id)]
+                                    ['class' => 'item action-delete', 'icon' => 'trash', 'confirm' => __d('banana','Are you sure you want to delete # {0}?', $content->id)]
                                 ) ?>
                             </div>
                         </div>

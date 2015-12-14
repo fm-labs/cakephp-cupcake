@@ -1,10 +1,10 @@
-<?php $this->Html->addCrumb(__('Content Modules')); ?>
+<?php $this->Html->addCrumb(__d('banana','Content Modules')); ?>
 <div class="be-toolbar actions">
     <div class="ui secondary menu">
         <div class="item"></div>
         <div class="right menu">
             <?= $this->Ui->link(
-                __('New {0}', __('Content Module')),
+                __d('banana','New {0}', __d('banana','Content Module')),
                 ['action' => 'add'],
                 ['class' => 'item', 'icon' => 'add']
             ) ?>
@@ -13,13 +13,13 @@
                 <i class="setting icon"></i>Actions
                 <div class="menu">
                     <?= $this->Ui->link(
-                        __('List {0}', __('Modules')),
+                        __d('banana','List {0}', __d('banana','Modules')),
                         ['controller' => 'Modules', 'action' => 'index'],
                         ['class' => 'item', 'icon' => 'list']
                     ) ?>
 
                     <?= $this->Ui->link(
-                        __('New {0}', __('Module')),
+                        __d('banana','New {0}', __d('banana','Module')),
                         ['controller' => 'Modules', 'action' => 'add'],
                         ['class' => 'item', 'icon' => 'add']
                     ) ?>
@@ -40,7 +40,7 @@
             <th><?= $this->Paginator->sort('module_id') ?></th>
             <th><?= $this->Paginator->sort('section') ?></th>
             <th><?= $this->Paginator->sort('template') ?></th>
-            <th class="actions"><?= __('Actions') ?></th>
+            <th class="actions"><?= __d('banana','Actions') ?></th>
         </tr>
     </thead>
     <tbody>
@@ -59,20 +59,20 @@
             <td class="actions">
                 <div class="ui basic small buttons">
                     <div class="ui button">
-                        <?= $this->Html->link(__('View'), ['action' => 'view', $contentModule->id]) ?>
+                        <?= $this->Html->link(__d('banana','View'), ['action' => 'view', $contentModule->id]) ?>
                     </div>
                     <div class="ui floating dropdown icon button">
                         <i class="dropdown icon"></i>
                         <div class="menu">
                             <?= $this->Ui->link(
-                                __('Edit'),
+                                __d('banana','Edit'),
                                 ['action' => 'edit', $contentModule->id],
                                 ['class' => 'item', 'icon' => 'edit']
                             ) ?>
                             <?= $this->Ui->postLink(
-                                __('Delete'),
+                                __d('banana','Delete'),
                                 ['action' => 'delete', $contentModule->id],
-                                ['class' => 'item', 'icon' => 'trash', 'confirm' => __('Are you sure you want to delete # {0}?', $contentModule->id)]
+                                ['class' => 'item', 'icon' => 'trash', 'confirm' => __d('banana','Are you sure you want to delete # {0}?', $contentModule->id)]
                             ) ?>
                         </div>
                     </div>
@@ -85,9 +85,9 @@
     </table>
     <div class="paginator">
         <div class="ui pagination menu">
-            <?= $this->Paginator->prev(__('previous')) ?>
+            <?= $this->Paginator->prev(__d('banana','previous')) ?>
             <?= $this->Paginator->numbers() ?>
-            <?= $this->Paginator->next(__('next')) ?>
+            <?= $this->Paginator->next(__d('banana','next')) ?>
 
             <div class="item">
                 <?= $this->Paginator->counter() ?>

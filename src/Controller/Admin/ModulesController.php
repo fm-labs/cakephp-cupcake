@@ -63,10 +63,10 @@ class ModulesController extends AppController
         if ($this->request->is('post')) {
             $module = $this->Modules->patchEntity($module, $this->request->data);
             if ($this->Modules->save($module)) {
-                $this->Flash->success(__('The {0} has been saved.', __('module')));
+                $this->Flash->success(__d('banana','The {0} has been saved.', __d('banana','module')));
                 return $this->redirect(['action' => 'index']);
             } else {
-                $this->Flash->error(__('The {0} could not be saved. Please, try again.', __('module')));
+                $this->Flash->error(__d('banana','The {0} could not be saved. Please, try again.', __d('banana','module')));
             }
         }
         $this->set(compact('module'));
@@ -88,10 +88,10 @@ class ModulesController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $module = $this->Modules->patchEntity($module, $this->request->data);
             if ($this->Modules->save($module)) {
-                $this->Flash->success(__('The {0} has been saved.', __('module')));
+                $this->Flash->success(__d('banana','The {0} has been saved.', __d('banana','module')));
                 return $this->redirect(['action' => 'index']);
             } else {
-                $this->Flash->error(__('The {0} could not be saved. Please, try again.', __('module')));
+                $this->Flash->error(__d('banana','The {0} could not be saved. Please, try again.', __d('banana','module')));
             }
         }
         $this->set(compact('module'));
@@ -110,9 +110,9 @@ class ModulesController extends AppController
         $this->request->allowMethod(['post', 'delete']);
         $module = $this->Modules->get($id);
         if ($this->Modules->delete($module)) {
-            $this->Flash->success(__('The {0} has been deleted.', __('module')));
+            $this->Flash->success(__d('banana','The {0} has been deleted.', __d('banana','module')));
         } else {
-            $this->Flash->error(__('The {0} could not be deleted. Please, try again.', __('module')));
+            $this->Flash->error(__d('banana','The {0} could not be deleted. Please, try again.', __d('banana','module')));
         }
         return $this->redirect(['action' => 'index']);
     }
@@ -126,10 +126,10 @@ class ModulesController extends AppController
 
         $duplicate = $this->Modules->duplicate($content);
         if ($this->Modules->save($duplicate)) {
-            $this->Flash->success(__('The {0} has been duplicated.', __('module')));
+            $this->Flash->success(__d('banana','The {0} has been duplicated.', __d('banana','module')));
             return $this->redirect(['action' => 'edit', $duplicate->id]);
         } else {
-            $this->Flash->error(__('The {0} could not be duplicated. Please, try again.', __('module')));
+            $this->Flash->error(__d('banana','The {0} could not be duplicated. Please, try again.', __d('banana','module')));
             return $this->redirect($this->referer(['action' => 'index']));
         }
     }

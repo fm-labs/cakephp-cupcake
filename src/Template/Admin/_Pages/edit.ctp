@@ -1,18 +1,18 @@
-<?php $this->Html->addCrumb(__('Pages'), ['action' => 'index']); ?>
-<?php $this->Html->addCrumb(__('Edit {0}', __('Page'))); ?>
+<?php $this->Html->addCrumb(__d('banana','Pages'), ['action' => 'index']); ?>
+<?php $this->Html->addCrumb(__d('banana','Edit {0}', __d('banana','Page'))); ?>
 <div class="pages">
     <div class="be-toolbar actions">
         <div class="ui secondary menu">
             <div class="item"></div>
             <div class="right menu">
                 <?= $this->Ui->postLink(
-                __('Delete'),
+                __d('banana','Delete'),
                 ['action' => 'delete', $page->id],
-                ['class' => 'item', 'icon' => 'trash', 'confirm' => __('Are you sure you want to delete # {0}?', $page->id)]
+                ['class' => 'item', 'icon' => 'trash', 'confirm' => __d('banana','Are you sure you want to delete # {0}?', $page->id)]
             )
             ?>
                     <?= $this->Ui->link(
-                    __('List {0}', __('Pages')),
+                    __d('banana','List {0}', __d('banana','Pages')),
                     ['action' => 'index'],
                     ['class' => 'item', 'icon' => 'list']
                 ) ?>
@@ -22,13 +22,13 @@
                     <div class="menu">
     
                         <?= $this->Ui->link(
-                            __('List {0}', __('Page Modules')),
+                            __d('banana','List {0}', __d('banana','Page Modules')),
                             ['controller' => 'PageModules', 'action' => 'index'],
                             ['class' => 'item', 'icon' => 'list']
                         ) ?>
 
                         <?= $this->Ui->link(
-                            __('New {0}', __('Page Module')),
+                            __d('banana','New {0}', __d('banana','Page Module')),
                             ['controller' => 'PageModules', 'action' => 'add'],
                             ['class' => 'item', 'icon' => 'add']
                         ) ?>
@@ -41,7 +41,7 @@
 
     <?= $this->Form->create($page); ?>
     <h2 class="ui top attached header">
-        <?= __('Edit {0}', __('Page')) ?>
+        <?= __d('banana','Edit {0}', __d('banana','Page')) ?>
     </h2>
     <div class="users ui attached segment">
         <div class="ui form">
@@ -60,7 +60,7 @@
         </div>
     </div>
     <div class="ui bottom attached segment">
-        <?= $this->Form->button(__('Submit')) ?>
+        <?= $this->Form->button(__d('banana','Submit')) ?>
     </div>
     <?= $this->Form->end() ?>
 

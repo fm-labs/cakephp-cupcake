@@ -1,7 +1,7 @@
-<?php $this->Html->addCrumb(__('Page Layouts'), ['action' => 'index']); ?>
-<?php $this->Html->addCrumb(__('New {0}', __('Page Layout'))); ?>
+<?php $this->Html->addCrumb(__d('banana','Page Layouts'), ['action' => 'index']); ?>
+<?php $this->Html->addCrumb(__d('banana','New {0}', __d('banana','Page Layout'))); ?>
 <?= $this->Toolbar->addLink(
-    __('List {0}', __('Page Layouts')),
+    __d('banana','List {0}', __d('banana','Page Layouts')),
     ['action' => 'index'],
     ['icon' => 'list']
 ) ?>
@@ -9,7 +9,7 @@
 <?php $this->Toolbar->endGroup(); ?>
 <div class="form">
     <h2 class="ui header">
-        <?= __('Add {0}', __('Page Layout')) ?>
+        <?= __d('banana','Add {0}', __d('banana','Page Layout')) ?>
     </h2>
     <?= $this->Form->create($pageLayout); ?>
     <div class="users ui basic segment">
@@ -23,7 +23,7 @@
         </div>
     </div>
     <div class="ui bottom attached segment">
-        <?= $this->Form->button(__('Submit')) ?>
+        <?= $this->Form->button(__d('banana','Submit')) ?>
     </div>
     <?= $this->Form->end() ?>
 

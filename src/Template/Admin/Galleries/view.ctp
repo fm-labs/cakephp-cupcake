@@ -1,33 +1,33 @@
-<?php $this->Html->addCrumb(__('Galleries'), ['action' => 'index']); ?>
+<?php $this->Html->addCrumb(__d('banana','Galleries'), ['action' => 'index']); ?>
 <?php $this->Html->addCrumb($gallery->title); ?>
 <?= $this->Toolbar->addLink(
-    __('Edit {0}', __('Gallery')),
+    __d('banana','Edit {0}', __d('banana','Gallery')),
     ['action' => 'edit', $gallery->id],
     ['icon' => 'edit']
 ) ?>
 <?= $this->Toolbar->addLink(
-    __('Delete {0}', __('Gallery')),
+    __d('banana','Delete {0}', __d('banana','Gallery')),
     ['action' => 'delete', $gallery->id],
-    ['icon' => 'trash', 'confirm' => __('Are you sure you want to delete # {0}?', $gallery->id)]) ?>
+    ['icon' => 'trash', 'confirm' => __d('banana','Are you sure you want to delete # {0}?', $gallery->id)]) ?>
 
 <?= $this->Toolbar->addLink(
-    __('List {0}', __('Galleries')),
+    __d('banana','List {0}', __d('banana','Galleries')),
     ['action' => 'index'],
     ['icon' => 'list']
 ) ?>
 <?= $this->Toolbar->addLink(
-    __('New {0}', __('Gallery')),
+    __d('banana','New {0}', __d('banana','Gallery')),
     ['action' => 'add'],
     ['icon' => 'add']
 ) ?>
-<?= $this->Toolbar->startGroup(__('More')); ?>
+<?= $this->Toolbar->startGroup(__d('banana','More')); ?>
 <?= $this->Toolbar->addLink(
-    __('List {0}', __('Posts')),
+    __d('banana','List {0}', __d('banana','Posts')),
     ['controller' => 'Posts', 'action' => 'index'],
     ['icon' => 'list']
 ) ?>
 <?= $this->Toolbar->addLink(
-    __('New {0}', __('Post')),
+    __d('banana','New {0}', __d('banana','Post')),
     ['controller' => 'Posts', 'action' => 'add'],
     ['icon' => 'add']
 ) ?>
@@ -40,57 +40,57 @@
         <!--
         <thead>
         <tr>
-            <th><?= __('Label'); ?></th>
-            <th><?= __('Value'); ?></th>
+            <th><?= __d('banana','Label'); ?></th>
+            <th><?= __d('banana','Value'); ?></th>
         </tr>
         </thead>
         -->
 
         <tr>
-            <td><?= __('Title') ?></td>
+            <td><?= __d('banana','Title') ?></td>
             <td><?= h($gallery->title) ?></td>
         </tr>
         <tr>
-            <td><?= __('View Template') ?></td>
+            <td><?= __d('banana','View Template') ?></td>
             <td><?= h($gallery->view_template) ?></td>
         </tr>
         <tr>
-            <td><?= __('Source') ?></td>
+            <td><?= __d('banana','Source') ?></td>
             <td><?= h($gallery->source) ?></td>
         </tr>
 
         <tr>
-            <td><?= __('Source Folder') ?></td>
+            <td><?= __d('banana','Source Folder') ?></td>
             <td><?= h($gallery->source_folder) ?></td>
         </tr>
 
 
 
         <tr>
-            <td><?= __('Id') ?></td>
+            <td><?= __d('banana','Id') ?></td>
             <td><?= $this->Number->format($gallery->id) ?></td>
         </tr>
 
         <tr class="text">
-            <td><?= __('Desc Html') ?></td>
+            <td><?= __d('banana','Desc Html') ?></td>
             <td><?= $this->Text->autoParagraph(h($gallery->desc_html)); ?></td>
         </tr>
     </table>
 </div>
 <div class="related">
     <div class="ui basic segment">
-    <h4 class="ui header"><?= __('Related {0}', __('Posts')) ?></h4>
+    <h4 class="ui header"><?= __d('banana','Related {0}', __d('banana','Posts')) ?></h4>
     <?php if (!empty($gallery->posts)): ?>
     <table class="ui table">
         <tr>
-            <th><?= __('Id') ?></th>
-            <th><?= __('Title') ?></th>
-            <th><?= __('Image File') ?></th>
-            <th><?= __('Template') ?></th>
-            <th><?= __('Cssclass') ?></th>
-            <th><?= __('Cssid') ?></th>
-            <th><?= __('Published') ?></th>
-            <th class="actions"><?= __('Actions') ?></th>
+            <th><?= __d('banana','Id') ?></th>
+            <th><?= __d('banana','Title') ?></th>
+            <th><?= __d('banana','Image File') ?></th>
+            <th><?= __d('banana','Template') ?></th>
+            <th><?= __d('banana','Cssclass') ?></th>
+            <th><?= __d('banana','Cssid') ?></th>
+            <th><?= __d('banana','Published') ?></th>
+            <th class="actions"><?= __d('banana','Actions') ?></th>
         </tr>
         <?php foreach ($gallery->posts as $posts): ?>
         <tr>
@@ -103,12 +103,12 @@
             <td><?= h($posts->is_published) ?></td>
 
             <td class="actions">
-                <?= $this->Html->link(__('View'), ['controller' => 'Posts', 'action' => 'view', $posts->id]) ?>
+                <?= $this->Html->link(__d('banana','View'), ['controller' => 'Posts', 'action' => 'view', $posts->id]) ?>
 
-                <?= $this->Html->link(__('Edit'), ['controller' => 'Posts', 'action' => 'edit', $posts->id]) ?>
-                <?= $this->Html->link(__('Copy'), ['controller' => 'Posts', 'action' => 'copy', $posts->id]) ?>
+                <?= $this->Html->link(__d('banana','Edit'), ['controller' => 'Posts', 'action' => 'edit', $posts->id]) ?>
+                <?= $this->Html->link(__d('banana','Copy'), ['controller' => 'Posts', 'action' => 'copy', $posts->id]) ?>
 
-                <?= $this->Form->postLink(__('Delete'), ['controller' => 'Posts', 'action' => 'delete', $posts->id], ['confirm' => __('Are you sure you want to delete # {0}?', $posts->id)]) ?>
+                <?= $this->Form->postLink(__d('banana','Delete'), ['controller' => 'Posts', 'action' => 'delete', $posts->id], ['confirm' => __d('banana','Are you sure you want to delete # {0}?', $posts->id)]) ?>
 
             </td>
         </tr>
@@ -118,7 +118,7 @@
     <?php endif; ?>
 
 
-    <?= $this->Html->link(__('Add Item'), ['action' => 'addItem', $gallery->id]) ?>
+    <?= $this->Html->link(__d('banana','Add Item'), ['action' => 'addItem', $gallery->id]) ?>
     </div>
 
     <?php debug($gallery); ?>
