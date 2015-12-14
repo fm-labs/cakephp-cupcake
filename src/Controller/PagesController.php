@@ -74,13 +74,33 @@ class PagesController extends FrontendController
      */
     public function view($id = null)
     {
-        $page = $this->Pages->get($id, [
-            'contain' => ['Posts']
-        ]);
+        if ($id === null) {
+            switch (true) {
+                case isset($this->request->query['page_id']):
+                    $id = $this->request->query['page_id'];
+                    break;
+                case isset($this->request->params['slug']):
+                    $page = $this->Pages->find()
+                        ->where(['slug' => $this->request->params['slug']])
+                        ->contain(['Posts'])
+                        ->first();
+                    break;
+                default:
+                    //throw new NotFoundException();
+            }
+        }
+
+        if (!isset($page)) {
+            $page = $this->Pages->get($id, [
+                'contain' => ['Posts']
+            ]);
+        }
 
         if (!$page) {
             throw new NotFoundException(__("Page {0} not found", strip_tags($id)));
         }
+
+        $this->Frontend->setRefId($page->id);
 
         $contentModules = $this->Pages->ContentModules
             ->find()
@@ -89,7 +109,6 @@ class PagesController extends FrontendController
             ->contain(['Modules'])
             ->all();
 
-        $this->Frontend->setRefId($id);
 
         switch ($page->type) {
             case 'redirect':
