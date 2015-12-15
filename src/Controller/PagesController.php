@@ -102,13 +102,11 @@ class PagesController extends FrontendController
 
         $this->Frontend->setRefId($page->id);
 
-        $contentModules = $this->Pages->ContentModules
-            ->find()
-            ->order(['ContentModules.priority' => 'DESC'])
-            ->where(['ContentModules.refid' => $page->id, 'ContentModules.refscope' => 'Banana.Pages'])
-            ->contain(['Modules'])
-            ->all();
+        $view = ($page->page_template) ?: null;
+        $layout = ($page->page_layout) ? $page->page_layout->template : null;
 
+        $this->viewBuilder()->template($view);
+        $this->viewBuilder()->layout($layout);
 
         switch ($page->type) {
             case 'redirect':
@@ -137,19 +135,30 @@ class PagesController extends FrontendController
                 break;
 
             case 'static':
+                $action = ($page->page_template) ?: null;
+                if ($action && method_exists($this, $action)) {
+                    $this->setAction($action);
+                    break;
+                }
             case 'content':
             default:
                 //$this->Frontend->setPage($page);
+
                 break;
         }
 
-        $this->set('contentModules', $contentModules);
+        $contentModules = $this->Pages->ContentModules
+            ->find()
+            ->order(['ContentModules.priority' => 'DESC'])
+            ->where(['ContentModules.refid' => $page->id, 'ContentModules.refscope' => 'Banana.Pages'])
+            ->contain(['Modules'])
+            ->all();
+
         $this->set('page', $page);
+        $this->set('contentModules', $contentModules);
 
-        $view = ($page->page_template) ?: null;
-        $layout = ($page->page_layout) ? $page->page_layout->template : null;
 
-        return $this->render($view, $layout);
+        return $this->render();
     }
 
     /**

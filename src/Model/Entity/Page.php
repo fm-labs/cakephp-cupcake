@@ -47,7 +47,7 @@ class Page extends Entity
     {
         $defaultUrl = [
             'prefix' => false,
-            'plugin' => 'Banana',
+            'plugin' => null,
             'controller' => 'Pages',
             'action' => 'view',
             'page_id' => $this->id,
