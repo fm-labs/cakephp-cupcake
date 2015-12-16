@@ -37,13 +37,15 @@ abstract class ModuleCell extends Cell
 
         parent::__construct($request, $response, $eventManager, $cellOptions);
 
-        $this->params = array_merge(static::$defaultParams, $this->module->params_arr);
+        $this->params = ($this->module)
+            ? array_merge(static::$defaultParams, $this->module->params_arr)
+            : static::$defaultParams;
     }
 
     public function display()
     {
         $this->set('params', $this->params);
-        $this->set('module', $this->module);
+        //$this->set('module', $this->module);
     }
 
     public static function defaults()
