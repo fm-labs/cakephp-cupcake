@@ -19,7 +19,7 @@ abstract class ModuleCell extends Cell
 
     public $module;
 
-    public $params;
+    public $params = [];
     /**
      * Constructor.
      *
@@ -34,7 +34,6 @@ abstract class ModuleCell extends Cell
         EventManager $eventManager = null,
         array $cellOptions = []
     ) {
-
         parent::__construct($request, $response, $eventManager, $cellOptions);
 
         $this->params = ($this->module)
