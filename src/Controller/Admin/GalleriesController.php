@@ -20,6 +20,7 @@ class GalleriesController extends AppController
     {
         $this->paginate['limit'] = 100;
         $this->paginate['order'] = ['Galleries.title' => 'ASC'];
+        $this->paginate['contain'] = ['Parent'];
 
         $this->set('galleries', $this->paginate($this->Galleries));
         $this->set('_serialize', ['galleries']);
@@ -95,7 +96,7 @@ class GalleriesController extends AppController
     public function edit($id = null)
     {
         $gallery = $this->Galleries->get($id, [
-            'contain' => ['Posts']
+            'contain' => ['Parent', 'Posts']
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $gallery = $this->Galleries->patchEntity($gallery, $this->request->data);
@@ -106,7 +107,10 @@ class GalleriesController extends AppController
                 $this->Flash->error(__d('banana','The gallery could not be saved. Please, try again.'));
             }
         }
-        $this->set(compact('gallery'));
+
+        $parents = $this->Galleries->find('list')->toArray();
+
+        $this->set(compact('gallery', 'parents'));
         $this->set('_serialize', ['gallery']);
     }
 

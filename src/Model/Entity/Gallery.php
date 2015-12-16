@@ -2,6 +2,7 @@
 namespace Banana\Model\Entity;
 
 use Cake\ORM\Entity;
+use Cake\ORM\TableRegistry;
 use Media\Lib\Media\MediaManager;
 
 /**
@@ -13,6 +14,8 @@ use Media\Lib\Media\MediaManager;
  */
 class Gallery extends Entity
 {
+
+    protected $_parent;
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -27,6 +30,23 @@ class Gallery extends Entity
         '*' => true,
         'id' => false,
     ];
+
+    protected function _getParent()
+    {
+        if ($this->_parent === null && isset($this->_properties['parent_id'])) {
+            $this->_parent = TableRegistry::get('Banana.Galleries')->get($this->_properties['parent_id']);
+        }
+        return $this->_parent;
+    }
+
+    protected function _getDescHtml()
+    {
+        if ($this->inherit_desc && $this->parent) {
+            return $this->parent->desc_html;
+        }
+
+        return $this->_properties['desc_html'];
+    }
 
     protected function _getImages()
     {

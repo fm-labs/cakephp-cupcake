@@ -28,6 +28,11 @@ class GalleriesTable extends Table
         $this->displayField('title');
         $this->primaryKey('id');
 
+        $this->belongsTo('Parent', [
+            'className' => 'Banana.Galleries',
+            'foreignKey' => 'parent_id',
+        ]);
+
         $this->hasMany('Posts', [
             'className' => 'Banana.Posts',
             'foreignKey' => 'refid',

@@ -32,7 +32,9 @@
     <div class="users ui basic segment">
         <div class="ui form">
         <?php
+            echo $this->Form->input('parent_id', ['empty' => true]);
             echo $this->Form->input('title');
+            echo $this->Form->input('inherit_desc');
             echo $this->Form->input('desc_html', [
                 'type' => 'htmleditor',
                 'editor' => [

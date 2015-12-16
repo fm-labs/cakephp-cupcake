@@ -16,6 +16,7 @@
     <thead>
         <tr>
             <th><?= $this->Paginator->sort('id') ?></th>
+            <th><?= $this->Paginator->sort('parent_id') ?></th>
             <th><?= $this->Paginator->sort('title') ?></th>
             <th><?= $this->Paginator->sort('view_template') ?></th>
             <th><?= $this->Paginator->sort('source') ?></th>
@@ -26,6 +27,11 @@
     <?php foreach ($galleries as $gallery): ?>
         <tr>
             <td><?= $this->Number->format($gallery->id) ?></td>
+            <td>
+                <?php if ($gallery->parent): ?>
+                <?= $this->Html->link($gallery->parent->title, ['action' => 'edit', $gallery->parent->id]) ?>
+                <?php endif; ?>
+            </td>
             <td><?= $this->Html->link($gallery->title, ['action' => 'edit', $gallery->id]) ?></td>
             <td><?= h($gallery->view_template) ?></td>
             <td><?= h($gallery->source) ?>
