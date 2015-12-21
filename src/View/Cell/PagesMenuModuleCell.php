@@ -54,8 +54,11 @@ class PagesMenuModuleCell extends ModuleCell
         $menu = [];
         foreach ($children as $child) {
             $isActive = false;
-            $attr = ['class' => ''];
-            if ($this->request->param('page_id') == $child->id) {
+            $attr = ['class' => $child->cssclass];
+            if ($child->hide_in_nav === true) {
+                continue;
+
+            } elseif ($this->request->param('page_id') == $child->id) {
                 $isActive = true;
 
             } elseif ($child->type == 'controller') {
@@ -71,7 +74,7 @@ class PagesMenuModuleCell extends ModuleCell
             }
 
             if ($isActive) {
-                $attr['class'] .= 'active ';
+                $attr['class'] .= ' active';
             }
 
             $item = [
