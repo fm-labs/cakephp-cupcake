@@ -32,9 +32,16 @@ class PagesController extends FrontendController
 
     public $viewClass = 'Banana.Frontend';
 
+    public function initialize()
+    {
+        parent::initialize();
+        $this->loadComponent('Banana.Frontend');
+    }
+
     public function beforeFilter(Event $event)
     {
         parent::beforeFilter($event);
+        $this->viewBuilder()->plugin('Banana');
         $this->autoRender = false;
     }
 
@@ -159,6 +166,9 @@ class PagesController extends FrontendController
             ->where(['ContentModules.refid' => $page->id, 'ContentModules.refscope' => 'Banana.Pages'])
             ->contain(['Modules'])
             ->all();
+
+        $this->set('metaDescription', ($page->meta_desc) ? $page->meta_desc : $page->title);
+        $this->set('metaKeywords', ($page->meta_keywords) ? $page->meta_keywords : $page->title);
 
         $this->set('page', $page);
         $this->set('contentModules', $contentModules);

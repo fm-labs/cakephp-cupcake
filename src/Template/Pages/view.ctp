@@ -3,6 +3,8 @@ use Cake\Core\Configure;
 
 $this->assign('title', $page->title);
 ?>
+<?php $this->Html->meta('description', $metaDescription, ['block' => true]); ?>
+<?php $this->Html->meta('keywords', $metaKeywords, ['block' => true]); ?>
 <div class="page view <?= $page->cssclass ?>" id="<?= $page->cssid; ?>">
     <?php if (Configure::read('debug')): ?>
     <div class="debug">
