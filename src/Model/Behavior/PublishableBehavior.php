@@ -31,7 +31,7 @@ class PublishableBehavior extends Behavior
 
     public function findPublished(Query $query, array $options)
     {
-        $statusField = $this->config('statusField');
+        $statusField = $query->repository()->alias() . '.' . $this->config('statusField');
         $options = array_merge([
             'published' => true
         ], $options);
@@ -39,8 +39,22 @@ class PublishableBehavior extends Behavior
     }
 
     /**
-     * Automatically slug when saving.
-     *
+     * @param Event $event
+     * @param Query $query
+     * @param ArrayObject $options
+     * @param boolean $primary
+     */
+    public function beforeFind(Event $event, Query $query, ArrayObject $options, $primary)
+    {
+
+        if (isset($options['published'])) {
+            $this->findPublished($query, [
+                'published' => $options['published']
+            ]);
+        }
+    }
+
+    /**
      * @param Event $event The event
      * @param Entity $entity The entity
      * @param \ArrayObject $options
@@ -53,8 +67,6 @@ class PublishableBehavior extends Behavior
 
 
     /**
-     * Automatically slug when saving.
-     *
      * @param Event $event The event
      * @param Entity $entity The entity
      * @return void
