@@ -70,7 +70,7 @@ class SectionCell extends Cell
     protected function _loadPageModules()
     {
         if (!isset($this->refid)) {
-            debug("ContentModules skipped for section " . $this->name . ": No refid set");
+            //debug("ContentModules skipped for section " . $this->name . ": No refid set");
             $this->_pageModules = [];
             return;
         }
