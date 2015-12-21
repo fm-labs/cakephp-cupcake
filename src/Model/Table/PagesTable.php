@@ -41,6 +41,7 @@ class PagesTable extends Table
             'excludeFields' => ['lft', 'rght', 'slug']
         ]);
         $this->addBehavior('Banana.Sluggable');
+        $this->addBehavior('Banana.Publishable');
 
         $this->belongsTo('ParentPages', [
             'className' => 'Banana.Pages',

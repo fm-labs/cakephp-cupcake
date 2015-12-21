@@ -17,7 +17,7 @@ $this->assign('heading', __d('banana','Pages'));
             <th><?= h('id') ?></th>
             <th><?= h('title') ?></th>
             <th><?= h('type') ?></th>
-            <th><?= h('url') ?></th>
+            <th><?= h('is_published') ?></th>
             <th class="actions"><?= __d('banana','Actions') ?></th>
         </tr>
         </thead>
@@ -25,12 +25,15 @@ $this->assign('heading', __d('banana','Pages'));
         <?php foreach ($contents as $content): ?>
             <tr data-id="<?= h($content->id) ?>">
                 <td><?= h($content->id); ?></td>
-                <td><?= $this->Html->link($pagesTree[$content->id], ['action' => 'edit', $content->id]); ?></td>
+                <td><?= $this->Html->link(
+                        $pagesTree[$content->id],
+                        ['action' => 'edit', $content->id],
+                        ['title' => $this->Url->build($content->url)]);
+                    ?></td>
                 <td><?= h($content->type); ?></td>
-                <td><?= $this->Url->build($content->url); ?></td>
+                <td><?= h($content->is_published) ?></td>
                 <td class="actions">
-                    <div class="ui basic tiny buttons">
-
+                    <div class="ui basic mini buttons">
 
                         <div class="ui button">
                             <?= $this->Html->link(__d('banana','View'), ['action' => 'view', $content->id]) ?>
@@ -61,7 +64,7 @@ $this->assign('heading', __d('banana','Pages'));
                                 <?= $this->Ui->deleteLink(
                                     __d('banana','Delete'),
                                     ['action' => 'delete', $content->id],
-                                    ['class' => 'item action-delete', 'icon' => 'trash', 'confirm' => __d('banana','Are you sure you want to delete # {0}?', $content->id)]
+                                    ['class' => 'item', 'icon' => 'trash', 'confirm' => __d('banana','Are you sure you want to delete # {0}?', $content->id)]
                                 ) ?>
                             </div>
                         </div>
@@ -71,42 +74,4 @@ $this->assign('heading', __d('banana','Pages'));
         <?php endforeach; ?>
         </tbody>
     </table>
-    <?php debug($pagesTree); ?>
 </div>
-<?php //echo $this->Html->script('Tree.tree-tablesort', ['block' => 'script-bottom', 'inline' => false]); ?>
-
-<div id="modal-action-delete" class="ui basic modal">
-    <i class="close icon"></i>
-    <div class="header">
-        Archive Old Messages
-    </div>
-    <div class="image content">
-        <div class="image">
-            <i class="archive icon"></i>
-        </div>
-        <div class="description">
-            <p>Your inbox is getting full, would you like us to enable automatic archiving of old messages?</p>
-        </div>
-    </div>
-    <div class="actions">
-        <div class="two fluid ui inverted buttons">
-            <div class="ui red basic inverted button">
-                <i class="remove icon"></i>
-                No
-            </div>
-            <div class="ui green basic inverted button">
-                <i class="checkmark icon"></i>
-                Yes
-            </div>
-        </div>
-    </div>
-</div>
-<?php $this->append('script-bottom'); ?>
-<script>
-$(document).ready(function() {
-    $('.action-delete').click(function() {
-        $('#modal-action-delete').modal('show');
-    });
-});
-</script>
-<?php $this->end(); ?>

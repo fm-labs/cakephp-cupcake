@@ -58,6 +58,9 @@ class PagesMenuModuleCell extends ModuleCell
             if ($child->hide_in_nav === true) {
                 continue;
 
+            } elseif ($child->is_published !== true) {
+                continue;
+
             } elseif ($this->request->param('page_id') == $child->id) {
                 $isActive = true;
 

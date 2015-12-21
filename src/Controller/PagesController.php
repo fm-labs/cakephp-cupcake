@@ -49,12 +49,14 @@ class PagesController extends FrontendController
 
         $rootPage = $this->Pages
             ->find()
+            ->find('published')
             ->where(['parent_id IS NULL', 'type' => 'root', 'title' => $host])
             ->first();
 
         if (!$rootPage) {
             $rootPage = $this->Pages
                 ->find()
+                ->find('published')
                 ->where(['parent_id IS NULL', 'type' => 'root'])
                 ->first();
         }
@@ -80,7 +82,9 @@ class PagesController extends FrontendController
                     $id = $this->request->query['page_id'];
                     break;
                 case isset($this->request->params['slug']):
-                    $page = $this->Pages->find()
+                    $page = $this->Pages
+                        ->find()
+                        ->find('published')
                         ->where(['slug' => $this->request->params['slug']])
                         ->contain(['Posts'])
                         ->first();
@@ -91,13 +95,15 @@ class PagesController extends FrontendController
         }
 
         if (!isset($page)) {
-            $page = $this->Pages->get($id, [
-                'contain' => ['Posts']
-            ]);
+            $page = $this->Pages
+                ->find('published')
+                ->where(['Pages.id' => $id])
+                ->contain(['Posts'])
+                ->first();
         }
 
         if (!$page) {
-            throw new NotFoundException(__d('banana',"Page {0} not found", strip_tags($id)));
+            throw new NotFoundException(__d('banana',"Page not found"));
         }
 
         $this->Frontend->setRefId($page->id);
