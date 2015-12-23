@@ -44,7 +44,7 @@ $this->assign('heading', __d('banana','Pages'));
                                 <?= $this->Ui->link(
                                     __d('banana','Preview'),
                                     ['action' => 'preview', $content->id],
-                                    ['class' => 'item', 'icon' => 'view']
+                                    ['class' => 'item', 'icon' => 'eye', 'target' => 'preview']
                                 ) ?>
                                 <?= $this->Ui->link(
                                     __d('banana','Duplicate'),
