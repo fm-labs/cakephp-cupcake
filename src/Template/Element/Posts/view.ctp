@@ -1,4 +1,8 @@
 <?php
+if (!$post->is_published) {
+    return;
+}
+
 try {
     $action = 'view';
     if ($post->teaser_html) {

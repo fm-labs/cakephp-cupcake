@@ -75,7 +75,8 @@ class PagesTable extends Table
         $this->hasMany('Posts', [
             'className' => 'Banana.Posts',
             'foreignKey' => 'refid',
-            'conditions' => ['refscope' => 'Banana.Pages']
+            'conditions' => ['refscope' => 'Banana.Pages'],
+            'order' => ['Posts.order' => 'DESC', 'Post.id' => 'ASC']
         ]);
 
         $this->addBehavior('Translate', [

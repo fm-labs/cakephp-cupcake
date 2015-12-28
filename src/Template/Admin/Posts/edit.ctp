@@ -189,6 +189,7 @@ $this->assign('heading', __d('banana','Edit {0}', __d('banana','Post')));
                 echo $this->Form->input('refid');
                 echo $this->Form->input('cssclass');
                 echo $this->Form->input('cssid');
+                echo $this->Form->input('order');
                 ?>
             </div>
         </div>

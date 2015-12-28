@@ -27,6 +27,7 @@ class Post extends Entity
         //'image_file_upload' => true,
         'image_files' => true,
         //'image_files_upload' => true,
+        'priority' => true,
         'is_published' => true,
         'publish_start_datetime' => true,
         'publish_end_datetime' => true,

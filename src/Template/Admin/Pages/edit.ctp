@@ -140,13 +140,15 @@ $this->assign('heading', __d('banana','Edit Page: {0}', $content->title));
         <thead>
         <tr>
             <th>Title</th>
+            <th>Is Published</th>
             <th class="actions">Actions</th>
         </tr>
         </thead>
         <tbody>
         <?php foreach($content->posts as $post): ?>
             <tr>
-                <td><?= h($post->title); ?></td>
+                <td><?= h($post->title); ?> (<?= h($post->order); ?>)</td>
+                <td><?= $this->Ui->statusLabel($post->is_published); ?></td>
                 <td class="actions">
                     <?= $this->Ui->link('Edit',
                         ['controller' => 'Posts', 'action' => 'edit', $post->id],
