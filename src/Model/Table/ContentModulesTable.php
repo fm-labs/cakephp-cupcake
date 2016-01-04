@@ -76,7 +76,7 @@ class ContentModulesTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['page_id'], 'Pages'));
+        //$rules->add($rules->existsIn(['page_id'], 'Pages'));
         $rules->add($rules->existsIn(['module_id'], 'Modules'));
         return $rules;
     }

@@ -272,13 +272,25 @@ class Banana
         return $availableThemes;
     }
 
-    public static function listContentSections()
+    public static function getContentSections()
     {
         return [
-            'main' => 'Main',
-            'top' => 'Top',
-            'bottom' => 'Bottom',
+            'before' => 'before',
+            'after' => 'after',
+            'main' => 'main',
+            'top' => 'top',
+            'bottom' => 'bottom',
         ];
     }
+
+
+    /**
+     * @deprecated Use getContentSections() instead
+     */
+    public static function listContentSections()
+    {
+        return self::getContentSections();
+    }
+
 
 }
