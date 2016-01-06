@@ -20,12 +20,12 @@ class PagesSubmenuModuleCell extends PagesMenuModuleCell
         } elseif ($this->params['start_node'] < 0) {
 
             // Determine start node for level
-            $level = $this->Pages->getLevel($this->page_id);
+            $level = $this->Pages->getLevel($this->refid);
             if ($level > $this->params['level']) {
-                $path = $this->Pages->find('path', ['for' => $this->page_id])->toArray();
+                $path = $this->Pages->find('path', ['for' => $this->refid])->toArray();
                 $nodeId = $path[$this->params['level']]->id;
             } else {
-                $nodeId = $this->page_id;
+                $nodeId = $this->refid;
             }
 
 

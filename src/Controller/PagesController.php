@@ -90,10 +90,9 @@ class PagesController extends FrontendController
                     break;
                 case isset($this->request->params['slug']):
                     $page = $this->Pages
-                        ->find()
                         ->find('published')
                         ->where(['slug' => $this->request->params['slug']])
-                        ->contain(['Posts'])
+                        ->contain(['Posts', 'PageLayouts'])
                         ->first();
                     break;
                 default:
@@ -105,7 +104,7 @@ class PagesController extends FrontendController
             $page = $this->Pages
                 ->find('published')
                 ->where(['Pages.id' => $id])
-                ->contain(['Posts'])
+                ->contain(['Posts', 'PageLayouts'])
                 ->first();
         }
 
@@ -172,7 +171,6 @@ class PagesController extends FrontendController
 
         $this->set('page', $page);
         $this->set('contentModules', $contentModules);
-
 
         return $this->render();
     }

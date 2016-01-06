@@ -11,15 +11,18 @@ abstract class ModuleCell extends Cell
     public static $defaultParams = [
     ];
 
-    protected $_validCellOptions = ['module', 'params', 'section', 'page_id'];
+    protected $_validCellOptions = ['module', 'params', 'section', 'refscope', 'refid'];
 
     public $section;
 
-    public $page_id;
+    public $refscope;
+
+    public $refid;
 
     public $module;
 
     public $params = [];
+
     /**
      * Constructor.
      *

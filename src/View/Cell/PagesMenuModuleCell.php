@@ -61,7 +61,7 @@ class PagesMenuModuleCell extends ModuleCell
             } elseif ($child->is_published !== true) {
                 continue;
 
-            } elseif ($this->request->param('page_id') == $child->id) {
+            } elseif ($this->request->param('refid') == $child->id) {
                 $isActive = true;
 
             } elseif ($child->type == 'controller') {
@@ -99,7 +99,7 @@ class PagesMenuModuleCell extends ModuleCell
         if ($this->params['start_node'] > 0) {
             $nodeId = $this->params['start_node'];
         } elseif ($this->params['start_node'] < 0) {
-            $nodeId = $this->page_id;
+            $nodeId = $this->refid;
         } else {
             //@TODO: Use custom finder to find root node (Pages->findRootNode())
             $rootNode = $this->Pages->find()->where(['parent_id IS NULL'])->first();

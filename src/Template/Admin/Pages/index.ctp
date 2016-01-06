@@ -31,7 +31,7 @@ $this->assign('heading', __d('banana','Pages'));
                         ['title' => $this->Url->build($content->url)]);
                     ?></td>
                 <td><?= h($content->type); ?></td>
-                <td><?= h($content->is_published) ?></td>
+                <td><?= $this->Ui->statusLabel($content->is_published) ?></td>
                 <td class="actions">
                     <div class="ui basic mini buttons">
 

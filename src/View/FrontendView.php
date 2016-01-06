@@ -45,14 +45,15 @@ class FrontendView extends View
             return $content;
         }
 
-        $cellData = ['foo', 'bar'];
+        $cellData = [];
 
         $cellOptions += [
-            'name' => $name,
+            'section' => $name,
             'refscope' => $this->get('refscope'),
-            'refid' => $this->get('refid')
+            'refid' => $this->get('refid'),
+            'name' => $name, // @deprecated
+            'page_id' => $this->get('refid') // @deprecated
         ];
-
 
         return $this->cell('Banana.Section', $cellData, $cellOptions);
     }
