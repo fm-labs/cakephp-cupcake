@@ -52,7 +52,8 @@ class PagesController extends FrontendController
 
     public function index()
     {
-        $host = env('HTTP_HOST');
+        // over ride pages host with BANANA_HOST
+        $host = (defined('BANANA_HOST')) ? BANANA_HOST : env('HTTP_HOST');
 
         $rootPage = $this->Pages
             ->find()
