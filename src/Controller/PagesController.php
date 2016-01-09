@@ -52,28 +52,19 @@ class PagesController extends FrontendController
 
     public function index()
     {
-        // over ride pages host with BANANA_HOST
-        $host = (defined('BANANA_HOST')) ? BANANA_HOST : env('HTTP_HOST');
 
-        $rootPage = $this->Pages
-            ->find()
-            ->find('published')
-            ->where(['parent_id IS NULL', 'type' => 'root', 'title' => $host])
-            ->first();
-
+        $rootPage = $this->Pages->findRoot();
         if (!$rootPage) {
-            $rootPage = $this->Pages
-                ->find()
-                ->find('published')
-                ->where(['parent_id IS NULL', 'type' => 'root'])
-                ->first();
-        }
-
-        if (!$rootPage) {
-            throw new NotFoundException(__d('banana',"Root page missing for host {0}", $host));
+            throw new NotFoundException(__d('banana',"Root page not found"));
         }
 
         $this->setAction('view', $rootPage->id);
+    }
+
+    public function viewSlug($slug = null)
+    {
+        $page = $this->Pages->findBySlug($slug);
+        $this->setAction('view', $page->id);
     }
 
     /**
@@ -118,6 +109,7 @@ class PagesController extends FrontendController
         $view = ($page->page_template) ?: null;
         $layout = ($page->page_layout) ? $page->page_layout->template : null;
 
+        $this->autoRender = false;
         $this->viewBuilder()->template($view);
         $this->viewBuilder()->layout($layout);
 

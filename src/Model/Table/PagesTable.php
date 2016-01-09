@@ -185,4 +185,53 @@ class PagesTable extends Table
 
         return null;
     }
+
+    public function findRoot()
+    {
+        $rootPage = $this
+            ->find()
+            ->find('published')
+            ->where([
+                'parent_id IS NULL',
+                'type' => 'root'
+            ])
+            ->first();
+
+        return $rootPage;
+    }
+
+    public function findHostRoot($fallback = true)
+    {
+        $host = (defined('BANANA_HOST')) ? BANANA_HOST : env('HTTP_HOST');
+
+        $page = $this
+            ->find()
+            ->find('published')
+            ->where([
+                'type' => 'root',
+                'parent_id IS NULL',
+                'title' => $host
+            ])
+            ->first();
+
+        if (!$page && $fallback === true) {
+            return $this->findRoot();
+        }
+
+        return $page;
+    }
+
+    public function findBySlug($slug = null)
+    {
+        $page = $this
+            ->find()
+            ->find('published')
+            ->where([
+                'slug' => $slug
+            ])
+            ->contain([])
+            ->first();
+
+        return $page;
+    }
 }

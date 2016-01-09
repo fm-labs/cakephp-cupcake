@@ -101,8 +101,7 @@ class PagesMenuModuleCell extends ModuleCell
         } elseif ($this->params['start_node'] < 0) {
             $nodeId = $this->refid;
         } else {
-            //@TODO: Use custom finder to find root node (Pages->findRootNode())
-            $rootNode = $this->Pages->find()->where(['parent_id IS NULL'])->first();
+            $rootNode = $this->Pages->findHostRoot();
             if (!$rootNode) {
                 throw new \Exception('MenuListModule: No root node found');
             }
