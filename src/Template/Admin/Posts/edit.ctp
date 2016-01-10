@@ -17,6 +17,7 @@ $this->Toolbar->addLink([
 ]);
 
 $this->assign('heading', __d('banana','Edit {0}', __d('banana','Post')));
+$this->assign('title', sprintf('%s [%s #%s]', $content->title, 'Post', $content->id));
 ?>
 <div class="posts">
     <?php if (isset($content->refscope)): ?>

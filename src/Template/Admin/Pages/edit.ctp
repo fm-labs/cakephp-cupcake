@@ -16,6 +16,7 @@ $this->Toolbar->addLink(__d('banana','New {0}', __d('banana','Page')), ['action'
 
 // HEADING
 $this->assign('heading', __d('banana','Edit Page: {0}', $content->title));
+$this->assign('title', sprintf('%s [%s #%s]', $content->title, 'Page', $content->id));
 
 // CONTENT
 ?>
