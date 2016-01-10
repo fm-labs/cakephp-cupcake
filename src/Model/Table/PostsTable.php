@@ -40,6 +40,9 @@ class PostsTable extends Table
             'excludeFields' => ['is_published']
         ]);
 
+        $this->addBehavior('Banana.Publishable', [
+        ]);
+
         if (Plugin::loaded('Media')) {
             $this->addBehavior('Media.Media', [
                 'fields' => [

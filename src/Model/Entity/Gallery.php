@@ -55,8 +55,16 @@ class Gallery extends Entity
                 return $this->_loadImagesFromFolder();
 
             default:
-                return $this->_loadImagesFromPosts();
+                throw new \InvalidArgumentException("Gallery: Unknown source: " . $this->_properties['source']);
         }
+    }
+
+    protected function _getPublishedPosts()
+    {
+        return TableRegistry::get('Banana.Posts')->find('published')->where([
+            'refscope' => 'Banana.Galleries',
+            'refid' => $this->id,
+        ])->all();
     }
 
     protected function _loadImagesFromFolder()
