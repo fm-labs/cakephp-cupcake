@@ -2,6 +2,8 @@
 namespace Banana\Controller\Admin;
 
 
+use Cake\Core\Plugin;
+use Cake\Event\Event;
 use Cake\Log\Log;
 use Cake\Routing\Router;
 use Media\Lib\Media\MediaManager;
@@ -32,19 +34,50 @@ class DataController extends AppController
         $this->viewClass = 'Json';
 
         $list = [];
-        try {
-            $this->loadModel('Banana.Pages');
-            $pages = $this->Pages->find()->contain([])->all()->toArray();
 
-            array_walk($pages, function($page) use (&$list) {
-                $list[] = ['title' => $page->title, 'value' => Router::url($page->url, true)];
+        $this->eventManager()->on('Banana.attachLinkList', function($event) {
+
+            //$event->data['list'][] = ['title' => '-- PAGES --', 'value' => ''];
+            try {
+                $this->loadModel('Banana.Pages');
+                $result = $this->Pages->find()->contain([])->all()->toArray();
+
+                array_walk($result, function($entity) use (&$event) {
+                    $event->data['list'][] = ['title' => str_repeat('_', $entity->level) . $entity->title, 'value' => Router::url($entity->url, true)];
+                });
+
+            } catch (\Exception $ex) {
+                Log::critical('DataController::editorImageList: ' . $ex->getMessage());
+            }
+
+        });
+
+        /*
+        if (Plugin::loaded('Shop')):
+
+            $this->eventManager()->on('Banana.attachLinkList', function($event) {
+
+                //$event->data['list'][] = ['title' => '-- PAGES --', 'value' => ''];
+                try {
+                    $this->loadModel('Shop.ShopCategories');
+                    $result = $this->ShopCategories->find()->contain([])->all()->toArray();
+
+                    array_walk($result, function($entity) use (&$event) {
+                        $event->data['list'][] = ['title' => str_repeat('_', $entity->level) . $entity->name, 'value' => Router::url($entity->url, true)];
+                    });
+
+                } catch (\Exception $ex) {
+                    Log::critical('DataController::editorImageList: ' . $ex->getMessage());
+                }
             });
 
-        } catch (\Exception $ex) {
-            Log::critical('DataController::editorImageList: ' . $ex->getMessage());
-        }
+        endif;
+        */
 
-        $this->set('list', $list);
+        $event = $this->dispatchEvent('Banana.attachLinkList', ['list' => $list], $this);
+
+
+        $this->set('list', $event->data['list']);
         $this->set('_serialize', 'list');
     }
 }

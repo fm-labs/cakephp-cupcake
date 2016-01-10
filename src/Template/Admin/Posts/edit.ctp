@@ -40,8 +40,10 @@ $this->assign('title', sprintf('%s [%s #%s]', $content->title, 'Post', $content-
                 echo $this->Form->input('teaser_html', [
                     'type' => 'htmleditor',
                     'editor' => [
-                        'image_list_url' => ['controller' => 'Data', 'action' => 'editorImageList'],
-                        'link_list_url' => ['controller' => 'Data', 'action' => 'editorLinkList'],
+                        //'image_list_url' => ['controller' => 'Data', 'action' => 'editorImageList'],
+                        //'link_list_url' => ['controller' => 'Data', 'action' => 'editorLinkList'],
+                        'image_list_url' => '@Banana.HtmlEditor.posts.imageList',
+                        'link_list_url' => '@Banana.HtmlEditor.posts.linkList'
                     ]
                 ]);
                 echo $this->Form->input('teaser_link_caption');
@@ -49,8 +51,10 @@ $this->assign('title', sprintf('%s [%s #%s]', $content->title, 'Post', $content-
                 echo $this->Form->input('body_html', [
                     'type' => 'htmleditor',
                     'editor' => [
-                        'image_list_url' => ['controller' => 'Data', 'action' => 'editorImageList'],
-                        'link_list_url' => ['controller' => 'Data', 'action' => 'editorLinkList'],
+                        //'image_list_url' => ['controller' => 'Data', 'action' => 'editorImageList'],
+                        //'link_list_url' => ['controller' => 'Data', 'action' => 'editorLinkList'],
+                        'image_list_url' => '@Banana.HtmlEditor.posts.imageList',
+                        'link_list_url' => '@Banana.HtmlEditor.posts.linkList'
                     ]
                 ]);
                 ?>
