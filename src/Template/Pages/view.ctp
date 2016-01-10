@@ -6,7 +6,7 @@ $this->assign('title', $page->title);
 <?php $this->Html->meta('description', $metaDescription, ['block' => true]); ?>
 <?php $this->Html->meta('keywords', $metaKeywords, ['block' => true]); ?>
 <div class="page view <?= $page->cssclass ?>" id="<?= $page->cssid; ?>">
-    <?php if (Configure::read('debug')): ?>
+    <?php if (Configure::read('Banana.debug')): ?>
     <div class="debug">
         Page: <?= h($page->title); ?> [ID <?= h($page->id); ?>]<br />
         Type: <?= h($page->type); ?><br />

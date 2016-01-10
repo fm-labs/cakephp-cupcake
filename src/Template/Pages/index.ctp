@@ -1,1 +1,4 @@
-[No contents]
+<?php
+/**
+ * @todo Generate Sitemap
+ */

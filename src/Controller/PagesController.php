@@ -52,8 +52,7 @@ class PagesController extends FrontendController
 
     public function index()
     {
-
-        $rootPage = $this->Pages->findRoot();
+        $rootPage = $this->Pages->findHostRoot();
         if (!$rootPage) {
             throw new NotFoundException(__d('banana',"Root page not found"));
         }
