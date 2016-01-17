@@ -16,7 +16,7 @@ $this->Toolbar->addLink(__d('banana','New {0}', __d('banana','Page')), ['action'
 
 // HEADING
 $this->assign('heading', __d('banana','Edit Page: {0}', $content->title));
-$this->assign('title', sprintf('%s [%s #%s]', $content->title, 'Page', $content->id));
+$this->assign('title', sprintf('[%s] %s (#%s)', 'Pages', $content->title, $content->id));
 
 // CONTENT
 ?>
@@ -119,8 +119,8 @@ $this->assign('title', sprintf('%s [%s #%s]', $content->title, 'Page', $content-
                 ?>
                 <?php
                 echo $this->Form->input('page_template',
-                    ['type' => 'text']
-                    //['empty' => __d('banana','- Default Template -'), 'options' => $pageTemplates]
+                    //['type' => 'text']
+                    ['empty' => __d('banana','- Default Template -'), 'options' => $pageTemplates]
                 );
                 ?>
                 <?= $this->Form->input('cssid'); ?>

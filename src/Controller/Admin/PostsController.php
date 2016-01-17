@@ -2,6 +2,7 @@
 namespace Banana\Controller\Admin;
 
 use Banana\Controller\Admin\AppController;
+use Banana\Lib\Banana;
 use Cake\Network\Exception\BadRequestException;
 use Cake\ORM\Table;
 use Media\Lib\Media\MediaManager;
@@ -103,13 +104,16 @@ class PostsController extends ContentController
             $content = $this->Posts->patchEntity($content, $this->request->data);
             if ($this->Posts->save($content)) {
                 $this->Flash->success(__d('banana','The {0} has been saved.', __d('banana','content')));
-                //return $this->redirect(['action' => 'edit', $content->id]);
+                return $this->redirect(['action' => 'edit', $content->id]);
             } else {
                 $this->Flash->error(__d('banana','The {0} could not be saved. Please, try again.', __d('banana','content')));
             }
         }
 
-        $this->set(compact('content'));
+        $teaserTemplates = Banana::getAvailablePostTeaserTemplates();
+        $templates = Banana::getAvailablePostTemplates();
+
+        $this->set(compact('content', 'teaserTemplates', 'templates'));
         $this->set('_serialize', ['content']);
     }
 

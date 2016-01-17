@@ -67,26 +67,6 @@ class Banana
         return $PageLayouts->find('list')->all();
     }
 
-    public static function getAvailablePageTemplates()
-    {
-        return [];
-    }
-
-    public static function getAvailablePageTypes()
-    {
-        return [
-            'content' => 'Content',
-            'controller' => 'Controller',
-            'cell' => 'Cell',
-            'module' => 'Module',
-            'page' => 'Page',
-            'redirect' => 'Redirect',
-            'root' => 'Website Root',
-            'static' => 'Static',
-            'shop_category' => 'ShopCategory',
-            'shop_product' => 'ShopProduct'
-        ];
-    }
 
     public static function getDefaultPageLayout()
     {
@@ -290,6 +270,140 @@ class Banana
     public static function listContentSections()
     {
         return self::getContentSections();
+    }
+
+
+    public static function getAvailablePageTemplates()
+    {
+        $path = 'Template' . DS . 'Pages';
+        $available = [];
+
+        $modulesLoader = function ($dir, $plugin = null) {
+            $list = [];
+            $folder = new Folder($dir);
+            list(,$files) = $folder->read();
+
+            array_walk($files, function ($val) use ($plugin, $dir, &$list) {
+                if (preg_match('/^\_/', $val)) {
+                    return;
+                }
+                elseif (preg_match('/^([\w\_]+)\.ctp$/', $val, $matches)) {
+                    $name = $matches[1];
+                    //$template = ($plugin) ? $plugin . "." . 'teaser_' . $matches[1] : 'teaser_' . $matches[1];
+                    $template = $matches[1];
+                    $list[$template] = $name;
+                }
+            });
+
+            return $list;
+        };
+
+        // load app modules
+        $available['App'] = $modulesLoader(APP . $path, null);
+
+        // load modules from loaded plugins
+        foreach (Plugin::loaded() as $plugin) {
+            $_path = Plugin::path($plugin) . 'src' . DS . $path;
+            $templates = $modulesLoader($_path, $plugin);
+            if ($templates) {
+                $available[$plugin] = $templates;
+            }
+        }
+
+        return $available;
+    }
+
+    public static function getAvailablePageTypes()
+    {
+        return [
+            'content' => 'Content',
+            'controller' => 'Controller',
+            'cell' => 'Cell',
+            'module' => 'Module',
+            'page' => 'Page',
+            'redirect' => 'Redirect',
+            'root' => 'Website Root',
+            'static' => 'Static',
+            'shop_category' => 'ShopCategory',
+            'shop_product' => 'ShopProduct'
+        ];
+    }
+
+    public static function getAvailablePostTeaserTemplates()
+    {
+        $path = 'Template' . DS . 'Posts';
+        $available = [];
+
+        $modulesLoader = function ($dir, $plugin = null) {
+            $list = [];
+            $folder = new Folder($dir);
+            list(,$files) = $folder->read();
+
+            array_walk($files, function ($val) use ($plugin, $dir, &$list) {
+                if (preg_match('/^teaser_([\w\_]+)\.ctp$/', $val, $matches)) {
+                    $name = $matches[1];
+                    //$template = ($plugin) ? $plugin . "." . 'teaser_' . $matches[1] : 'teaser_' . $matches[1];
+                    $template = 'teaser_' . $matches[1];
+                    $list[$template] = $name;
+                }
+            });
+
+            return $list;
+        };
+
+        // load app modules
+        $available['App'] = $modulesLoader(APP . $path, null);
+
+        // load modules from loaded plugins
+        foreach (Plugin::loaded() as $plugin) {
+            $_path = Plugin::path($plugin) . 'src' . DS . $path;
+            $templates = $modulesLoader($_path, $plugin);
+            if ($templates) {
+                $available[$plugin] = $templates;
+            }
+        }
+
+        return $available;
+    }
+
+    public static function getAvailablePostTemplates()
+    {
+        $path = 'Template' . DS . 'Posts';
+        $available = [];
+
+        $modulesLoader = function ($dir, $plugin = null) {
+            $list = [];
+            $folder = new Folder($dir);
+            list(,$files) = $folder->read();
+
+            array_walk($files, function ($val) use ($plugin, $dir, &$list) {
+                if (preg_match('/^\_/', $val)) {
+                    return;
+                }
+                elseif (preg_match('/^([\w\_]+)\.ctp$/', $val, $matches)) {
+                    $name = $matches[1];
+                    //$template = ($plugin) ? $plugin . "." . 'teaser_' . $matches[1] : 'teaser_' . $matches[1];
+                    $template = $matches[1];
+                    $list[$template] = $name;
+                }
+            });
+
+            return $list;
+        };
+
+        // load app modules
+        $available['App'] = $modulesLoader(APP . $path, null);
+
+        // load modules from loaded plugins
+        foreach (Plugin::loaded() as $plugin) {
+            $_path = Plugin::path($plugin) . 'src' . DS . $path;
+            $templates = $modulesLoader($_path, $plugin);
+            if ($templates) {
+                $available[$plugin] = $templates;
+            }
+        }
+
+        return $available;
     }
 
 

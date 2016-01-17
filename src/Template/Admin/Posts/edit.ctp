@@ -40,10 +40,8 @@ $this->assign('title', sprintf('%s [%s #%s]', $content->title, 'Post', $content-
                 echo $this->Form->input('teaser_html', [
                     'type' => 'htmleditor',
                     'editor' => [
-                        //'image_list_url' => ['controller' => 'Data', 'action' => 'editorImageList'],
-                        //'link_list_url' => ['controller' => 'Data', 'action' => 'editorLinkList'],
-                        'image_list_url' => '@Banana.HtmlEditor.posts.imageList',
-                        'link_list_url' => '@Banana.HtmlEditor.posts.linkList'
+                        'image_list_url' => '@Banana.HtmlEditor.default.imageList',
+                        'link_list_url' => '@Banana.HtmlEditor.default.linkList'
                     ]
                 ]);
                 echo $this->Form->input('teaser_link_caption');
@@ -51,10 +49,8 @@ $this->assign('title', sprintf('%s [%s #%s]', $content->title, 'Post', $content-
                 echo $this->Form->input('body_html', [
                     'type' => 'htmleditor',
                     'editor' => [
-                        //'image_list_url' => ['controller' => 'Data', 'action' => 'editorImageList'],
-                        //'link_list_url' => ['controller' => 'Data', 'action' => 'editorLinkList'],
-                        'image_list_url' => '@Banana.HtmlEditor.posts.imageList',
-                        'link_list_url' => '@Banana.HtmlEditor.posts.linkList'
+                        'image_list_url' => '@Banana.HtmlEditor.default.imageList',
+                        'link_list_url' => '@Banana.HtmlEditor.default.linkList'
                     ]
                 ]);
                 ?>
@@ -80,8 +76,8 @@ $this->assign('title', sprintf('%s [%s #%s]', $content->title, 'Post', $content-
             <h5 class="ui attached header">Layout</h5>
             <div class="ui attached segment form">
                 <?php
-                echo $this->Form->input('teaser_template');
-                echo $this->Form->input('template');
+                echo $this->Form->input('teaser_template', ['empty' => '- Default -']);
+                echo $this->Form->input('template', ['empty' => '- Default -']);
                 ?>
             </div>
 
@@ -204,50 +200,3 @@ $this->assign('title', sprintf('%s [%s #%s]', $content->title, 'Post', $content-
     <?php echo $this->Tabs->render(); ?>
 
 </div>
-
-<div class="ui modal" id="imagepicker-modal">
-    <i class="close icon"></i>
-    <div class="header">
-        Select image
-    </div>
-    <div class="content" style="overflow: scroll; max-height: 500px;">
-    </div>
-    <div class="actions">
-        <div class="ui black deny button">
-            <?= __d('banana','Cancel'); ?>
-        </div>
-        <div class="ui approve button">
-            <?= __d('banana','Ok'); ?>
-        </div>
-    </div>
-</div>
-
-<?php $this->append('scriptBottom'); ?>
-<script>
-    /*
-    $('#set-image').click(function (e) {
-        e.preventDefault();
-        $('#imagepicker-modal .content')
-            .html(
-                $('<iframe>', { src: $(this).attr('href'), id: 'imagepicker-iframe' })
-            );
-
-        $('#imagepicker-modal')
-            .modal({
-                closable: false,
-                onVisible: function() {
-                    $('#imagepicker-iframe').height('500px').width($('#imagepicker-modal').width());
-                },
-                onDeny: function() {
-                    console.log("denied");
-                },
-                onApprove: function(el) {
-                    console.log("approved");
-                }
-            })
-            .modal('show')
-        ;
-    });
-    */
-</script>
-<?php $this->end(); ?>

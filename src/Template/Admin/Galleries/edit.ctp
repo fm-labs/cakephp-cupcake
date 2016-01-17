@@ -38,8 +38,8 @@
             echo $this->Form->input('desc_html', [
                 'type' => 'htmleditor',
                 'editor' => [
-                    'image_list_url' => ['controller' => 'Data', 'action' => 'editorImageList'],
-                    'link_list_url' => ['controller' => 'Data', 'action' => 'editorLinkList'],
+                    'image_list_url' => '@Banana.HtmlEditor.default.imageList',
+                    'link_list_url' => '@Banana.HtmlEditor.default.linkList'
                 ]
             ]);
             echo $this->Form->input('view_template');
@@ -67,9 +67,6 @@
                 <th><?= __d('banana','Id') ?></th>
                 <th><?= __d('banana','Title') ?></th>
                 <th><?= __d('banana','Image File') ?></th>
-                <th><?= __d('banana','Template') ?></th>
-                <th><?= __d('banana','Cssclass') ?></th>
-                <th><?= __d('banana','Cssid') ?></th>
                 <th><?= __d('banana','Published') ?></th>
                 <th class="actions"><?= __d('banana','Actions') ?></th>
             </tr>
@@ -79,17 +76,14 @@
                     <td><?= h($posts->id) ?></td>
                     <td><?= h($posts->title) ?></td>
                     <td><?= h($posts->image_file) ?></td>
-                    <td><?= h($posts->template) ?></td>
-                    <td><?= h($posts->cssclass) ?></td>
-                    <td><?= h($posts->cssid) ?></td>
-                    <td><?= h($posts->is_published) ?></td>
+                    <td><?= $this->Ui->statusLabel($posts->is_published) ?></td>
 
                     <td class="actions">
-                        <?= $this->Html->link(__d('banana','View'), ['controller' => 'Posts', 'action' => 'view', $posts->id]) ?>
-                        <?= $this->Html->link(__d('banana','Edit'), ['controller' => 'Posts', 'action' => 'edit', $posts->id]) ?>
-                        <?= $this->Html->link(__d('banana','Copy'), ['controller' => 'Posts', 'action' => 'copy', $posts->id]) ?>
+                        <?php // $this->Html->link(__d('banana','View'), ['controller' => 'Posts', 'action' => 'view', $posts->id], ['class' => 'view icon']) ?>
+                        <?= $this->Html->link(__d('banana','Edit'), ['controller' => 'Posts', 'action' => 'edit', $posts->id], ['class' => 'edit icon']) ?>
+                        <?= $this->Html->link(__d('banana','Copy'), ['controller' => 'Posts', 'action' => 'copy', $posts->id], ['class' => 'copy icon']) ?>
                         <?= $this->Form->postLink(__d('banana','Delete'), ['controller' => 'Posts', 'action' => 'delete', $posts->id],
-                            ['confirm' => __d('banana','Are you sure you want to delete # {0}?', $posts->id)]) ?>
+                            ['class' => 'delete icon', 'confirm' => __d('banana','Are you sure you want to delete # {0}?', $posts->id)]) ?>
 
                     </td>
                 </tr>
