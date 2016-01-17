@@ -170,6 +170,6 @@ class Page extends Entity
             return $this->__parentTheme = $parent->parent_theme;
         }
 
-        return Configure::read('Banana.frontend.theme');
+        return Configure::read('Banana.Frontend.theme');
     }
 }

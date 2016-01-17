@@ -31,7 +31,7 @@
         <header id="header">
             <div class="ui one column page grid">
                 <div class="column">
-                    <h1 class="ui header"><?= $this->Html->link(\Cake\Core\Configure::read('Settings.Banana.site.title'), '/'); ?></h1>
+                    <h1 class="ui header"><?= $this->Html->link(\Cake\Core\Configure::read('Banana.site.title'), '/'); ?></h1>
                 </div>
             </div>
         </header>

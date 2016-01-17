@@ -45,7 +45,7 @@ class FrontendComponent extends Component
         $this->controller = $this->_registry->getController();
 
         if (is_null($this->_config['theme'])) {
-            $this->_config['theme'] = Configure::read('Banana.frontend.theme');
+            $this->_config['theme'] = Configure::read('Banana.Frontend.theme');
         }
 
         if (is_null($this->_config['layout'])) {

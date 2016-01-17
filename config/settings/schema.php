@@ -1,25 +1,32 @@
 <?php
 return [
     'Settings' => [
-        'Banana.site.enabled' => [
+        'Banana.debug' => [
+            'description' => 'Enable / Disable debugging for Banana',
             'type' => 'boolean',
             'default' => false
         ],
-        'Banana.site.title' => [
-            'type' => 'string',
-            'default' => 'BANANA:CAKE'
+        'Banana.Site.enabled' => [
+            'type' => 'boolean',
+            'default' => false
         ],
-        'Banana.site.theme' => [
+        'Banana.Site.title' => [
+            'type' => 'string',
+            'default' => 'Untitled Site'
+        ],
+        'Banana.Frontend.theme' => [
             'type' => 'string',
             'default' => null
         ],
-        'Banana.posts.theme' => [
-            'type' => 'string',
-            'default' => null
+        /*
+        'Banana.Editor.default.imageList' => [
+            'type' => 'string', // url
+            'default' => '/banana/data/imageList'
         ],
-        'Banana.session.timeout' => [
-            'type' => 'int',
-            'default' => 20
+        'Banana.Editor.default.linkList' => [
+            'type' => 'string', // url
+            'default' => '/banana/data/linkList'
         ],
+        */
     ]
 ];
