@@ -72,11 +72,13 @@ class AppController extends AbstractBackendController
                         'url' => ['plugin' => 'Banana', 'controller' => 'Posts', 'action' => 'index'],
                         'icon' => 'edit'
                     ],
+                    /*
                     'media' => [
                         'title' => 'Media',
                         'url' => ['plugin' => 'Banana', 'controller' => 'Media', 'action' => 'index'],
                         'icon' => ''
                     ],
+                    */
                     'galleries' => [
                         'title' => 'Galleries',
                         'url' => ['plugin' => 'Banana', 'controller' => 'Galleries', 'action' => 'index'],
