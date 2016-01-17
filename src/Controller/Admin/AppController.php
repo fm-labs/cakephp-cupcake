@@ -111,11 +111,6 @@ class AppController extends AbstractBackendController
                         'url' => ['plugin' => 'Banana', 'controller' => 'ContentModules', 'action' => 'index'],
                         'icon' => 'content'
                     ],
-                    'settings' => [
-                        'title' => 'Settings',
-                        'url' => ['plugin' => 'Banana', 'controller' => 'Settings', 'action' => 'index'],
-                        'icon' => 'settings'
-                    ],
                     'users' => [
                         'title' => 'Users',
                         'url' => ['plugin' => 'Banana', 'controller' => 'Users', 'action' => 'index'],

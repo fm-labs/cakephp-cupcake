@@ -2,7 +2,10 @@
 use Banana\Lib\Banana;
 use Cake\Core\Configure;
 
-Configure::load('banana');
+if (!Configure::read('Banana')) {
+    die("Banana Plugin not configured");
+}
+
 
 Banana::bootstrap();
 //Banana::bootstrapConfigs();
