@@ -33,6 +33,10 @@ class Post extends Entity
         'publish_end_datetime' => true,
     ];
 
+    protected function _setTitle($val)
+    {
+        return trim($val);
+    }
 
     /**
      * Get Teaser Link Url.

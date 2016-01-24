@@ -36,7 +36,8 @@ class PagesController extends ContentController
         $this->paginate = [
             'contain' => ['ParentPages'],
             'order' => ['Pages.lft ASC'],
-            'limit' => 100
+            'limit' => 200,
+            'maxLimit' => 200,
         ];
 
         $pagesTree = $this->Pages->find('treeList')->toArray();
@@ -44,6 +45,20 @@ class PagesController extends ContentController
 
         $this->set('contents', $this->paginate($this->Pages));
         $this->set('_serialize', ['contents']);
+    }
+
+    public function quick()
+    {
+        if ($this->request->is(['post','put'])) {
+            $id = $this->request->data('page_id');
+            if ($id) {
+                $this->redirect(['action' => 'view', $id]);
+                return;
+            }
+        }
+
+        $this->Flash->error('Bad Request');
+        $this->redirect($this->referer(['action' => 'index']));
     }
 
     public function tree()
@@ -134,6 +149,15 @@ class PagesController extends ContentController
                 $this->Flash->error(__d('banana','The {0} could not be saved. Please, try again.', __d('banana','content')));
             }
         }
+        $pagesTree = $this->Pages->find('treeList')->toArray();
+        $this->set('pagesTree', $pagesTree);
+
+        $this->set('types', Banana::getAvailablePageTypes());
+        $this->set('pageLayouts', Banana::getAvailablePageLayouts());
+        $this->set('pageTemplates', Banana::getAvailablePageTemplates());
+
+        $this->set('content', $content);
+        $this->set('_serialize', ['content']);
     }
 
     public function view($id = null)
@@ -160,8 +184,6 @@ class PagesController extends ContentController
         $sections = array_combine($sections, $sections);
         $this->set('sections', $sections);
 
-        $pagesTree = $this->Pages->find('treeList')->toArray();
-        $this->set('pagesTree', $pagesTree);
 
         //$sectionsModules = $this->Pages->ContentModules->find()->where(['refscope' => 'Banana.Pages', 'refid' => $id]);
         //debug($sectionsModules);
@@ -169,9 +191,6 @@ class PagesController extends ContentController
         $availableModules = $this->Pages->ContentModules->Modules->find('list');
         $this->set('availableModules', $availableModules);
 
-        $this->set('types', Banana::getAvailablePageTypes());
-        $this->set('pageLayouts', Banana::getAvailablePageLayouts());
-        $this->set('pageTemplates', Banana::getAvailablePageTemplates());
         $this->set('content', $content);
         $this->set('_serialize', ['content']);
     }

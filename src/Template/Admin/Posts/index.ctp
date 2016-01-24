@@ -8,6 +8,21 @@ $this->Toolbar->addLink(__d('banana','New {0}', __d('banana','Post')), ['action'
 $this->assign('heading', __d('banana','Posts'));
 ?>
 <div class="posts index">
+
+    <!-- Quick Search -->
+    <div class="ui segment">
+        <div class="ui form">
+            <?= $this->Form->create(null, ['id' => 'quickfinder', 'action' => 'quick']); ?>
+            <?= $this->Form->input('post_id', [
+                'options' => $postsList,
+                'label' => false,
+                'empty' => '- Quick Search -'
+            ]); ?>
+            <?= $this->Form->button('Go'); ?>
+            <?= $this->Form->end() ?>
+        </div>
+    </div>
+
     <table class="ui table compact striped">
     <thead>
         <tr>

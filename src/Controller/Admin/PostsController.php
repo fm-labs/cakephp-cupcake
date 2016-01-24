@@ -23,14 +23,36 @@ class PostsController extends ContentController
      */
     public function index()
     {
+        $scope = ['Posts.refscope' => 'Banana.Pages'];
+        $order = ['Posts.title' => 'ASC'];
+
         $this->paginate = [
             'contain' => [],
-            'order' => ['Posts.created DESC',],
-            'limit' => 100
+            'order' => $order,
+            'limit' => 200,
+            'maxLimit' => 200,
+            'conditions' => $scope
         ];
+
+        $this->set('postsList', $this->Posts->find('list')->where($scope)->order($order));
 
         $this->set('contents', $this->paginate($this->Posts));
         $this->set('_serialize', ['contents']);
+    }
+
+
+    public function quick()
+    {
+        if ($this->request->is(['post','put'])) {
+            $id = $this->request->data('post_id');
+            if ($id) {
+                $this->redirect(['action' => 'edit', $id]);
+                return;
+            }
+        }
+
+        $this->Flash->error('Bad Request');
+        $this->redirect($this->referer(['action' => 'index']));
     }
 
     /**

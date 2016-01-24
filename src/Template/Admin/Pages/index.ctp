@@ -11,6 +11,21 @@ $this->assign('heading', __d('banana','Pages'));
 // CONTENT
 ?>
 <div class="pages index">
+
+    <!-- Quick Search -->
+    <div class="ui segment">
+        <div class="ui form">
+            <?= $this->Form->create(null, ['id' => 'quickfinder', 'action' => 'quick']); ?>
+            <?= $this->Form->input('page_id', [
+                'options' => $pagesTree,
+                'label' => false,
+                'empty' => '- Quick Search -'
+            ]); ?>
+            <?= $this->Form->button('Go'); ?>
+            <?= $this->Form->end() ?>
+        </div>
+    </div>
+
     <table class="ui sortable compact table" data-sort-url="<?= $this->Url->build(['action' => 'tree_sort']) ?>">
         <thead>
         <tr>
@@ -27,7 +42,7 @@ $this->assign('heading', __d('banana','Pages'));
                 <td><?= h($content->id); ?></td>
                 <td><?= $this->Html->link(
                         $pagesTree[$content->id],
-                        ['action' => 'edit', $content->id],
+                        ['action' => 'view', $content->id],
                         ['title' => $this->Url->build($content->url)]);
                     ?></td>
                 <td><?= h($content->type); ?></td>
@@ -42,12 +57,17 @@ $this->assign('heading', __d('banana','Pages'));
                             <i class="dropdown icon"></i>
                             <div class="menu">
                                 <?= $this->Ui->link(
+                                    __d('banana','Edit'),
+                                    ['action' => 'preview', $content->id],
+                                    ['class' => 'item', 'icon' => 'edit']
+                                ) ?>
+                                <?= $this->Ui->link(
                                     __d('banana','Preview'),
                                     ['action' => 'preview', $content->id],
                                     ['class' => 'item', 'icon' => 'eye', 'target' => 'preview']
                                 ) ?>
                                 <?= $this->Ui->link(
-                                    __d('banana','Duplicate'),
+                                    __d('banana','Copy'),
                                     ['action' => 'duplicate', $content->id],
                                     ['class' => 'item', 'icon' => 'edit']
                                 ) ?>
