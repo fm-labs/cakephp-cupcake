@@ -3,7 +3,11 @@ use Cake\Routing\Router;
 
 // Banana and Banana admin routes
 Router::plugin('Banana',['path' => '/cms'], function ($routes) {
+
     $routes->prefix('admin', function ($routes) {
+
+        $routes->extensions(['json']);
+
         $routes->connect('/:controller');
         $routes->fallbacks('DashedRoute');
     });

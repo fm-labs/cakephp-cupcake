@@ -147,8 +147,9 @@ class Post extends Entity
 
         $ref = pluginSplit($this->refscope);
 
-        return ['plugin' => $ref[0], 'controller' => $ref[1], 'action' => 'edit', $this->refid];
+        return ['plugin' => $ref[0], 'controller' => $ref[1], 'action' => 'view', $this->refid];
     }
+
 
 
     /*

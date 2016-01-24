@@ -5,7 +5,8 @@ if (!$post->is_published) {
 
 try {
     $action = 'view';
-    if ($post->teaser_html) {
+    //@TODO only rely on use_teaser flag
+    if ($post->teaser_html || $post->use_teaser) {
         $action = 'teaser';
     }
     $url = $this->Url->build(['plugin' => 'banana', 'controller' => 'Posts', 'action' => $action, $post->id]);

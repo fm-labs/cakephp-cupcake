@@ -95,7 +95,7 @@ class PagesController extends FrontendController
             $page = $this->Pages
                 ->find('published')
                 ->where(['Pages.id' => $id])
-                ->contain(['Posts', 'PageLayouts'])
+                ->contain(['PageLayouts'])
                 ->first();
         }
 
@@ -147,7 +147,6 @@ class PagesController extends FrontendController
             case 'content':
             default:
                 //$this->Frontend->setPage($page);
-
                 break;
         }
 

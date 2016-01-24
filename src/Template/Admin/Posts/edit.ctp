@@ -37,6 +37,7 @@ $this->assign('title', sprintf('%s [%s #%s]', $content->title, 'Post', $content-
                 echo $this->Form->input('title');
                 echo $this->Form->input('slug');
                 echo $this->Form->input('subheading');
+                echo $this->Form->input('use_teaser');
                 echo $this->Form->input('teaser_html', [
                     'type' => 'htmleditor',
                     'editor' => [

@@ -26,11 +26,6 @@ class PagesController extends ContentController
 
     public $modelClass = "Banana.Pages";
 
-    public function beforeRender(Event $event)
-    {
-        parent::beforeRender($event);
-    }
-
     /**
      * Index method
      *
@@ -49,6 +44,40 @@ class PagesController extends ContentController
 
         $this->set('contents', $this->paginate($this->Pages));
         $this->set('_serialize', ['contents']);
+    }
+
+    public function tree()
+    {
+
+    }
+
+    public function treeData()
+    {
+        $this->viewBuilder()->className('Json');
+
+        $id = $this->request->query('id');
+        //debug($id);
+
+        if ($id == '#') {
+            $pages = $this->Pages->find()->where(['parent_id IS NULL'])->all()->toArray();
+        } else {
+            $pages = $this->Pages->find()->where(['parent_id' => $id])->all()->toArray();
+        }
+
+        //debug($pages);
+        $treeData = [];
+        array_walk($pages, function ($val) use (&$treeData, &$id) {
+            $treeData[] = [
+                'id' => $val->id,
+                'text' => $val->title,
+                'children' => true,
+                'icon' => 'ui browser icon',
+                'parent' => ($val->parent_id) ?: '#'
+            ];
+        });
+
+        $this->set('treeData', $treeData);
+        $this->set('_serialize', 'treeData');
     }
 
     public function add()
@@ -94,8 +123,28 @@ class PagesController extends ContentController
     public function edit($id = null)
     {
         $content = $this->Pages->get($id, [
-            'contain' => ['ContentModules' => ['Modules'], 'PageLayouts', 'Posts']
+            'contain' => ['PageLayouts', 'Posts']
         ]);
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $content = $this->Pages->patchEntity($content, $this->request->data);
+            if ($this->Pages->save($content)) {
+                $this->Flash->success(__d('banana','The {0} has been saved.', __d('banana','content')));
+                return $this->redirect(['action' => 'edit', $content->id]);
+            } else {
+                $this->Flash->error(__d('banana','The {0} could not be saved. Please, try again.', __d('banana','content')));
+            }
+        }
+    }
+
+    public function view($id = null)
+    {
+        $content = $this->Pages->get($id, [
+            'contain' => ['ContentModules' => ['Modules'], 'PageLayouts']
+        ]);
+
+        $posts = $this->Pages->Posts->find()->where(['refid' => $id])->order(['Posts.order' => 'DESC']);
+        $content->posts = $posts;
+
         if ($this->request->is(['patch', 'post', 'put'])) {
             $content = $this->Pages->patchEntity($content, $this->request->data);
             if ($this->Pages->save($content)) {
@@ -128,21 +177,6 @@ class PagesController extends ContentController
     }
 
 
-    /**
-     * View method
-     *
-     * @param string|null $id Post id.
-     * @return void
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
-     */
-    public function view($id = null)
-    {
-        $content = $this->model()->get($id, [
-            'contain' => ['ContentModules']
-        ]);
-        $this->set('page', $content);
-        $this->set('_serialize', ['page']);
-    }
 
     public function preview($id = null)
     {

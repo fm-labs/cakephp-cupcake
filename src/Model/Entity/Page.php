@@ -76,37 +76,6 @@ class Page extends Entity
         return $url;
     }
 
-    protected function _____getChildren()
-    {
-        switch ($this->type) {
-            /*
-            case "shop_category":
-                $catId = $this->_properties['redirect_location'];
-                $children = TableRegistry::get('Shop.ShopCategories')->find('children', ['for' => $catId]);
-
-                // generate Page entity for ShopCategory
-                $Pages = TableRegistry::get('Banana.Pages');
-                $pages = [];
-                foreach ($children as $child) {
-                    $page = $Pages->newEntity([
-                        'id' => $this->id,
-                        'title' => $child->name,
-                        'type' => 'shop_category',
-                        'slug' => $child->slug,
-                        'redirect_location' => $child->id,
-                        'is_published' => $child->id
-                    ], ['validate' => false]);
-                    $pages[] = $page;
-                }
-
-                return $pages;
-            */
-            default:
-                return TableRegistry::get('Banana.Pages')->find('children', ['for' => $this->id])->all();
-        }
-
-    }
-
     protected function _getRedirectControllerUrl()
     {
         $controller = explode('::', $this->redirect_controller);
@@ -171,5 +140,14 @@ class Page extends Entity
         }
 
         return Configure::read('Banana.Frontend.theme');
+    }
+
+    protected function _getPublishedPosts()
+    {
+        return TableRegistry::get('Banana.Posts')
+            ->find('published')
+            ->where(['Posts.refscope' => 'Banana.Pages', 'Posts.refid' => $this->id])
+            ->order(['Posts.order' => 'DESC', 'Posts.id' => 'ASC'])
+            ->all();
     }
 }
