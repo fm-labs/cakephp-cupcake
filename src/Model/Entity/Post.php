@@ -94,7 +94,7 @@ class Post extends Entity
     {
         return [
             'prefix' => false, 'plugin' => 'Banana', 'controller' => 'Posts',
-            'action' => 'view',  $this->id
+            'action' => 'view',  'post_id' => $this->id, 'slug' => $this->slug
         ];
     }
 

@@ -35,8 +35,8 @@ class PostsController extends FrontendController
      */
     public function view($id = null)
     {
-        if ($id === null && $this->request->query('id')) {
-            $id = $this->request->query('id');
+        if ($id === null && $this->request->query('post_id')) {
+            $id = $this->request->query('post_id');
         }
         $post = $this->Posts->get($id, [
         ]);
@@ -58,8 +58,8 @@ class PostsController extends FrontendController
      */
     public function teaser($id = null)
     {
-        if ($id === null && $this->request->query('id')) {
-            $id = $this->request->query('id');
+        if ($id === null && $this->request->query('post_id')) {
+            $id = $this->request->query('post_id');
         }
         $post = $this->Posts->get($id, [
             'contain' => []
