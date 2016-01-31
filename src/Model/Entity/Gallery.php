@@ -61,7 +61,10 @@ class Gallery extends Entity
 
     protected function _getPublishedPosts()
     {
-        return TableRegistry::get('Banana.Posts')->find('published')->where([
+        return TableRegistry::get('Banana.Posts')
+            ->find('published')
+            ->find('media')
+            ->where([
             'refscope' => 'Banana.Galleries',
             'refid' => $this->id,
         ])->all();

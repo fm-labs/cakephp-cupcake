@@ -39,6 +39,7 @@ class PostsController extends FrontendController
             $id = $this->request->query('post_id');
         }
         $post = $this->Posts->get($id, [
+            'media' => true,
         ]);
 
         $this->set('post', $post);
@@ -62,7 +63,8 @@ class PostsController extends FrontendController
             $id = $this->request->query('post_id');
         }
         $post = $this->Posts->get($id, [
-            'contain' => []
+            'contain' => [],
+            'media' => true,
         ]);
 
         $this->set('post', $post);

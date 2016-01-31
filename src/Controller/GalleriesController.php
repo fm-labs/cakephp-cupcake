@@ -21,7 +21,8 @@ class GalleriesController extends FrontendController
     public function view($id = null)
     {
         $gallery = $this->Galleries->get($id, [
-            'contain' => ['Posts']
+            'contain' => ['Posts'],
+            'media' => true,
         ]);
         $this->set('gallery', $gallery);
         $this->set('_serialize', ['gallery']);
