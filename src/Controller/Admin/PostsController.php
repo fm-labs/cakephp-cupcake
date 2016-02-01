@@ -31,7 +31,8 @@ class PostsController extends ContentController
             'order' => $order,
             'limit' => 200,
             'maxLimit' => 200,
-            'conditions' => $scope
+            'conditions' => $scope,
+            //'media' => true,
         ];
 
         $this->set('postsList', $this->Posts->find('list')->where($scope)->order($order));
@@ -120,7 +121,8 @@ class PostsController extends ContentController
     public function edit($id = null)
     {
         $content = $this->Posts->get($id, [
-            'contain' => ['ContentModules' => ['Modules']]
+            'contain' => ['ContentModules' => ['Modules']],
+            'media' => true,
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $content = $this->Posts->patchEntity($content, $this->request->data);
@@ -146,7 +148,8 @@ class PostsController extends ContentController
 
         $this->Posts->behaviors()->unload('Media');
         $content = $this->Posts->get($id, [
-            'contain' => []
+            'contain' => [],
+            'media' => true,
         ]);
 
         if ($this->request->is(['patch', 'post', 'put'])) {
@@ -180,7 +183,8 @@ class PostsController extends ContentController
 
         $this->Posts->behaviors()->unload('Media');
         $content = $this->Posts->get($id, [
-            'contain' => []
+            'contain' => [],
+            'media' => true,
         ]);
 
         if (!in_array($scope, ['teaser_image_file', 'image_file', 'image_files'])) {
