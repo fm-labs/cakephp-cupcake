@@ -30,7 +30,7 @@ class PagesController extends FrontendController
 
     public $modelClass = 'Banana.Pages';
 
-    public $viewClass = 'Banana.Frontend';
+    public $viewClass = 'Banana.Page';
 
     public function initialize()
     {
@@ -105,11 +105,13 @@ class PagesController extends FrontendController
 
         $this->Frontend->setRefId($page->id);
 
-        $view = ($page->page_template) ?: null;
-        $layout = ($page->page_layout) ? $page->page_layout->template : null;
-
         $this->autoRender = false;
+        $this->viewBuilder()->className('Banana.Page');
+
+        $view = ($page->page_template) ?: null;
         $this->viewBuilder()->template($view);
+
+        $layout = ($page->page_layout) ? $page->page_layout->template : null;
         $this->viewBuilder()->layout($layout);
 
         switch ($page->type) {
@@ -156,9 +158,6 @@ class PagesController extends FrontendController
             ->where(['ContentModules.refid' => $page->id, 'ContentModules.refscope' => 'Banana.Pages'])
             ->contain(['Modules'])
             ->all();
-
-        $this->set('metaDescription', ($page->meta_desc) ? $page->meta_desc : $page->title);
-        $this->set('metaKeywords', ($page->meta_keywords) ? $page->meta_keywords : $page->title);
 
         $this->set('page', $page);
         $this->set('contentModules', $contentModules);
@@ -213,25 +212,6 @@ class PagesController extends FrontendController
     public function render($view = null, $layout = null)
     {
         parent::render($view, $layout);
-        /*
-        if (!empty($this->request->params['bare'])) {
-            $this->getView()->autoLayout = false;
-        }
-
-        $event = $this->dispatchEvent('Controller.beforeRender');
-        if ($event->result instanceof Response) {
-            $this->autoRender = false;
-            return $event->result;
-        }
-        if ($event->isStopped()) {
-            $this->autoRender = false;
-            return $this->response;
-        }
-
-        $this->autoRender = false;
-        $this->response->body($this->getView()->render($view, $layout));
-        return $this->response;
-        */
     }
 
 
