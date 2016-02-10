@@ -9,7 +9,7 @@
 namespace Banana\Controller\Admin;
 
 use Backend\Controller\Admin\AbstractBackendController;
-use Banana\Lib\Banana;
+use Banana\Core\Banana;
 use Cake\Core\Configure;
 use Cake\Core\Plugin;
 use Cake\Event\Event;

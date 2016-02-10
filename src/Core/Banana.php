@@ -1,12 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: flow
- * Date: 9/5/15
- * Time: 10:43 PM
- */
-
-namespace Banana\Lib;
+namespace Banana\Core;
 
 use Cake\Core\Configure;
 use Cake\Core\Plugin;

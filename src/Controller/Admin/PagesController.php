@@ -8,7 +8,7 @@
 
 namespace Banana\Controller\Admin;
 
-use Banana\Lib\Banana;
+use Banana\Core\Banana;
 use Banana\Model\Table\PagesTable;
 use Cake\Event\Event;
 use Tree\Controller\TreeSortControllerTrait;

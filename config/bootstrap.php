@@ -1,5 +1,5 @@
 <?php
-use Banana\Lib\Banana;
+use Banana\Core\Banana;
 use Cake\Core\Configure;
 
 if (!Configure::read('Banana')) {

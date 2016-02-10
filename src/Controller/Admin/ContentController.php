@@ -8,7 +8,7 @@ use Cake\Event\Event;
 use Cake\Form\Form;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\Table;
-use Banana\Lib\Banana;
+use Banana\Core\Banana;
 use Media\Lib\Media\MediaManager;
 
 abstract class ContentController extends AppController

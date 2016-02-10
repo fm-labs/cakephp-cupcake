@@ -2,7 +2,7 @@
 namespace Banana\Controller\Admin;
 
 use Banana\Form\ModuleParamsForm;
-use Banana\Lib\Banana;
+use Banana\Core\Banana;
 use Banana\View\ViewModule;
 use Cake\Core\App;
 use Cake\Core\Configure;
