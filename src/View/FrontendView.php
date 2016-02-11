@@ -45,8 +45,6 @@ class FrontendView extends View
             return $content;
         }
 
-        $cellData = [];
-
         $cellOptions += [
             'section' => $name,
             'refscope' => $this->get('refscope'),
