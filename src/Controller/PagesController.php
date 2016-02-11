@@ -76,34 +76,73 @@ class PagesController extends FrontendController
     {
         if ($id === null) {
             switch (true) {
-                case isset($this->request->query['page_id']):
-                    $id = $this->request->query['page_id'];
+                case $this->request->query('page_id'):
+                    $id = $this->request->query('page_id');
                     break;
-                case isset($this->request->params['slug']):
-                    $page = $this->Pages
-                        ->find('published')
-                        ->where(['slug' => $this->request->params['slug']])
-                        ->contain(['Posts', 'PageLayouts'])
-                        ->first();
+                case $this->request->param('page_id'):
+                    $id = $this->request->param('page_id');
+                    break;
+                case $this->request->query('slug'):
+                    $id = $this->Pages->findIdBySlug($this->request->query('slug'));
+                    break;
+                case $this->request->param('slug'):
+                    $id = $this->Pages->findIdBySlug($this->request->param('slug'));
                     break;
                 default:
                     //throw new NotFoundException();
             }
         }
 
-        if (!isset($page)) {
-            $page = $this->Pages
-                ->find('published')
-                ->where(['Pages.id' => $id])
-                ->contain(['PageLayouts'])
-                ->first();
-        }
+        $page = $this->Pages
+            ->find('published')
+            ->where(['Pages.id' => $id])
+            ->contain(['PageLayouts'])
+            ->first();
 
         if (!$page) {
             throw new NotFoundException(__d('banana',"Page not found"));
         }
 
         $this->Frontend->setRefId($page->id);
+
+        switch ($page->type) {
+            // Internal redirects
+            case 'root':
+            case 'page':
+                //$page = $this->Pages->get($page->redirect_page_id, ['contain' => []]);
+                //return $this->redirect($page->url, $page->redirect_status);
+                return $this->setAction('view', $page->redirect_page_id);
+
+            // Http redirect
+            case 'redirect':
+                return $this->redirect($page->redirect_location, $page->redirect_status);
+            case 'controller':
+                return $this->redirect($page->redirect_controller_url, $page->redirect_status);
+
+            // Inline types
+            case 'cell':
+                $cellName = $page->redirect_controller;
+                $this->setAction('cell', $cellName);
+                break;
+
+            case 'module':
+                $moduleName = $page->redirect_controller;
+                $this->setAction('module', $moduleName);
+                break;
+
+            // Static
+            case 'static':
+                $action = ($page->page_template) ?: null;
+                if ($action && method_exists($this, $action)) {
+                    $this->setAction($action);
+                    break;
+                }
+
+            // Content
+            case 'content':
+            default:
+                break;
+        }
 
         $this->autoRender = false;
         $this->viewBuilder()->className('Banana.Page');
@@ -113,44 +152,6 @@ class PagesController extends FrontendController
 
         $layout = ($page->page_layout) ? $page->page_layout->template : null;
         $this->viewBuilder()->layout($layout);
-
-        switch ($page->type) {
-            case 'redirect':
-                return $this->redirect($page->redirect_location, $page->redirect_status);
-            case 'page':
-            case 'root':
-                $page = $this->Pages->get($page->redirect_page_id, ['contain' => []]);
-                return $this->redirect($page->url, $page->redirect_status);
-            case 'controller':
-                return $this->redirect($page->redirect_controller_url, $page->redirect_status);
-            //case 'root':
-                //$children = $this->Pages->find('children', ['for' => $page->id]);
-                //debug($children);
-                break;
-
-            case 'cell':
-                $cellName = $page->redirect_controller;
-                $this->setAction('cell', $cellName);
-                //$this->Frontend->setPage($page);
-                break;
-
-            case 'module':
-                $moduleName = $page->redirect_controller;
-                $this->setAction('module', $moduleName);
-                //$this->Frontend->setPage($page);
-                break;
-
-            case 'static':
-                $action = ($page->page_template) ?: null;
-                if ($action && method_exists($this, $action)) {
-                    $this->setAction($action);
-                    break;
-                }
-            case 'content':
-            default:
-                //$this->Frontend->setPage($page);
-                break;
-        }
 
         $contentModules = $this->Pages->ContentModules
             ->find()

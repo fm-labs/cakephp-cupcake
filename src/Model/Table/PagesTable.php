@@ -234,4 +234,23 @@ class PagesTable extends Table
 
         return $page;
     }
+
+    /**
+     * @param null $slug
+     * @return mixed Model Id or null
+     */
+    public function findIdBySlug($slug = null)
+    {
+        $page = $this
+            ->find()
+            ->where([
+                'slug' => $slug
+            ])
+            ->select('id')
+            ->contain([])
+            ->hydrate(false)
+            ->first();
+
+        return $page['id'];
+    }
 }
