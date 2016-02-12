@@ -2,7 +2,7 @@
 namespace Banana\Controller\Admin;
 
 use Banana\Controller\Admin\AppController;
-use Banana\Lib\Banana;
+use Banana\Core\Banana;
 use Cake\Network\Exception\BadRequestException;
 use Cake\ORM\Table;
 use Media\Lib\Media\MediaManager;
