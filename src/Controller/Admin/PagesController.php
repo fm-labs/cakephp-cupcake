@@ -31,7 +31,7 @@ class PagesController extends ContentController
      *
      * @return void
      */
-    public function index()
+    public function table()
     {
         $this->paginate = [
             'contain' => ['ParentPages'],
@@ -61,7 +61,7 @@ class PagesController extends ContentController
         $this->redirect($this->referer(['action' => 'index']));
     }
 
-    public function table()
+    public function index()
     {
 
     }

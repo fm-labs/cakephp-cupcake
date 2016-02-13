@@ -115,11 +115,10 @@ $this->Toolbar->addLink(__d('banana','Repair'), ['action' => 'repair'], ['icon' 
                 "checkbox" : {
                     "keep_selected_style" : false
                 },
-                "plugins" : [ "wholerow", "state", "dnd" ] // , "checkbox"
+                "plugins" : [ "wholerow", "state" ] // , "checkbox", "dnd"
             })
 
             /*
-             */
             .on('move_node.jstree', function (e, data) {
                 console.log('Moved');
                 console.log(data);
@@ -128,6 +127,7 @@ $this->Toolbar->addLink(__d('banana','Repair'), ['action' => 'repair'], ['icon' 
 
                 var movedB
             });
+             */
 
         /*
         $(document)
