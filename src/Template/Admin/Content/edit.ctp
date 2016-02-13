@@ -9,20 +9,5 @@
 
     <!-- content -->
     <?= $this->fetch('content'); ?>
-
-    <!-- available modules
-    <div class="ui hidden divider"></div>
-    <div class="ui segment">
-        <ul>
-            <?php foreach ($this->get('modulesAvailable') as $aModule): ?>
-                <li><?php
-                    $url = ['action' => 'add_content_module', 'content_id' => $content->id, 'module' => $aModule];
-                    echo $this->Ui->link(__d('banana','Add {0} Module', $aModule), $url, ['icon' => 'add']);
-                    ?></li>
-            <?php endforeach; ?>
-        </ul>
-    </div>
-     -->
-
     <?php debug($content); ?>
 </div>

@@ -53,20 +53,13 @@ class AppController extends AbstractBackendController
     public static function backendMenu()
     {
         return [
-            'Banana' => [
+            'plugin.banana' => [
                 'plugin' => 'Banana',
                 'title' => 'Content',
                 'url' => ['plugin' => 'Banana', 'controller' => 'Pages', 'action' => 'index'],
                 'icon' => 'desktop',
 
                 '_children' => [
-                    /*
-                    'content_manager' => [
-                        'title' => 'Content Manager',
-                        'url' => ['plugin' => 'Banana', 'controller' => 'ContentManager', 'action' => 'index'],
-                        'icon' => 'content'
-                    ],
-                    */
                     'pages' => [
                         'title' => 'Pages',
                         'url' => ['plugin' => 'Banana', 'controller' => 'Pages', 'action' => 'index'],
@@ -77,27 +70,11 @@ class AppController extends AbstractBackendController
                         'url' => ['plugin' => 'Banana', 'controller' => 'Posts', 'action' => 'index'],
                         'icon' => 'edit'
                     ],
-                    /*
-                    'media' => [
-                        'title' => 'Media',
-                        'url' => ['plugin' => 'Banana', 'controller' => 'Media', 'action' => 'index'],
-                        'icon' => ''
-                    ],
-                    */
                     'galleries' => [
                         'title' => 'Galleries',
                         'url' => ['plugin' => 'Banana', 'controller' => 'Galleries', 'action' => 'index'],
-                        'icon' => ''
+                        'icon' => 'image file outline'
                     ],
-                ]
-            ],
-            'BananaAdvanced' => [
-                'plugin' => 'Banana',
-                'title' => 'Advanced',
-                'url' => ['plugin' => 'Banana', 'controller' => 'ContentManager', 'action' => 'index'],
-                'icon' => 'configure',
-
-                '_children' => [
                     'page_layouts' => [
                         'title' => 'Layouts',
                         'url' => ['plugin' => 'Banana', 'controller' => 'PageLayouts', 'action' => 'index'],
@@ -117,11 +94,6 @@ class AppController extends AbstractBackendController
                         'title' => 'Content Modules',
                         'url' => ['plugin' => 'Banana', 'controller' => 'ContentModules', 'action' => 'index'],
                         'icon' => 'content'
-                    ],
-                    'users' => [
-                        'title' => 'Users',
-                        'url' => ['plugin' => 'Banana', 'controller' => 'Users', 'action' => 'index'],
-                        'icon' => 'users'
                     ],
                     'themes_manager' => [
                         'title' => 'Theme',

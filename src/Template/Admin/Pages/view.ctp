@@ -1,6 +1,6 @@
 <?php
 $this->loadHelper('Backend.Tabs');
-$this->extend('/Admin/Content/edit');
+//$this->extend('/Admin/Content/edit');
 
 // EXTEND: TOOLBAR
 $this->Toolbar->addLink(
@@ -15,7 +15,6 @@ $this->Toolbar->addLink(__d('banana','New {0}', __d('banana','Page')), ['action'
 
 
 // HEADING
-$this->assign('heading', __d('banana','Page: {0}', $content->title));
 $this->assign('title', sprintf('[%s] %s (#%s)', 'Pages', $content->title, $content->id));
 
 // CONTENT
@@ -30,102 +29,85 @@ $this->assign('title', sprintf('[%s] %s (#%s)', 'Pages', $content->title, $conte
 </style>
 <div class="pages">
 
-    <div class="ui basic segment">
-        Slug: <?= h($content->slug); ?><br />
-        Type: <?= h($content->type); ?><br />
-        Published: <?= $this->Ui->statusLabel($content->is_published); ?><br />
-        <?= $this->Html->link(__('Edit {0}', __('Page')), ['action' => 'edit', $content->id]); ?>
+    <div class="ui fluid card">
+        <div class="content">
+            <?= $this->Html->link($content->title, ['action' => 'edit', $content->id], ['class' => 'header']); ?>
+            <small>Slug: <?= h($content->slug); ?></small>
+        </div>
+        <div class="extra">
+            <?= $this->Ui->link(
+                $this->Html->Url->build($content->url, true),
+                $content->url,
+                ['target' => '_blank', 'icon' => 'external']
+            ); ?>
+        </div>
+        <div class="content">
+            Type: <?= h($content->type); ?><br />
+            Published: <?= $this->Ui->statusLabel($content->is_published); ?><br />
+        </div>
     </div>
-    <div class="ui divider"></div>
 
     <?php $this->Tabs->start(); ?>
-
     <?php $this->Tabs->add(__d('banana','Related Posts')); ?>
 
     <h3>Related Posts</h3>
 
     <div class="related-posts">
-    <?php foreach($content->posts as $post): ?>
-
-    <!-- -->
-    <div class="ui fluid card">
-        <div class="content">
-
-            <?= $this->Html->link($post->title,
-                ['controller' => 'Posts', 'action' => 'edit', $post->id],
-                ['class' => 'left floated header']
-            ); ?>
-
-            <span class="right floated edit">
-                <i class="edit icon"></i>
-                <?= $this->Html->link(__('Edit'), ['controller' => 'Posts', 'action' => 'edit', $post->id]); ?>
-            </span>
-
-        </div>
-
-        <div class="extra">
-            <span class="ui left floated">
-                <?= $this->Ui->statusLabel($post->is_published, ['label' => [__('Unpublished'), __('Published')]]); ?>
-            </span>
-            <!--
-            <?php if ($post->is_published): ?>
-                <span class="right floated">
-                    <i class="hide icon"></i>
-                    <?= $this->Html->link(__('Unpublish'), ['controller' => 'Posts', 'action' => 'publish', $post->id]); ?>
-                </span>
-            <?php else: ?>
-                <span class="right floated">
-                    <i class="green unhide icon"></i>
-                    <?= $this->Html->link(__('Publish'), ['controller' => 'Posts', 'action' => 'unpublish', $post->id]); ?>
-                </span>
-            <?php endif; ?>
-            -->
-        </div>
-
-        <div class="content">
-            <h5 class="">Teaser</h5>
-            <div class="description">
-                <?= strip_tags($post->teaser_html); ?>
-            </div>
-        </div>
-
-        <div class="content">
-            <h5 class="">Content</h5>
-            <div class="description">
-                <?= strip_tags($post->body_html); ?>
-            </div>
-        </div>
-    </div>
-    <?php endforeach; ?>
-    </div>
-    <!--
-    <table class="ui compact table">
-        <thead>
-        <tr>
-            <th>Order</th>
-            <th>Title</th>
-            <th>Is Published</th>
-            <th class="actions">Actions</th>
-        </tr>
-        </thead>
-        <tbody>
         <?php foreach($content->posts as $post): ?>
-            <tr>
-                <td><?= h($post->order); ?></td>
-                <td><?= h($post->title); ?></td>
-                <td><?= $this->Ui->statusLabel($post->is_published); ?></td>
-                <td class="actions">
-                    <?= $this->Ui->link('Edit',
-                        ['controller' => 'Posts', 'action' => 'edit', $post->id],
-                        ['class' => 'ui mini button', 'icon' => 'edit']
-                    ); ?>
-                </td>
-            </tr>
-        <?php endforeach; ?>
-        </tbody>
-    </table>
-     -->
 
+        <!-- -->
+        <div class="ui fluid card">
+            <div class="content">
+
+                <?= $this->Html->link($post->title,
+                    ['controller' => 'Posts', 'action' => 'edit', $post->id],
+                    ['class' => 'left floated header']
+                ); ?>
+
+                <span class="right floated edit">
+                    <i class="edit icon"></i>
+                    <?= $this->Html->link(__('Edit'), ['controller' => 'Posts', 'action' => 'edit', $post->id]); ?>
+                </span>
+
+            </div>
+
+            <div class="extra">
+                <span class="ui left floated">
+                    <?= $this->Ui->statusLabel($post->is_published, ['label' => [__('Unpublished'), __('Published')]]); ?>
+                </span>
+                <!--
+                <?php if ($post->is_published): ?>
+                    <span class="right floated">
+                        <i class="hide icon"></i>
+                        <?= $this->Html->link(__('Unpublish'), ['controller' => 'Posts', 'action' => 'publish', $post->id]); ?>
+                    </span>
+                <?php else: ?>
+                    <span class="right floated">
+                        <i class="green unhide icon"></i>
+                        <?= $this->Html->link(__('Publish'), ['controller' => 'Posts', 'action' => 'unpublish', $post->id]); ?>
+                    </span>
+                <?php endif; ?>
+                -->
+            </div>
+
+            <div class="content">
+                <h5 class="">Teaser</h5>
+                <div class="description">
+                    <?= strip_tags($post->teaser_html); ?>
+                </div>
+            </div>
+
+            <div class="content">
+                <h5 class="">Content</h5>
+                <div class="description">
+                    <?= strip_tags($post->body_html); ?>
+                </div>
+            </div>
+        </div>
+        <?php endforeach; ?>
+    </div>
+
+    <div class="ui divider"></div>
     <div class="actions">
         <?= $this->Ui->link('Add Post',
             ['controller' => 'Posts', 'action' => 'add', 'refid' => $content->id, 'refscope' => 'Banana.Pages'],
@@ -162,24 +144,3 @@ $this->assign('title', sprintf('[%s] %s (#%s)', 'Pages', $content->title, $conte
     <?php echo $this->Tabs->render(); ?>
 
 </div>
-
-<?php $this->append('scriptBottom'); ?>
-    <script>
-        /*
-        $(document).ready(function() {
-
-            //$('.content-modules .menu .item:first-child').addClass('active');
-            //$('.content-modules .tab:first-child').addClass('active');
-            $('.content-modules .menu .item').tab();
-            $('.content-modules .menu .item:first-child').trigger('click');
-
-            $('.select-type').hide();
-            $('#select-type').change(function() {
-                var type = $(this).val();
-                $('.select-type').fadeOut();
-                $('.select-type-' + type).fadeIn();
-            }).trigger('change');
-        })
-        */
-    </script>
-<?php $this->end(); ?>
