@@ -20,6 +20,14 @@ $this->assign('title', sprintf('[%s] %s (#%s)', 'Pages', $content->title, $conte
 
 // CONTENT
 ?>
+<style>
+    /*
+    .related-posts .card {
+        max-height: 300px;
+        overflow-y: scroll;
+    }
+    */
+</style>
 <div class="pages">
 
     <div class="ui basic segment">
@@ -35,6 +43,62 @@ $this->assign('title', sprintf('[%s] %s (#%s)', 'Pages', $content->title, $conte
     <?php $this->Tabs->add(__d('banana','Related Posts')); ?>
 
     <h3>Related Posts</h3>
+
+    <div class="related-posts">
+    <?php foreach($content->posts as $post): ?>
+
+    <!-- -->
+    <div class="ui fluid card">
+        <div class="content">
+
+            <?= $this->Html->link($post->title,
+                ['controller' => 'Posts', 'action' => 'edit', $post->id],
+                ['class' => 'left floated header']
+            ); ?>
+
+            <span class="right floated edit">
+                <i class="edit icon"></i>
+                <?= $this->Html->link(__('Edit'), ['controller' => 'Posts', 'action' => 'edit', $post->id]); ?>
+            </span>
+
+        </div>
+
+        <div class="extra">
+            <span class="ui left floated">
+                <?= $this->Ui->statusLabel($post->is_published, ['label' => [__('Unpublished'), __('Published')]]); ?>
+            </span>
+            <!--
+            <?php if ($post->is_published): ?>
+                <span class="right floated">
+                    <i class="hide icon"></i>
+                    <?= $this->Html->link(__('Unpublish'), ['controller' => 'Posts', 'action' => 'publish', $post->id]); ?>
+                </span>
+            <?php else: ?>
+                <span class="right floated">
+                    <i class="green unhide icon"></i>
+                    <?= $this->Html->link(__('Publish'), ['controller' => 'Posts', 'action' => 'unpublish', $post->id]); ?>
+                </span>
+            <?php endif; ?>
+            -->
+        </div>
+
+        <div class="content">
+            <h5 class="">Teaser</h5>
+            <div class="description">
+                <?= strip_tags($post->teaser_html); ?>
+            </div>
+        </div>
+
+        <div class="content">
+            <h5 class="">Content</h5>
+            <div class="description">
+                <?= strip_tags($post->body_html); ?>
+            </div>
+        </div>
+    </div>
+    <?php endforeach; ?>
+    </div>
+    <!--
     <table class="ui compact table">
         <thead>
         <tr>
@@ -60,6 +124,8 @@ $this->assign('title', sprintf('[%s] %s (#%s)', 'Pages', $content->title, $conte
         <?php endforeach; ?>
         </tbody>
     </table>
+     -->
+
     <div class="actions">
         <?= $this->Ui->link('Add Post',
             ['controller' => 'Posts', 'action' => 'add', 'refid' => $content->id, 'refscope' => 'Banana.Pages'],
@@ -68,8 +134,8 @@ $this->assign('title', sprintf('[%s] %s (#%s)', 'Pages', $content->title, $conte
     </div>
 
 
-    <?php $this->Tabs->add('Related Content Modules'); ?>
     <!-- RELATED CONTENT MODULES -->
+    <?php $this->Tabs->add('Related Content Modules'); ?>
         <h3>Related content modules</h3>
         <?= $this->element('Banana.Admin/Content/related_content_modules', compact('content', 'sections')); ?>
         <br />

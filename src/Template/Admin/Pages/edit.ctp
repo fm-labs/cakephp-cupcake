@@ -23,9 +23,6 @@ $this->assign('title', sprintf('[%s] %s (#%s)', 'Pages', $content->title, $conte
 <div class="pages">
 
 
-    <?php $this->Tabs->start(); ?>
-    <?php $this->Tabs->add(__('Page')); ?>
-
     <?= $this->Form->create($content); ?>
     <div class="ui grid">
         <div class="twelve wide column">
@@ -130,8 +127,8 @@ $this->assign('title', sprintf('[%s] %s (#%s)', 'Pages', $content->title, $conte
         </div>
     </div>
     <?= $this->Form->end() ?>
+    <!-- EOF PAGE EDIT FORM -->
 
-    <?php echo $this->Tabs->render(); ?>
 
 </div>
 

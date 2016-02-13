@@ -60,6 +60,11 @@ class PagesController extends FrontendController
         $this->setAction('view', $rootPage->id);
     }
 
+    public function tree()
+    {
+
+    }
+
     public function viewSlug($slug = null)
     {
         $page = $this->Pages->findBySlug($slug);

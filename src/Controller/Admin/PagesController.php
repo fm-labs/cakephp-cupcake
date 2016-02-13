@@ -61,7 +61,7 @@ class PagesController extends ContentController
         $this->redirect($this->referer(['action' => 'index']));
     }
 
-    public function tree()
+    public function table()
     {
 
     }
@@ -84,15 +84,21 @@ class PagesController extends ContentController
         array_walk($pages, function ($val) use (&$treeData, &$id) {
             $treeData[] = [
                 'id' => $val->id,
-                'text' => $val->title,
+                'text' => $val->title . " (". $val->id . ")",
                 'children' => true,
-                'icon' => 'ui browser icon',
+                'icon' => 'ui outline file icon',
                 'parent' => ($val->parent_id) ?: '#'
             ];
         });
 
         $this->set('treeData', $treeData);
         $this->set('_serialize', 'treeData');
+    }
+
+    public function treeView()
+    {
+        $id = $this->request->query('id');
+        $this->setAction('view', $id);
     }
 
     public function add()

@@ -1,97 +1,153 @@
+<?= $this->Html->css('Backend.jstree/themes/default/style.min', ['block' => true]); ?>
+<?= $this->Html->script('Backend.underscore-min', ['block' => true]); ?>
+<?= $this->Html->script('Backend.backbone-min', ['block' => true]); ?>
+<?= $this->Html->script('Backend.jstree/jstree.min', ['block' => true]); ?>
 <?php $this->Html->addCrumb(__d('banana','Pages')); ?>
-<?php $this->extend('/Admin/Content/index'); ?>
 <?php
 // TOOLBAR
 $this->Toolbar->addLink(__d('banana','New {0}', __d('banana','Page')), ['action' => 'add'], ['icon' => 'add']);
 $this->Toolbar->addLink(__d('banana','Repair'), ['action' => 'repair'], ['icon' => 'configure']);
 
-// HEADING
-$this->assign('heading', __d('banana','Pages'));
-
-// CONTENT
 ?>
+<style>
+    #pages-container {
+        border-left: 1px solid #e8e8e8;
+        padding-left: 1em;
+    }
+</style>
 <div class="pages index">
 
-    <!-- Quick Search -->
-    <div class="ui segment">
-        <div class="ui form">
-            <?= $this->Form->create(null, ['id' => 'quickfinder', 'action' => 'quick']); ?>
-            <?= $this->Form->input('page_id', [
-                'options' => $pagesTree,
-                'label' => false,
-                'empty' => '- Quick Search -'
-            ]); ?>
-            <?= $this->Form->button('Go'); ?>
-            <?= $this->Form->end() ?>
+    <div class="ui grid">
+        <div class="row">
+            <div class="four wide column">
+
+                <h1 class="ui header"><?= __('Pages'); ?></h1>
+
+                <?= $this->Html->div('flowui-tree', 'Loading Pages ...', [
+                    'id' => 'pages-tree',
+                    'data-tree-url' => $this->Html->Url->build(['action' => 'treeData']),
+                    'data-view-url' => $this->Html->Url->build(['action' => 'treeView'])
+                ]); ?>
+            </div>
+            <div class="twelve wide column">
+                <div id="pages-container">
+                    Select a page
+                </div>
+            </div>
         </div>
     </div>
 
-    <table class="ui sortable compact table" data-sort-url="<?= $this->Url->build(['action' => 'tree_sort']) ?>">
-        <thead>
-        <tr>
-            <th><?= h('id') ?></th>
-            <th><?= h('title') ?></th>
-            <th><?= h('type') ?></th>
-            <th><?= h('is_published') ?></th>
-            <th class="actions"><?= __d('banana','Actions') ?></th>
-        </tr>
-        </thead>
-        <tbody>
-        <?php foreach ($contents as $content): ?>
-            <tr data-id="<?= h($content->id) ?>">
-                <td><?= h($content->id); ?></td>
-                <td><?= $this->Html->link(
-                        $pagesTree[$content->id],
-                        ['action' => 'view', $content->id],
-                        ['title' => $this->Url->build($content->url)]);
-                    ?></td>
-                <td><?= h($content->type); ?></td>
-                <td><?= $this->Ui->statusLabel($content->is_published) ?></td>
-                <td class="actions">
-                    <div class="ui basic mini buttons">
-
-                        <div class="ui button">
-                            <?= $this->Html->link(__d('banana','View'), ['action' => 'view', $content->id]) ?>
-                        </div>
-                        <div class="ui floating dropdown icon button">
-                            <i class="dropdown icon"></i>
-                            <div class="menu">
-                                <?= $this->Ui->link(
-                                    __d('banana','Edit'),
-                                    ['action' => 'preview', $content->id],
-                                    ['class' => 'item', 'icon' => 'edit']
-                                ) ?>
-                                <?= $this->Ui->link(
-                                    __d('banana','Preview'),
-                                    ['action' => 'preview', $content->id],
-                                    ['class' => 'item', 'icon' => 'eye', 'target' => 'preview']
-                                ) ?>
-                                <?= $this->Ui->link(
-                                    __d('banana','Copy'),
-                                    ['action' => 'duplicate', $content->id],
-                                    ['class' => 'item', 'icon' => 'edit']
-                                ) ?>
-                                <?= $this->Ui->link(
-                                    __d('banana','Move Up'),
-                                    ['action' => 'moveUp', $content->id],
-                                    ['class' => 'item', 'icon' => 'arrow up']
-                                ) ?>
-                                <?= $this->Ui->link(
-                                    __d('banana','Move Down'),
-                                    ['action' => 'moveDown', $content->id],
-                                    ['class' => 'item', 'icon' => 'arrow down']
-                                ) ?>
-                                <?= $this->Ui->deleteLink(
-                                    __d('banana','Delete'),
-                                    ['action' => 'delete', $content->id],
-                                    ['class' => 'item', 'icon' => 'trash', 'confirm' => __d('banana','Are you sure you want to delete # {0}?', $content->id)]
-                                ) ?>
-                            </div>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-        <?php endforeach; ?>
-        </tbody>
-    </table>
 </div>
+
+
+<script>
+
+    $(document).ready(function() {
+        //return;
+
+        var selected = {};
+        var path;
+        var $tree = $('#pages-tree');
+        var $container = $('#pages-container');
+
+        $.jstree.defaults.checkbox.three_state = false;
+        $.jstree.defaults.checkbox.cascade = 'up+undetermined';
+
+        $.jstree.defaults.dnd.is_draggable = function() { return true; };
+
+        $tree
+            .on('changed.jstree', function (e, data) {
+                var i, j, r = [];
+                console.log(data);
+                if (data.action === "select_node") {
+                    for(i = 0, j = data.selected.length; i < j; i++) {
+                        r.push(data.instance.get_node(data.selected[i]).id);
+                    }
+                    //$('.filepicker .folder-selected').html('Selected: ' + r.join(', '));
+                    console.log('Selected: ' + r.join(', '));
+
+
+                    var config = '';
+                    var url = $tree.data('viewUrl') + '?id=' + r.join(',');
+
+                    $.ajax({
+                        method: 'GET',
+                        url: url,
+                        dataType: 'html',
+                        data: {'selected': r },
+                        beforeSend: function() {
+                          $container.html('<div class="ui active small inline loader"></div>');
+                        },
+                        success: function(data) {
+
+                            // no files in folder
+                            if (data.length === 0) {
+                                $container.html('<div class="ui info message"><i class="info icon"></i>Nothing found</div>');
+                                return;
+                            }
+
+                            $container.html(data);
+                        }
+                    });
+
+                }
+
+            })
+
+            .jstree({
+                "core" : {
+                    "themes" : {
+                        "variant" : "large"
+                    },
+                    'data' : {
+                        'url': function (node) {
+                            console.log(node);
+                            console.log($tree.data('treeUrl'));
+                            return $tree.data('treeUrl');
+                        },
+                        'data': function (node) {
+                            console.log(node)
+                            return {'id': node.id};
+                        },
+                    },
+                    "check_callback" : true
+                },
+                "checkbox" : {
+                    "keep_selected_style" : false
+                },
+                "plugins" : [ "wholerow", "state", "dnd" ] // , "checkbox"
+            })
+
+            /*
+             */
+            .on('move_node.jstree', function (e, data) {
+                console.log('Moved');
+                console.log(data);
+
+                var movedId = data.node.id;
+
+                var movedB
+            });
+
+        /*
+        $(document)
+
+            .on('dnd_scroll.vakata', function (e, data) {
+                console.log("dnd_scroll");
+                console.log(data);
+            })
+
+
+            .on('dnd_start.vakata', function (e, data) {
+                console.log("dnd_start");
+                console.log(data);
+            })
+
+            .on('dnd_stop.vakata', function (e, data) {
+                console.log("dnd_stop");
+                console.log(data);
+            })
+        */
+
+    });
+</script>
