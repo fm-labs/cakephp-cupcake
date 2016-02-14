@@ -166,7 +166,7 @@ abstract class ContentController extends AppController
         } else {
             $this->Flash->error(__d('banana','The {0} could not be deleted. Please, try again.', __d('banana','content')));
         }
-        return $this->redirect(['action' => 'index']);
+        $this->redirect($this->referer(['action' => 'index']));
     }
 
 
