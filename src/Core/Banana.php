@@ -54,6 +54,11 @@ class Banana
         }
     }
 
+    public static function routes()
+    {
+        // @todo Implement me
+    }
+
     public static function getAvailablePageLayouts()
     {
         $PageLayouts = TableRegistry::get('Banana.PageLayouts');
