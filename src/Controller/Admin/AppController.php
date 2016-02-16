@@ -1,21 +1,15 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: flow
- * Date: 5/29/15
- * Time: 6:00 PM
- */
 
 namespace Banana\Controller\Admin;
 
-use Backend\Controller\Admin\AbstractBackendController;
+use App\Controller\Admin\AppController as BaseAdminAppController;
 use Banana\Core\Banana;
 use Cake\Core\Configure;
 use Cake\Core\Plugin;
 use Cake\Event\Event;
 use Cake\Filesystem\Folder;
 
-class AppController extends AbstractBackendController
+class AppController extends BaseAdminAppController
 {
     public $paginate = [
         'limit' => 100,
@@ -24,8 +18,6 @@ class AppController extends AbstractBackendController
     public function initialize()
     {
         parent::initialize();
-        //$this->loadComponent('RequestHandler');
-        $this->loadComponent('Backend.Backend');
     }
 
     public function beforeFilter(Event $event)
@@ -42,13 +34,6 @@ class AppController extends AbstractBackendController
         $this->set('locale', $this->locale);
     }
 
-    protected function _getGalleryList()
-    {
-        $list = [];
-        $mm = MediaManager::get('gallery');
-        $list = $mm->getSelectListRecursive();
-        return $list;
-    }
 
     public static function backendMenu()
     {
@@ -103,6 +88,17 @@ class AppController extends AbstractBackendController
                 ]
             ]
         ];
+    }
+
+    /**
+     * @deprecated
+     */
+    protected function _getGalleryList()
+    {
+        $list = [];
+        $mm = MediaManager::get('gallery');
+        $list = $mm->getSelectListRecursive();
+        return $list;
     }
 
     /**

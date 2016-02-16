@@ -2,8 +2,8 @@
 
 namespace Banana\Controller;
 
-use Cake\Controller\Controller;
+use App\Controller\AppController as BaseAppController;
 
-class AppController extends Controller
+class AppController extends BaseAppController
 {
 }
