@@ -33,6 +33,12 @@ class PagesController extends FrontendController
 
     public $viewClass = 'Banana.Page';
 
+    /**
+     * Indicates root page
+     * @var bool
+     */
+    protected $_root = false;
+
     public function initialize()
     {
         parent::initialize();
@@ -114,6 +120,8 @@ class PagesController extends FrontendController
         switch ($page->type) {
             // Internal redirects
             case 'root':
+                $this->_root = true; // root flag
+
             case 'page':
                 return $this->setAction('view', $page->redirect_page_id);
 
@@ -155,8 +163,8 @@ class PagesController extends FrontendController
                 break;
         }
 
-        // force canonical url
-        if (Configure::read('Banana.Router.forceCanonical')) {
+        // force canonical url (except root pages)
+        if (Configure::read('Banana.Router.forceCanonical') && !$this->_root) {
             $here = Router::normalize($this->request->here);
             $canonical = Router::normalize($page->url);
 
