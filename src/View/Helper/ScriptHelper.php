@@ -1,17 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: flow
- * Date: 9/10/15
- * Time: 11:19 PM
- */
 
 namespace Banana\View\Helper;
 
-
+use Cake\View\Helper;
 use Cake\View\View;
 
-class ScriptHelper extends AppHelper
+class ScriptHelper extends Helper
 {
     public static $scriptBlockHead = "script";
     public static $scriptBlockBottom = "script-bottom"; // legacy

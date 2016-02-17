@@ -34,7 +34,9 @@ class FrontendView extends View
     ) {
         parent::__construct($request, $response, $eventManager, $viewOptions);
 
-        $this->helpers()->load('Banana.Frontend', []);
+        $this->helpers()->load('Banana.Content', []);
+        //$this->helpers()->load('Banana.Frontend', []);
+        //$this->helpers()->load('Banana.Script', []);
     }
 
     public function section($name, $cellData = [], $cellOptions = [])
