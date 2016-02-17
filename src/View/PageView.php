@@ -53,13 +53,13 @@ class PageView extends FrontendView
 
             // Open Graph Tags
             $this->Html->meta(['property' => 'og:type', 'content' => 'website'], null, ['block' => true]);
-            $this->Html->meta(['property' => 'og:title', 'content' => $page->title], null, ['block' => true]);
+            $this->Html->meta(['property' => 'og:title', 'content' => $metaTitle], null, ['block' => true]);
             $this->Html->meta(['property' => 'og:description', 'content' => $metaDescription], null, ['block' => true]);
             $this->Html->meta(['property' => 'og:url', 'content' => $pageUrl], null, ['block' => true]);
 
             // Twitter Tags
             $this->Html->meta(['property' => 'twitter:card', 'content' => 'summary'], null, ['block' => true]);
-            $this->Html->meta(['property' => 'twitter:title', 'content' => $page->title], null, ['block' => true]);
+            $this->Html->meta(['property' => 'twitter:title', 'content' => $metaTitle], null, ['block' => true]);
             $this->Html->meta(['property' => 'twitter:description', 'content' => $metaDescription], null, ['block' => true]);
             $this->Html->meta(['property' => 'twitter:url', 'content' => $pageUrl], null, ['block' => true]);
 
