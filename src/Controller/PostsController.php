@@ -35,6 +35,8 @@ class PostsController extends FrontendController
      */
     public function view($id = null)
     {
+        $this->viewBuilder()->className('Banana.Post');
+
         if ($id === null && $this->request->query('post_id')) {
             $id = $this->request->query('post_id');
         }
@@ -59,6 +61,8 @@ class PostsController extends FrontendController
      */
     public function teaser($id = null)
     {
+        $this->viewBuilder()->className('Banana.Post');
+
         if ($id === null && $this->request->query('post_id')) {
             $id = $this->request->query('post_id');
         }

@@ -49,8 +49,18 @@ $this->assign('title', sprintf('%s [%s #%s]', $content->title, 'Post', $content-
                     'editor' => '@Banana.HtmlEditor.default'
                 ]);
                 ?>
-            </div>
 
+                <fieldset>
+                    <legend>Meta</legend>
+                    <div>
+                        <?= $this->Form->input('meta_title'); ?>
+                        <?= $this->Form->input('meta_desc'); ?>
+                        <?= $this->Form->input('meta_keywords'); ?>
+                        <?= $this->Form->input('meta_lang'); ?>
+                        <?= $this->Form->input('meta_robots'); ?>
+                    </div>
+                </fieldset>
+            </div>
 
         </div>
         <div class="four wide column">
