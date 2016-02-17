@@ -43,17 +43,33 @@ class Page extends Entity
         'child_pages' => true,
     ];
 
+    protected $_virtual = [
+        'url'
+    ];
+
     protected function _getUrl()
     {
-        $defaultUrl = [
-            'prefix' => false,
-            'plugin' => null,
-            'controller' => 'Pages',
-            'action' => 'view',
-            'page_id' => $this->id,
-            'slug' => $this->slug,
-            //$this->id
-        ];
+        if (Configure::read('Banana.Router.enablePrettyUrls')) {
+
+            $defaultUrl = [
+                'prefix' => false,
+                'plugin' => null,
+                'controller' => 'Pages',
+                'action' => 'view',
+                'page_id' => $this->id,
+                'slug' => $this->slug,
+            ];
+        } else {
+
+            $defaultUrl = [
+                'prefix' => false,
+                'plugin' => null,
+                'controller' => 'Pages',
+                'action' => 'view',
+                $this->id,
+                'slug' => $this->slug,
+            ];
+        }
 
         try {
             switch ($this->type) {

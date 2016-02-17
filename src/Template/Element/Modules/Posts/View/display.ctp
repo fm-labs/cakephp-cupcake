@@ -11,7 +11,7 @@ if (!$post) {
 }
 ?>
 <div class="mod mod-post">
-    <?php $rendered = $this->requestAction('/banana/posts/view/' . $post->id); ?>
+    <?php $rendered = $this->requestAction('/content/posts/view/' . $post->id); ?>
     <?php echo $rendered ?>
 </div>
 

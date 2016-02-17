@@ -9,7 +9,7 @@ try {
     if ($post->teaser_html || $post->use_teaser) {
         $action = 'teaser';
     }
-    $url = $this->Url->build(['plugin' => 'banana', 'controller' => 'Posts', 'action' => $action, $post->id]);
+    $url = $this->Url->build(['plugin' => 'Banana', 'controller' => 'Posts', 'action' => $action, $post->id]);
     echo $this->requestAction($url);
 } catch (\Exception $ex) {
     debug($ex->getMessage());

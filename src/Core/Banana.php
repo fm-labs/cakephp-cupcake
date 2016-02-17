@@ -12,12 +12,19 @@ class Banana
 
     public static $version;
 
+    protected static $_hooks;
+
     public static function version()
     {
         if (!isset(static::$version)) {
             static::$version = @file_get_contents(Plugin::path('Banana') . DS . 'VERSION.txt');
         }
         return static::$version;
+    }
+
+    public static function hook($type, callable $callback)
+    {
+
     }
 
     public static function bootstrap()

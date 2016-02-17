@@ -1,6 +1,7 @@
 <?php
 namespace Banana\Model\Entity;
 
+use Cake\Core\Configure;
 use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Inflector;
@@ -31,6 +32,10 @@ class Post extends Entity
         'is_published' => true,
         'publish_start_datetime' => true,
         'publish_end_datetime' => true,
+    ];
+
+    protected $_virtual = [
+        'url'
     ];
 
     protected function _setTitle($val)
@@ -92,10 +97,29 @@ class Post extends Entity
      */
     protected function _getViewUrl()
     {
-        return [
-            'prefix' => false, 'plugin' => 'Banana', 'controller' => 'Posts',
-            'action' => 'view',  'post_id' => $this->id, 'slug' => $this->slug
-        ];
+        if (Configure::read('Banana.Router.enablePrettyUrls')) {
+
+            $url = [
+                'prefix' => false,
+                'plugin' => 'Banana',
+                'controller' => 'Posts',
+                'action' => 'view',
+                'post_id' => $this->id,
+                'slug' => $this->slug,
+            ];
+        } else {
+
+            $url = [
+                'prefix' => false,
+                'plugin' => 'Banana',
+                'controller' => 'Posts',
+                'action' => 'view',
+                $this->id,
+                'slug' => $this->slug,
+            ];
+        }
+
+        return $url;
     }
 
     /**

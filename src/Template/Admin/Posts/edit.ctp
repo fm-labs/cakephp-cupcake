@@ -40,19 +40,13 @@ $this->assign('title', sprintf('%s [%s #%s]', $content->title, 'Post', $content-
                 echo $this->Form->input('use_teaser');
                 echo $this->Form->input('teaser_html', [
                     'type' => 'htmleditor',
-                    'editor' => [
-                        'image_list_url' => '@Banana.HtmlEditor.default.imageList',
-                        'link_list_url' => '@Banana.HtmlEditor.default.linkList'
-                    ]
+                    'editor' => '@Banana.HtmlEditor.default'
                 ]);
                 echo $this->Form->input('teaser_link_caption');
                 echo $this->Form->input('teaser_link_href');
                 echo $this->Form->input('body_html', [
                     'type' => 'htmleditor',
-                    'editor' => [
-                        'image_list_url' => '@Banana.HtmlEditor.default.imageList',
-                        'link_list_url' => '@Banana.HtmlEditor.default.linkList'
-                    ]
+                    'editor' => '@Banana.HtmlEditor.default'
                 ]);
                 ?>
             </div>
