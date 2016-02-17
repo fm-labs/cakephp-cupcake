@@ -114,13 +114,18 @@ class PagesController extends FrontendController
             // Internal redirects
             case 'root':
             case 'page':
-                //$page = $this->Pages->get($page->redirect_page_id, ['contain' => []]);
-                //return $this->redirect($page->url, $page->redirect_status);
                 return $this->setAction('view', $page->redirect_page_id);
 
             // Http redirect
             case 'redirect':
-                return $this->redirect($page->redirect_location, $page->redirect_status);
+                if ($page->redirect_page_id) {
+                    $page = $this->Pages->get($page->redirect_page_id, ['contain' => []]);
+                    $redirectUrl = $page->url;
+                } else {
+                    $redirectUrl = $page->redirect_location;
+                }
+
+                return $this->redirect($redirectUrl, $page->redirect_status);
             case 'controller':
                 return $this->redirect($page->redirect_controller_url, $page->redirect_status);
 
