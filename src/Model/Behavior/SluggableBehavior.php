@@ -22,7 +22,7 @@ class SluggableBehavior extends Behavior
         'field' => 'title', // the field to create the slug from
         'slug' => 'slug', // the slug field name
         'replacement' => '-', // the replacement string for non-standard characters
-        'caseSensitive' => true, // case sensitive or lower case
+        'caseSensitive' => false, // case sensitive or lower case
     ];
 
     /**
