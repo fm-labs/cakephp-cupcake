@@ -8,7 +8,7 @@
         <?= h($post->title); ?>
     </h2>
     <div class="text">
-        <?= $post->teaser_html; ?>
+        <?= $this->Content->userHtml($post->teaser_html); ?>
     </div>
     <div class="action">
         <?= $this->Html->link($post->real_teaser_link_caption, $post->real_teaser_link_href); ?>

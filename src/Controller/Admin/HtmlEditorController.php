@@ -67,7 +67,9 @@ class HtmlEditorController extends AppController
                 $this->loadModel('Banana.Posts');
                 $result = $this->Pages->Posts
                     ->find()
-                    ->where(['ref' => 'Banana.Pages'])
+                    ->where(['refscope' => 'Banana.Pages'])
+                    ->order(['title' => 'ASC'])
+                    //->select(['id', 'title', 'level'])
                     ->contain([])
                     ->all()
                     ->toArray();

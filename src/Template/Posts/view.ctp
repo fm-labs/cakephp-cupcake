@@ -8,6 +8,6 @@
         <?php endif; ?>
     </div>
     <div class="body">
-        <?= $post->body_html; ?>
+        <?= $this->Content->userHtml($post->body_html); ?>
     </div>
 </div>
