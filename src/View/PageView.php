@@ -13,10 +13,11 @@ class PageView extends FrontendView
         if ($this->get('page')) {
             $page = $this->get('page');
 
+            $metaTitle = ($page->meta_title) ?: $page->title;
             $pageUrl = $this->Html->Url->build($page->url, true);
 
             // page title
-            $this->assign('title', $page->title);
+            $this->assign('title', $metaTitle);
 
             // canonical url
             $this->Html->meta(['link' => $pageUrl, 'rel' => 'canonical'], null, ['block' => true]);

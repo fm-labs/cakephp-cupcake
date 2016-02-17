@@ -32,7 +32,9 @@ $this->assign('title', sprintf('[%s] %s (#%s)', 'Pages', $content->title, $conte
     <div class="ui fluid card">
         <div class="content">
             <?= $this->Html->link($content->title, ['action' => 'edit', $content->id], ['class' => 'header']); ?>
-            <small>Slug: <?= h($content->slug); ?></small>
+            <small>Slug: <?= h($content->slug); ?></small><br />
+            <small>Meta Title: <?= h($content->meta_title); ?></small><br />
+            <small>Meta Desc: <?= h($content->meta_desc); ?></small>
         </div>
         <div class="extra">
             <?= $this->Ui->link(

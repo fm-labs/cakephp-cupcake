@@ -62,9 +62,10 @@ $this->assign('title', sprintf('[%s] %s (#%s)', 'Pages', $content->title, $conte
                     ?>
                 </div>
 
-                <fieldset class="collapsed">
+                <fieldset>
                     <legend>Meta</legend>
                     <div>
+                        <?= $this->Form->input('meta_title'); ?>
                         <?= $this->Form->input('meta_desc'); ?>
                         <?= $this->Form->input('meta_keywords'); ?>
                         <?= $this->Form->input('meta_lang'); ?>
