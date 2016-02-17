@@ -15,6 +15,7 @@ use Cake\Network\Exception\NotFoundException;
 use Banana\Model\Table\PagesTable;
 use Cake\Core\Configure;
 use Cake\Network\Response;
+use Cake\Routing\Router;
 use Cake\View\Exception\MissingTemplateException;
 use Banana\Controller\Component\FrontendComponent;
 
@@ -152,6 +153,17 @@ class PagesController extends FrontendController
             case 'content':
             default:
                 break;
+        }
+
+        // force canonical url
+        if (Configure::read('Banana.Router.forceCanonical')) {
+            $here = Router::normalize($this->request->here);
+            $canonical = Router::normalize($page->url);
+
+            if ($here != $canonical) {
+                $this->redirect($canonical, 301);
+                return;
+            }
         }
 
         $this->autoRender = false;

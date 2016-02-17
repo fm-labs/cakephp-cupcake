@@ -5,6 +5,7 @@ return [
             'disableFrontendRoutes' => false,
             'disableAdminRoutes' => false,
             'enablePrettyUrls' => true,
+            'forceCanonical' => false,
         ],
         'HtmlEditor' => [
             'default' => [

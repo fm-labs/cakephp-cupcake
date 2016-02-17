@@ -20,8 +20,10 @@ class ContentHelper extends Helper
      */
     public function parseUrlPlaceholders($text) {
 
+        //@todo Implement modelMap feature
         $modelMap = [
-            'Content.Pages' => 'Banana.Pages'
+            'Content.Pages' => 'Banana.Pages',
+            'Content.Posts' => 'Banana.Posts'
         ];
 
         $text = preg_replace_callback('/\{\{(.*)\}\}/U', function($matches) use ($modelMap) {
