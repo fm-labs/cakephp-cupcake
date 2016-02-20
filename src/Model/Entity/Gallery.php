@@ -45,7 +45,7 @@ class Gallery extends Entity
             return $this->parent->desc_html;
         }
 
-        return $this->_properties['desc_html'];
+        return (isset($this->_properties['desc_html'])) ? $this->_properties['desc_html'] : null;
     }
 
     protected function _getImages()
