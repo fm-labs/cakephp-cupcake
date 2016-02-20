@@ -75,12 +75,12 @@ if (!Configure::read('Banana.Router.disableFrontendRoutes')) {
 
             $routes->connect('/post/:slug/:post_id/*',
                 ['plugin' => 'Banana',  'controller' => 'Posts', 'action' => 'view'],
-                ['pass' => ['post_id'], ['_name' => 'post']]
+                ['pass' => ['post_id'], ['_name' => $name]]
             );
 
             $routes->connect('/post/:slug',
                 ['plugin' => 'Banana', 'controller' => 'Posts', 'action' => 'view'],
-                ['pass' => [], ['_name' => 'postslug']]
+                ['pass' => []]
             );
 
             $routes->connect('/post/*',
