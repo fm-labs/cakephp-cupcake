@@ -3,6 +3,23 @@ $module = $contentModule->module;
 $cell = ($contentModule->template) ? $module->path . 'Module::' . $contentModule->template : $module->path.'Module';
 $cellData = [];
 $cellOptions = compact('refscope', 'refid', 'section', 'module');
+
+$moduleHtml = $this->cell($cell , $cellData, $cellOptions);
+
+// output module without module container
+$nowrap = ($contentModule->cssclass == '_nowrap_');
+if ($nowrap) {
+    echo $moduleHtml;
+    return;
+}
+
+$attr = [
+    'class' => trim('mod ' . $contentModule->cssclass),
+    'id' => ($contentModule->cssid) ?: 'mod' . $contentModule->id
+];
+
+echo $this->Html->div(null, $moduleHtml, $attr);
+return;
 ?>
 <!-- Content Module #<?= $contentModule->id ?> -->
 <div class="mod">

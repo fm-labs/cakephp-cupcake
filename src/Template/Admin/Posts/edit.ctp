@@ -18,6 +18,11 @@ $this->Toolbar->addLink([
 
 $this->assign('heading', __d('banana','Edit {0}', __d('banana','Post')));
 $this->assign('title', sprintf('%s [%s #%s]', $content->title, 'Post', $content->id));
+
+// HtmlEditor config
+$editor = \Cake\Core\Configure::read('Banana.HtmlEditor.default');
+$editor['body_class'] = $content->cssclass;
+$editor['body_id'] = $content->cssid;
 ?>
 <div class="posts">
     <?php if (isset($content->refscope)): ?>
@@ -40,13 +45,14 @@ $this->assign('title', sprintf('%s [%s #%s]', $content->title, 'Post', $content-
                 echo $this->Form->input('use_teaser');
                 echo $this->Form->input('teaser_html', [
                     'type' => 'htmleditor',
-                    'editor' => '@Banana.HtmlEditor.default'
+                    'editor' => $editor
                 ]);
                 echo $this->Form->input('teaser_link_caption');
                 echo $this->Form->input('teaser_link_href');
+
                 echo $this->Form->input('body_html', [
                     'type' => 'htmleditor',
-                    'editor' => '@Banana.HtmlEditor.default'
+                    'editor' => $editor
                 ]);
                 ?>
 
