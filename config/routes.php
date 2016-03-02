@@ -12,7 +12,7 @@ if (Configure::read('Banana.Router.enableRootScope')) {
         // Pages
         $routes->connect('/:slug/:page_id/*',
             ['plugin' => null,  'controller' => 'Pages', 'action' => 'view'],
-            ['pass' => ['page_id'], '_name' => 'page']
+            ['page_id' => '^[0-9]+', 'pass' => ['page_id'], '_name' => 'page']
         );
 
         $routes->connect('/:slug',
@@ -25,11 +25,10 @@ if (Configure::read('Banana.Router.enableRootScope')) {
             ['pass' => ['page_id'], 0 => '^[0-9]+']
         );
 
-
         // Posts
         $routes->connect('/post/:slug/:post_id/*',
             ['plugin' => 'Banana',  'controller' => 'Posts', 'action' => 'view'],
-            ['pass' => ['post_id'], ['_name' => 'post']]
+            ['post_id' => '^[0-9]+', 'pass' => ['post_id'], ['_name' => 'post']]
         );
 
         $routes->connect('/post/:slug',
@@ -51,12 +50,9 @@ if (!Configure::read('Banana.Router.disableFrontendRoutes')) {
 
         if (Configure::read('Banana.Router.enablePrettyUrls')) {
 
-            // do not create named page route here, if already defined in root scope
-            $name = Configure::read('Banana.Router.enableRootScope') ? null : 'page';
-
             $routes->connect('/page/:slug/:page_id/*',
                 ['plugin' => null,  'controller' => 'Pages', 'action' => 'view'],
-                ['pass' => ['page_id'], '_name' => $name]
+                ['pass' => ['page_id'], '_name' => 'page']
             );
 
             $routes->connect('/page/:slug',
@@ -70,12 +66,9 @@ if (!Configure::read('Banana.Router.disableFrontendRoutes')) {
             );
 
             // Posts
-            // do not create named page route here, if already defined in root scope
-            $name = Configure::read('Banana.Router.enableRootScope') ? null : 'post';
-
             $routes->connect('/post/:slug/:post_id/*',
                 ['plugin' => 'Banana',  'controller' => 'Posts', 'action' => 'view'],
-                ['pass' => ['post_id'], ['_name' => $name]]
+                ['pass' => ['post_id'], ['_name' => 'post']]
             );
 
             $routes->connect('/post/:slug',
