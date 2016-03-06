@@ -45,55 +45,48 @@ if (Configure::read('Banana.Router.enableRootScope')) {
 }
 
 // Frontend routes
-if (!Configure::read('Banana.Router.disableFrontendRoutes')) {
-    Router::scope('/content', ['plugin' => 'Banana', '_namePrefix' => 'content:', ], function ($routes) {
 
-        if (Configure::read('Banana.Router.enablePrettyUrls')) {
+Router::scope('/content', ['plugin' => 'Banana', '_namePrefix' => 'content:', ], function ($routes) {
 
-            $routes->connect('/page/:slug/:page_id/*',
-                ['plugin' => null,  'controller' => 'Pages', 'action' => 'view'],
-                ['pass' => ['page_id'], '_name' => 'page']
-            );
+    if (!Configure::read('Banana.Router.disableFrontendRoutes') && Configure::read('Banana.Router.enablePrettyUrls')) {
 
-            $routes->connect('/page/:slug',
-                ['plugin' => null, 'controller' => 'Pages', 'action' => 'view'],
-                ['pass' => []]
-            );
+        $routes->connect('/page/:slug/:page_id/*',
+            ['plugin' => null,  'controller' => 'Pages', 'action' => 'view'],
+            ['pass' => ['page_id'], '_name' => 'page']
+        );
 
-            $routes->connect('/page/*',
-                ['plugin' => null, 'controller' => 'Pages', 'action' => 'view'],
-                ['pass' => ['page_id'], 0 => '^[0-9]+']
-            );
+        $routes->connect('/page/:slug',
+            ['plugin' => null, 'controller' => 'Pages', 'action' => 'view'],
+            ['pass' => []]
+        );
 
-            // Posts
-            $routes->connect('/post/:slug/:post_id/*',
-                ['plugin' => 'Banana',  'controller' => 'Posts', 'action' => 'view'],
-                ['pass' => ['post_id'], ['_name' => 'post']]
-            );
+        $routes->connect('/page/*',
+            ['plugin' => null, 'controller' => 'Pages', 'action' => 'view'],
+            ['pass' => ['page_id'], 0 => '^[0-9]+']
+        );
 
-            $routes->connect('/post/:slug',
-                ['plugin' => 'Banana', 'controller' => 'Posts', 'action' => 'view'],
-                ['pass' => []]
-            );
+        // Posts
+        $routes->connect('/post/:slug/:post_id/*',
+            ['plugin' => 'Banana',  'controller' => 'Posts', 'action' => 'view'],
+            ['pass' => ['post_id'], ['_name' => 'post']]
+        );
 
-            $routes->connect('/post/*',
-                ['plugin' => 'Banana', 'controller' => 'Posts', 'action' => 'view'],
-                ['pass' => ['post_id'], 0 => '^[0-9]+']
-            );
+        $routes->connect('/post/:slug',
+            ['plugin' => 'Banana', 'controller' => 'Posts', 'action' => 'view'],
+            ['pass' => []]
+        );
 
-        } else {
-            // fallback named routes
-            //$routes->connect('/pages/view/*', ['plugin' => null, 'controller' => 'Pages', 'action' => 'view'], ['_name' => 'page']);
-            //$routes->connect('/posts/view/*', ['plugin' => 'Banana', 'controller' => 'Posts', 'action' => 'view'], ['_name' => 'post']);
-        }
+        $routes->connect('/post/*',
+            ['plugin' => 'Banana', 'controller' => 'Posts', 'action' => 'view'],
+            ['pass' => ['post_id'], 0 => '^[0-9]+']
+        );
 
+    }
 
-        //$routes->connect('/:controller');
-        $routes->fallbacks('DashedRoute');
+    $routes->fallbacks('DashedRoute');
 
-    });
+});
 
-}
 
 
 // Admin routes
