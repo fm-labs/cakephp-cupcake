@@ -11,6 +11,7 @@ namespace Banana\Controller\Admin;
 use Banana\Core\Banana;
 use Banana\Model\Table\PagesTable;
 use Cake\Event\Event;
+use Cake\ORM\TableRegistry;
 use Tree\Controller\TreeSortControllerTrait;
 
 /**
@@ -82,11 +83,12 @@ class PagesController extends ContentController
         //debug($pages);
         $treeData = [];
         array_walk($pages, function ($val) use (&$treeData, &$id) {
+            $publishedClass = ($val->is_published) ? 'published' : 'unpublished';
             $treeData[] = [
                 'id' => $val->id,
                 'text' => $val->title . " (". $val->id . ")",
                 'children' => true,
-                'icon' => 'ui outline file icon',
+                'icon' => $val->type . " " . $publishedClass,
                 'parent' => ($val->parent_id) ?: '#'
             ];
         });
@@ -98,7 +100,90 @@ class PagesController extends ContentController
     public function treeView()
     {
         $id = $this->request->query('id');
-        $this->setAction('view', $id);
+        $this->setAction('manage', $id);
+    }
+
+    public function manage($id = null)
+    {
+        $content = $this->Pages->get($id, [
+            'contain' => []
+        ]);
+
+        $this->set('content', $content);
+        $this->set('_serialize', ['content']);
+    }
+
+    public function relatedPosts($id = null)
+    {
+        $content = $this->Pages->get($id, [
+            'contain' => []
+        ]);
+
+        $posts = $this->Pages->Posts
+            ->find()
+            ->where(['refid' => $id])
+            ->order(['Posts.order' => 'DESC'])
+            ->all();
+
+
+        $this->set('content', $content);
+        $this->set('posts', $posts);
+        $this->set('_serialize', ['content', 'posts']);
+    }
+
+    public function relatedPageMeta($id = null)
+    {
+        $PageMetas = TableRegistry::get('Banana.PageMetas');
+
+        $content = $this->Pages->get($id, [
+            'contain' => []
+        ]);
+
+        $pageMeta = $content->meta;
+        if (!$pageMeta) {
+            $pageMeta = $PageMetas->newEntity(
+                ['model' => 'Banana.Pages', 'foreignKey' => $content->id],
+                ['validate' => false]
+            );
+        }
+
+        if ($this->request->is(['put', 'post'])) {
+            $pageMeta = $PageMetas->patchEntity($pageMeta, $this->request->data);
+            if ($PageMetas->save($pageMeta)) {
+                $this->Flash->success('Successful');
+                $this->redirect(['action' => 'manage', $id]);
+            } else {
+                $this->Flash->error('Failed');
+            }
+        }
+
+        $this->set('content', $content);
+        $this->set('pageMeta', $pageMeta);
+        $this->set('_serialize', ['content', 'pageMeta']);
+    }
+
+    public function relatedContentModules($id = null)
+    {
+
+        $content = $this->Pages->get($id, [
+            'contain' => ['ContentModules' => ['Modules']]
+        ]);
+
+
+        //@TODO Read custom sections from page layout
+        $sections = ['main', 'top', 'bottom', 'before', 'after', 'left', 'right'];
+        $sections = array_combine($sections, $sections);
+
+        //$sectionsModules = $this->Pages->ContentModules->find()->where(['refscope' => 'Banana.Pages', 'refid' => $id]);
+        //debug($sectionsModules);
+
+        $availableModules = $this->Pages->ContentModules->Modules->find('list');
+
+        $this->set('content', $content);
+        $this->set('sections', $sections);
+        $this->set('availableModules', $availableModules);
+
+        $this->set('_serialize', ['content', 'sections', 'availableModules']);
     }
 
     public function add()

@@ -1,6 +1,7 @@
 <?php
 namespace Banana\Model\Entity;
 
+use Banana\Model\Behavior\PageMeta\PageMetaTrait;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
 use Cake\ORM\Behavior\Translate\TranslateTrait;
@@ -14,8 +15,14 @@ use Cake\Routing\Router;
 class Page extends Entity
 {
     use TranslateTrait;
+    use PageMetaTrait;
 
     private $__parentTheme;
+
+    /**
+     * @var string PageMetaTrait model definition
+     */
+    protected $_pageMetaModel = 'Banana.Pages';
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -44,7 +51,12 @@ class Page extends Entity
     ];
 
     protected $_virtual = [
-        'url'
+        'url',
+        'meta_title',
+        'meta_desc',
+        'meta_keywords',
+        'meta_robots',
+        'meta_lang'
     ];
 
     protected function _getUrl()
@@ -166,4 +178,5 @@ class Page extends Entity
             ->order(['Posts.order' => 'DESC', 'Posts.id' => 'ASC'])
             ->all();
     }
+
 }

@@ -1,5 +1,5 @@
 <?php
-$this->loadHelper('Backend.Tabs');
+//$this->loadHelper('Backend.Tabs');
 $this->extend('/Admin/Content/edit');
 
 // EXTEND: TOOLBAR
@@ -61,17 +61,6 @@ $this->assign('title', sprintf('[%s] %s (#%s)', 'Pages', $content->title, $conte
                         ]);
                     ?>
                 </div>
-
-                <fieldset>
-                    <legend>Meta</legend>
-                    <div>
-                        <?= $this->Form->input('meta_title'); ?>
-                        <?= $this->Form->input('meta_desc'); ?>
-                        <?= $this->Form->input('meta_keywords'); ?>
-                        <?= $this->Form->input('meta_lang'); ?>
-                        <?= $this->Form->input('meta_robots'); ?>
-                    </div>
-                </fieldset>
 
 
                 <fieldset class="collapsed">

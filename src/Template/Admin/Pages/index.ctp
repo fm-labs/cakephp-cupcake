@@ -1,7 +1,4 @@
-<?= $this->Html->css('Backend.jstree/themes/default/style.min', ['block' => true]); ?>
-<?= $this->Html->script('Backend.underscore-min', ['block' => true]); ?>
-<?= $this->Html->script('Backend.backbone-min', ['block' => true]); ?>
-<?= $this->Html->script('Backend.jstree/jstree.min', ['block' => true]); ?>
+<?= $this->extend('/Admin/Backend/default'); ?>
 <?php $this->Html->addCrumb(__d('banana','Pages')); ?>
 <?php
 // TOOLBAR
@@ -58,13 +55,13 @@ $this->Toolbar->addLink(__d('banana','Repair'), ['action' => 'repair'], ['icon' 
         $tree
             .on('changed.jstree', function (e, data) {
                 var i, j, r = [];
-                console.log(data);
+                //console.log(data);
                 if (data.action === "select_node") {
                     for(i = 0, j = data.selected.length; i < j; i++) {
                         r.push(data.instance.get_node(data.selected[i]).id);
                     }
                     //$('.filepicker .folder-selected').html('Selected: ' + r.join(', '));
-                    console.log('Selected: ' + r.join(', '));
+                    //console.log('Selected: ' + r.join(', '));
 
 
                     var config = '';
@@ -101,12 +98,12 @@ $this->Toolbar->addLink(__d('banana','Repair'), ['action' => 'repair'], ['icon' 
                     },
                     'data' : {
                         'url': function (node) {
-                            console.log(node);
-                            console.log($tree.data('treeUrl'));
+                            //console.log(node);
+                            //console.log($tree.data('treeUrl'));
                             return $tree.data('treeUrl');
                         },
                         'data': function (node) {
-                            console.log(node)
+                            //console.log(node)
                             return {'id': node.id};
                         },
                     },
