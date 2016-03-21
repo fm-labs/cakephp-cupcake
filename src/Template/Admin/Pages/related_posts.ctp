@@ -1,3 +1,4 @@
+<?php $this->loadHelper('Banana.Content'); ?>
 <div class="related posts">
 
     <?php if (count($posts) < 1): ?>
@@ -6,52 +7,27 @@
 
     <?php foreach($posts as $post): ?>
 
-        <!-- -->
-        <div class="ui fluid card">
-            <div class="content">
-
+        <div class="panel panel-default">
+            <div class="panel-heading">
                 <?= $this->Html->link($post->title,
                     ['controller' => 'Posts', 'action' => 'edit', $post->id],
-                    ['class' => 'left floated header']
+                    ['class' => 'link-frame']
                 ); ?>
 
-                <span class="right floated edit">
-                    <i class="edit icon"></i>
-                    <?= $this->Html->link(__('Edit'), ['controller' => 'Posts', 'action' => 'edit', $post->id]); ?>
-                </span>
-
+                <?= $this->Ui->statusLabel($post->is_published, ['label' => [__('Unpublished'), __('Published')]]); ?>
             </div>
 
-            <div class="extra">
-                <span class="ui left floated">
-                    <?= $this->Ui->statusLabel($post->is_published, ['label' => [__('Unpublished'), __('Published')]]); ?>
-                </span>
-                <!--
-                <?php if ($post->is_published): ?>
-                    <span class="right floated">
-                        <i class="hide icon"></i>
-                        <?= $this->Html->link(__('Unpublish'), ['controller' => 'Posts', 'action' => 'publish', $post->id]); ?>
-                    </span>
-                <?php else: ?>
-                    <span class="right floated">
-                        <i class="green unhide icon"></i>
-                        <?= $this->Html->link(__('Publish'), ['controller' => 'Posts', 'action' => 'unpublish', $post->id]); ?>
-                    </span>
-                <?php endif; ?>
-                -->
-            </div>
-
-            <div class="content">
-                <h5 class="">Teaser</h5>
+            <div class="panel-body">
+                <h4 class="">Teaser</h4>
                 <div class="description">
-                    <?= strip_tags($post->teaser_html); ?>
+                    <?= $this->Content->userHtml($post->teaser_html); ?>
                 </div>
             </div>
 
-            <div class="content">
-                <h5 class="">Content</h5>
+            <div class="panel-body">
+                <h4 class="">Content</h4>
                 <div class="description">
-                    <?= strip_tags($post->body_html); ?>
+                    <?= $this->Content->userHtml($post->body_html); ?>
                 </div>
             </div>
         </div>
@@ -66,3 +42,13 @@
 
     <?php debug($posts); ?>
 </div>
+<script>
+    $(document).on('click', '.related.posts .panel-body a', function(e) {
+        e.preventDefault();
+
+        $(this).attr("target", "_blank");
+        window.open($(this).attr("href"));
+
+        return false;
+    });
+</script>

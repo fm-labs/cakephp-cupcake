@@ -5,7 +5,10 @@
 $this->Toolbar->addLink(__d('banana','New {0}', __d('banana','Page')), ['action' => 'add'], ['icon' => 'add']);
 $this->Toolbar->addLink(__d('banana','Repair'), ['action' => 'repair'], ['icon' => 'configure']);
 
+$this->assign('heading', __('Pages'));
 ?>
+<?= $this->Html->css('Backend.jstree/themes/default/style.min', ['block' => true]); ?>
+<?= $this->Html->script('Backend.jstree/jstree.min', ['block' => true]); ?>
 <style>
     #pages-container {
         border-left: 1px solid #e8e8e8;
@@ -14,11 +17,14 @@ $this->Toolbar->addLink(__d('banana','Repair'), ['action' => 'repair'], ['icon' 
 </style>
 <div class="pages index">
 
-    <div class="ui grid">
-        <div class="row">
-            <div class="four wide column">
 
-                <h1 class="ui header"><?= __('Pages'); ?></h1>
+    <div class="container-fluid">
+
+        <h2><?= __('Pages'); ?></h2>
+
+        <div class="row">
+            <div class="col-md-3">
+
 
                 <?= $this->Html->div('flowui-tree', 'Loading Pages ...', [
                     'id' => 'pages-tree',
@@ -26,7 +32,7 @@ $this->Toolbar->addLink(__d('banana','Repair'), ['action' => 'repair'], ['icon' 
                     'data-view-url' => $this->Html->Url->build(['action' => 'treeView'])
                 ]); ?>
             </div>
-            <div class="twelve wide column">
+            <div class="col-md-9">
                 <div id="pages-container">
                     Select a page
                 </div>

@@ -29,10 +29,9 @@ $this->assign('title', sprintf('[%s] %s (#%s)', 'Pages', $content->title, $conte
 </style>
 <div class="pages">
 
-    <div class="ui fluid card">
-        <div class="content">
-            <?= $this->Html->link($content->title, ['action' => 'edit', $content->id], ['class' => 'header']); ?>
-            <br />
+    <div class="panel panel-default">
+        <div class="panel-heading"><?= $content->title; ?></div>
+        <div class="panel-body">
             <?= $this->Ui->link(
                 $this->Html->Url->build($content->url, true),
                 $content->url,

@@ -151,7 +151,6 @@ class PagesController extends ContentController
             $pageMeta = $PageMetas->patchEntity($pageMeta, $this->request->data);
             if ($PageMetas->save($pageMeta)) {
                 $this->Flash->success('Successful');
-                $this->redirect(['action' => 'manage', $id]);
             } else {
                 $this->Flash->error('Failed');
             }

@@ -1,24 +1,26 @@
 <div class="related content-modules">
 
     <?= $this->element('Banana.Admin/Content/related_content_modules', compact('content', 'sections')); ?>
+    <!--
     <br />
     <?= $this->Ui->link('Build a new module for this page', [
         'controller' => 'ModuleBuilder',
         'action' => 'build2',
         'refscope' => 'Banana.Pages',
         'refid' => $content->id
-    ], ['class' => 'ui button', 'icon' => 'add']); ?>
+    ], ['class' => 'btn btn-default', 'icon' => 'add']); ?>
+    -->
 
-    <div class="ui divider"></div>
+    <hr />
 
-    <h4>Link existing module</h4>
-    <div class="ui form">
+    <h3><?= __('Link existing module'); ?></h3>
+    <div class="form">
         <?= $this->Form->create(null, ['url' => ['action' => 'linkModule', $content->id]]); ?>
-        <?= $this->Form->input('refscope', ['default' => 'Banana.Pages']); ?>
-        <?= $this->Form->input('refid', ['default' => $content->id]); ?>
+        <?= $this->Form->hidden('refscope', ['default' => 'Banana.Pages']); ?>
+        <?= $this->Form->hidden('refid', ['default' => $content->id]); ?>
         <?= $this->Form->input('module_id', ['options' => $availableModules]); ?>
         <?= $this->Form->input('section'); ?>
-        <?= $this->Form->submit('Link module'); ?>
+        <?= $this->Form->button('Link module'); ?>
         <?= $this->Form->end(); ?>
     </div>
 

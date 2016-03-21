@@ -1,5 +1,5 @@
 <?php $this->loadHelper('Backend.Tabs'); ?>
-<div class="contents form">
+<div class="contents form container-fluid">
 
     <!-- header
     <h2 class="ui header">
@@ -10,5 +10,5 @@
 
     <!-- content -->
     <?= $this->fetch('content'); ?>
-    <?php debug($content); ?>
+    <?php ///debug($content); ?>
 </div>
