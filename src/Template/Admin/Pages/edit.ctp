@@ -1,6 +1,6 @@
 <?php
 //$this->loadHelper('Backend.Tabs');
-$this->extend('/Admin/Content/edit');
+//$this->extend('/Admin/Content/edit');
 
 // EXTEND: TOOLBAR
 $this->Toolbar->addLink(
@@ -21,7 +21,6 @@ $this->assign('title', sprintf('[%s] %s (#%s)', 'Pages', $content->title, $conte
 // CONTENT
 ?>
 <div class="pages form">
-
 
     <?= $this->Form->create($content, []); ?>
     <?php

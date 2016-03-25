@@ -12,61 +12,32 @@
     ['icon' => 'add']
 ) ?>
 <div class="galleries index">
-    <table class="ui table compact striped">
-    <thead>
-        <tr>
-            <th><?= $this->Paginator->sort('id') ?></th>
-            <th><?= $this->Paginator->sort('parent_id') ?></th>
-            <th><?= $this->Paginator->sort('title') ?></th>
-            <th><?= $this->Paginator->sort('view_template') ?></th>
-            <th><?= $this->Paginator->sort('source') ?></th>
-            <th class="actions"><?= __d('banana','Actions') ?></th>
-        </tr>
-    </thead>
-    <tbody>
-    <?php foreach ($galleries as $gallery): ?>
-        <tr>
-            <td><?= $this->Number->format($gallery->id) ?></td>
-            <td>
-                <?php if ($gallery->parent): ?>
-                <?= $this->Html->link($gallery->parent->title, ['action' => 'edit', $gallery->parent->id]) ?>
-                <?php endif; ?>
-            </td>
-            <td><?= $this->Html->link($gallery->title, ['action' => 'edit', $gallery->id]) ?></td>
-            <td><?= h($gallery->view_template) ?></td>
-            <td><?= h($gallery->source) ?>
-                <?php if ($gallery->source == 'folder') {
-                    echo '<br /><small>' . h($gallery->source_folder) . '</small>';
+
+    <?= $this->cell('Backend.DataTable', [[
+        'paginate' => true,
+        'model' => 'Banana.Galleries',
+        'data' => $galleries,
+        'fields' => [
+            'id',
+            'parent' => [
+                'formatter' => function($val) {
+                    if ($val) {
+                        return $this->Html->link($val->title, ['action' => 'edit', $val->id]);
+                    }
                 }
-                ?>
-            </td>
-            <td class="actions">
-                <?php
-                $menu = new Backend\Lib\Menu\Menu();
-                $menu->add(
-                    __d('banana','Edit'),
-                    ['action' => 'edit', $gallery->id],
-                    ['icon' => 'edit']
-                );
-
-                $dropdown = $menu->add('Dropdown');
-                $dropdown->getChildren()->add(
-                    __d('banana','Add Item'),
-                    ['action' => 'addItem', $gallery->id],
-                    ['icon' => 'plus']
-                );
-                $dropdown->getChildren()->add(
-                    __d('banana','Delete'),
-                    ['action' => 'delete', $gallery->id],
-                    ['icon' => 'trash', 'confirm' => __d('banana','Are you sure you want to delete # {0}?', $gallery->id)]
-                );
-                ?>
-                <?= $this->element('Backend.Table/table_row_actions', ['menu' => $menu]); ?>
-            </td>
-        </tr>
-
-    <?php endforeach; ?>
-    </tbody>
-    </table>
-    <?= $this->element('Backend.Pagination/default'); ?>
+            ],
+            'title' => [
+                'formatter' => function($val, $row) {
+                    return $this->Html->link($val, ['action' => 'edit', $row->id]);
+                }
+            ],
+            'view_template',
+            'source'
+        ],
+        'rowActions' => [
+            [__d('shop','Edit'), ['action' => 'edit', ':id'], ['class' => 'edit']],
+            [__d('shop','Delete'), ['action' => 'delete', ':id'], ['class' => 'delete', 'confirm' => __d('shop','Are you sure you want to delete # {0}?', ':id')]]
+        ]
+    ]]);
+    ?>
 </div>

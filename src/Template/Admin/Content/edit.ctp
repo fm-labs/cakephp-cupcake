@@ -1,14 +1,9 @@
 <?php $this->loadHelper('Backend.Tabs'); ?>
-<div class="contents form container-fluid">
+<div class="contents form">
 
-    <!-- header
-    <h2 class="ui header">
+    <h2>
         <?= $this->fetch('heading', "Edit Content"); ?>
     </h2>
-     -->
 
-
-    <!-- content -->
     <?= $this->fetch('content'); ?>
-    <?php ///debug($content); ?>
 </div>

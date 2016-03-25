@@ -29,6 +29,10 @@ $this->assign('title', sprintf('[%s] %s (#%s)', 'Pages', $content->title, $conte
 </style>
 <div class="pages">
 
+    <?php $this->Tabs->start(); ?>
+
+    <?php $this->Tabs->add(__d('banana', 'Page')); ?>
+
     <div class="panel panel-default">
         <div class="panel-heading"><?= $content->title; ?></div>
         <div class="panel-body">
@@ -44,8 +48,6 @@ $this->assign('title', sprintf('[%s] %s (#%s)', 'Pages', $content->title, $conte
             <small>Published: <?= $this->Ui->statusLabel($content->is_published); ?></small><br />
         </div>
     </div>
-
-    <?php $this->Tabs->start(); ?>
 
     <?php $this->Tabs->add(__d('banana', 'Edit Page'), [
         'url' => ['action' => 'edit', $content->id]
@@ -79,8 +81,6 @@ $this->assign('title', sprintf('[%s] %s (#%s)', 'Pages', $content->title, $conte
             'url' => ['plugin' => 'Shop', 'controller' => 'ShopCategories', 'action' => 'relatedContentModules', $content->redirect_location]
         ]); ?>
     <?php endif; ?>
-
-
 
     <?php echo $this->Tabs->render(); ?>
 
