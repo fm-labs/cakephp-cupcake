@@ -58,7 +58,7 @@ class AppController extends BaseAdminAppController
                     'galleries' => [
                         'title' => 'Galleries',
                         'url' => ['plugin' => 'Banana', 'controller' => 'Galleries', 'action' => 'index'],
-                        'icon' => 'image file outline'
+                        'icon' => 'image'
                     ],
                     'page_layouts' => [
                         'title' => 'Layouts',
@@ -68,22 +68,22 @@ class AppController extends BaseAdminAppController
                     'module_builder' => [
                         'title' => 'Module Builder',
                         'url' => ['plugin' => 'Banana', 'controller' => 'ModuleBuilder', 'action' => 'index'],
-                        'icon' => 'wizard'
+                        'icon' => 'magic'
                     ],
                     'modules' => [
                         'title' => 'Modules',
                         'url' => ['plugin' => 'Banana', 'controller' => 'Modules', 'action' => 'index'],
-                        'icon' => 'block layout'
+                        'icon' => 'puzzle-piece'
                     ],
                     'content_modules' => [
                         'title' => 'Content Modules',
                         'url' => ['plugin' => 'Banana', 'controller' => 'ContentModules', 'action' => 'index'],
-                        'icon' => 'content'
+                        'icon' => 'object-group'
                     ],
                     'themes_manager' => [
                         'title' => 'Theme',
                         'url' => ['plugin' => 'Banana', 'controller' => 'ThemesManager', 'action' => 'index'],
-                        'icon' => 'paint brush'
+                        'icon' => 'paint-brush'
                     ],
                 ]
             ]
