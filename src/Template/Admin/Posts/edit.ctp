@@ -1,6 +1,5 @@
 <?php $this->Html->addCrumb(__d('banana','Posts'), ['action' => 'index']); ?>
 <?php $this->Html->addCrumb(__d('banana','Edit {0}', __d('banana','Post'))); ?>
-<?php $this->extend('/Admin/Content/edit'); ?>
 <?php $this->loadHelper('Backend.Tabs'); ?>
 <?php
 // TOOLBAR
@@ -68,102 +67,63 @@ echo $this->Form->input('template', ['empty' => '- Default -']);
 ?>
 
 
-    <h5 class="ui attached header">Teaser Image</h5>
-    <?php
-    if ($content->teaser_image_file) {
-        echo $this->Html->image($content->teaser_image_file->url, ['width' => 200]) . '<br />';
-        echo h($content->teaser_image_file->basename) . '<br />';
-    }
-
-    /*
-    echo $this->Form->input('teaser_image_file', [
-        'type' => 'imageselect', 'options' => '@default'
-    ]);
-    */
-
-    ?>
-    <?php
-    echo $this->Ui->link(
-        __d('banana','Select Image'),
-        ['action' => 'setImage', $content->id, 'scope' => 'teaser_image_file' ],
-        ['class' => 'iframe-modal', 'icon' => 'folder open outline']
-    );
-    ?>
-    <?php
-    echo $this->Ui->link(
-        __d('banana','Remove Image'),
-        ['action' => 'deleteImage', $content->id, 'scope' => 'teaser_image_file' ],
-        ['icon' => 'remove circle']
-    );
-    ?>
-
-    <h5 class="ui attached header">Primary Image</h5>
-    <div class="ui attached segment form">
-        <?php
-        if ($content->image_file) {
-            echo $this->Html->image($content->image_file->url, ['width' => 200]) . '<br />';
-            echo h($content->image_file->basename) . '<br />';
-        }
-
-        /*
-        echo $this->Form->input('image_file', [
-            'type' => 'imageselect', 'options' => '@default'
-        ]);
-        */
-
-        ?>
-        <?php
-        echo $this->Ui->link(
-            __d('banana','Select Image'),
-            ['action' => 'setImage', $content->id, 'scope' => 'image_file' ],
-            ['class' => 'iframe-modal', 'icon' => 'folder open outline']
-        );
-        ?>
-        <?php
-        echo $this->Ui->link(
-            __d('banana','Remove Image'),
-            ['action' => 'deleteImage', $content->id, 'scope' => 'image_file' ],
-            ['icon' => 'remove circle']
-        );
-        ?>
+    <?= $this->element('Backend.Media/image_file', [
+        'label' => 'Teaser Image',
+        'image' => $content->teaser_image_file,
+        'imageOptions' => ['width' => 200],
+        'actions' => [
+            [
+                __d('banana','Select Image'),
+                ['action' => 'setImage', $content->id, 'scope' => 'teaser_image_file' ],
+                ['class' => 'iframe-modal', 'icon' => 'folder']
+            ],
+            [
+                __d('banana','Remove Image'),
+                ['action' => 'deleteImage', $content->id, 'scope' => 'teaser_image_file' ],
+                ['icon' => 'remove']
+            ]
+        ]
+    ]); ?>
 
 
-    </div>
 
-    <h5 class="ui attached header">Additional Images</h5>
-    <div class="ui attached segment form">
-        <?php
-        if ($content->image_files) {
-            foreach ($content->image_files as $imageFile) {
-                echo $this->Html->image($imageFile->url, ['width' => 200]) . '<br />';
-                echo h($imageFile->basename) . '<br />';
-            }
-        }
-
-        /*
-        echo $this->Form->input('image_files', [
-            'type' => 'imageselect', 'options' => '@default'
-        ]);
-        */
-
-        ?>
-        <?php
-        echo $this->Ui->link(
-            __d('banana','Select Images'),
-            ['action' => 'setImage', $content->id, 'scope' => 'image_files', 'multiple' => true ],
-            ['class' => 'iframe-modal', 'icon' => 'folder open outline']
-        );
-        ?>
-        <?php
-        echo $this->Ui->link(
-            __d('banana','Remove Images'),
-            ['action' => 'deleteImage', $content->id, 'scope' => 'image_files' ],
-            ['icon' => 'remove circle']
-        );
-        ?>
+    <?= $this->element('Backend.Media/image_file', [
+        'label' => 'Primary Image',
+        'image' => $content->image_file,
+        'imageOptions' => ['width' => 200],
+        'actions' => [
+            [
+                __d('banana','Select Image'),
+                ['action' => 'setImage', $content->id, 'scope' => 'image_file' ],
+                ['class' => 'iframe-modal', 'icon' => 'folder']
+            ],
+            [
+                __d('banana','Remove Image'),
+                ['action' => 'deleteImage', $content->id, 'scope' => 'image_file' ],
+                ['icon' => 'remove']
+            ]
+        ]
+    ]); ?>
 
 
-    </div>
+
+    <?= $this->element('Backend.Media/image_files', [
+        'label' => 'Additional Images',
+        'images' => $content->image_files,
+        'imageOptions' => ['width' => 200],
+        'actions' => [
+            [
+                __d('banana','Select Image'),
+                ['action' => 'setImage', $content->id, 'scope' => 'image_files', 'multiple' => true ],
+                ['class' => 'iframe-modal', 'icon' => 'folder']
+            ],
+            [
+                __d('banana','Remove Image'),
+                ['action' => 'deleteImage', $content->id, 'scope' => 'image_files' ],
+                ['icon' => 'remove']
+            ]
+        ]
+    ]); ?>
 
 
     <h5 class="ui attached header">Advanced</h5>
