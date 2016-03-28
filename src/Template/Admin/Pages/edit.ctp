@@ -58,21 +58,22 @@ $this->assign('title', sprintf('[%s] %s (#%s)', 'Pages', $content->title, $conte
         ?>
     </div>
 
+    <?= $this->Form->fieldsetStart(['legend' => __('Navigation'), 'collapsed' => true]); ?>
+    <?= $this->Form->input('hide_in_nav'); ?>
+    <?= $this->Form->input('hide_in_sitemap'); ?>
+    <?= $this->Form->fieldsetEnd(); ?>
 
-    <fieldset class="collapsed">
-        <legend>Navigation</legend>
-        <div>
-            <?= $this->Form->input('hide_in_nav'); ?>
-            <?= $this->Form->input('hide_in_sitemap'); ?>
-        </div>
-    </fieldset>
 
+    <?= $this->Form->fieldsetStart(['legend' => __('Publish'), 'collapsed' => true]); ?>
     <?php
     echo $this->Form->input('is_published');
     echo $this->Form->input('publish_start_date', ['type' => 'datepicker']);
     echo $this->Form->input('publish_end_date', ['type' => 'datepicker']);
     ?>
+    <?= $this->Form->fieldsetEnd(); ?>
 
+
+    <?= $this->Form->fieldsetStart(['legend' => __('Advanced'), 'collapsed' => true]); ?>
     <?php
     echo $this->Form->input('parent_id',
         ['options' => $pagesTree, 'empty' => '- Root Node -']);
@@ -93,6 +94,7 @@ $this->assign('title', sprintf('[%s] %s (#%s)', 'Pages', $content->title, $conte
     ?>
     <?= $this->Form->input('cssid'); ?>
     <?= $this->Form->input('cssclass'); ?>
+    <?= $this->Form->fieldsetEnd(); ?>
 
 
     <?= $this->Form->button(__d('banana','Save Changes')) ?>

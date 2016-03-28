@@ -19,7 +19,8 @@ class ContentModulesController extends AppController
     public function index()
     {
         $this->paginate = [
-            'contain' => ['Modules']
+            'contain' => ['Modules'],
+            'limit' => 100,
         ];
         $this->set('contentModules', $this->paginate($this->ContentModules));
         $this->set('_serialize', ['contentModules']);
