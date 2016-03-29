@@ -21,12 +21,12 @@
     <div class="users ui basic segment">
         <div class="ui form">
         <?php
-                echo $this->Form->input('model');
-                echo $this->Form->input('foreignKey');
+                echo $this->Form->hidden('model');
+                echo $this->Form->hidden('foreignKey');
                 echo $this->Form->input('title');
                 echo $this->Form->input('description');
                 echo $this->Form->input('keywords');
-                echo $this->Form->input('robots');
+                echo $this->Form->input('robots', ['options' => $robots, 'empty' => __('-- Select --')]);
                 echo $this->Form->input('lang');
         ?>
         </div>

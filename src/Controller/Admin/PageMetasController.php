@@ -55,6 +55,7 @@ class PageMetasController extends AppController
                 $this->Flash->error(__('The {0} could not be saved. Please, try again.', __('page meta')));
             }
         }
+        $this->set('robots', $this->_getRobotsOptions());
         $this->set(compact('pageMeta'));
         $this->set('_serialize', ['pageMeta']);
     }
@@ -80,6 +81,7 @@ class PageMetasController extends AppController
                 $this->Flash->error(__('The {0} could not be saved. Please, try again.', __('page meta')));
             }
         }
+        $this->set('robots', $this->_getRobotsOptions());
         $this->set(compact('pageMeta'));
         $this->set('_serialize', ['pageMeta']);
     }
@@ -101,5 +103,15 @@ class PageMetasController extends AppController
             $this->Flash->error(__('The {0} could not be deleted. Please, try again.', __('page meta')));
         }
         return $this->redirect(['action' => 'index']);
+    }
+
+    protected function _getRobotsOptions()
+    {
+        return [
+            'index,follow' => 'Index, Follow',
+            'noindex,nofollow' => 'NoIndex, NoFollow',
+            'index,nofollow' => 'Index, No Follow',
+            'noindex,follow' => 'NoIndex, Follow',
+        ];
     }
 }
