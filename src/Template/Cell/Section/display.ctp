@@ -17,7 +17,7 @@ foreach ($page_modules as $contentModule):
 endforeach;
 
 if ($sectionTag) {
-    $sectionHtml = $this->Html->tag($sectionTag, $sectionHtml);
+    $sectionHtml = $this->Html->tag($sectionTag, $sectionHtml, $sectionAttrs);
 }
 
 echo $sectionHtml;

@@ -55,7 +55,8 @@ class PagesMenuModuleCell extends ModuleCell
         $menu = [];
         foreach ($children as $child) {
             $isActive = false;
-            $attr = ['class' => $child->cssclass];
+            $class = $child->cssclass;
+
             if ($child->hide_in_nav === true) {
                 continue;
 
@@ -78,13 +79,13 @@ class PagesMenuModuleCell extends ModuleCell
             }
 
             if ($isActive) {
-                $attr['class'] .= ' active';
+                $class .= ' active';
             }
 
             $item = [
                 'title' => $child->title,
                 'url' => $child->url,
-                'attr' => $attr,
+                'class' => $class,
                 '_children' => []
             ];
             if ($child->children) {

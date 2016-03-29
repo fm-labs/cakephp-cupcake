@@ -51,7 +51,7 @@ class SectionCell extends Cell
 
     }
 
-    public function display($tag = 'section')
+    public function display($tag = 'section', $attrs = [])
     {
         $this->loadModel('Banana.ContentModules');
 
@@ -64,6 +64,7 @@ class SectionCell extends Cell
         $this->set('refid', $this->refid);
         $this->set('section', $this->name);
         $this->set('sectionTag', $tag);
+        $this->set('sectionAttrs', $attrs);
         $this->set('layout_modules', $this->_layoutModules);
         $this->set('page_modules', $this->_pageModules);
     }
