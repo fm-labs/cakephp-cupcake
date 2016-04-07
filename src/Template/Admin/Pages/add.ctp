@@ -6,7 +6,7 @@ $this->extend('/Admin/Content/add');
 $this->assign('heading', __d('banana','Add {0}', __d('banana','Page')));
 ?>
 <div class="pages">
-    <?= $this->Form->create($content); ?>
+    <?= $this->Form->create($content, ['class' => 'no-ajax']); ?>
     <div class="users ui segment">
         <div class="ui form">
             <?php

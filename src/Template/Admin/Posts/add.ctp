@@ -7,7 +7,7 @@ $this->assign('heading', __d('banana','Add {0}', __d('banana','Post')));
 ?>
 <div class="posts">
     <?php var_dump($content->errors()); ?>
-    <?= $this->Form->create($content); ?>
+    <?= $this->Form->create($content, ['class' => 'no-ajax']); ?>
     <div class="users ui top attached segment">
         <div class="ui form">
         <?php

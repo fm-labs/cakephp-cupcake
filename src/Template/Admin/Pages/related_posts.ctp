@@ -36,7 +36,7 @@
     <div class="actions">
         <?= $this->Html->link(
             __('Add {0}', __('Post')),
-            ['controller' => 'Posts', 'action' => 'add', 'page_id' => $content->id],
+            ['controller' => 'Posts', 'action' => 'add', 'refscope' => 'Banana.Pages',  'refid' => $content->id],
             ['class' => 'ui default button']); ?>
     </div>
 
