@@ -78,6 +78,7 @@ $this->assign('heading', __('Pages'));
                             }
 
                             $container.html(data);
+                            Backend.beautify();
                         }
                     });
 
