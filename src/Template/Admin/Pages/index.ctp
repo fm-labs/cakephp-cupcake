@@ -1,4 +1,3 @@
-<?= $this->extend('/Admin/Backend/default'); ?>
 <?php $this->Html->addCrumb(__d('banana','Pages')); ?>
 <?php
 // TOOLBAR
@@ -10,7 +9,7 @@ $this->assign('heading', __('Pages'));
 <?= $this->Html->script('Backend.jstree/jstree.min', ['block' => true]); ?>
 <div class="pages index">
 
-    <h2><?= __('Pages'); ?></h2>
+    <h1><?= __('Pages'); ?></h1>
 
     <div class="row">
         <div class="col-sm-4 col-md-3">
