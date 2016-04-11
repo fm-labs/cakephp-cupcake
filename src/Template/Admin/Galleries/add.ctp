@@ -22,7 +22,7 @@
     <h2 class="ui header">
         <?= __d('banana','Add {0}', __d('banana','Gallery')) ?>
     </h2>
-    <?= $this->Form->create($gallery); ?>
+    <?= $this->Form->create($gallery, ['class' => 'no-ajax']); ?>
     <div class="users ui basic segment">
         <div class="ui form">
         <?php
