@@ -59,6 +59,22 @@ class Module extends Entity
         $this->setParams($params, false);
     }
 
+    public function getAdminPreviewUrl()
+    {
+        $paramsArr = $this->_getParamsArr();
+
+        $url = [
+            'plugin' => 'Banana',
+            'prefix' => 'admin',
+            'controller' => 'Modules',
+            'action' => 'preview',
+            'path' => $this->path,
+            'params' => base64_encode(json_encode($paramsArr))
+        ];
+
+        return $url;
+    }
+
     protected function _setParams($params = null)
     {
         $this->setParams((array) json_decode($params, true));

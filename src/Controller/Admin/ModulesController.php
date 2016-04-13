@@ -14,6 +14,13 @@ class ModulesController extends AppController
 
     public $modelClass = 'Banana.Modules';
 
+    public function initialize()
+    {
+        parent::initialize();
+
+        $this->Auth->allow(['preview']);
+    }
+
     /**
      * Index method
      *
@@ -47,9 +54,26 @@ class ModulesController extends AppController
         $this->set('_serialize', ['module']);
     }
 
-    public function preview($id = null)
+    public function previewModule($id = null)
     {
         $this->redirect(['prefix' => false, 'plugin' => 'Banana', 'controller' => 'Modules', 'action' => 'view', $id]);
+    }
+
+    public function preview()
+    {
+        $path = $this->request->query('path');
+        $params = $this->request->query('params');
+        if ($params) {
+            $params = json_decode(base64_decode($params), true);
+        }
+
+        $this->set('modulePath', $path);
+        $this->set('moduleParams', $params);
+
+        $this->viewBuilder()
+            ->layout('frontend')
+            ->theme('ThemeLederleitner')
+            ->className('Banana.Frontend');
     }
 
     /**

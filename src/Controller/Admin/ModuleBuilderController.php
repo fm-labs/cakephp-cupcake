@@ -173,6 +173,8 @@ class ModuleBuilderController extends AppController
 
         if ($this->request->is('post') || $this->request->is('put')) {
             $module = $this->Modules->patchEntity($module, $this->request->data());
+
+            /*
             if ($module->_save == true && $module = $this->Modules->save($module)) {
                 $this->Flash->success(__d('banana','Module has been saved with ID {0}', $module->id));
 
@@ -202,6 +204,10 @@ class ModuleBuilderController extends AppController
             } elseif ($module->_save == true) {
                 debug($module->errors());
             }
+            */
+
+            $previewUrl = $module->getAdminPreviewUrl();
+            $this->set('previewUrl', $previewUrl);
         }
 
         $this->set('class', $class);
