@@ -1,6 +1,6 @@
 <?php $this->Html->addCrumb(__('Page Metas')); ?>
 
-<?php $this->Toolbar->addLink(__('New {0}', __('Page Meta')), ['action' => 'add'], ['icon' => 'add']); ?>
+<?php $this->Toolbar->addLink(__('New {0}', __('Page Meta')), ['action' => 'add'], ['icon' => 'plus']); ?>
 <div class="pageMetas index">
     <table class="ui compact table striped">
     <thead>

@@ -18,7 +18,7 @@
 <?= $this->Toolbar->addLink(
     __('New {0}', __('Page Meta')),
     ['action' => 'add'],
-    ['icon' => 'add']
+    ['icon' => 'plus']
 ) ?>
 <?= $this->Toolbar->startGroup(__('More')); ?>
 <?= $this->Toolbar->endGroup(); ?>

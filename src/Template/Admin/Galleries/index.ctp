@@ -1,6 +1,6 @@
 <?php $this->Html->addCrumb(__d('banana','Galleries')); ?>
 
-<?php $this->Toolbar->addLink(__d('banana','New {0}', __d('banana','Gallery')), ['action' => 'add'], ['icon' => 'add']); ?>
+<?php $this->Toolbar->addLink(__d('banana','New {0}', __d('banana','Gallery')), ['action' => 'add'], ['icon' => 'plus']); ?>
 <?= $this->Toolbar->addLink(
     __d('banana','List {0}', __d('banana','Posts')),
     ['controller' => 'Posts', 'action' => 'index'],
@@ -9,7 +9,7 @@
 <?= $this->Toolbar->addLink(
     __d('banana','New {0}', __d('banana','Post')),
     ['controller' => 'Posts', 'action' => 'add'],
-    ['icon' => 'add']
+    ['icon' => 'plus']
 ) ?>
 <div class="galleries index">
 

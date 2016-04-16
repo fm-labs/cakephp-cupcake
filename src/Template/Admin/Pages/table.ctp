@@ -2,8 +2,9 @@
 <?php $this->extend('/Admin/Content/index'); ?>
 <?php
 // TOOLBAR
-$this->Toolbar->addLink(__d('banana','New {0}', __d('banana','Page')), ['action' => 'add'], ['icon' => 'add']);
-$this->Toolbar->addLink(__d('banana','Repair'), ['action' => 'repair'], ['icon' => 'configure']);
+$this->Toolbar->addLink(__d('banana','{0} (Tree)', __d('banana','Pages')), ['action' => 'index'], ['icon' => 'sitemap']);
+$this->Toolbar->addLink(__d('banana','New {0}', __d('banana','Page')), ['action' => 'add'], ['icon' => 'file-o']);
+$this->Toolbar->addLink(__d('banana','Repair Tree'), ['action' => 'repair'], ['icon' => 'wrench']);
 
 // HEADING
 $this->assign('heading', __d('banana','Pages'));
@@ -13,9 +14,12 @@ $this->assign('heading', __d('banana','Pages'));
 <div class="pages index">
 
     <!-- Quick Search -->
-    <div class="ui segment">
-        <div class="ui form">
-            <?= $this->Form->create(null, ['id' => 'quickfinder', 'action' => 'quick']); ?>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Quick Search
+        </div>
+        <div class="panel-body">
+            <?= $this->Form->create(null, ['id' => 'quickfinder', 'action' => 'quick', 'class' => 'no-ajax']); ?>
             <?= $this->Form->input('page_id', [
                 'options' => $pagesTree,
                 'label' => false,
@@ -26,72 +30,33 @@ $this->assign('heading', __d('banana','Pages'));
         </div>
     </div>
 
-    <table class="ui sortable compact table" data-sort-url="<?= $this->Url->build(['action' => 'tree_sort']) ?>">
-        <thead>
-        <tr>
-            <th><?= h('id') ?></th>
-            <th><?= h('title') ?></th>
-            <th><?= h('type') ?></th>
-            <th><?= h('is_published') ?></th>
-            <th class="actions"><?= __d('banana','Actions') ?></th>
-        </tr>
-        </thead>
-        <tbody>
-        <?php foreach ($contents as $content): ?>
-            <tr data-id="<?= h($content->id) ?>">
-                <td><?= h($content->id); ?></td>
-                <td><?= $this->Html->link(
-                        $pagesTree[$content->id],
-                        ['action' => 'view', $content->id],
-                        ['title' => $this->Url->build($content->url)]);
-                    ?></td>
-                <td><?= h($content->type); ?></td>
-                <td><?= $this->Ui->statusLabel($content->is_published) ?></td>
-                <td class="actions">
-                    <div class="ui basic mini buttons">
+    <?= $this->cell('Backend.DataTable', [[
+        'paginate' => true,
+        'model' => 'Banana.Pages',
+        'data' => $contents,
+        'fields' => [
+            'id',
+            'title' => [
+                'formatter' => function($val, $row) use ($pagesTree) {
+                    return $this->Html->link($pagesTree[$row->id], ['action' => 'edit', $row->id]);
+                }
+            ],
+            'type',
+            'is_published' => [
+                'formatter' => function($val, $row) {
+                    return $this->Ui->statusLabel($val);
+                }
+            ]
+        ],
+        'rowActions' => [
+            [__d('shop','Edit'), ['action' => 'edit', ':id'], ['class' => 'edit']],
+            [__d('shop','Preview'), ['action' => 'preview', ':id'], ['class' => 'edit']],
+            [__d('shop','Copy'), ['action' => 'copy', ':id'], ['class' => 'copy']],
+            [__d('shop','Move Up'), ['action' => 'moveUp', ':id'], ['class' => 'move-up']],
+            [__d('shop','Move Down'), ['action' => 'moveDown', ':id'], ['class' => 'move-down']],
+            [__d('shop','Delete'), ['action' => 'delete', ':id'], ['class' => 'delete', 'confirm' => __d('shop','Are you sure you want to delete # {0}?', ':id')]]
+        ]
+    ]]);
+    ?>
 
-                        <div class="ui button">
-                            <?= $this->Html->link(__d('banana','View'), ['action' => 'view', $content->id]) ?>
-                        </div>
-                        <div class="ui floating dropdown icon button">
-                            <i class="dropdown icon"></i>
-                            <div class="menu">
-                                <?= $this->Ui->link(
-                                    __d('banana','Edit'),
-                                    ['action' => 'preview', $content->id],
-                                    ['class' => 'item', 'icon' => 'edit']
-                                ) ?>
-                                <?= $this->Ui->link(
-                                    __d('banana','Preview'),
-                                    ['action' => 'preview', $content->id],
-                                    ['class' => 'item', 'icon' => 'eye', 'target' => 'preview']
-                                ) ?>
-                                <?= $this->Ui->link(
-                                    __d('banana','Copy'),
-                                    ['action' => 'duplicate', $content->id],
-                                    ['class' => 'item', 'icon' => 'edit']
-                                ) ?>
-                                <?= $this->Ui->link(
-                                    __d('banana','Move Up'),
-                                    ['action' => 'moveUp', $content->id],
-                                    ['class' => 'item', 'icon' => 'arrow up']
-                                ) ?>
-                                <?= $this->Ui->link(
-                                    __d('banana','Move Down'),
-                                    ['action' => 'moveDown', $content->id],
-                                    ['class' => 'item', 'icon' => 'arrow down']
-                                ) ?>
-                                <?= $this->Ui->deleteLink(
-                                    __d('banana','Delete'),
-                                    ['action' => 'delete', $content->id],
-                                    ['class' => 'item', 'icon' => 'trash', 'confirm' => __d('banana','Are you sure you want to delete # {0}?', $content->id)]
-                                ) ?>
-                            </div>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-        <?php endforeach; ?>
-        </tbody>
-    </table>
 </div>

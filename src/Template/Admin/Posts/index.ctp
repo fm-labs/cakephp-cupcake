@@ -2,7 +2,7 @@
 <?php $this->extend('/Admin/Content/index'); ?>
 <?php
 // EXTEND: TOOLBAR
-$this->Toolbar->addLink(__d('banana','New {0}', __d('banana','Post')), ['action' => 'add'], ['icon' => 'add']);
+$this->Toolbar->addLink(__d('banana','New {0}', __d('banana','Post')), ['action' => 'add'], ['icon' => 'plus']);
 
 // EXTEND: HEADING
 $this->assign('heading', __d('banana','Posts'));

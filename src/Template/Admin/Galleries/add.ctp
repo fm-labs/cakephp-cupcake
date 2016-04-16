@@ -15,7 +15,7 @@
 <?= $this->Toolbar->addLink(
     __d('banana','New {0}', __d('banana','Post')),
     ['controller' => 'Posts', 'action' => 'add'],
-    ['icon' => 'add']
+    ['icon' => 'plus']
 ) ?>
 <?php $this->Toolbar->endGroup(); ?>
 <div class="form">

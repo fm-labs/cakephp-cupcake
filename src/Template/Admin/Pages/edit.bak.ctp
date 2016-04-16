@@ -8,9 +8,9 @@ $this->Toolbar->addLink(
     ['icon' => 'trash', 'confirm' => __d('banana','Are you sure you want to delete # {0}?', $content->id)]
 );
 $this->Toolbar->addLink(__d('banana','List {0}', __d('banana','Pages')), ['action' => 'index'], ['icon' => 'list']);
-$this->Toolbar->addLink(__d('banana','Add {0}', __d('banana','Content Module')), ['action' => 'add_module'], ['icon' => 'add']);
+$this->Toolbar->addLink(__d('banana','Add {0}', __d('banana','Content Module')), ['action' => 'add_module'], ['icon' => 'plus']);
 $this->Toolbar->addLink(__d('banana','Preview'), ['action' => 'preview', $content->id], ['icon' => 'eye', 'target' => '_preview']);
-$this->Toolbar->addLink(__d('banana','New {0}', __d('banana','Page')), ['action' => 'add'], ['icon' => 'add']);
+$this->Toolbar->addLink(__d('banana','New {0}', __d('banana','Page')), ['action' => 'add'], ['icon' => 'plus']);
 
 
 // HEADING
@@ -164,7 +164,7 @@ $this->assign('heading', __d('banana','Edit Page: {0}', $content->title));
                 <div class="actions">
                     <?= $this->Ui->link('Add Post',
                         ['controller' => 'Posts', 'action' => 'add', 'refid' => $content->id, 'refscope' => 'Banana.Pages'],
-                        ['class' => 'ui button', 'icon' => 'add']
+                        ['class' => 'ui button', 'icon' => 'plus']
                     ); ?>
                 </div>
 
@@ -180,7 +180,7 @@ $this->assign('heading', __d('banana','Edit Page: {0}', $content->title));
                     'action' => 'build2',
                     'refscope' => 'Banana.Pages',
                     'refid' => $content->id
-                ], ['class' => 'ui button', 'icon' => 'add']); ?>
+                ], ['class' => 'ui button', 'icon' => 'plus']); ?>
 
             </div>
 

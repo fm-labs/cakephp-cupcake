@@ -8,7 +8,7 @@
         'action' => 'build2',
         'refscope' => 'Banana.Pages',
         'refid' => $content->id
-    ], ['class' => 'btn btn-default', 'icon' => 'add']); ?>
+    ], ['class' => 'btn btn-default', 'icon' => 'plus']); ?>
     -->
 
     <hr />

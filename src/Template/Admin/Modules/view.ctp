@@ -18,12 +18,12 @@
 <?= $this->Toolbar->addLink(
     __d('banana','New {0}', __d('banana','Module')),
     ['action' => 'add'],
-    ['icon' => 'add']
+    ['icon' => 'plus']
 ) ?>
 <?= $this->Toolbar->addLink(
     __d('banana','Preview {0}', __d('banana','Module')),
     ['action' => 'preview', $module->id],
-    ['icon' => 'add', 'target' => 'preview']
+    ['icon' => 'plus', 'target' => 'preview']
 ) ?>
 
 <div class="modules view">

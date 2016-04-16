@@ -21,7 +21,7 @@
 <?= $this->Toolbar->addLink(
     __d('banana','New {0}', __d('banana','Post')),
     ['controller' => 'Posts', 'action' => 'add'],
-    ['icon' => 'add']
+    ['icon' => 'plus']
 ) ?>
 <?php $this->Toolbar->endGroup(); ?>
 <div class="form">
@@ -94,7 +94,7 @@
 
     <?= $this->Ui->link(__d('banana','Add Gallery Item'),
         ['action' => 'addItem', $gallery->id],
-        ['class' => 'ui tiny button', 'icon' => 'add']
+        ['class' => 'ui tiny button', 'icon' => 'plus']
     ) ?>
 </div>
 

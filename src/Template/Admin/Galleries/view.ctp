@@ -18,7 +18,7 @@
 <?= $this->Toolbar->addLink(
     __d('banana','New {0}', __d('banana','Gallery')),
     ['action' => 'add'],
-    ['icon' => 'add']
+    ['icon' => 'plus']
 ) ?>
 <?= $this->Toolbar->startGroup(__d('banana','More')); ?>
 <?= $this->Toolbar->addLink(
@@ -29,7 +29,7 @@
 <?= $this->Toolbar->addLink(
     __d('banana','New {0}', __d('banana','Post')),
     ['controller' => 'Posts', 'action' => 'add'],
-    ['icon' => 'add']
+    ['icon' => 'plus']
 ) ?>
 <?= $this->Toolbar->endGroup(); ?>
 <div class="galleries view">

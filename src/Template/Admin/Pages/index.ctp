@@ -1,8 +1,9 @@
 <?php $this->Html->addCrumb(__d('banana','Pages')); ?>
 <?php
 // TOOLBAR
-$this->Toolbar->addLink(__d('banana','New {0}', __d('banana','Page')), ['action' => 'add'], ['icon' => 'add']);
-$this->Toolbar->addLink(__d('banana','Repair'), ['action' => 'repair'], ['icon' => 'configure']);
+$this->Toolbar->addLink(__d('banana','{0} (Table)', __d('banana','Pages')), ['action' => 'table'], ['icon' => 'list']);
+$this->Toolbar->addLink(__d('banana','New {0}', __d('banana','Page')), ['action' => 'add'], ['icon' => 'plus']);
+$this->Toolbar->addLink(__d('banana','Repair'), ['action' => 'repair'], ['icon' => 'wrench']);
 
 $this->assign('heading', __('Pages'));
 ?>
@@ -13,8 +14,6 @@ $this->assign('heading', __('Pages'));
 
     <div class="row">
         <div class="col-sm-4 col-md-3">
-
-
             <?= $this->Html->div('flowui-tree', 'Loading Pages ...', [
                 'id' => 'pages-tree',
                 'data-tree-url' => $this->Html->Url->build(['action' => 'treeData']),
@@ -67,13 +66,16 @@ $this->assign('heading', __('Pages'));
                         dataType: 'html',
                         data: {'selected': r },
                         beforeSend: function() {
-                          $container.html('<div class="ui active small inline loader"></div>');
+                            Backend.Loader.show();
+                        },
+                        complete: function() {
+                            Backend.Loader.hide();
                         },
                         success: function(data) {
 
                             // no files in folder
                             if (data.length === 0) {
-                                $container.html('<div class="ui info message"><i class="info icon"></i>Nothing found</div>');
+                                $container.html('<div class="alert alert-info">No Pages found</div>');
                                 return;
                             }
 

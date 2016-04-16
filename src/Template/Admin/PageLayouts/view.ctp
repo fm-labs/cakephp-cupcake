@@ -18,7 +18,7 @@
 <?= $this->Toolbar->addLink(
     __d('banana','New {0}', __d('banana','Page Layout')),
     ['action' => 'add'],
-    ['icon' => 'add']
+    ['icon' => 'plus']
 ) ?>
 <?= $this->Toolbar->startGroup(__d('banana','More')); ?>
 <?= $this->Toolbar->endGroup(); ?>

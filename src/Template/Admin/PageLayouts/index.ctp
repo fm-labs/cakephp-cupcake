@@ -1,6 +1,6 @@
 <?php $this->Html->addCrumb(__d('banana','Page Layouts')); ?>
 
-<?php $this->Toolbar->addLink(__d('banana','New {0}', __d('banana','Page Layout')), ['action' => 'add'], ['icon' => 'add']); ?>
+<?php $this->Toolbar->addLink(__d('banana','New {0}', __d('banana','Page Layout')), ['action' => 'add'], ['icon' => 'plus']); ?>
 <div class="pageLayouts index">
 
 

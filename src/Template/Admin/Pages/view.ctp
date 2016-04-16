@@ -11,7 +11,7 @@ $this->Toolbar->addLink(
 $this->Toolbar->addLink(__d('banana','Edit {0}', __d('banana','Page')), ['action' => 'edit', $content->id], ['icon' => 'edit']);
 $this->Toolbar->addLink(__d('banana','Preview'), ['action' => 'preview', $content->id], ['icon' => 'eye', 'target' => '_preview']);
 $this->Toolbar->addLink(__d('banana','List {0}', __d('banana','Pages')), ['action' => 'index'], ['icon' => 'list']);
-$this->Toolbar->addLink(__d('banana','New {0}', __d('banana','Page')), ['action' => 'add'], ['icon' => 'add']);
+$this->Toolbar->addLink(__d('banana','New {0}', __d('banana','Page')), ['action' => 'add'], ['icon' => 'plus']);
 
 
 // HEADING
@@ -113,7 +113,7 @@ $this->assign('title', sprintf('[%s] %s (#%s)', 'Pages', $content->title, $conte
     <div class="actions">
         <?= $this->Ui->link('Add Post',
             ['controller' => 'Posts', 'action' => 'add', 'refid' => $content->id, 'refscope' => 'Banana.Pages'],
-            ['class' => 'ui button', 'icon' => 'add']
+            ['class' => 'ui button', 'icon' => 'plus']
         ); ?>
     </div>
 
@@ -128,7 +128,7 @@ $this->assign('title', sprintf('[%s] %s (#%s)', 'Pages', $content->title, $conte
             'action' => 'build2',
             'refscope' => 'Banana.Pages',
             'refid' => $content->id
-        ], ['class' => 'ui button', 'icon' => 'add']); ?>
+        ], ['class' => 'ui button', 'icon' => 'plus']); ?>
 
 
     <?php $this->Tabs->add('Link existing module'); ?>
