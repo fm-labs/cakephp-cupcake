@@ -29,92 +29,75 @@ $this->assign('title', sprintf('[%s] %s (#%s)', 'Pages', $content->title, $conte
 </style>
 <div class="pages">
 
-    <div class="ui fluid card">
-        <div class="content">
+    <?php $this->Tabs->start(); ?>
+    <?php $this->Tabs->add(__d('banana','Page')); ?>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
             <?= $this->Html->link($content->title, ['action' => 'edit', $content->id], ['class' => 'header']); ?>
-            <small>Slug: <?= h($content->slug); ?></small><br />
-            <small>Meta Title: <?= h($content->meta_title); ?></small><br />
-            <small>Meta Desc: <?= h($content->meta_desc); ?></small>
         </div>
-        <div class="extra">
-            <?= $this->Ui->link(
+        <div class="panel-body"><?= $this->Ui->link(
                 $this->Html->Url->build($content->url, true),
                 $content->url,
                 ['target' => '_blank', 'icon' => 'external']
             ); ?>
-        </div>
-        <div class="content">
+            <br />
+            Meta Title: <?= h($content->meta_title); ?><br />
+            Meta Desc: <?= h($content->meta_desc); ?><br />
             Type: <?= h($content->type); ?><br />
             Published: <?= $this->Ui->statusLabel($content->is_published); ?><br />
         </div>
     </div>
 
-    <?php $this->Tabs->start(); ?>
+    <?= $this->cell('Backend.EntityView', [ $content ], [
+        'title' => false,
+        'model' => 'Banana.Pages',
+        'fields' => [
+            'title' => [
+                'formatter' => function($val, $entity) {
+                    return $this->Html->link($val, ['action' => 'edit', $entity->id], ['class' => 'link-frame']);
+                }
+            ],
+            'parent_id' => [
+                'title' => __('Parent Page'),
+                'formatter' => function($val, $entity) {
+                    if (!$entity->parent_id) {
+                        return __('Root Page');
+                    }
+
+                    $title = ($entity->parent_page) ? $entity->parent_page->title : $entity->parent_id;
+                    return $this->Html->link($title, ['action' => 'view', $entity->id], ['class' => 'link-frame']);
+                }
+            ],
+            'is_published' => ['formatter' => 'boolean'],
+            'url' => ['formatter' => 'link']
+        ],
+        'exclude' => ['id', 'level', 'lft', 'rght', 'meta', 'meta_lang', 'meta_title', 'meta_desc', 'meta_keywords', 'meta_robots', 'parent_page']
+    ]); ?>
+
     <?php $this->Tabs->add(__d('banana','Related Posts')); ?>
 
     <h3>Related Posts</h3>
 
     <div class="related-posts">
-        <?php foreach($content->posts as $post): ?>
-
-        <!-- -->
-        <div class="ui fluid card">
-            <div class="content">
-
-                <?= $this->Html->link($post->title,
-                    ['controller' => 'Posts', 'action' => 'edit', $post->id],
-                    ['class' => 'left floated header']
-                ); ?>
-
-                <span class="right floated edit">
-                    <i class="edit icon"></i>
-                    <?= $this->Html->link(__('Edit'), ['controller' => 'Posts', 'action' => 'edit', $post->id]); ?>
-                </span>
-
-            </div>
-
-            <div class="extra">
-                <span class="ui left floated">
-                    <?= $this->Ui->statusLabel($post->is_published, ['label' => [__('Unpublished'), __('Published')]]); ?>
-                </span>
-                <!--
-                <?php if ($post->is_published): ?>
-                    <span class="right floated">
-                        <i class="hide icon"></i>
-                        <?= $this->Html->link(__('Unpublish'), ['controller' => 'Posts', 'action' => 'publish', $post->id]); ?>
-                    </span>
-                <?php else: ?>
-                    <span class="right floated">
-                        <i class="green unhide icon"></i>
-                        <?= $this->Html->link(__('Publish'), ['controller' => 'Posts', 'action' => 'unpublish', $post->id]); ?>
-                    </span>
-                <?php endif; ?>
-                -->
-            </div>
-
-            <div class="content">
-                <h5 class="">Teaser</h5>
-                <div class="description">
-                    <?= strip_tags($post->teaser_html); ?>
-                </div>
-            </div>
-
-            <div class="content">
-                <h5 class="">Content</h5>
-                <div class="description">
-                    <?= strip_tags($post->body_html); ?>
-                </div>
-            </div>
-        </div>
-        <?php endforeach; ?>
-    </div>
-
-    <div class="ui divider"></div>
-    <div class="actions">
-        <?= $this->Ui->link('Add Post',
-            ['controller' => 'Posts', 'action' => 'add', 'refid' => $content->id, 'refscope' => 'Banana.Pages'],
-            ['class' => 'ui button', 'icon' => 'plus']
-        ); ?>
+        <?= $this->cell('Backend.DataTable', [[
+            'paginate' => false,
+            'model' => 'Banana.Posts',
+            'data' => $content->posts,
+            'fields' => [
+                'id',
+                'created',
+                'title' => [
+                    'formatter' => function($val, $row) {
+                        return $this->Html->link($val, ['action' => 'edit', $row->id], ['class' => 'link-frame']);
+                    }
+                ]
+            ],
+            'rowActions' => [
+                [__d('shop','Edit'), ['action' => 'edit', ':id'], ['class' => 'edit']],
+            ]
+        ]]);
+        ?>
     </div>
 
 
@@ -130,8 +113,8 @@ $this->assign('title', sprintf('[%s] %s (#%s)', 'Pages', $content->title, $conte
             'refid' => $content->id
         ], ['class' => 'ui button', 'icon' => 'plus']); ?>
 
-
-    <?php $this->Tabs->add('Link existing module'); ?>
+    <?php // $this->Tabs->add('Link existing module'); ?>
+    <!--
         <h3>Link existing module</h3>
         <div class="ui form">
             <?= $this->Form->create(null, ['url' => ['action' => 'linkModule', $content->id]]); ?>
@@ -142,6 +125,7 @@ $this->assign('title', sprintf('[%s] %s (#%s)', 'Pages', $content->title, $conte
             <?= $this->Form->submit('Link module'); ?>
             <?= $this->Form->end(); ?>
         </div>
+    -->
 
     <?php echo $this->Tabs->render(); ?>
 

@@ -34,7 +34,16 @@ $this->assign('title', sprintf('[%s] %s (#%s)', 'Pages', $content->title, $conte
     <?php $this->Tabs->add(__d('banana', 'Page')); ?>
 
     <div class="panel panel-default">
-        <div class="panel-heading"><?= $content->title; ?></div>
+        <div class="panel-heading">
+            <?= $content->title; ?>
+            <!--
+            <div class="actions">
+                <?= $this->Html->link(__('Edit'),
+                    ['action' => 'edit', $content->id ],
+                    [ 'class' => 'edit link-frame', 'data-icon' => 'edit']); ?>
+            </div>
+            -->
+        </div>
         <div class="panel-body">
             <?= $this->Ui->link(
                 $this->Html->Url->build($content->url, true),
@@ -49,21 +58,52 @@ $this->assign('title', sprintf('[%s] %s (#%s)', 'Pages', $content->title, $conte
         </div>
     </div>
 
-    <?php $this->Tabs->add(__d('banana', 'Edit Page'), [
+    <?= $this->cell('Backend.EntityView', [ $content ], [
+        'title' => false,
+        'model' => 'Banana.Pages',
+        'fields' => [
+            'title' => [
+                'formatter' => function($val, $entity) {
+                    return $this->Html->link($val, ['action' => 'edit', $entity->id], ['class' => 'link-frame']);
+                }
+            ],
+            'parent_id' => [
+                'title' => __('Parent Page'),
+                'formatter' => function($val, $entity) {
+                    if (!$entity->parent_id) {
+                        return __('Root Page');
+                    }
+
+                    $title = ($entity->parent_page) ? $entity->parent_page->title : $entity->parent_id;
+                    return $this->Html->link($title, ['action' => 'view', $entity->id], ['class' => 'link-frame']);
+                }
+            ],
+            'is_published' => ['formatter' => 'boolean'],
+            'url' => ['formatter' => 'link']
+        ],
+        'exclude' => ['id', 'level', 'lft', 'rght', 'meta', 'meta_lang', 'meta_title', 'meta_desc', 'meta_keywords', 'meta_robots', 'parent_page']
+    ]); ?>
+
+
+    <?php $this->Tabs->add(__d('banana', 'Edit'), [
         'url' => ['action' => 'edit', $content->id]
     ]); ?>
 
 
     <?php if (in_array($content->type, ['content', 'static'])): ?>
-        <?php $this->Tabs->add(__d('banana', 'Related Posts'), [
+        <?php $this->Tabs->add(__d('banana', 'Posts'), [
             'url' => ['action' => 'relatedPosts', $content->id]
         ]); ?>
 
-        <?php $this->Tabs->add(__d('banana', 'Related Meta'), [
+        <?php $this->Tabs->add(__d('banana', 'Meta'), [
             'url' => ['action' => 'relatedPageMeta', $content->id]
         ]); ?>
 
-        <?php $this->Tabs->add(__d('banana', 'Related Content Modules'), [
+        <?php $this->Tabs->add(__d('banana', 'Sitemap'), [
+            'url' => ['action' => 'relatedPageMeta', $content->id]
+        ]); ?>
+
+        <?php $this->Tabs->add(__d('banana', 'Content Modules'), [
             'url' => ['action' => 'relatedContentModules', $content->id]
         ]); ?>
     <?php endif; ?>

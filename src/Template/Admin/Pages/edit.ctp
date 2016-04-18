@@ -1,6 +1,6 @@
 <?php
 //$this->loadHelper('Backend.Tabs');
-//$this->extend('/Admin/Content/edit');
+$this->extend('/Admin/Content/edit');
 
 // EXTEND: TOOLBAR
 $this->Toolbar->addLink(

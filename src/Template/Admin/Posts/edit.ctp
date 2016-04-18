@@ -10,6 +10,11 @@ $this->Toolbar->addPostLink([
     'attr' => ['icon' => 'trash', 'confirm' => __d('banana','Are you sure you want to delete # {0}?', $content->id)],
 ]);
 $this->Toolbar->addLink([
+    'title' => __d('banana','View'),
+    'url' => ['action' => 'view', $content->id],
+    'attr' => ['icon' => 'eye']
+]);
+$this->Toolbar->addLink([
     'title' => __d('banana','List {0}', __d('banana','Posts')),
     'url' => ['action' => 'index'],
     'attr' => ['icon' => 'list']
@@ -24,7 +29,7 @@ $editor['body_class'] = $content->cssclass;
 $editor['body_id'] = $content->cssid;
 ?>
 <?= $this->Form->create($content); ?>
-
+<h1><?= sprintf('%s [%s #%s]', $content->title, 'Post', $content->id); ?></h1>
 <div class="row">
     <div class="col-md-9">
 

@@ -141,4 +141,14 @@ class PostsController extends ContentController
         $this->set('_serialize', ['content']);
     }
 
+    public function view($id = null)
+    {
+        $post = $this->Posts->get($id, [
+            'contain' => ['ContentModules' => ['Modules']],
+            'media' => true
+        ]);
+
+        $this->set('post', $post);
+        $this->set('_serialize', $post);
+    }
 }

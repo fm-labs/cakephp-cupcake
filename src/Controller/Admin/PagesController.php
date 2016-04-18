@@ -106,7 +106,7 @@ class PagesController extends ContentController
     public function manage($id = null)
     {
         $content = $this->Pages->get($id, [
-            'contain' => []
+            'contain' => ['ParentPages']
         ]);
 
         $this->set('content', $content);
