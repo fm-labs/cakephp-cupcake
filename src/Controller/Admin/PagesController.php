@@ -72,8 +72,6 @@ class PagesController extends ContentController
         $this->viewBuilder()->className('Json');
 
         $id = $this->request->query('id');
-        //debug($id);
-
         if ($id == '#') {
             $pages = $this->Pages->find()->where(['parent_id IS NULL'])->all()->toArray();
         } else {

@@ -1,8 +1,7 @@
 <?php
-$this->loadHelper('Backend.Tabs');
-//$this->extend('/Admin/Content/edit');
+$this->Html->addCrumb(__('Pages'), ['action' => 'index']);
+$this->Html->addCrumb(__d('banana','Edit {0}', $content->title));
 
-// EXTEND: TOOLBAR
 $this->Toolbar->addLink(
     __d('banana','Delete'),
     ['action' => 'delete', $content->id],
@@ -15,39 +14,11 @@ $this->Toolbar->addLink(__d('banana','New {0}', __d('banana','Page')), ['action'
 
 
 // HEADING
-$this->assign('title', sprintf('[%s] %s (#%s)', 'Pages', $content->title, $content->id));
+$this->assign('title', $content->title);
 
 // CONTENT
 ?>
-<style>
-    /*
-    .related-posts .card {
-        max-height: 300px;
-        overflow-y: scroll;
-    }
-    */
-</style>
-<div class="pages">
-
-    <?php $this->Tabs->start(); ?>
-    <?php $this->Tabs->add(__d('banana','Page')); ?>
-
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <?= $this->Html->link($content->title, ['action' => 'edit', $content->id], ['class' => 'header']); ?>
-        </div>
-        <div class="panel-body"><?= $this->Ui->link(
-                $this->Html->Url->build($content->url, true),
-                $content->url,
-                ['target' => '_blank', 'icon' => 'external']
-            ); ?>
-            <br />
-            Meta Title: <?= h($content->meta_title); ?><br />
-            Meta Desc: <?= h($content->meta_desc); ?><br />
-            Type: <?= h($content->type); ?><br />
-            Published: <?= $this->Ui->statusLabel($content->is_published); ?><br />
-        </div>
-    </div>
+<div class="pages view">
 
     <?= $this->cell('Backend.EntityView', [ $content ], [
         'title' => false,
@@ -74,59 +45,4 @@ $this->assign('title', sprintf('[%s] %s (#%s)', 'Pages', $content->title, $conte
         ],
         'exclude' => ['id', 'level', 'lft', 'rght', 'meta', 'meta_lang', 'meta_title', 'meta_desc', 'meta_keywords', 'meta_robots', 'parent_page']
     ]); ?>
-
-    <?php $this->Tabs->add(__d('banana','Related Posts')); ?>
-
-    <h3>Related Posts</h3>
-
-    <div class="related-posts">
-        <?= $this->cell('Backend.DataTable', [[
-            'paginate' => false,
-            'model' => 'Banana.Posts',
-            'data' => $content->posts,
-            'fields' => [
-                'id',
-                'created',
-                'title' => [
-                    'formatter' => function($val, $row) {
-                        return $this->Html->link($val, ['action' => 'edit', $row->id], ['class' => 'link-frame']);
-                    }
-                ]
-            ],
-            'rowActions' => [
-                [__d('shop','Edit'), ['action' => 'edit', ':id'], ['class' => 'edit']],
-            ]
-        ]]);
-        ?>
-    </div>
-
-
-    <!-- RELATED CONTENT MODULES -->
-    <?php $this->Tabs->add('Related Content Modules'); ?>
-        <h3>Related content modules</h3>
-        <?= $this->element('Banana.Admin/Content/related_content_modules', compact('content', 'sections')); ?>
-        <br />
-        <?= $this->Ui->link('Build a new module for this page', [
-            'controller' => 'ModuleBuilder',
-            'action' => 'build2',
-            'refscope' => 'Banana.Pages',
-            'refid' => $content->id
-        ], ['class' => 'ui button', 'icon' => 'plus']); ?>
-
-    <?php // $this->Tabs->add('Link existing module'); ?>
-    <!--
-        <h3>Link existing module</h3>
-        <div class="ui form">
-            <?= $this->Form->create(null, ['url' => ['action' => 'linkModule', $content->id]]); ?>
-            <?= $this->Form->input('refscope', ['default' => 'Banana.Pages']); ?>
-            <?= $this->Form->input('refid', ['default' => $content->id]); ?>
-            <?= $this->Form->input('module_id', ['options' => $availableModules]); ?>
-            <?= $this->Form->input('section'); ?>
-            <?= $this->Form->submit('Link module'); ?>
-            <?= $this->Form->end(); ?>
-        </div>
-    -->
-
-    <?php echo $this->Tabs->render(); ?>
-
 </div>
