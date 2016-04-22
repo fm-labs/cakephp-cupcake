@@ -20,13 +20,13 @@
             ],
             'title' => [
                 'formatter' => function($val, $row) {
-                    return $this->Html->link($val, ['action' => 'edit', $row->id]);
+                    return $this->Html->link($val, ['controller' => 'Posts', 'action' => 'edit', $row->id], ['class' => 'link-frame']);
                 }
             ]
         ],
         'rowActions' => [
-            [__d('shop','Edit'), ['action' => 'edit', ':id'], ['class' => 'edit']],
-            [__d('shop','Delete'), ['action' => 'delete', ':id'], ['class' => 'delete', 'confirm' => __d('shop','Are you sure you want to delete # {0}?', ':id')]]
+            [__d('shop','Edit'), ['controller' => 'Posts', 'action' => 'edit', ':id'], ['class' => 'edit link-frame']],
+            [__d('shop','Delete'), ['controller' => 'Posts', 'action' => 'delete', ':id'], ['class' => 'delete', 'confirm' => __d('shop','Are you sure you want to delete # {0}?', ':id')]]
         ]
     ]]);
     ?>
