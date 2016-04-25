@@ -174,37 +174,37 @@ class ModuleBuilderController extends AppController
         if ($this->request->is('post') || $this->request->is('put')) {
             $module = $this->Modules->patchEntity($module, $this->request->data());
 
-            /*
             if ($module->_save == true && $module = $this->Modules->save($module)) {
                 $this->Flash->success(__d('banana','Module has been saved with ID {0}', $module->id));
 
-                if ($refscope && $refid) {
-                    $this->loadModel('Banana.ContentModules');
-                    $contentModule = $this->ContentModules->newEntity();
-                    $contentModule->refscope = $refscope;
-                    $contentModule->refid = $refid;
-                    $contentModule->module_id = $module->id;
-                    $contentModule->section = ($section) ?: 'main';
+                /*
+                    if ($refscope && $refid) {
+                        $this->loadModel('Banana.ContentModules');
+                        $contentModule = $this->ContentModules->newEntity();
+                        $contentModule->refscope = $refscope;
+                        $contentModule->refid = $refid;
+                        $contentModule->module_id = $module->id;
+                        $contentModule->section = ($section) ?: 'main';
 
-                    if ($contentModule = $this->ContentModules->save($contentModule)) {
-                        $this->Flash->success(__d('banana','Module has been saved with ID {0} and linked to content {1} #{2} with ID {3}',
-                            $module->id,
-                            $refscope,
-                            $refid,
-                            $contentModule->id
-                        ));
-                    } else {
-                        $this->Flash->error(__d('banana','Module has been saved with ID {0} but not linked to content {1}',
-                            $module->id,
-                            $class
-                        ));
+                        if ($contentModule = $this->ContentModules->save($contentModule)) {
+                            $this->Flash->success(__d('banana','Module has been saved with ID {0} and linked to content {1} #{2} with ID {3}',
+                                $module->id,
+                                $refscope,
+                                $refid,
+                                $contentModule->id
+                            ));
+                        } else {
+                            $this->Flash->error(__d('banana','Module has been saved with ID {0} but not linked to content {1}',
+                                $module->id,
+                                $class
+                            ));
+                        }
                     }
-                }
+                */
 
-            } elseif ($module->_save == true) {
-                debug($module->errors());
-            }
-            */
+                } elseif ($module->_save == true) {
+                    debug($module->errors());
+                }
 
             $previewUrl = $module->getAdminPreviewUrl();
             $this->set('previewUrl', $previewUrl);
