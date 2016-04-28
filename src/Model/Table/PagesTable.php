@@ -76,7 +76,7 @@ class PagesTable extends Table
             'className' => 'Banana.Posts',
             'foreignKey' => 'refid',
             'conditions' => ['refscope' => 'Banana.Pages'],
-            'order' => ['Posts.order' => 'DESC', 'Posts.id' => 'ASC']
+            'order' => ['Posts.pos' => 'DESC', 'Posts.id' => 'ASC']
         ]);
 
         $this->addBehavior('Translate', [

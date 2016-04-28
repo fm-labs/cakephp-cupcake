@@ -120,7 +120,7 @@ class PagesController extends ContentController
         $posts = $this->Pages->Posts
             ->find()
             ->where(['refid' => $id])
-            ->order(['Posts.order' => 'DESC'])
+            ->order(['Posts.pos' => 'DESC'])
             ->all();
 
 
@@ -254,7 +254,7 @@ class PagesController extends ContentController
             'contain' => ['ContentModules' => ['Modules'], 'PageLayouts']
         ]);
 
-        $posts = $this->Pages->Posts->find()->where(['refid' => $id])->order(['Posts.order' => 'DESC']);
+        $posts = $this->Pages->Posts->find()->where(['refid' => $id])->order(['Posts.pos' => 'DESC']);
         $content->posts = $posts;
 
         if ($this->request->is(['patch', 'post', 'put'])) {

@@ -175,7 +175,7 @@ class Page extends Entity
         return TableRegistry::get('Banana.Posts')
             ->find('published')
             ->where(['Posts.refscope' => 'Banana.Pages', 'Posts.refid' => $this->id])
-            ->order(['Posts.order' => 'DESC', 'Posts.id' => 'ASC'])
+            ->order(['Posts.pos' => 'DESC', 'Posts.id' => 'ASC'])
             ->all();
     }
 

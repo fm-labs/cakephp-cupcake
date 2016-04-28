@@ -85,7 +85,7 @@ class PagesMenuModuleCell extends ModuleCell
             $item = [
                 'title' => $child->title,
                 'url' => $child->url,
-                'class' => $class,
+                'attr' => ['class' => $class],
                 '_children' => []
             ];
             if ($child->children) {
