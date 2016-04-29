@@ -155,7 +155,7 @@ class PostsFixture extends TestFixture
         [
             'id' => 3,
             'refscope' => 'Test',
-            'refid' => 2,
+            'refid' => 3,
             'parent_id' => '',
             'type' => '',
             'title' => 'Lorem ipsum dolor sit amet',
@@ -193,7 +193,7 @@ class PostsFixture extends TestFixture
         [
             'id' => 4,
             'refscope' => 'Test',
-            'refid' => 2,
+            'refid' => 4,
             'parent_id' => '',
             'type' => '',
             'title' => 'Lorem ipsum dolor sit amet',

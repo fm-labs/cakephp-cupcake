@@ -35,7 +35,6 @@ class SortableBehavior extends Behavior
     }
 
     /**
-     *
      * @param Event $event The event
      * @param Entity $entity The entity
      * @param \ArrayObject $options
@@ -48,8 +47,6 @@ class SortableBehavior extends Behavior
 
 
     /**
-     * Automatically slug when saving.
-     *
      * @param Event $event The event
      * @param Entity $entity The entity
      * @return void
@@ -99,7 +96,7 @@ class SortableBehavior extends Behavior
     {
         return $this->_table->connection()->transactional(function () use ($node) {
             //$this->_ensureFields($node);
-            return $this->_moveToPosition($node, $this->_getMaxPos());
+            return $this->_moveToPosition($node, $this->_getMaxPos($node));
         });
     }
 
@@ -107,9 +104,20 @@ class SortableBehavior extends Behavior
     {
         return $this->_table->connection()->transactional(function () use ($node, $targetId) {
             //$this->_ensureFields($node);
-            $targetNode = $this->_table->get($targetId);
-            $targetPos = $targetNode->pos;
-            //debug("Move after $targetId which is will be $targetPos");
+
+            $targetQuery = $this->_scoped($this->_table->query(), $node);
+            $targetNode = $targetQuery
+                ->hydrate(false)
+                ->select($this->_config['field'])
+                ->where([ 'id' => $targetId ])
+                ->first();
+
+            if (!$targetNode) {
+                return false;
+            }
+
+            $targetPos = $targetNode[$this->_config['field']];
+            //debug("Move after $targetId which will be $targetPos");
             return $this->_moveToPosition($node, $targetPos);
         });
     }
@@ -118,13 +126,23 @@ class SortableBehavior extends Behavior
     {
         return $this->_table->connection()->transactional(function () use ($node, $targetId) {
             //$this->_ensureFields($node);
-            $targetNode = $this->_table->get($targetId);
-            $maxPos = $this->_getMaxPos() - 1;
-            $targetPos = max(1, min($targetNode->pos, $maxPos));
+
+            $targetQuery = $this->_scoped($this->_table->query(), $node);
+            $targetNode = $targetQuery
+                ->hydrate(false)
+                ->select($this->_config['field'])
+                ->where([ 'id' => $targetId ])
+                ->first();
+
+            if (!$targetNode) {
+                return false;
+            }
+
+            $maxPos = $this->_getMaxPos($node) - 1;
+            $targetPos = max(1, min($targetNode[$this->_config['field']], $maxPos));
             //debug("Move before $targetId which will be Pos $targetPos | Max $maxPos");
             return $this->_moveToPosition($node, $targetPos);
         });
-        return $node;
     }
 
     protected function _moveToPosition(EntityInterface $node, $newPos)
@@ -139,21 +157,22 @@ class SortableBehavior extends Behavior
     {
         $sortField = $this->_config['field'];
         $pos = $node->get($sortField);
-        $newPos = $pos - $delta;
 
+        $newPos = $pos - $delta;
+        $newPos = max(1, $newPos);
         //debug("Move Pos $pos by delta $delta -> New position will be: $newPos");
 
         if ($delta == 0) {
             return $node;
         }
         
-        $query = $this->_scoped($this->_table->query());
+        $query = $this->_scoped($this->_table->query(), $node);
         $exp = $query->newExpr();
         $shift = 1;
 
         if ($delta < 0) {
             // move down
-            $max = $this->_getMaxPos();
+            $max = $this->_getMaxPos($node);
             $newPos = min($newPos, $max);
 
             $movement = clone $exp;
@@ -167,7 +186,6 @@ class SortableBehavior extends Behavior
 
         } elseif ($delta > 0) {
             // move up
-            $newPos = max(0, $newPos);
 
             $movement = clone $exp;
             $movement->add($sortField)->add("{$shift}")->type("+");
@@ -192,18 +210,23 @@ class SortableBehavior extends Behavior
         return $this->_table->save($node);
     }
 
-    protected function _getMaxPos()
+    protected function _getMaxPos(EntityInterface $node)
     {
         $sortField = $this->_config['field'];
-        $res = $this->_table->find()->select([$sortField])->hydrate(false)->orderDesc($sortField)->first();
+
+        $query = $this->_scoped($this->_table->query(), $node);
+        $res = $query->select([$sortField])->hydrate(false)->orderDesc($sortField)->first();
         return $res[$sortField];
     }
 
-    protected function _scoped(Query $query) {
+    protected function _scoped(Query $query, EntityInterface $node) {
 
         $scope = $this->_config['scope'];
 
-        //@TODO Implement me
+        if ($scope) {
+            $scopeData = $node->extract($scope);
+            $query->where($scopeData);
+        }
 
         return $query;
     }
