@@ -22,6 +22,17 @@ class SortableBehavior extends Behavior
      * @var array
      */
     protected $_defaultConfig = [
+        'implementedFinders' => [
+            'sorted' => 'findSorted',
+        ],
+        'implementedMethods' => [
+            'moveUp' => 'moveUp',
+            'moveDown' => 'moveDown',
+            'moveTop' => 'moveTop',
+            'moveBottom' => 'moveBottom',
+            'moveAfter' => 'moveAfter',
+            'moveBefore' => 'moveBefore'
+        ],
         'field' => 'pos', // the sort position field
         'scope' => [], // sorting scope
     ];
@@ -44,7 +55,6 @@ class SortableBehavior extends Behavior
     public function beforeRules(Event $event, Entity $entity, ArrayObject $options, $operation)
     {
     }
-
 
     /**
      * @param Event $event The event
@@ -186,7 +196,6 @@ class SortableBehavior extends Behavior
 
         } elseif ($delta > 0) {
             // move up
-
             $movement = clone $exp;
             $movement->add($sortField)->add("{$shift}")->type("+");
 
