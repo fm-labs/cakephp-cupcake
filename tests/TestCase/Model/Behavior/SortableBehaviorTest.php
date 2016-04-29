@@ -76,6 +76,7 @@ class SortableBehaviorTest extends TestCase
     {
         $sorted = $this->table->find('sorted')->select(['id', 'title', 'pos'])->hydrate(false)->all();
         //debug($sorted->toArray());
+        $this->markTestIncomplete();
     }
 
 
@@ -271,7 +272,7 @@ class SortableBehaviorTest extends TestCase
     /**********************************************************************************/
 
 
-    protected function setupScoped()
+    public function setupScoped()
     {
         $this->loadScopedBehavior();
         $this->loadScopedRecords();
@@ -307,6 +308,8 @@ class SortableBehaviorTest extends TestCase
         $this->setupScoped();
         $sorted = $this->table->find('sorted')->select(['id', 'title', 'pos'])->hydrate(false)->all();
         //debug($sorted->toArray());
+
+        $this->markTestIncomplete();
     }
 
     /**
@@ -494,7 +497,7 @@ class SortableBehaviorTest extends TestCase
             11 => 3
         ]);
 
-        // moving after node with different scope -> fails
+        // moving after node with different scope -> fail
         $entity = $this->table->moveAfter($this->table->get(5), 10);
         $this->assertFalse($entity);
         $this->assertScopedPositions([
@@ -502,6 +505,38 @@ class SortableBehaviorTest extends TestCase
             7 => 2,
             8 => 3,
             5 => 4,
+            9 => 1,
+            10 => 2,
+            11 => 3
+        ]);
+    }
+
+    /**
+     * @group scoped
+     */
+    public function testScopedMoveBefore()
+    {
+        $this->setupScoped();
+        $entity = $this->table->moveBefore($this->table->get(8), 5);
+        $this->assertEquals(1, $entity->pos);
+        $this->assertScopedPositions([
+            8 => 1,
+            5 => 2,
+            6 => 3,
+            7 => 4,
+            9 => 1,
+            10 => 2,
+            11 => 3
+        ]);
+
+        // moving before node with different scope -> fail
+        $entity = $this->table->moveBefore($this->table->get(8), 10);
+        $this->assertFalse($entity);
+        $this->assertScopedPositions([
+            8 => 1,
+            5 => 2,
+            6 => 3,
+            7 => 4,
             9 => 1,
             10 => 2,
             11 => 3
