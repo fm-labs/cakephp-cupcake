@@ -67,12 +67,15 @@ class SortableBehavior extends Behavior
 
     public function findSorted(Query $query, array $options = [])
     {
-        //$options += ['scope' => []];
-        //$scope = ($options['scope']) ? $options['scope'] : $this->config('scope');
-        $scope = (array) $this->config('scope');
-        array_unshift($scope, $this->config('field'));
+        $options += [ 'reverse' => false ];
 
-        $query->order($scope);
+        $scope = (array) $this->config('scope');
+        array_push($scope, $this->config('field'));
+
+        $dir = ($options['reverse']) ? 'desc' : 'asc';
+        $order = array_combine($scope, array_fill(0, count($scope), $dir));
+
+        $query->order($order);
         return $query;
     }
 

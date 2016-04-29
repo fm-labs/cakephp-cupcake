@@ -79,6 +79,30 @@ class SortableBehaviorTest extends TestCase
         $this->markTestIncomplete();
     }
 
+    public function testFindSortedReverse()
+    {
+        $sorted = $this->table->find('sorted')->select(['id', 'title', 'pos'])->hydrate(false)->all();
+        //debug($sorted->toArray());
+        $this->markTestIncomplete();
+    }
+
+    public function testFindSortedList()
+    {
+        $sorted = $this->table
+            ->find('list')
+            ->find('sorted');
+
+        $this->assertEquals([1,2,3,4], array_keys($sorted->toArray()));
+    }
+
+    public function testFindSortedListReverse()
+    {
+        $sorted = $this->table
+            ->find('list')
+            ->find('sorted', ['reverse' => true]);
+
+        $this->assertEquals([4,3,2,1], array_keys($sorted->toArray()));
+    }
 
     public function testMoveUp()
     {
