@@ -13,6 +13,7 @@
         'model' => 'Banana.Posts',
         'data' => $posts,
         'fields' => [
+            'pos',
             'is_published' => [
                 'title' => __('Published'),
                 'formatter' => function($val, $row) {
