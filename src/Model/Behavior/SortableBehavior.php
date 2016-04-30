@@ -65,6 +65,18 @@ class SortableBehavior extends Behavior
      */
     public function beforeSave(Event $event, Entity $entity)
     {
+        if ($entity->get($this->_config['field']) === null) {
+            $entity->set($this->_config['field'], $this->_getMaxPos($entity) + 1);
+        }
+    }
+
+    public function afterDelete(Event $event, EntityInterface $entity, ArrayObject $options)
+    {
+        $conditions = $entity->extract($this->_config['scope']);
+        $this->reorder($conditions, [
+            'field' => $this->_config['field'],
+            'order' => 'ASC'
+        ]);
     }
 
     public function findSorted(Query $query, array $options = [])
@@ -160,8 +172,23 @@ class SortableBehavior extends Behavior
         });
     }
 
+    /**
+     * Reorder
+     *
+     * Options:
+     * - field: Order Field (Default to primary key)
+     * - order: Order Direction ASC|DESC (Default: ASC)
+     *
+     * @param array $scope Scope conditions
+     * @param array $options Order options
+     * @throws \Exception
+     *
+     * @todo Refactor reordering with shifting instead of assigning new positions
+     */
     public function reorder($scope = [], $options = []) {
-        $options += ['field' => 'id', 'order' => 'ASC'];
+
+        $primaryKey = $this->_table->primaryKey()[0];
+        $options += ['field' => $primaryKey, 'order' => 'ASC'];
 
         if (count($scope) !== count($this->_config['scope'])) {
             throw new \Exception("Can not reorder table " . $this->_table->alias(). ": Scope count does not match");
@@ -172,11 +199,11 @@ class SortableBehavior extends Behavior
             ->where($scope)
             ->order([$options['field'] => $options['order']]);
 
-        $this->_table->connection()->transactional(function() use ($list) {
+        $this->_table->connection()->transactional(function() use ($list, $primaryKey) {
 
             $i = 1;
             foreach(array_keys($list->toArray()) as $id) {
-                $this->_table->updateAll([$this->_config['field'] => $i++], ['id' => $id]);
+                $this->_table->updateAll([$this->_config['field'] => $i++], [$primaryKey => $id]);
             }
         });
 
@@ -185,7 +212,10 @@ class SortableBehavior extends Behavior
     public function reorderAll($options = [])
     {
         $selectFields = $scopeFields = $this->_config['scope'];
-        array_push($selectFields, 'id', $this->_config['field']);
+
+        //$primaryKey = $this->_table->primaryKey()[0];
+        //array_push($selectFields, $primaryKey, $this->_config['field']);
+        array_push($selectFields, $this->_config['field']);
 
         $done = [];
 

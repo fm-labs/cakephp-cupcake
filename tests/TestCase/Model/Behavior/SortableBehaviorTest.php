@@ -18,7 +18,8 @@ use DebugKit\Database\Log\DebugLog;
 class SortableBehaviorTest extends TestCase
 {
     public $fixtures = [
-        'plugin.banana.posts'
+        'plugin.banana.posts',
+        'plugin.banana.i18n'
     ];
 
     /**
@@ -39,6 +40,7 @@ class SortableBehaviorTest extends TestCase
         if ($this->table->behaviors()->has('Sortable')) {
             $this->table->behaviors()->unload('Sortable');
         }
+        $this->table->removeBehavior('Translate');
         $this->table->addBehavior('Banana.Sortable', ['scope' => []]);
 
     }
@@ -290,6 +292,29 @@ class SortableBehaviorTest extends TestCase
         ]);
     }
 
+    public function testNewRecord()
+    {
+        $new = $this->table->save($this->table->newEntity(['refscope' => 'Test', 'refid' => 5, 'title' => 'Test', 'is_published' => true]));
+        $this->assertEquals(5, $new->pos);
+        $this->assertPositions([
+            1 => 1,
+            2 => 2,
+            3 => 3,
+            4 => 4,
+            5 => 5
+        ]);
+    }
+
+
+    public function testDeleteRecord()
+    {
+        $this->table->delete($this->table->get(3));
+        $this->assertPositions([
+            1 => 1,
+            2 => 2,
+            4 => 3,
+        ]);
+    }
 
     /**********************************************************************************/
     /********* S C O P E D    B E H A V I O R    T E S T S ****************************/
@@ -564,6 +589,57 @@ class SortableBehaviorTest extends TestCase
             9 => 1,
             10 => 2,
             11 => 3
+        ]);
+    }
+
+    /**
+     * @group scoped
+     */
+    public function testScopedNewRecord()
+    {
+        $this->setupScoped();
+        $new = $this->table->save($this->table->newEntity([
+            'refscope' => 'TestScope',
+            'refid' => 99,
+            'title' => 'Test Scoped New Record',
+            'is_published' => true
+        ]));
+        $this->assertEquals(5, $new->pos);
+        $this->assertScopedPositions([
+            5 => 1,
+            6 => 2,
+            7 => 3,
+            8 => 4,
+            12 => 5,
+            9 => 1,
+            10 => 2,
+            11 => 3
+        ]);
+    }
+
+    /**
+     * @group scoped
+     */
+    public function testScopedDeleteRecord()
+    {
+        $this->setupScoped();
+        $this->table->delete($this->table->get(7));
+        $this->assertScopedPositions([
+            5 => 1,
+            6 => 2,
+            8 => 3,
+            9 => 1,
+            10 => 2,
+            11 => 3
+        ]);
+
+        $this->table->delete($this->table->get(10));
+        $this->assertScopedPositions([
+            5 => 1,
+            6 => 2,
+            8 => 3,
+            9 => 1,
+            11 => 2
         ]);
     }
 
