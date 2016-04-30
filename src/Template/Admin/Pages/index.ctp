@@ -6,6 +6,6 @@ $this->Toolbar->addLink(__d('banana','New {0}', __d('banana','Page')), ['action'
 $this->Toolbar->addLink(__d('banana','Repair'), ['action' => 'repair'], ['icon' => 'wrench']);
 
 $this->extend('Backend./Admin/Base/Tree/index');
-$this->assign('heading', __('Pages'));
+//$this->assign('heading', __('Pages'));
 ?>
 <?= __('Select a page'); ?>

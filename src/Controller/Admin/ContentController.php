@@ -149,6 +149,24 @@ abstract class ContentController extends AppController
         $this->render('add');
     }
 
+    public function moveUp($id = null)
+    {
+        $node = $this->model()->moveUp($this->model()->get($id));
+
+        if ($this->request->is('ajax')) {
+            $this->viewBuilder()->className('Json');
+        } else {
+            if ($node) {
+                $this->Flash->success(__('Moved'));
+            } else {
+                $this->Flash->error(__('Failed to move'));
+            }
+            $this->redirect($this->referer(['action' => 'index']));
+        }
+
+        $this->set('node', $node);
+        $this->set('_serialize', 'node');
+    }
 
     /**
      * Delete method

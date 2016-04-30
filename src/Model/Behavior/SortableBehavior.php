@@ -2,6 +2,7 @@
 namespace Banana\Model\Behavior;
 
 use ArrayObject;
+use Cake\Core\Exception\Exception;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
 use Cake\Network\Exception\NotImplementedException;
@@ -31,7 +32,8 @@ class SortableBehavior extends Behavior
             'moveTop' => 'moveTop',
             'moveBottom' => 'moveBottom',
             'moveAfter' => 'moveAfter',
-            'moveBefore' => 'moveBefore'
+            'moveBefore' => 'moveBefore',
+            'reorder' => 'reorder'
         ],
         'field' => 'pos', // the sort position field
         'scope' => [], // sorting scope
@@ -156,6 +158,52 @@ class SortableBehavior extends Behavior
             //debug("Move before $targetId which will be Pos $targetPos | Max $maxPos");
             return $this->_moveToPosition($node, $targetPos);
         });
+    }
+
+    public function reorder($scope = [], $options = []) {
+        $options += ['field' => 'id', 'order' => 'ASC'];
+
+        if (count($scope) !== count($this->_config['scope'])) {
+            throw new \Exception("Can not reorder table " . $this->_table->alias(). ": Scope count does not match");
+        }
+
+        $list = $this->_table
+            ->find('list')
+            ->where($scope)
+            ->order([$options['field'] => $options['order']]);
+
+        $this->_table->connection()->transactional(function() use ($list) {
+
+            $i = 1;
+            foreach(array_keys($list->toArray()) as $id) {
+                $this->_table->updateAll([$this->_config['field'] => $i++], ['id' => $id]);
+            }
+        });
+
+    }
+
+    public function reorderAll($options = [])
+    {
+        $selectFields = $scopeFields = $this->_config['scope'];
+        array_push($selectFields, 'id', $this->_config['field']);
+
+        $done = [];
+
+        $result = $this->_table->find()->select($selectFields)->hydrate(true)->all();
+        $result->filter(function(EntityInterface $row) use ($scopeFields, $options, $done) {
+
+            $_scope = $row->extract($scopeFields);
+            $_scopeKey = md5(serialize($_scope));
+
+            if (isset($done[$_scopeKey])) {
+                return;
+            }
+
+            $this->reorder($_scope, $options);
+            $done[$_scopeKey] = true;
+        });
+
+
     }
 
     protected function _moveToPosition(EntityInterface $node, $newPos)

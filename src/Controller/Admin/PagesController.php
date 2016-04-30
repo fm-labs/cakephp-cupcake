@@ -118,9 +118,9 @@ class PagesController extends ContentController
         ]);
 
         $posts = $this->Pages->Posts
-            ->find()
+            ->find('sorted')
             ->where(['refid' => $id])
-            ->order(['Posts.pos' => 'DESC'])
+            //->order(['Posts.pos' => 'DESC'])
             ->all();
 
 

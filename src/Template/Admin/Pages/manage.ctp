@@ -23,12 +23,13 @@ $this->assign('title', $content->title);
 
     <h1>
         <?= h($content->title); ?>
-        <?= $this->Html->link(__('Edit'),
+        <?= $this->Html->link(__('Edit {0}', __('Page')),
             [ 'action' => 'edit', $content->id ],
             [ 'class' => 'edit link-frame btn btn-default btn-sm', 'data-icon' => 'edit']);
         ?>
     </h1>
 
+    <!--
     <div class="panel panel-default">
         <div class="panel-body">
             <?= $this->Ui->link(
@@ -43,6 +44,7 @@ $this->assign('title', $content->title);
             Published: <?= $this->Ui->statusLabel($content->is_published); ?>
         </div>
     </div>
+    -->
 
     <?php $this->Tabs->start(); ?>
 

@@ -29,20 +29,31 @@ class PostsTable extends Table
         $this->displayField('title');
         $this->primaryKey('id');
         $this->addBehavior('Timestamp');
-        $this->addBehavior('Banana.Sluggable');
+
+        $this->addBehavior('Translate', [
+            'fields' => ['title', 'slug', 'teaser_html', 'teaser_link_caption', 'body_html'],
+            'translationTable' => 'bc_i18n'
+        ]);
+
         $this->addBehavior('Banana.ContentModule', [
             'alias' => 'ContentModules',
             'scope' => 'Banana.Posts',
             'concat' => 'body_html'
         ]);
 
+        $this->addBehavior('Banana.Sortable', [
+            'field' => 'pos',
+            'scope' => ['refscope', 'refid']
+        ]);
+
         $this->addBehavior('Banana.Copyable', [
             'excludeFields' => ['is_published']
         ]);
 
-        $this->addBehavior('Banana.Publishable', [
-        ]);
+        $this->addBehavior('Banana.Sluggable');
+        $this->addBehavior('Banana.Publishable', []);
 
+        //@TODO Refactor with initalization hook
         if (Plugin::loaded('Media')) {
             $this->addBehavior('Media.Media', [
                 'fields' => [
@@ -59,14 +70,10 @@ class PostsTable extends Table
                 ]
             ]);
         } else {
-            Log::warning('Attachment plugin is not loaded');
+            Log::warning('Media plugin is not loaded');
         }
 
 
-        $this->addBehavior('Translate', [
-            'fields' => ['title', 'slug', 'teaser_html', 'teaser_link_caption', 'body_html'],
-            'translationTable' => 'bc_i18n'
-        ]);
 
         /*
         if (Plugin::loaded('Attachment')) {
