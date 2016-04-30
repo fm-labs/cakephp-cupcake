@@ -30,6 +30,7 @@ class PagesMenuModuleCell extends ModuleCell
                 $children = $this->Pages
                     ->find('children', ['for' => $startNodeId])
                     ->find('threaded')
+                    ->orderAsc('lft')
                     ->contain([])
                     ->toArray();
 
