@@ -72,15 +72,12 @@ class PagesController extends ContentController
         $this->viewBuilder()->className('Json');
 
         $id = $this->request->query('id');
-        if ($id == '#') {
-            $pages = $this->Pages->find()->where(['parent_id IS NULL'])->all()->toArray();
-        } else {
-            $pages = $this->Pages->find()->where(['parent_id' => $id])->all()->toArray();
-        }
+        $conditions = ($id == '#') ? ['parent_id IS NULL'] : ['parent_id' => $id];
+        $nodes = $this->Pages->find()->where($conditions)->orderAsc('lft')->all()->toArray();
 
         //debug($pages);
         $treeData = [];
-        array_walk($pages, function ($val) use (&$treeData, &$id) {
+        array_walk($nodes, function ($val) use (&$treeData, &$id) {
             $publishedClass = ($val->is_published) ? 'published' : 'unpublished';
             $treeData[] = [
                 'id' => $val->id,
