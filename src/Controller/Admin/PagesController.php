@@ -84,7 +84,7 @@ class PagesController extends ContentController
             $publishedClass = ($val->is_published) ? 'published' : 'unpublished';
             $treeData[] = [
                 'id' => $val->id,
-                'text' => $val->title . " (". $val->id . ")",
+                'text' => $val->title,
                 'children' => true,
                 'icon' => $val->type . " " . $publishedClass,
                 'parent' => ($val->parent_id) ?: '#'
