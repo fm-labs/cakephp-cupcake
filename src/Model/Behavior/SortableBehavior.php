@@ -187,7 +187,7 @@ class SortableBehavior extends Behavior
      */
     public function reorder($scope = [], $options = []) {
 
-        $primaryKey = $this->_table->primaryKey()[0];
+        $primaryKey = $this->_primaryKey();
         $options += ['field' => $primaryKey, 'order' => 'ASC'];
 
         if (count($scope) !== count($this->_config['scope'])) {
@@ -207,20 +207,21 @@ class SortableBehavior extends Behavior
             }
         });
 
+        return true;
     }
 
     public function reorderAll($options = [])
     {
         $selectFields = $scopeFields = $this->_config['scope'];
 
-        //$primaryKey = $this->_table->primaryKey()[0];
+        //$primaryKey = $this->_primaryKey();
         //array_push($selectFields, $primaryKey, $this->_config['field']);
         array_push($selectFields, $this->_config['field']);
 
         $done = [];
 
         $result = $this->_table->find()->select($selectFields)->hydrate(true)->all();
-        $result->filter(function(EntityInterface $row) use ($scopeFields, $options, $done) {
+        $result->filter(function(EntityInterface $row) use ($scopeFields, $options, &$done) {
 
             $_scope = $row->extract($scopeFields);
             $_scopeKey = md5(serialize($_scope));
@@ -233,7 +234,7 @@ class SortableBehavior extends Behavior
             $done[$_scopeKey] = true;
         });
 
-
+        return true;
     }
 
     protected function _moveToPosition(EntityInterface $node, $newPos)
@@ -319,5 +320,11 @@ class SortableBehavior extends Behavior
         }
 
         return $query;
+    }
+
+    protected function _primaryKey()
+    {
+        $pk = $this->_table->primaryKey();
+        return (is_array($pk)) ? $pk[0] : $pk;
     }
 }
