@@ -331,9 +331,10 @@ class Banana
     {
         return [
             'content' => 'Content',
+            'blog_category' => 'Blog Category',
             'controller' => 'Controller',
-            'cell' => 'Cell',
-            'module' => 'Module',
+            //'cell' => 'Cell',
+            //'module' => 'Module',
             'page' => 'Page',
             'redirect' => 'Redirect',
             'root' => 'Website Root',

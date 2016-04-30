@@ -53,6 +53,7 @@ $this->assign('title', $content->title);
     <?php
     switch($content->type):
         case 'content':
+        case 'blog_category':
         case 'static':
             $this->Tabs->add(__d('banana', 'Posts'), [
                 'url' => ['action' => 'relatedPosts', $content->id]

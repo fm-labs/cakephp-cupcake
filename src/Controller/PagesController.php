@@ -43,6 +43,7 @@ class PagesController extends FrontendController
     {
         parent::initialize();
         $this->loadComponent('Banana.Frontend');
+        $this->loadComponent('Paginator');
     }
 
     public function beforeFilter(Event $event)
@@ -154,8 +155,17 @@ class PagesController extends FrontendController
                 $action = ($page->page_template) ?: null;
                 if ($action && method_exists($this, $action)) {
                     $this->setAction($action);
-                    break;
                 }
+                break;
+
+            case 'blog_category':
+                $query = $this->Pages->Posts
+                    ->find('published')
+                    ->where(['refscope' => 'Banana.Pages', 'refid' => $page->id]);
+
+                $posts = $this->Paginator->paginate($query);
+                $this->set('posts', $posts);
+                break;
 
             // Content
             case 'content':
@@ -177,7 +187,8 @@ class PagesController extends FrontendController
         $this->autoRender = false;
         $this->viewBuilder()->className('Banana.Page');
 
-        $view = ($page->page_template) ?: null;
+        $view = ($page->page_template) ?: $page->type;
+        $view = ($view == 'content') ? 'view' : $view;
         $this->viewBuilder()->template($view);
 
         $layout = ($page->page_layout) ? $page->page_layout->template : null;
