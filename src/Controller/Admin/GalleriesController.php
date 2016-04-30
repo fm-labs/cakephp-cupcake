@@ -2,6 +2,7 @@
 namespace Banana\Controller\Admin;
 
 use Banana\Controller\Admin\AppController;
+use Banana\Core\Banana;
 
 /**
  * Galleries Controller
@@ -96,7 +97,7 @@ class GalleriesController extends AppController
     public function edit($id = null)
     {
         $gallery = $this->Galleries->get($id, [
-            'contain' => ['Parent', 'Posts']
+            'contain' => ['Parent']
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $gallery = $this->Galleries->patchEntity($gallery, $this->request->data);
@@ -109,8 +110,12 @@ class GalleriesController extends AppController
         }
 
         $parents = $this->Galleries->find('list')->toArray();
+        $sources = $this->Galleries->getSources();
+        $sourceFolders = $this->Galleries->getSourceFolders();
+        $viewTemplates = Banana::getAvailableGalleryTemplates();
+        $galleryPosts = $this->Galleries->Posts->find('sorted')->find('media')->where(['refid' => $id]);
 
-        $this->set(compact('gallery', 'parents'));
+        $this->set(compact('gallery', 'parents', 'sources', 'sourceFolders', 'viewTemplates', 'galleryPosts'));
         $this->set('_serialize', ['gallery']);
     }
 

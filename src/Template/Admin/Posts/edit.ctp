@@ -69,7 +69,7 @@ $editor['body_id'] = $content->cssid;
     </div>
     <div class="col-md-3">
 
-        <?= $this->Form->button(__d('banana','Save Changes')) ?>
+        <?= $this->Form->button(__d('banana','Save Changes'), ['class' => 'btn btn-primary btn-block']) ?>
 
         <?= $this->Form->fieldsetStart(['legend' => 'Publish']); ?>
         <?php

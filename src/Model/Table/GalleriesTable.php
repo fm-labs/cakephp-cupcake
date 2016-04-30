@@ -2,10 +2,12 @@
 namespace Banana\Model\Table;
 
 use Banana\Model\Entity\Gallery;
+use Cake\Core\Plugin;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Media\Lib\Media\MediaManager;
 
 /**
  * Galleries Model
@@ -61,5 +63,28 @@ class GalleriesTable extends Table
             ->allowEmpty('desc_html');
 
         return $validator;
+    }
+
+    /**
+     * Get list of available gallery sources
+     */
+    public function getSources()
+    {
+        return [
+            'folder' => __('Folder'),
+            'posts' => __('Posts')
+        ];
+    }
+
+    /**
+     * Get a recursive directory list of available gallery source folders
+     */
+    public function getSourceFolders()
+    {
+        if (Plugin::loaded('Media')) {
+            $mm = MediaManager::get('default');
+            return $mm->open('gallery/')->getSelectFolderListRecursive();
+        }
+        return null;
     }
 }

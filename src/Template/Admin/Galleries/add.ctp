@@ -23,26 +23,24 @@
         <?= __d('banana','Add {0}', __d('banana','Gallery')) ?>
     </h2>
     <?= $this->Form->create($gallery, ['class' => 'no-ajax']); ?>
-    <div class="users ui basic segment">
-        <div class="ui form">
+    <div class="ui form">
         <?php
+        echo $this->Form->input('parent_id', ['empty' => true]);
         echo $this->Form->input('title');
+        echo $this->Form->input('inherit_desc');
         echo $this->Form->input('desc_html', [
             'type' => 'htmleditor',
             'editor' => [
-                'image_list_url' => ['controller' => 'Data', 'action' => 'editorImageList'],
-                'link_list_url' => ['controller' => 'Data', 'action' => 'editorLinkList'],
+                'image_list_url' => '@Banana.HtmlEditor.default.imageList',
+                'link_list_url' => '@Banana.HtmlEditor.default.linkList'
             ]
         ]);
         echo $this->Form->input('view_template');
         echo $this->Form->input('source');
         echo $this->Form->input('source_folder');
         ?>
-        </div>
     </div>
-    <div class="ui bottom attached segment">
-        <?= $this->Form->button(__d('banana','Submit')) ?>
-    </div>
+    <?= $this->Form->button(__d('banana','Submit')) ?>
     <?= $this->Form->end() ?>
 
 </div>

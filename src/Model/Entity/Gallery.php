@@ -62,6 +62,7 @@ class Gallery extends Entity
     protected function _getPublishedPosts()
     {
         return TableRegistry::get('Banana.Posts')
+            ->find('sorted')
             ->find('published')
             ->find('media')
             ->where([
