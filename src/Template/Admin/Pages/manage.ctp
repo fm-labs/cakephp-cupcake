@@ -46,6 +46,15 @@ $this->assign('title', $content->title);
     </div>
     -->
 
+    Public URL:
+    <?= $this->Ui->link(
+        $this->Html->Url->build($content->url, true),
+        $content->url,
+        ['target' => '_blank', 'icon' => 'external']
+    ); ?>
+    <hr />
+
+
     <?php $this->Tabs->start(); ?>
 
 
