@@ -196,14 +196,24 @@ class SortableBehaviorTest extends TestCase
 
     public function testMoveAfter()
     {
+        // move after lower node
         $entity = $this->table->moveAfter($this->table->get(2), 3);
-        //debug($this->dbLogger->queries());
         $this->assertEquals(3, $entity->pos);
         $this->assertPositions([
             1 => 1,
-            2 => 3,
             3 => 2,
+            2 => 3,
             4 => 4
+        ]);
+
+        // move after higher node
+        $entity = $this->table->moveAfter($this->table->get(4), 1);
+        $this->assertEquals(2, $entity->pos);
+        $this->assertPositions([
+            1 => 1,
+            4 => 2,
+            3 => 3,
+            2 => 4,
         ]);
     }
 
@@ -214,9 +224,9 @@ class SortableBehaviorTest extends TestCase
         $this->assertEquals(4, $entity->pos);
         $this->assertPositions([
             1 => 1,
-            2 => 4,
             3 => 2,
-            4 => 3
+            4 => 3,
+            2 => 4,
         ]);
     }
 
@@ -255,14 +265,24 @@ class SortableBehaviorTest extends TestCase
 
     public function testMoveBefore()
     {
+        // move before higher node
         $entity = $this->table->moveBefore($this->table->get(4), 2);
-        //debug($this->dbLogger->queries());
         $this->assertEquals(2, $entity->pos);
         $this->assertPositions([
             1 => 1,
+            4 => 2,
             2 => 3,
             3 => 4,
-            4 => 2
+        ]);
+
+        // move before lower node
+        $entity = $this->table->moveBefore($this->table->get(1), 3);
+        $this->assertEquals(3, $entity->pos);
+        $this->assertPositions([
+            4 => 1,
+            2 => 2,
+            1 => 3,
+            3 => 4,
         ]);
     }
 
@@ -533,6 +553,7 @@ class SortableBehaviorTest extends TestCase
      */
     public function testScopedMoveAfter()
     {
+        // move after lower node
         $this->setupScoped();
         $entity = $this->table->moveAfter($this->table->get(5), 8);
         $this->assertEquals(4, $entity->pos);
@@ -546,14 +567,27 @@ class SortableBehaviorTest extends TestCase
             11 => 3
         ]);
 
+        // move after higher node
+        $entity = $this->table->moveAfter($this->table->get(5), 6);
+        $this->assertEquals(2, $entity->pos);
+        $this->assertScopedPositions([
+            6 => 1,
+            5 => 2,
+            7 => 3,
+            8 => 4,
+            9 => 1,
+            10 => 2,
+            11 => 3
+        ]);
+
         // moving after node with different scope -> fail
         $entity = $this->table->moveAfter($this->table->get(5), 10);
         $this->assertFalse($entity);
         $this->assertScopedPositions([
             6 => 1,
-            7 => 2,
-            8 => 3,
-            5 => 4,
+            5 => 2,
+            7 => 3,
+            8 => 4,
             9 => 1,
             10 => 2,
             11 => 3
@@ -565,6 +599,7 @@ class SortableBehaviorTest extends TestCase
      */
     public function testScopedMoveBefore()
     {
+        // move before higher node
         $this->setupScoped();
         $entity = $this->table->moveBefore($this->table->get(8), 5);
         $this->assertEquals(1, $entity->pos);
@@ -578,6 +613,20 @@ class SortableBehaviorTest extends TestCase
             11 => 3
         ]);
 
+        // move before lower node
+        $entity = $this->table->moveBefore($this->table->get(9), 11);
+        $this->assertEquals(2, $entity->pos);
+        $this->assertScopedPositions([
+            8 => 1,
+            5 => 2,
+            6 => 3,
+            7 => 4,
+            10 => 1,
+            9 => 2,
+            11 => 3
+        ]);
+
+
         // moving before node with different scope -> fail
         $entity = $this->table->moveBefore($this->table->get(8), 10);
         $this->assertFalse($entity);
@@ -586,8 +635,8 @@ class SortableBehaviorTest extends TestCase
             5 => 2,
             6 => 3,
             7 => 4,
-            9 => 1,
-            10 => 2,
+            10 => 1,
+            9 => 2,
             11 => 3
         ]);
     }
@@ -646,7 +695,7 @@ class SortableBehaviorTest extends TestCase
     /**
      * Assert the sort order position
      *
-     * @param array $expected [ expectedPos => id , ... ]
+     * @param array $expected [ id => expectedPos , ... ]
      */
     protected function assertPositions($expected = [])
     {
@@ -657,7 +706,7 @@ class SortableBehaviorTest extends TestCase
     /**
      * Assert the sort order position
      *
-     * @param array $expected [ expectedPos => id , ... ]
+     * @param array $expected [ id => expectedPos , ... ]
      */
     protected function assertScopedPositions($expected = [])
     {

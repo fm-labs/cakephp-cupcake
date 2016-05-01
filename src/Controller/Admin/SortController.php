@@ -52,7 +52,13 @@ class SortController extends AppController
 
                 $modelName = (isset($data['model'])) ? (string) $data['model'] : null;
                 $id = (isset($data['id'])) ? (int) $data['id'] : null;
-                $after = (isset($data['after'])) ? (int) $data['after'] : 0;
+                $after = (isset($data['after'])) ? (int) $data['after'] : false;
+
+                $responseData = [
+                    'model' => $modelName,
+                    'id' => $id,
+                    'after' => $after,
+                ];
 
                 if (!$id) {
                     throw new BadRequestException('ID missing');
@@ -67,13 +73,13 @@ class SortController extends AppController
                     throw new Exception('Table has no Sortable behavior attached');
                 }
 
-                if ($after < 1) {
-                    $success = $model->moveTop($model->get($id));
-                } else {
-                    $success = $model->moveAfter($model->get($id), $after);
-                }
+                $node = $model->get($id);
+                $responseData['oldPos'] = $node->pos;
 
-                $responseData['success'] = (bool) $success;
+                $node = $model->moveAfter($node, $after);
+                $responseData['newPos'] = $node->pos;
+
+                $responseData['success'] = (bool) $node;
             }
         } catch (\Exception $ex) {
             $responseData['success'] = false;

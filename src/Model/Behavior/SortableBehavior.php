@@ -143,9 +143,13 @@ class SortableBehavior extends Behavior
                 return false;
             }
 
+
+            $pos = $node->get($this->_config['field']);
             $targetPos = $targetNode[$this->_config['field']];
-            //debug("Move after $targetId which will be $targetPos");
-            return $this->_moveToPosition($node, $targetPos);
+            $newPos = ($pos > $targetPos) ? $targetPos + 1 : $targetPos;
+
+            //debug("Move $pos AFTER $targetPos : NewPos $newPos --> Delta " . ($pos - $newPos));
+            return $this->_moveToPosition($node, $newPos);
         });
     }
 
@@ -165,10 +169,13 @@ class SortableBehavior extends Behavior
                 return false;
             }
 
-            $maxPos = $this->_getMaxPos($node) - 1;
-            $targetPos = max(1, min($targetNode[$this->_config['field']], $maxPos));
-            //debug("Move before $targetId which will be Pos $targetPos | Max $maxPos");
-            return $this->_moveToPosition($node, $targetPos);
+
+            $pos = $node->get($this->_config['field']);
+            $targetPos = $targetNode[$this->_config['field']];
+            $newPos = ($pos < $targetPos) ? $targetPos - 1 : $targetPos;
+
+            //debug("Move $pos BEFORE $targetPos : NewPos $newPos --> Delta " . ($pos - $newPos));
+            return $this->_moveToPosition($node, $newPos);
         });
     }
 
@@ -242,6 +249,7 @@ class SortableBehavior extends Behavior
         $sortField = $this->_config['field'];
         $pos = $node->get($sortField);
         $delta = $pos - $newPos;
+
         return $this->_moveByDelta($node, $delta);
     }
 
