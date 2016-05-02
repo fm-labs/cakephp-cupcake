@@ -2,6 +2,7 @@
 namespace Banana\Controller\Admin;
 
 use Banana\Controller\Admin\AppController;
+use Cake\Core\Configure;
 use Cake\Network\Exception\NotFoundException;
 
 /**
@@ -18,7 +19,7 @@ class ModulesController extends AppController
     {
         parent::initialize();
 
-        $this->Auth->allow(['preview']);
+        //$this->Auth->allow(['preview']);
     }
 
     /**
@@ -72,7 +73,7 @@ class ModulesController extends AppController
 
         $this->viewBuilder()
             ->layout('frontend')
-            ->theme('ThemeLederleitner')
+            ->theme(Configure::read('Banana.Frontend.theme'))
             ->className('Banana.Frontend');
     }
 

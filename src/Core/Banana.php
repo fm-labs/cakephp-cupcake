@@ -83,6 +83,12 @@ class Banana
     public static function getModulesAvailable()
     {
         $modules =  [
+            'Flexslider' => [
+                'class' => 'Banana.Flexslider'
+            ],
+            'HtmlElement' => [
+                'class' => 'Banana.HtmlElement'
+            ],
             'PostsList' => [
                 'class' => 'Banana.PostsList'
             ],
@@ -91,9 +97,6 @@ class Banana
             ],
             'TextHtml' => [
                 'class' => 'Banana.TextHtml'
-            ],
-            'Flexslider' => [
-                'class' => 'Banana.Flexslider'
             ],
             'PagesMenu' => [
                 'class' => 'Banana.PagesMenu'
@@ -344,8 +347,14 @@ class Banana
         ];
     }
 
+    /**
+     * @return array
+     * @deprecated Use getAvailablePostTemplates() instead
+     */
     public static function getAvailablePostTeaserTemplates()
     {
+        return self::getAvailablePostTemplates();
+
         $path = 'Template' . DS . 'Posts';
         $available = [];
 
