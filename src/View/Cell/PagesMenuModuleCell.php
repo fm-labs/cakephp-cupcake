@@ -20,6 +20,8 @@ class PagesMenuModuleCell extends ModuleCell
         'element_path' => null
     ];
 
+    protected $_depth = 0;
+
     public function display()
     {
         if (empty($this->params['menu'])) {
@@ -53,6 +55,7 @@ class PagesMenuModuleCell extends ModuleCell
 
     protected function _buildMenu($children)
     {
+        $this->_depth++;
         $menu = [];
         foreach ($children as $child) {
             $isActive = false;
@@ -84,16 +87,26 @@ class PagesMenuModuleCell extends ModuleCell
             }
 
             $item = [
-                'title' => $child->title,
-                'url' => $child->url,
-                'attr' => ['class' => $class],
+                'title' => $child->getPageTitle(),
+                'url' => $child->getPageUrl(),
+                'class' => $class,
                 '_children' => []
             ];
+
+            /*
             if ($child->children) {
                 $item['_children'] = $this->_buildMenu($child->children);
             }
+            */
+
+            if ($this->_depth <= $this->params['depth'] && $child->getPageChildren()) {
+                $item['_children'] = $this->_buildMenu($child->getPageChildren());
+            }
+
             $menu[] = $item;
         }
+
+        $this->_depth--;
         return $menu;
     }
 

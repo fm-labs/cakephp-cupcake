@@ -35,6 +35,10 @@ class AppController extends BaseAdminAppController
     }
 
 
+    /**
+     * @return array
+     * @deprecated Use backend config file instead
+     */
     public static function backendMenu()
     {
         return [

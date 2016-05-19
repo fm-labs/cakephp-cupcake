@@ -21,52 +21,37 @@ $this->assign('title', $content->title);
 ?>
 <div class="pages">
 
-    <h1>
-        <?= h($content->title); ?>
-        <?= $this->Html->link(__('Edit {0}', __('Page')),
-            [ 'action' => 'edit', $content->id ],
-            [ 'class' => 'edit link-frame btn btn-default btn-sm', 'data-icon' => 'edit']);
-        ?>
-    </h1>
-
-    <!--
-    <div class="panel panel-default">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <?= __('Page'); ?>: <?= h($content->title); ?>
+        </div>
         <div class="panel-body">
+
+            Public URL:
             <?= $this->Ui->link(
                 $this->Html->Url->build($content->url, true),
                 $content->url,
                 ['target' => '_blank', 'icon' => 'external']
             ); ?>
-            <br />
-            Slug: <?= h($content->slug); ?><br />
-            Meta Title: <?= h($content->meta_title); ?><br />
-            Meta Desc: <?= h($content->meta_desc); ?><br />
-            Published: <?= $this->Ui->statusLabel($content->is_published); ?>
+            <div class="actions">
+
+                <?= $this->Html->link(__('Edit {0}', __('Page')),
+                    [ 'action' => 'edit', $content->id ],
+                    [ 'class' => 'edit link-frame btn btn-primary btn-sm', 'data-icon' => 'edit']);
+                ?>
+            </div>
         </div>
-    </div>
-    -->
-
-    Public URL:
-    <?= $this->Ui->link(
-        $this->Html->Url->build($content->url, true),
-        $content->url,
-        ['target' => '_blank', 'icon' => 'external']
-    ); ?>
-    <hr />
+        <div class="panel-body">
 
 
-    <?php $this->Tabs->start(); ?>
+            <?php $this->Tabs->start(); ?>
+            <?php
 
-
-
-    <?php
-    switch($content->type):
-        case 'content':
-        case 'blog_category':
-        case 'static':
-            $this->Tabs->add(__d('banana', 'Posts'), [
-                'url' => ['action' => 'relatedPosts', $content->id]
-            ]);
+            if ($content->type == 'content') {
+                $this->Tabs->add(__d('banana', 'Posts'), [
+                    'url' => ['action' => 'relatedPosts', $content->id]
+                ]);
+            }
 
             $this->Tabs->add(__d('banana', 'Meta'), [
                 'url' => ['action' => 'relatedPageMeta', $content->id]
@@ -83,25 +68,10 @@ $this->assign('title', $content->title);
             $this->Tabs->add(__d('banana', 'Content Modules'), [
                 'url' => ['action' => 'relatedContentModules', $content->id]
             ]);
-
-            break;
-
-        case 'shop_category':
-            $this->Tabs->add(__d('banana', 'Shop Category'), [
-                'url' => ['plugin' => 'Shop', 'controller' => 'ShopCategories', 'action' => 'view', $content->redirect_location]
-            ]);
-
-            $this->Tabs->add(__d('banana', 'Meta'), [
-                'url' => ['plugin' => 'Shop', 'controller' => 'ShopCategories', 'action' => 'relatedPageMeta', $content->redirect_location]
-            ]);
-
-            $this->Tabs->add(__d('banana', 'Content Modules'), [
-                'url' => ['plugin' => 'Shop', 'controller' => 'ShopCategories', 'action' => 'relatedContentModules', $content->redirect_location]
-            ]);
-            break;
+            echo $this->Tabs->render();
+            ?>
+        </div>
+    </div>
 
 
-    endswitch;
-    echo $this->Tabs->render();
-    ?>
 </div>

@@ -6,9 +6,11 @@ use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Cake\View\Helper;
 
-class ContentHelper extends Helper
+use Cake\View\Helper\HtmlHelper;
+use Cake\View\View;
+
+class ContentHelper extends HtmlHelper
 {
-    public $helpers = ['Html'];
 
     protected $_urlPlaceholderCache = [];
 
@@ -73,5 +75,54 @@ class ContentHelper extends Helper
         $text = $this->parseUrlPlaceholders($text);
 
         return $text;
+    }
+
+
+    public function getCrumbList(array $options = [], $startText = false) {
+
+        $this->templater()->add([
+            'breadcrumb_list' => '<ol{{attrs}}>{{items}}</ol>',
+            'breadcrumb_item' => '<li{{attrs}}>{{content}}</li>'
+        ]);
+
+        $defaults = ['separator' => '', 'escape' => true];
+        $options += $defaults;
+
+        $separator = $options['separator'];
+        $escape = $options['escape'];
+        unset($options['separator'], $options['escape']);
+
+
+        $crumbs = $this->_prepareCrumbs($startText, $escape);
+        if (empty($crumbs)) {
+            return null;
+        }
+
+        $result = '';
+        $listOptions = $options;
+        foreach ($crumbs as $which => $crumb) {
+            $options = [
+                'itemscope' => true,
+                'itemtype' => "http://schema.org/breadcrumb"
+            ];
+            if (empty($crumb[1])) {
+                $elementContent = $crumb[0];
+            } else {
+                $linkAttrs = $crumb[2];
+                $linkAttrs += ['itemprop' => 'url'];
+                $elementContent = $this->link($crumb[0], $crumb[1], $linkAttrs);
+            }
+
+            $result .= $this->formatTemplate('breadcrumb_item', [
+                'content' => $elementContent,
+                'attrs' => $this->templater()->formatAttributes($options)
+            ]);
+        }
+
+
+        return $this->formatTemplate('breadcrumb_list', [
+            'items' => $result,
+            'attrs' => $this->templater()->formatAttributes($listOptions)
+        ]);
     }
 }

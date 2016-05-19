@@ -1,6 +1,8 @@
 <?php
 namespace Banana\Core;
 
+use Banana\Model\Entity\Page;
+use Banana\Model\Entity\PageTypeTrait;
 use Cake\Core\Configure;
 use Cake\Core\Plugin;
 use Cake\Filesystem\Folder;
@@ -78,6 +80,24 @@ class Banana
         $PageLayouts = TableRegistry::get('Banana.PageLayouts');
         $pageLayout = $PageLayouts->find('first')->where(['is_default' => true]);
         return $pageLayout;
+    }
+
+    public static function getPageHandler($pageType)
+    {
+        $handlers = [
+            'root' => 'Banana\Page\RootPageType',
+            'content' => 'Banana\Page\ContentPageType',
+            'static' => 'Banana\Page\StaticPageType',
+            'redirect' => 'Banana\Page\RedirectPageType',
+            'controller' => 'Banana\Page\ControllerPageType',
+            'shop_category' => 'Shop\Page\ShopCategoryPageType',
+        ];
+
+        if (isset($handlers[$pageType])) {
+            return new $handlers[$pageType]();
+        }
+
+        return null;
     }
 
     public static function getModulesAvailable()

@@ -1,4 +1,4 @@
-<div class="post view <?= $post->cssclass; ?>" id="<?= $post->cssid ?>">
+<article class="post view <?= $post->cssclass; ?>" id="<?= $post->cssid ?>">
     <h1 class="title">
         <?= h($post->title); ?>
     </h1>
@@ -10,4 +10,4 @@
     <div class="body">
         <?= $this->Content->userHtml($post->body_html); ?>
     </div>
-</div>
+</article>

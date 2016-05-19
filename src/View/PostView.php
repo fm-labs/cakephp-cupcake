@@ -5,7 +5,7 @@ namespace Banana\View;
 use Cake\I18n\I18n;
 use Cake\Routing\Router;
 
-class PostView extends FrontendView
+class PostView extends ContentView
 {
 
     public function render($view = null, $layout = null)

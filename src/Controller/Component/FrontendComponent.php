@@ -33,7 +33,7 @@ class FrontendComponent extends Component
     public $Pages;
 
     protected $_defaultConfig = [
-        'viewClass' => 'Banana.Frontend',
+        'viewClass' => 'Banana.Content',
         'theme' => null,
         'layout' => null
     ];

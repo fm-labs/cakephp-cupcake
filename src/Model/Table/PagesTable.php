@@ -40,6 +40,7 @@ class PagesTable extends Table
         $this->addBehavior('Banana.Copyable', [
             'excludeFields' => ['lft', 'rght', 'slug']
         ]);
+        $this->addBehavior('Banana.Page');
         $this->addBehavior('Banana.Sluggable');
         $this->addBehavior('Banana.Publishable');
 

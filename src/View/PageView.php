@@ -5,7 +5,7 @@ namespace Banana\View;
 use Cake\I18n\I18n;
 use Cake\Routing\Router;
 
-class PageView extends FrontendView
+class PageView extends ContentView
 {
 
     public function render($view = null, $layout = null)
@@ -13,7 +13,7 @@ class PageView extends FrontendView
         if ($this->get('page')) {
             $page = $this->get('page');
 
-            $metaTitle = ($page->meta_title) ?: $page->title;
+            $metaTitle = ($page->meta_title) ?: $page->getPageTitle();
             $pageUrl = $this->Html->Url->build($page->url, true);
 
             // page title
@@ -62,6 +62,13 @@ class PageView extends FrontendView
             $this->Html->meta(['property' => 'twitter:title', 'content' => $metaTitle], null, ['block' => true]);
             $this->Html->meta(['property' => 'twitter:description', 'content' => $metaDescription], null, ['block' => true]);
             $this->Html->meta(['property' => 'twitter:url', 'content' => $pageUrl], null, ['block' => true]);
+
+            foreach ($page->getPath() as $node) {
+                if (!$node->parent_id) continue;
+                $this->Content->addCrumb($node->getPageTitle(), $node->getPageUrl());
+            }
+
+            //$this->Content->addCrumb($page->getPageTitle(), $page->getPageUrl());
 
         }
 

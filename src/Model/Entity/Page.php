@@ -1,21 +1,26 @@
 <?php
 namespace Banana\Model\Entity;
 
+use Banana\Core\Banana;
 use Banana\Model\Behavior\PageMeta\PageMetaTrait;
+use Banana\Model\Entity\Page\PageInterface;
+use Banana\Page\AbstractPageType;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
 use Cake\ORM\Behavior\Translate\TranslateTrait;
 use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
+use Cake\Utility\Hash;
 
 /**
  * Page Entity.
  */
-class Page extends Entity
+class Page extends Entity implements PageInterface
 {
     use TranslateTrait;
     use PageMetaTrait;
+    use PageTypeTrait;
 
     private $__parentTheme;
 
@@ -59,6 +64,16 @@ class Page extends Entity
         'meta_lang'
     ];
 
+    public function getPath()
+    {
+        return TableRegistry::get('Banana.Pages')
+            ->find('path', ['for' => $this->id]);
+    }
+
+    /**
+     * @return array|string
+     * @deprecated Use getPageUrl() instead
+     */
     protected function _getUrl()
     {
         if (Configure::read('Banana.Router.enablePrettyUrls')) {
@@ -104,6 +119,10 @@ class Page extends Entity
         return $url;
     }
 
+    /**
+     * @return array
+     * @todo Move to ControllerPageType class
+     */
     protected function _getRedirectControllerUrl()
     {
         $controller = explode('::', $this->redirect_controller);
@@ -150,6 +169,10 @@ class Page extends Entity
         return '/?pageid=' . $this->id;
     }
 
+    /**
+     * @return mixed
+     * @todo Replace with ParentTrait
+     */
     protected function _getParentTheme()
     {
 
@@ -170,6 +193,10 @@ class Page extends Entity
         return Configure::read('Banana.Frontend.theme');
     }
 
+    /**
+     * @return \Cake\Datasource\ResultSetInterface
+     * @todo Cache results
+     */
     protected function _getPublishedPosts()
     {
         return TableRegistry::get('Banana.Posts')
@@ -178,5 +205,13 @@ class Page extends Entity
             ->order(['Posts.pos' => 'ASC', 'Posts.id' => 'ASC'])
             ->all();
     }
+
+
+
+
+    /** PAGE AWARE **/
+
+
+
 
 }
