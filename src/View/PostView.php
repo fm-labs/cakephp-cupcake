@@ -4,6 +4,7 @@ namespace Banana\View;
 
 use Cake\I18n\I18n;
 use Cake\Routing\Router;
+use Cake\Utility\Text;
 
 class PostView extends ContentView
 {
@@ -11,6 +12,8 @@ class PostView extends ContentView
     public function render($view = null, $layout = null)
     {
         if ($this->get('post')) {
+            $this->loadHelper('Media.Media');
+
             $post = $this->get('post');
 
             $metaTitle = ($post->meta_title) ?: $post->title;
@@ -52,15 +55,36 @@ class PostView extends ContentView
 
 
             // Open Graph Tags
-            $this->Html->meta(['property' => 'og:type', 'content' => 'website'], null, ['block' => true]);
             $this->Html->meta(['property' => 'og:title', 'content' => $metaTitle], null, ['block' => true]);
             $this->Html->meta(['property' => 'og:description', 'content' => $metaDescription], null, ['block' => true]);
             $this->Html->meta(['property' => 'og:url', 'content' => $postUrl], null, ['block' => true]);
+            $this->Html->meta(['property' => 'og:type', 'content' => 'article'], null, ['block' => true]);
 
-            // Twitter Tags
+            $publishedTime = ($post->publish_start) ?: $post->created;
+            if ($publishedTime) {
+                $this->Html->meta(['property' => 'article:published_time', 'content' => $publishedTime->format(DATE_ISO8601)], null, ['block' => true]);
+            }
+
+            $expirationTime = ($post->publish_end);
+            if ($expirationTime) {
+                $this->Html->meta(['property' => 'article:expiration_time', 'content' => $expirationTime->format(DATE_ISO8601)], null, ['block' => true]);
+            }
+
+            $modifiedTime = $post->modified;
+            if ($modifiedTime) {
+                $this->Html->meta(['property' => 'article:modified_time', 'content' => $modifiedTime->format(DATE_ISO8601)], null, ['block' => true]);
+            }
+
+            if ($post->image) {
+                $thumb = $this->Media->thumbnailUrl($post->image->filepath, ['width' => 200, 'height' => 200], true);
+                $this->Html->meta(['property' => 'og:image', 'content' => $thumb], null, ['block' => true]);
+                $this->Html->meta(['property' => 'twitter:image', 'content' => $thumb], null, ['block' => true]);
+            }
+
+            // Twitter Tags (https://dev.twitter.com/cards/markup)
             $this->Html->meta(['property' => 'twitter:card', 'content' => 'summary'], null, ['block' => true]);
             $this->Html->meta(['property' => 'twitter:title', 'content' => $metaTitle], null, ['block' => true]);
-            $this->Html->meta(['property' => 'twitter:description', 'content' => $metaDescription], null, ['block' => true]);
+            $this->Html->meta(['property' => 'twitter:description', 'content' => Text::truncate($metaDescription, 197, ['ellipsis' => '...', 'exact' => false])], null, ['block' => true]);
             $this->Html->meta(['property' => 'twitter:url', 'content' => $postUrl], null, ['block' => true]);
 
         }
