@@ -22,7 +22,7 @@
             ],
             'title' => [
                 'formatter' => function($val, $row) {
-                    return $this->Html->link($val, ['controller' => 'Posts', 'action' => 'edit', $row->id], ['class' => 'link-frame-modal']);
+                    return $this->Html->link($val, ['controller' => 'Posts', 'action' => 'edit', $row->id], ['class' => 'link-frame']);
                 }
             ]
         ],

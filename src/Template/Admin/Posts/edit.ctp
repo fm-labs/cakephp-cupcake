@@ -36,7 +36,7 @@ $editor['body_id'] = $content->cssid;
         <?php
         echo $this->Form->input('title');
         echo $this->Form->input('slug');
-        echo $this->Form->input('subheading');
+        //echo $this->Form->input('subheading');
         ?>
         <?= $this->Form->fieldsetStart(['legend' => 'Teaser', 'collapsed' => !($content->use_teaser || $content->teaser_html)]);  ?>
         <?php
@@ -50,12 +50,14 @@ $editor['body_id'] = $content->cssid;
         ?>
         <?= $this->Form->fieldsetEnd(); ?>
 
+        <?= $this->Form->fieldsetStart(['legend' => 'Content', 'collapsed' => false]);  ?>
         <?php
         echo $this->Form->input('body_html', [
             'type' => 'htmleditor',
             'editor' => $editor
         ]);
         ?>
+        <?= $this->Form->fieldsetEnd(); ?>
 
         <?= $this->Form->fieldsetStart(['legend' => 'Meta', 'collapsed' => true]); ?>
 
@@ -86,7 +88,7 @@ $editor['body_id'] = $content->cssid;
         ?>
         <?= $this->Form->fieldsetEnd(); ?>
 
-        <?= $this->Form->fieldsetStart(['legend' => 'Media', 'collapsed' => true]); ?>
+        <?= $this->Form->fieldsetStart(['legend' => 'Media', 'collapsed' => false]); ?>
         <?= $this->cell('Media.ImageSelect', [[
             'label' => 'Teaser Image',
             'model' => 'Banana.Posts',
@@ -110,9 +112,9 @@ $editor['body_id'] = $content->cssid;
             'label' => 'Additional Images',
             'model' => 'Banana.Posts',
             'id' => $content->id,
-            'scope' => 'images_file',
+            'scope' => 'image_files',
             'multiple' => true,
-            'image' => $content->images_file,
+            'image' => $content->image_files,
             'imageOptions' => ['width' => 200]
         ]]); ?>
         <?= $this->Form->fieldsetEnd(); ?>
