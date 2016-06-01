@@ -201,7 +201,7 @@ class PagesTable extends Table
         return $rootPage;
     }
 
-    public function findHostRoot($fallback = true)
+    public function findHostRoot($fallback = false)
     {
         $host = (defined('BANANA_HOST')) ? BANANA_HOST : env('HTTP_HOST');
 

@@ -16,7 +16,7 @@ abstract class AbstractPageType
 
             $pageUrl = [
                 'prefix' => false,
-                'plugin' => null,
+                'plugin' => 'Banana',
                 'controller' => 'Pages',
                 'action' => 'view',
                 'page_id' => $page->id,
@@ -26,7 +26,7 @@ abstract class AbstractPageType
 
             $pageUrl = [
                 'prefix' => false,
-                'plugin' => null,
+                'plugin' => 'Banana',
                 'controller' => 'Pages',
                 'action' => 'view',
                 $page->id,

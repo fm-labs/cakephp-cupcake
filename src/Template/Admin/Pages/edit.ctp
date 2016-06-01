@@ -22,7 +22,7 @@ $this->assign('title', $content->title);
 ?>
 <div class="pages form">
 
-    <?= $this->Form->create($content, []); ?>
+    <?= $this->Form->create($content, ['class' => 'no-ajax']); ?>
 
     <div class="row">
         <div class="col-md-9">

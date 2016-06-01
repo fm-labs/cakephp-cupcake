@@ -21,7 +21,11 @@ Plugin::load('Settings', ['bootstrap' => true, 'routes' => true]);
  * Theme plugins
  */
 if (Configure::check('Banana.Frontend.theme')) {
-    Plugin::load(Configure::read('Banana.Frontend.theme'), ['bootstrap' => true, 'routes' => true]);
+    try {
+        Plugin::load(Configure::read('Banana.Frontend.theme'), ['bootstrap' => true, 'routes' => true]);
+    } catch (\Cake\Core\Exception\Exception $ex) {
+        die ($ex->getMessage());
+    }
 }
 
 /**

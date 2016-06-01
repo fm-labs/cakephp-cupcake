@@ -329,12 +329,18 @@ class Banana
         $available['App'] = $filesFinder(APP . $path, null);
 
         // find templates from loaded plugins
+        debug(Plugin::loaded());
         foreach (Plugin::loaded() as $plugin) {
             $_path = Plugin::path($plugin) . 'src' . DS . $path;
             $available[$plugin] = $filesFinder($_path, $plugin);
         }
+
+        debug($available);
         */
 
+        //sort($available);
+
+        asort($available);
         return $available;
     }
 

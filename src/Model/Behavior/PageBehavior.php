@@ -32,8 +32,6 @@ class PageBehavior extends Behavior
     // In a table or behavior class
     public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options)
     {
-        debug($data);
-        die("Marshal!!");
     }
 
     /**

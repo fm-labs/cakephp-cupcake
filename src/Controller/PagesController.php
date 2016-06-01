@@ -112,6 +112,7 @@ class PagesController extends FrontendController
             ->contain(['PageLayouts'])
             ->first();
 
+
         if (!$page) {
             throw new NotFoundException(__d('banana',"Page not found"));
         }
@@ -153,7 +154,7 @@ class PagesController extends FrontendController
             // Static
             case 'static':
                 $action = ($page->page_template) ?: null;
-                if ($action && method_exists($this, $action)) {
+                if ($action !== 'view' && $action && method_exists($this, $action)) {
                     $this->setAction($action);
                 }
                 break;
