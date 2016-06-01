@@ -86,7 +86,7 @@ class PageView extends ContentView
             $this->Html->meta(['property' => 'twitter:url', 'content' => $pageUrl], null, ['block' => true]);
 
             foreach ($page->getPath() as $node) {
-                if (!$node->parent_id) continue;
+                if (!$node->parent_id || $node->hide_in_nav) continue;
                 $this->Content->addCrumb($node->getPageTitle(), $node->getPageUrl());
             }
 
