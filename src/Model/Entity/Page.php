@@ -76,97 +76,11 @@ class Page extends Entity implements PageInterface
      */
     protected function _getUrl()
     {
-        if (Configure::read('Banana.Router.enablePrettyUrls')) {
-
-            $defaultUrl = [
-                'prefix' => false,
-                'plugin' => null,
-                'controller' => 'Pages',
-                'action' => 'view',
-                'page_id' => $this->id,
-                'slug' => $this->slug,
-            ];
-        } else {
-
-            $defaultUrl = [
-                'prefix' => false,
-                'plugin' => null,
-                'controller' => 'Pages',
-                'action' => 'view',
-                $this->id,
-                'slug' => $this->slug,
-            ];
-        }
-
-        try {
-            switch ($this->type) {
-                case "controller":
-                    $url = $this->_getRedirectControllerUrl();
-                    break;
-                case "shop_category":
-                    $catId = $this->_properties['redirect_location'];
-                    $url = Router::url(TableRegistry::get('Shop.ShopCategories')->get($catId)->url); //. '&page_id=' . $this->id;
-                    break;
-                case "cell":
-                case "module":
-                default:
-                    $url = $defaultUrl;
-            }
-        } catch (\Exception $ex) {
-            $url = $defaultUrl;
-        }
-
-        return $url;
-    }
-
-    /**
-     * @return array
-     * @todo Move to ControllerPageType class
-     */
-    protected function _getRedirectControllerUrl()
-    {
-        $controller = explode('::', $this->redirect_controller);
-        $action = 'index';
-        $params = [];
-        if (count($controller) == 2) {
-            list($controller, $action) = $controller;
-
-            $action = explode(':', $action);
-            if (count($action) == 2) {
-                list($action, $args) = $action;
-
-                $args = explode(',', $args);
-                array_walk($args, function ($val, $idx) use (&$params) {
-                    $val = trim($val);
-                    if (preg_match('/^[\{](.*)[\}]$/', $val, $matches)) {
-                        $val = $this->get($matches[1]);
-                        $params[$matches[1]] = $val;
-                    } else {
-                        $params[] = $val;
-                    }
-                });
-
-                //debug($params);
-            } elseif (count($action) == 1) {
-                $action = $action[0];
-            } else {
-                throw new Exception("Malformed controller params");
-            }
-
-        } elseif (count($controller) == 1) {
-            $controller = $controller[0];
-        } else {
-            throw new Exception("Malformed controller location");
-        }
-
-        list($plugin, $controller) = pluginSplit($controller);
-        $url = ['prefix' => false, 'plugin' => $plugin, 'controller' => $controller, 'action' => $action, 'page_id' => $this->id];
-        $url = array_merge($params, $url);
-        return $url;
+        return $this->getPageUrl();
     }
 
     protected function _getPermaUrl() {
-        return '/?pageid=' . $this->id;
+        return '/?page_id=' . $this->id;
     }
 
     /**

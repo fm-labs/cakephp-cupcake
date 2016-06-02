@@ -7,21 +7,21 @@ if (Configure::read('Banana.Router.enableRootScope')) {
 
     Router::scope('/', function($routes) {
 
-        $routes->connect('/', ['plugin' => null, 'controller' => 'Pages', 'action' => 'index']);
+        $routes->connect('/', ['plugin' => 'Banana', 'controller' => 'Pages', 'action' => 'index']);
 
         // Pages
         $routes->connect('/:slug/:page_id/*',
-            ['plugin' => null,  'controller' => 'Pages', 'action' => 'view'],
+            ['plugin' => 'Banana',  'controller' => 'Pages', 'action' => 'view'],
             ['page_id' => '^[0-9]+', 'pass' => ['page_id'], '_name' => 'page']
         );
 
         $routes->connect('/:slug',
-            ['plugin' => null, 'controller' => 'Pages', 'action' => 'view'],
+            ['plugin' => 'Banana', 'controller' => 'Pages', 'action' => 'view'],
             ['pass' => []]
         );
 
         $routes->connect('/*',
-            ['plugin' => null, 'controller' => 'Pages', 'action' => 'view'],
+            ['plugin' => 'Banana', 'controller' => 'Pages', 'action' => 'view'],
             ['pass' => ['page_id'], 0 => '^[0-9]+']
         );
 
@@ -51,17 +51,17 @@ Router::scope('/content', ['plugin' => 'Banana', '_namePrefix' => 'content:', ],
     if (!Configure::read('Banana.Router.disableFrontendRoutes') && Configure::read('Banana.Router.enablePrettyUrls')) {
 
         $routes->connect('/page/:slug/:page_id/*',
-            ['plugin' => null,  'controller' => 'Pages', 'action' => 'view'],
+            ['plugin' => 'Banana',  'controller' => 'Pages', 'action' => 'view'],
             ['pass' => ['page_id'], '_name' => 'page']
         );
 
         $routes->connect('/page/:slug',
-            ['plugin' => null, 'controller' => 'Pages', 'action' => 'view'],
+            ['plugin' => 'Banana', 'controller' => 'Pages', 'action' => 'view'],
             ['pass' => []]
         );
 
         $routes->connect('/page/*',
-            ['plugin' => null, 'controller' => 'Pages', 'action' => 'view'],
+            ['plugin' => 'Banana', 'controller' => 'Pages', 'action' => 'view'],
             ['pass' => ['page_id'], 0 => '^[0-9]+']
         );
 
