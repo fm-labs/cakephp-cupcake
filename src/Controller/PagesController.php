@@ -245,21 +245,6 @@ class PagesController extends FrontendController
         }
     }
 
-
-    /**
-     * Instantiates the correct view class, hands it its data, and uses it to render the view output.
-     *
-     * @param string $view View to use for rendering
-     * @param string $layout Layout to use
-     * @return \Cake\Network\Response A response object containing the rendered view.
-     * @link http://book.cakephp.org/3.0/en/controllers.html#rendering-a-view
-     */
-    public function render($view = null, $layout = null)
-    {
-        parent::render($view, $layout);
-    }
-
-
     protected function module($moduleName)
     {
         $this->set('moduleName', $moduleName);
