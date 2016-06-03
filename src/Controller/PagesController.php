@@ -31,6 +31,10 @@ class PagesController extends FrontendController
 
     public $modelClass = 'Banana.Pages';
 
+    /**
+     * @var string
+     * @deprecated
+     */
     public $viewClass = 'Banana.Page';
 
     /**
@@ -44,13 +48,13 @@ class PagesController extends FrontendController
         parent::initialize();
         $this->loadComponent('Banana.Frontend');
         $this->loadComponent('Paginator');
+        $this->loadComponent('RequestHandler');
     }
 
     public function beforeFilter(Event $event)
     {
         parent::beforeFilter($event);
         $this->viewBuilder()->plugin('Banana');
-        $this->autoRender = false;
     }
 
     public function beforeRender(Event $event)
@@ -185,7 +189,6 @@ class PagesController extends FrontendController
             }
         }
 
-        $this->autoRender = false;
         $this->viewBuilder()->className('Banana.Page');
 
         $view = ($page->page_template) ?: $page->type;
@@ -205,7 +208,6 @@ class PagesController extends FrontendController
         $this->set('page', $page);
         $this->set('contentModules', $contentModules);
 
-        return $this->render();
     }
 
     /**

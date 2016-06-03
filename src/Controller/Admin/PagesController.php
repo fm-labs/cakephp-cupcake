@@ -220,8 +220,6 @@ class PagesController extends ContentController
             //debug($nodes);
         }
 
-
-
         //debug($pages);
         $treeData = [];
         array_walk($nodes, function ($node) use (&$treeData, &$id) {
@@ -235,7 +233,7 @@ class PagesController extends ContentController
                 'data' => [
                     'type' => $node->type,
                     'adminUrl' => Router::url($node->getPageAdminUrl()),
-                    'treeUrl' => Router::url($node->getPageTreeUrl())
+                    'treeUrl' => null
                 ]
             ];
         });
