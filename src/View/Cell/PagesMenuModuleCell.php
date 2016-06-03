@@ -61,10 +61,10 @@ class PagesMenuModuleCell extends ModuleCell
             $isActive = false;
             $class = $child->cssclass;
 
-            if ($child->hide_in_nav === true) {
+            if ($child->isPageHiddenInNav()) {
                 continue;
 
-            } elseif ($child->is_published !== true) {
+            } elseif (!$child->isPagePublished()) {
                 continue;
 
             } elseif ($this->request->param('refid') == $child->id) {

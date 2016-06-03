@@ -6,8 +6,9 @@ use Exception;
 
 class ControllerPageType extends AbstractPageType
 {
-    public function getUrl(EntityInterface $page)
+    public function getUrl()
     {
+        $page =& $this->page;
         $controller = explode('::', $page->redirect_controller);
         $action = 'index';
         $params = [];

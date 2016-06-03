@@ -109,7 +109,7 @@ class PagesController extends ContentController
 
         $nodeFormatter = function(PageInterface $node) use (&$id) {
 
-            $publishedClass = ($node->is_published) ? 'published' : 'unpublished';
+            $publishedClass = ($node->isPagePublished()) ? 'published' : 'unpublished';
             $class = $node->getPageType();
             $class.= " " . $publishedClass;
 

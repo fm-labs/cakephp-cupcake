@@ -82,8 +82,9 @@ class Banana
         return $pageLayout;
     }
 
-    public static function getPageHandler($pageType)
+    public static function getPageHandler(Page $page)
     {
+        $pageType = $page->getPageType();
         $handlers = [
             'root' => 'Banana\Page\RootPageType',
             'content' => 'Banana\Page\ContentPageType',
@@ -94,7 +95,7 @@ class Banana
         ];
 
         if (isset($handlers[$pageType])) {
-            return new $handlers[$pageType]();
+            return new $handlers[$pageType]($page);
         }
 
         return null;

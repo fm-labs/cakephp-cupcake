@@ -20,7 +20,6 @@ class Page extends Entity implements PageInterface
 {
     use TranslateTrait;
     use PageMetaTrait;
-    use PageTypeTrait;
 
     private $__parentTheme;
 
@@ -63,6 +62,63 @@ class Page extends Entity implements PageInterface
         'meta_robots',
         'meta_lang'
     ];
+
+    /**
+     * @var AbstractPageType
+     */
+    protected $_handler;
+
+    function getPageTitle()
+    {
+        return $this->title;
+    }
+
+
+    function getPageType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @return AbstractPageType|null
+     * @throws \Exception
+     */
+    public function getPageHandler()
+    {
+        if ($this->_handler === null) {
+            $this->_handler = Banana::getPagehandler($this);
+            if (!$this->_handler) {
+                throw new \Exception(sprintf('Page Handler not found for type %s', $this->type));
+            }
+        }
+        return $this->_handler;
+    }
+
+
+    function getPageUrl()
+    {
+        return $this->getPageHandler()->getUrl();
+    }
+
+    function getPageAdminUrl()
+    {
+        return $this->getPageHandler()->getAdminUrl();
+    }
+
+    public function getPageChildren()
+    {
+        return $this->getPageHandler()->getChildren();
+    }
+
+    public function isPagePublished()
+    {
+        return $this->getPageHandler()->isPublished();
+    }
+
+    public function isPageHiddenInNav()
+    {
+        return $this->getPageHandler()->isHiddenInNav();
+    }
 
     public function getPath()
     {

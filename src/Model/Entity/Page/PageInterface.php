@@ -20,4 +20,6 @@ interface PageInterface
     function getPageUrl();
     function getPageAdminUrl();
     function getPageChildren();
+    function isPagePublished();
+    function isPageHiddenInNav();
 }

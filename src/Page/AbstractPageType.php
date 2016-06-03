@@ -9,8 +9,14 @@ use Cake\ORM\TableRegistry;
 
 abstract class AbstractPageType
 {
-
-    public function getUrl(EntityInterface $page)
+    protected $page;
+    
+    public function __construct(Page $page)
+    {
+        $this->page =& $page;
+    }
+    
+    public function getUrl()
     {
         if (Configure::read('Banana.Router.enablePrettyUrls')) {
 
@@ -19,8 +25,8 @@ abstract class AbstractPageType
                 'plugin' => 'Banana',
                 'controller' => 'Pages',
                 'action' => 'view',
-                'page_id' => $page->id,
-                'slug' => $page->slug,
+                'page_id' => $this->page->id,
+                'slug' => $this->page->slug,
             ];
         } else {
 
@@ -29,33 +35,42 @@ abstract class AbstractPageType
                 'plugin' => 'Banana',
                 'controller' => 'Pages',
                 'action' => 'view',
-                $page->id,
-                'slug' => $page->slug,
+                $this->page->id,
+                'slug' => $this->page->slug,
             ];
         }
 
         return $pageUrl;
     }
 
-    public function getAdminUrl(EntityInterface $page)
+    public function getAdminUrl()
     {
         return [
             'prefix' => 'admin',
             'plugin' => 'Banana',
             'controller' => 'Pages',
             'action' => 'manage',
-            $page->id,
+            $this->page->id,
         ];
     }
 
-    public function getChildren(EntityInterface $page)
+    public function getChildren()
     {
         return TableRegistry::get('Banana.Pages')
             ->find()
-            ->where(['parent_id' => $page->id])
+            ->where(['parent_id' => $this->page->id])
             ->orderAsc('lft')
             ->all()
             ->toArray();
     }
 
+    public function isPublished()
+    {
+        return $this->page->is_published;
+    }
+
+    public function isHiddenInNav()
+    {
+        return $this->page->hide_in_nav;
+    }
 }
