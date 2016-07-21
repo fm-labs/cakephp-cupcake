@@ -365,7 +365,7 @@ class Banana
             'controller' => 'Controller',
             //'cell' => 'Cell',
             //'module' => 'Module',
-            'page' => 'Page',
+            //'page' => 'Page',
             'redirect' => 'Redirect',
             'root' => 'Website Root',
             'static' => 'Static',
