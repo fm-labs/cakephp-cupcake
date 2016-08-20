@@ -28,6 +28,8 @@ abstract class ContentController extends AppController
 
     public function beforeRender(Event $event)
     {
+        parent::beforeRender($event);
+
         $this->set('layoutsAvailable', $this->getLayoutsAvailable());
         $this->set('modulesAvailable', $this->getModulesAvailable());
         $this->set('moduleTemplatesAvailable', $this->getModuleTemplatesAvailable());

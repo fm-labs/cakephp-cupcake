@@ -30,6 +30,14 @@ class PagesController extends ContentController
 
     public $modelClass = "Banana.Pages";
 
+    public function beforeRender(Event $event) {
+        parent::beforeRender($event);
+
+
+        $this->response->header("Access-Control-Allow-Headers", "Content-Type");
+        $this->response->header("Access-Control-Allow-Origin", "*");
+    }
+
     /**
      * Index method
      *
