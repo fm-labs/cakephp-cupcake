@@ -15,11 +15,12 @@ interface PageInterface
 {
     //function getPageType(EntityInterface $entity);
 
-    function getPageType();
-    function getPageTitle();
-    function getPageUrl();
-    function getPageAdminUrl();
-    function getPageChildren();
-    function isPagePublished();
-    function isPageHiddenInNav();
+    public function getPageId();
+    public function getPageType();
+    public function getPageTitle();
+    public function getPageUrl();
+    public function getPageAdminUrl();
+    public function getPageChildren();
+    public function isPagePublished();
+    public function isPageHiddenInNav();
 }

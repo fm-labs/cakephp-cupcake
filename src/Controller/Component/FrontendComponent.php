@@ -83,6 +83,7 @@ class FrontendComponent extends Component
         $this->_page = $page;
         */
         $this->controller->set('page_id', $pageId);
+        $this->setRefScope('Banana.Pages');
         $this->setRefId($pageId);
     }
 

@@ -2,6 +2,7 @@
 namespace Banana\View\Cell;
 
 use Cake\ORM\TableRegistry;
+use Cake\Routing\Router;
 use Cake\Utility\Inflector;
 use Cake\View\Cell;
 use Banana\Model\Table\PagesTable;
@@ -20,6 +21,8 @@ class PagesMenuModuleCell extends ModuleCell
         'element_path' => null
     ];
 
+    protected $_index = [];
+    protected $_activeIndex;
     protected $_depth = 0;
 
     public function display()
@@ -45,11 +48,9 @@ class PagesMenuModuleCell extends ModuleCell
 
         $this->params['element_path'] = ($this->params['element_path']) ?: 'Banana.Modules/PagesMenu/menu_list';
 
-        //$tree = $this->Pages->find('treeList')->toArray();
-        //$this->set('tree', $tree);
-        //$this->set('children', $children);
-        //$this->set($params);
-        //$this->render('other');
+        $this->set('index', $this->_index);
+        $this->set('activeIndex', $this->_activeIndex);-
+        $this->set('activePageId', $this->request->param('page_id'));
         $this->set('params', $this->params);
     }
 
@@ -67,8 +68,8 @@ class PagesMenuModuleCell extends ModuleCell
             } elseif (!$child->isPagePublished()) {
                 continue;
 
-            } elseif ($this->request->param('refid') == $child->id) {
-                $isActive = true;
+            //} elseif ($this->request->param('page_id') == $child->id) {
+            //    $isActive = true;
 
             } elseif ($child->type == 'controller') {
                 $plugin = $this->request->param('plugin');
@@ -77,21 +78,28 @@ class PagesMenuModuleCell extends ModuleCell
                     ? Inflector::camelize($plugin) . '.' . Inflector::camelize($controller)
                     : Inflector::camelize($controller);
 
-                if ($child->redirect_location == $needle) {
-                    $isActive = true;
-                }
+                //if ($child->redirect_location == $needle) {
+                //    $isActive = true;
+                //}
             }
 
             if ($isActive) {
                 $class .= ' active';
             }
 
+            $itemPageId = $child->getPageId();
             $item = [
                 'title' => $child->getPageTitle(),
                 'url' => $child->getPageUrl(),
                 'class' => $class,
                 '_children' => []
             ];
+
+            $indexKey = count($this->_index) . ':' . Router::url($item['url'], true);
+            $this->_index[$indexKey] = str_repeat('_', $this->_depth - 1) . $item['title'];
+            //if ($isActive) {
+            //    $this->_activeIndex = $indexKey;
+            //}
 
             /*
             if ($child->children) {

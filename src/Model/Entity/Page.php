@@ -68,6 +68,10 @@ class Page extends Entity implements PageInterface
      */
     protected $_handler;
 
+    function getPageId() {
+        return $this->id;
+    }
+
     function getPageTitle()
     {
         return $this->title;
