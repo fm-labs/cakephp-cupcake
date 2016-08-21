@@ -80,7 +80,9 @@ class ModulesTable extends Table
     public function modularize($entity)
     {
         $entityClass = self::moduleEntityClass($entity->path);
-        $this->entityClass($entityClass);
+        if ($entityClass) {
+            $this->entityClass($entityClass);
+        }
 
         $mod = $this->newEntity();
         $mod->accessible('*', true);

@@ -74,7 +74,7 @@ class ModulesController extends AppController
         $this->viewBuilder()
             ->layout('frontend')
             ->theme(Configure::read('Banana.Frontend.theme'))
-            ->className('Banana.Frontend');
+            ->className('Banana.Content');
     }
 
     /**

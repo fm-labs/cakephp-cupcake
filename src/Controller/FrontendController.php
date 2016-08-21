@@ -13,8 +13,6 @@ use Cake\Event\Event;
  */
 abstract class FrontendController extends Controller
 {
-    //public $viewClass = 'Banana.Frontend';
-
     public function initialize()
     {
         parent::initialize();
