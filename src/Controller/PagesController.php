@@ -121,8 +121,9 @@ class PagesController extends FrontendController
             throw new NotFoundException(__d('banana',"Page not found"));
         }
 
-        $this->request->params['page_id'] = $page->id;
-        $this->Frontend->setPageId($page->id);
+        //$this->request->params['page_id'] = $page->id;
+        //$this->Frontend->setPageId($page->id);
+        $this->Frontend->setRefId($page->id);
 
         switch ($page->type) {
             // Internal redirects

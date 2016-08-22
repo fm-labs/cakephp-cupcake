@@ -71,17 +71,6 @@ class FrontendComponent extends Component
 
     public function setPageId($pageId)
     {
-        //debug("Set pageId #".$pageId);
-        /*
-        $this->controller->loadModel('Banana.Pages');
-        try {
-            $page = $this->controller->Pages->get($pageId);
-        } catch (\Exception $ex) {
-            debug('FrontendComponent: Failed to set pageId: #'.$pageId.': ' . $ex->getMessage());
-            return;
-        }
-        $this->_page = $page;
-        */
         $this->controller->set('page_id', $pageId);
         $this->setRefScope('Banana.Pages');
         $this->setRefId($pageId);
@@ -89,19 +78,19 @@ class FrontendComponent extends Component
 
     public function beforeFilter(Event $event)
     {
-        $this->detectPage();
+        //$this->detectPage();
     }
 
     public function beforeRender(Event $event)
     {
-        /*
-        if (!$controller->theme && $this->_theme) {
-            $controller->theme = $this->_theme;
-        }
-        if (!$controller->layout && $this->_layout) {
-            $controller->layout = $this->_layout;
-        }
-        */
+
+        //if (!$controller->theme && $this->_theme) {
+        //    $controller->theme = $this->_theme;
+        //}
+
+        //if (!$controller->layout && $this->_layout) {
+        //    $controller->layout = $this->_layout;
+        //}
     }
 
     public function detectPage()

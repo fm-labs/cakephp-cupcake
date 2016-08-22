@@ -53,6 +53,8 @@ class ContentView extends View
             'page_id' => $this->get('refid') // @deprecated
         ];
 
+        var_dump($cellOptions);
+
         return $this->cell('Banana.Section', $cellData, $cellOptions);
     }
 

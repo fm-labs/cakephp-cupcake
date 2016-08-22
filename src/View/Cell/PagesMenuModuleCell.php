@@ -49,7 +49,7 @@ class PagesMenuModuleCell extends ModuleCell
         $this->params['element_path'] = ($this->params['element_path']) ?: 'Banana.Modules/PagesMenu/menu_list';
 
         $this->set('index', $this->_index);
-        $this->set('activeIndex', $this->_activeIndex);-
+        $this->set('activeIndex', $this->_activeIndex);
         $this->set('activePageId', $this->request->param('page_id'));
         $this->set('params', $this->params);
     }
