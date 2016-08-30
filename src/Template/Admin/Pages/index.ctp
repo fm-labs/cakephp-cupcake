@@ -8,4 +8,4 @@ $this->Toolbar->addLink(__d('banana','Repair'), ['action' => 'repair'], ['icon' 
 $this->extend('Backend./Admin/Base/Tree/index');
 //$this->assign('heading', __('Pages'));
 ?>
-<?= __('Select a page'); ?>
+<?= __('Loading'); ?>&nbsp;...
