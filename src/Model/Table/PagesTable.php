@@ -46,6 +46,14 @@ class PagesTable extends Table
         $this->addBehavior('Banana.Sluggable');
         $this->addBehavior('Banana.Publishable');
 
+
+        /*
+        $this->addBehavior('Banana.Sortable', [
+            'field' => 'pos',
+            'scope' => []
+        ]);
+        */
+
         $this->belongsTo('ParentPages', [
             'className' => 'Banana.Pages',
             'foreignKey' => 'parent_id'

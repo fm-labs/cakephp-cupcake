@@ -3,7 +3,7 @@
 <?php
 // TOOLBAR
 $this->Toolbar->addLink(__d('banana','{0} (Tree)', __d('banana','Pages')), ['action' => 'index'], ['icon' => 'sitemap']);
-$this->Toolbar->addLink(__d('banana','New {0}', __d('banana','Page')), ['action' => 'add'], ['icon' => 'file-o']);
+$this->Toolbar->addLink(__d('banana','New {0}', __d('banana','Page')), ['action' => 'add'], ['icon' => 'file-o', 'class' => 'link-frame-modal']);
 $this->Toolbar->addLink(__d('banana','Repair Tree'), ['action' => 'repair'], ['icon' => 'wrench']);
 
 // HEADING
@@ -29,9 +29,24 @@ $this->assign('heading', __d('banana','Pages'));
             <?= $this->Form->end() ?>
         </div>
     </div>
-
+    <div class="actions right grouped">
+        <ul>
+            <!--
+            <li><?= $this->Html->link(
+                    __('Reorder (tree)'),
+                    [
+                        'controller' => 'Sort', 'action' => 'reorder', 'model' => 'Banana.Pages',
+                        'field' => 'lft',  'order' => 'asc',
+                        'scope' => []
+                    ],
+                    ['class' => 'link-frame btn btn-default']); ?></li>
+            -->
+        </ul>
+    </div>
     <?= $this->cell('Backend.DataTable', [[
         'paginate' => true,
+        //'sortable' => true,
+        //'sortUrl' => ['plugin' => 'Banana', 'controller' => 'Sort', 'action' => 'tableSort'],
         'model' => 'Banana.Pages',
         'data' => $contents,
         'fields' => [

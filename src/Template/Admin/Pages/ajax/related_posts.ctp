@@ -35,28 +35,31 @@
     ]]);
     ?>
 
-    <div class="actions">
-        <?= $this->Html->link(
-            __('Add {0}', __('Post')),
-            ['controller' => 'Posts', 'action' => 'add', 'refscope' => 'Banana.Pages',  'refid' => $content->id],
-            ['class' => 'link-frame btn btn-default']); ?>
-
-        <?= $this->Html->link(
-            __('Reorder (asc)'),
-            [
-                'controller' => 'Sort', 'action' => 'reorder', 'model' => 'Banana.Posts',
-                'field' => 'pos',  'order' => 'asc',
-                'scope' => ['refscope' => 'Banana.Pages', 'refid' => $content->id]
-            ],
-            ['class' => 'link-frame btn btn-default']); ?>
-        <?= $this->Html->link(
-            __('Reorder (desc)'),
-            [
-                'controller' => 'Sort', 'action' => 'reorder', 'model' => 'Banana.Posts',
-                'field' => 'pos',  'order' => 'desc',
-                'scope' => ['refscope' => 'Banana.Pages', 'refid' => $content->id]
-            ],
-            ['class' => 'link-frame btn btn-default']); ?>
+    <div class="actions grouped">
+        <ul>
+            <li><?= $this->Html->link(
+                    __('Add {0}', __('Post')),
+                    ['controller' => 'Posts', 'action' => 'add', 'refscope' => 'Banana.Pages',  'refid' => $content->id],
+                    ['class' => 'link-frame btn btn-default']); ?>
+            </li>
+            <li><?= $this->Html->link(
+                    __('Reorder (asc)'),
+                    [
+                        'controller' => 'Sort', 'action' => 'reorder', 'model' => 'Banana.Posts',
+                        'field' => 'pos',  'order' => 'asc',
+                        'scope' => ['refscope' => 'Banana.Pages', 'refid' => $content->id]
+                    ],
+                    ['class' => 'link-frame btn btn-default']); ?></li>
+            <li><?= $this->Html->link(
+                    __('Reorder (desc)'),
+                    [
+                        'controller' => 'Sort', 'action' => 'reorder', 'model' => 'Banana.Posts',
+                        'field' => 'pos',  'order' => 'desc',
+                        'scope' => ['refscope' => 'Banana.Pages', 'refid' => $content->id]
+                    ],
+                    ['class' => 'link-frame btn btn-default']); ?>
+            </li>
+        </ul>
     </div>
 
     <?php //debug($posts); ?>
