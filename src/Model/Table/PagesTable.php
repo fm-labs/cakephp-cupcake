@@ -2,9 +2,11 @@
 namespace Banana\Model\Table;
 
 use Banana\Model\Entity\Page;
+use Banana\Model\Entity\Page\PageInterface;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\Routing\Router;
 use Cake\Validation\Validator;
 use Banana\Model\Table\PageModulesTable;
 use Banana\Model\Table\PageLayoutsTable;
@@ -253,5 +255,71 @@ class PagesTable extends Table
             ->first();
 
         return $page['id'];
+    }
+
+    public function jsTreeGetNodes()
+    {
+
+        $nodes = $this->find('threaded')
+            ->all()
+            ->toArray();
+
+
+        $id = 1;
+        $nodeFormatter = function(PageInterface $node) use (&$id) {
+
+            $publishedClass = ($node->isPagePublished()) ? 'published' : 'unpublished';
+            $class = $node->getPageType();
+            $class.= " " . $publishedClass;
+
+            return [
+                'id' => $id++,
+                'text' => $node->getPageTitle(),
+                'icon' => $class,
+                'state' => [
+                    'opened' => false,
+                    'disabled' => false,
+                    'selected' => false,
+                ],
+                'children' => [],
+                'li_attr' => ['class' => $class],
+                'a_attr' => [],
+                'data' => [
+                    'type' => $node->getPageType(),
+                    'viewUrl' => Router::url($node->getPageAdminUrl()),
+                ]
+            ];
+        };
+
+        $nodesFormatter = function($nodes) use ($nodeFormatter, &$nodesFormatter) {
+            $formatted = [];
+            foreach ($nodes as $node) {
+                $_node = $nodeFormatter($node);
+                if ($node->getPageChildren()) {
+                    $_node['children'] = $nodesFormatter($node->getPageChildren());
+                }
+                $formatted[] = $_node;
+            }
+            return $formatted;
+        };
+
+        /*
+        $jsTree = [
+            'id' => null,
+            'text' => 'All Sites',
+            'icon' => 'super',
+            'state' => [
+                'opened' => true,
+                'disabled' => false,
+                'selected' => true,
+            ],
+            'children' => $nodesFormatter($nodes),
+            'li_attr' => [],
+            'a_attr' => []
+        ];
+        */
+
+        $jsTree = $nodesFormatter($nodes);
+        return $jsTree;
     }
 }
