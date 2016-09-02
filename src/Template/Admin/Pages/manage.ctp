@@ -23,7 +23,9 @@ $this->assign('title', $content->title);
 
     <div class="panel panel-primary">
         <div class="panel-heading">
-            <?= __('Page'); ?>: <?= h($content->title); ?>
+            <i class="fa fa-page"></i>
+            <strong><?= __('Page'); ?></strong>
+            <?= h($content->title); ?>
         </div>
         <div class="panel-body">
 

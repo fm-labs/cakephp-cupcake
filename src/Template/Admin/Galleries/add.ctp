@@ -18,6 +18,7 @@
     ['icon' => 'plus']
 ) ?>
 <?php $this->Toolbar->endGroup(); ?>
+<?php $this->set('title', __d('banana','Add {0}', __d('banana','Gallery'))); ?>
 <div class="form">
     <h2 class="ui header">
         <?= __d('banana','Add {0}', __d('banana','Gallery')) ?>
@@ -26,8 +27,8 @@
     <div class="ui form">
         <?php
         echo $this->Form->input('parent_id', ['empty' => true]);
-        echo $this->Form->input('title');
-        echo $this->Form->input('inherit_desc');
+        echo $this->Form->input('title', ['placeholder' => 'Slider']);
+        echo $this->Form->input('inherit_desc', ['label' => __('Inherit description from parent gallery')]);
         echo $this->Form->input('desc_html', [
             'type' => 'htmleditor',
             'editor' => [

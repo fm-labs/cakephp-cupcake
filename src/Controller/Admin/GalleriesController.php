@@ -2,6 +2,8 @@
 namespace Banana\Controller\Admin;
 
 use Banana\Controller\Admin\AppController;
+use Banana\Controller\Shared\JsTreeAwareTrait;
+use Banana\Controller\Shared\PrimaryModelAwareTrait;
 use Banana\Core\Banana;
 
 /**
@@ -12,12 +14,24 @@ use Banana\Core\Banana;
 class GalleriesController extends AppController
 {
 
+    use PrimaryModelAwareTrait;
+    use JsTreeAwareTrait;
+
+    public function index()
+    {
+        $this->setAction('indexTree');
+    }
+
+    public function indexTree() {
+        $this->set('dataUrl', ['action' => 'treeData']);
+    }
+
     /**
      * Index method
      *
      * @return void
      */
-    public function index()
+    public function indexTable()
     {
         $this->paginate['limit'] = 100;
         $this->paginate['order'] = ['Galleries.title' => 'ASC'];
@@ -43,6 +57,18 @@ class GalleriesController extends AppController
         $this->set('_serialize', ['gallery']);
     }
 
+    public function manage($id = null) {
+        $this->autoRender = false;
+        $this->setAction('view', $id);
+        $this->render('manage');
+    }
+
+    public function treeView()
+    {
+        $id = $this->request->query('id');
+        $this->setAction('manage', $id);
+    }
+
     /**
      * Add method
      *
@@ -60,7 +86,13 @@ class GalleriesController extends AppController
                 $this->Flash->error(__d('banana','The gallery could not be saved. Please, try again.'));
             }
         }
-        $this->set(compact('gallery'));
+
+        $parents = $this->Galleries->find('list')->toArray();
+        $sources = $this->Galleries->getSources();
+        $sourceFolders = $this->Galleries->getSourceFolders();
+        $viewTemplates = Banana::getAvailableGalleryTemplates();
+
+        $this->set(compact('gallery', 'parents', 'sources', 'sourceFolders', 'viewTemplates'));
         $this->set('_serialize', ['gallery']);
     }
 

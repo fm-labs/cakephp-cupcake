@@ -11,6 +11,7 @@ namespace Banana\Controller;
 
 class GalleriesController extends FrontendController
 {
+
     /**
      * View method
      *

@@ -36,7 +36,12 @@ $jsTree = $this->get('jsTree', $defaultJsTree);
     <div class="row">
         <div class="col-sm-4 col-md-3">
             <div class="panel panel-primary panel-nopad">
-                <div class="panel-heading">Pages</div>
+                <?php if ($this->fetch('treeHeading')): ?>
+                <div class="panel-heading">
+                    <?= $this->fetch('treeHeading'); ?>
+                </div>
+                <?php endif; ?>
+
                 <div class="panel-body">
                     <?= $this->Html->div('be-index-tree', 'Loading Pages ...', [
                         'id' => 'index-tree',
@@ -128,9 +133,11 @@ $this->fetch('jsTreeScript');
                             data: {'selected': r },
                             beforeSend: function() {
                                 Backend.Loader.show();
+                                Backend.Util.saveScrollPosition('jstree', 0);
                             },
                             complete: function() {
                                 Backend.Loader.hide();
+                                Backend.Util.restoreScrollPosition();
                             },
                             success: function(data) {
 

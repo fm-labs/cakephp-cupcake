@@ -6,6 +6,7 @@ use Cake\Core\Plugin;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\Routing\Router;
 use Cake\Validation\Validator;
 use Media\Lib\Media\MediaManager;
 
@@ -86,5 +87,55 @@ class GalleriesTable extends Table
             return $mm->open('gallery/')->getSelectFolderListRecursive();
         }
         return null;
+    }
+
+
+    public function jsTreeGetNodes()
+    {
+        $nodes = $this->find('threaded')
+            ->orderAsc('Galleries.title')
+            ->all()
+            ->toArray();
+
+        //debug($nodes);
+
+        $id = 1;
+        $nodeFormatter = function(Gallery $node) use (&$id) {
+
+            $class = "content published";
+
+            return [
+                'id' => $id++,
+                'text' => $node->title,
+                'icon' => $class,
+                'state' => [
+                    'opened' => false,
+                    'disabled' => false,
+                    'selected' => false,
+                ],
+                'children' => [],
+                'li_attr' => ['class' => $class],
+                'a_attr' => [],
+                'data' => [
+                    'type' => 'content',
+                    'viewUrl' => Router::url(['controller' => 'Galleries', 'action' => 'manage', $node->id]),
+                ]
+            ];
+        };
+
+        $nodesFormatter = function($nodes) use ($nodeFormatter, &$nodesFormatter) {
+            $formatted = [];
+            foreach ($nodes as $node) {
+                $_node = $nodeFormatter($node);
+                if ($node->children) {
+                    $_node['children'] = $nodesFormatter($node->children);
+                }
+                $formatted[] = $_node;
+            }
+            return $formatted;
+        };
+
+        $nodesFormatted = $nodesFormatter($nodes);
+        return $nodesFormatted;
     }
 }

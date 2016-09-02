@@ -259,7 +259,6 @@ class PagesTable extends Table
 
     public function jsTreeGetNodes()
     {
-
         $nodes = $this->find('threaded')
             ->all()
             ->toArray();
@@ -303,23 +302,7 @@ class PagesTable extends Table
             return $formatted;
         };
 
-        /*
-        $jsTree = [
-            'id' => null,
-            'text' => 'All Sites',
-            'icon' => 'super',
-            'state' => [
-                'opened' => true,
-                'disabled' => false,
-                'selected' => true,
-            ],
-            'children' => $nodesFormatter($nodes),
-            'li_attr' => [],
-            'a_attr' => []
-        ];
-        */
-
-        $jsTree = $nodesFormatter($nodes);
-        return $jsTree;
+        $nodesFormatted = $nodesFormatter($nodes);
+        return $nodesFormatted;
     }
 }

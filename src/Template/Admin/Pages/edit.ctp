@@ -8,9 +8,9 @@ $this->Toolbar->addLink(
     ['action' => 'delete', $content->id],
     ['icon' => 'trash', 'confirm' => __d('banana','Are you sure you want to delete # {0}?', $content->id)]
 );
-$this->Toolbar->addLink(__d('banana','List {0}', __d('banana','Pages')), ['action' => 'index'], ['icon' => 'list']);
+//$this->Toolbar->addLink(__d('banana','List {0}', __d('banana','Pages')), ['action' => 'index'], ['icon' => 'list']);
 $this->Toolbar->addLink(__d('banana','View'), ['action' => 'view', $content->id], ['icon' => 'file']);
-$this->Toolbar->addLink(__d('banana','Preview'), ['action' => 'preview', $content->id], ['icon' => 'eye', 'target' => '_preview']);
+//$this->Toolbar->addLink(__d('banana','Preview'), ['action' => 'preview', $content->id], ['icon' => 'eye', 'target' => '_preview']);
 $this->Toolbar->addLink(__d('banana','New {0}', __d('banana','Page')), ['action' => 'add'], ['icon' => 'plus']);
 
 
@@ -71,7 +71,7 @@ $this->assign('title', $content->title);
             <?= $this->Form->fieldsetEnd(); ?>
 
 
-            <?= $this->Form->fieldsetStart(['legend' => __('Publish'), 'collapsed' => true]); ?>
+            <?= $this->Form->fieldsetStart(['legend' => __('Publish'), 'collapsed' => false]); ?>
             <?php
             echo $this->Form->input('is_published');
             echo $this->Form->input('publish_start_date', ['type' => 'datepicker']);
@@ -80,7 +80,7 @@ $this->assign('title', $content->title);
             <?= $this->Form->fieldsetEnd(); ?>
 
 
-            <?= $this->Form->fieldsetStart(['legend' => __('Advanced'), 'collapsed' => true]); ?>
+            <?= $this->Form->fieldsetStart(['legend' => __('Advanced'), 'collapsed' => false]); ?>
             <?php
             echo $this->Form->input('parent_id',
                 ['options' => $pagesTree, 'empty' => '- Root Node -']);
