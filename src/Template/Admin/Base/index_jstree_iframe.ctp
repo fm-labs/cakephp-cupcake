@@ -16,6 +16,7 @@ $jsTree = (isset($jsTree)) ? $jsTree : $defaultJsTree;
 unset($defaultJsTree);
 
 ?>
+<?= $this->Html->css('Backend.jstree/themes/backend/style.min', ['block' => true]); ?>
 <?= $this->Html->script('Backend.jstree/jstree.min', ['block' => true]); ?>
 <div class="index index-tree">
 
