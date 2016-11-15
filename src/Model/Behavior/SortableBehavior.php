@@ -129,6 +129,10 @@ class SortableBehavior extends Behavior
 
     public function moveAfter(EntityInterface $node, $targetId)
     {
+        if ($targetId === 0) {
+            return $this->moveTop($node);
+        }
+
         return $this->_table->connection()->transactional(function () use ($node, $targetId) {
             //$this->_ensureFields($node);
 
