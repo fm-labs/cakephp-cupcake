@@ -64,16 +64,16 @@ class JsTreeBehavior extends Behavior
     {
     }
 
-    public function getJsTree()
+    public function getJsTree($rootId = null)
     {
-        if (!method_exists($this->_table, "jsTreeGetNodes")) {
+        if (!method_exists($this->_table, "toJsTree")) {
             if (Configure::read('debug')) {
                 throw new MissingModelException(sprintf("Missing method 'jsTreeGetNodes' in model %s", $this->_table->alias()));
             }
             return [];
         }
 
-        return call_user_func([$this->_table, 'jsTreeGetNodes']);
+        return call_user_func([$this->_table, 'toJsTree'], $rootId);
     }
 
     public function doSomething(EntityInterface $node)
