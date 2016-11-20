@@ -23,10 +23,11 @@ class SiteComponent extends Component
 
             $site = TableRegistry::get('Banana.Sites')->find()->where(['Sites.hostname' => $siteHost])->first();
             $this->_site = ($site) ? $site->toArray() : null;
-            $this->request->session()->write(self::SESSION_KEY, $this->_site);
+            //$this->request->session()->write(self::SESSION_KEY, $this->_site);
         } else {
-            $site = TableRegistry::get('Banana.Sites')->newEntity($this->request->session()->read(self::SESSION_KEY));
-            $this->_site = $site->toArray();
+            //$site = TableRegistry::get('Banana.Sites')->newEntity($this->request->session()->read(self::SESSION_KEY));
+            //$this->_site = $site->toArray();
+            $this->_site = $this->request->session()->read(self::SESSION_KEY);
         }
     }
 

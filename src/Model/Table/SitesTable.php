@@ -90,15 +90,14 @@ class SitesTable extends Table
         $id = 1;
         $nodeFormatter = function(MenuItem $menuItem) use (&$id) {
 
-            //$publishedClass = ($menuItem->isPublished()) ? 'published' : 'unpublished';
-            $publishedClass = '';
+            $publishedClass = ($menuItem->isHiddenInNav()) ? 'unpublished' : 'published';
             $class = $menuItem->type;
             $class.= " " . $publishedClass;
 
             return [
-                'id' => $id++,
+                'id' => 'menu_item__' . $menuItem->id,
                 'text' => $menuItem->getLabel(),
-                'icon' => null, //$class,
+                'icon' => $class,
                 'state' => [
                     'opened' => false,
                     'disabled' => false,
@@ -135,7 +134,7 @@ class SitesTable extends Table
                 $menuItems = TableRegistry::get('Content.MenuItems')->find()->where(['menu_id' => $menu->id, 'parent_id IS' => null])->all();
 
                 $menuNode = [
-                    'id' => 'menu_' . $menu->id,
+                    'id' => 'menu__' . $menu->id,
                     'text' => $menu->title,
                     'icon' => null,
                     'state' => [
@@ -155,7 +154,7 @@ class SitesTable extends Table
             }
 
             $siteNode = [
-                'id' => 'site_' . $site->id,
+                'id' => 'site__' . $site->id,
                 'text' => $site->alias,
                 'icon' => null,
                 'state' => [

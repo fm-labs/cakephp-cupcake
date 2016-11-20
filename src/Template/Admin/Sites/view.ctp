@@ -38,10 +38,12 @@
     </h2>
 
     <?php
-    echo $this->cell('Backend.EntityView', [ $post ], [
-        'title' => $post->title,
+
+    echo $this->cell('Backend.EntityView', [ $site ], [
+        'title' => $site->title,
         'model' => 'Banana.Sites',
     ]);
+
     ?>
 
 <!--

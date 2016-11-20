@@ -12,6 +12,11 @@ Plugin::load('Media', ['bootstrap' => true, 'routes' => true]);
 Plugin::load('Settings', ['bootstrap' => true, 'routes' => true]);
 
 /**
+ * Banana init
+ */
+//Banana\Lib\Banana::init();
+
+/**
  * Backend hook
  */
 Backend\Lib\Backend::hookPlugin('Banana');
