@@ -95,7 +95,7 @@ class SitesTable extends Table
             $class.= " " . $publishedClass;
 
             return [
-                'id' => 'menu_item__' . $menuItem->id,
+                'id' => $id++ . '__' . $menuItem->type . '__' . $menuItem->typeid,
                 'text' => $menuItem->getLabel(),
                 'icon' => $class,
                 'state' => [
@@ -174,4 +174,5 @@ class SitesTable extends Table
         }
         return $nodes;
     }
+
 }
