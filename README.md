@@ -1,4 +1,27 @@
-# Banana plugin for CakePHP
+# BananaCake Core plugin
+
+A management plugin for [CakePHP](http://cakephp.org) applications with some extra batteries included.
+
+
+## Core Features
+
+- Plugin Manager
+- Theme Manager
+- Multi-Site
+
+## Optional Features
+
+- Administration Interface
+- Content Manager
+- Mailman
+- MediaManager
+- Newsletter
+- Shop
+- Sitemap
+- Settings Manager
+- File Upload
+- PDF Generator (with Tcpdf)
+- User Manager
 
 ## Installation
 
@@ -7,5 +30,8 @@ You can install this plugin into your CakePHP application using [composer](http:
 The recommended way to install composer packages is:
 
 ```
-composer require your-name-here/Banana
+composer fm-labs/cakephp3-banana
 ```
+
+## Usage
+
