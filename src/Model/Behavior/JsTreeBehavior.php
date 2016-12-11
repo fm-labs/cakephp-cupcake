@@ -68,7 +68,7 @@ class JsTreeBehavior extends Behavior
     {
         if (!method_exists($this->_table, "toJsTree")) {
             if (Configure::read('debug')) {
-                throw new MissingModelException(sprintf("Missing method 'jsTreeGetNodes' in model %s", $this->_table->alias()));
+                throw new MissingModelException(sprintf("Missing method 'toJsTree' in model %s", $this->_table->alias()));
             }
             return [];
         }
