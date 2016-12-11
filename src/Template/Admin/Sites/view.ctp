@@ -1,5 +1,5 @@
-<?php $this->Html->addCrumb(__('Sites'), ['action' => 'index']); ?>
-<?php $this->Html->addCrumb($site->title); ?>
+<?php $this->Breadcrumbs->add(__('Sites'), ['action' => 'index']); ?>
+<?php $this->Breadcrumbs->add($site->title); ?>
 <?= $this->Toolbar->addLink(
     __('Edit {0}', __('Site')),
     ['action' => 'edit', $site->id],

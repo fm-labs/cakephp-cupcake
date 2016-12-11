@@ -1,4 +1,4 @@
-<?php $this->Html->addCrumb(__('Sites')); ?>
+<?php $this->Breadcrumbs->add(__('Sites')); ?>
 
 <?php $this->Toolbar->addLink(__('New {0}', __('Site')), ['action' => 'add'], ['data-icon' => 'plus']); ?>
 <?= $this->Toolbar->addLink(

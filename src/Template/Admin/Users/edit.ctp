@@ -1,5 +1,5 @@
-<?php $this->Html->addCrumb(__d('content','Users'), ['action' => 'index']); ?>
-<?php $this->Html->addCrumb(__d('content','Edit {0}', __d('content','User'))); ?>
+<?php $this->Breadcrumbs->add(__d('content','Users'), ['action' => 'index']); ?>
+<?php $this->Breadcrumbs->add(__d('content','Edit {0}', __d('content','User'))); ?>
 <div class="actions">
     <div class="ui secondary menu">
         <div class="item"></div>

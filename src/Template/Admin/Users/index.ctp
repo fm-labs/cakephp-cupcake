@@ -1,4 +1,4 @@
-<?php $this->Html->addCrumb(__d('content','Users')); ?>
+<?php $this->Breadcrumbs->add(__d('content','Users')); ?>
 <div class="actions">
     <div class="ui secondary menu">
         <div class="item"></div>
