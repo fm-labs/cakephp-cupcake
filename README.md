@@ -7,6 +7,7 @@ A management plugin for [CakePHP](http://cakephp.org) applications with some ext
 
 - Plugin Manager
 - Theme Manager
+- Settings Manager
 - Multi-Site
 
 ## Optional Features
@@ -18,7 +19,6 @@ A management plugin for [CakePHP](http://cakephp.org) applications with some ext
 - Newsletter
 - Shop
 - Sitemap
-- Settings Manager
 - File Upload
 - PDF Generator (with Tcpdf)
 - User Manager
