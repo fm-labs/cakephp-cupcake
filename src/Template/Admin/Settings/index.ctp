@@ -17,9 +17,6 @@
 
 <div class="settings index">
 
-    <h2>Settings</h2>
-
-
     <?= $this->cell('Backend.DataTable', [[
         'paginate' => false,
         'model' => 'Settings.Settings',
@@ -32,7 +29,7 @@
                     return $this->Html->link($val, ['action' => 'edit', $row->id]);
                 }
             ],
-            'value_type',
+            'type',
             'value' => [
                 'formatter' => function($val, $entity) {
 
@@ -51,7 +48,8 @@
                     }
                     return $currentValue;
                 }
-            ]
+            ],
+            'default'
         ],
         'rowActions' => [
             [__d('shop','Edit'), ['action' => 'edit', ':id'], ['class' => 'edit']],

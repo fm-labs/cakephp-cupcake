@@ -7,11 +7,8 @@
     <?php
     echo $this->Form->input('scope');
     echo $this->Form->input('key');
-    echo $this->Form->input('title');
-    echo $this->Form->input('description');
-    echo $this->Form->input('value_type', ['default' => 'string']);
+    echo $this->Form->input('type', ['default' => 'string']);
     echo $this->Form->input('value');
-    echo $this->Form->input('is_required');
     ?>
     <?= $this->Form->button(__d('banana','Submit')) ?>
     <?= $this->Form->end() ?>
