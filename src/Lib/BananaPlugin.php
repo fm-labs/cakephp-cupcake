@@ -23,6 +23,13 @@ use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 class BananaPlugin extends Plugin
 {
 
+    static $_installed = [];
+
+    static public function installed()
+    {
+        return array_keys(static::$_installed);
+    }
+
     /**
      * @param null $plugin
      * @param null $path
@@ -106,7 +113,7 @@ class BananaPlugin extends Plugin
      */
     static public function loadAll(array $options = [])
     {
-        parent::loadAll(['bootstrap' => false, 'routes' => false, 'autoload' => false]);
+        //parent::loadAll(['bootstrap' => false, 'routes' => false, 'autoload' => false]);
 
         $path = CONFIG . 'plugins' . DS;
         if (!is_dir($path)) {
@@ -128,7 +135,7 @@ class BananaPlugin extends Plugin
 
         //ksort($files_array);
         foreach ($files_array as $pluginName => $pluginConfigFilepath) {
-            static::loadUserPlugin($pluginName);
+            static::load($pluginName);
         }
     }
 
@@ -138,7 +145,7 @@ class BananaPlugin extends Plugin
      * @throws \Exception
      * @return void
      */
-    public static function loadUserPlugin($plugin, array $config = [])
+    public static function load($plugin, array $config = [])
     {
         $defaultConfig = [
             'bootstrap' => false,
@@ -157,6 +164,7 @@ class BananaPlugin extends Plugin
 
             if ($config['enabled'] === true) {
                 parent::load($plugin, $config);
+                static::$_installed[$plugin] = $config;
             }
         //} catch (MissingPluginConfigException $ex) {
 

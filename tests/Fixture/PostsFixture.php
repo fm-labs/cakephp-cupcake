@@ -15,7 +15,7 @@ class PostsFixture extends TestFixture
      *
      * @var string
      */
-    public $table = 'bc_posts';
+    //public $table = 'bc_posts';
 
     /**
      * Fields
@@ -107,8 +107,8 @@ class PostsFixture extends TestFixture
             'meta_robots' => '',
             'meta_lang' => '',
             'is_published' => 1,
-            'publish_start_datetime' => '',
-            'publish_end_datetime' => '',
+            'publish_start_datetime' => null,
+            'publish_end_datetime' => null,
             'pos' => 1,
             'section' => '',
             'modified' => '2016-04-27 17:15:43',
@@ -145,8 +145,8 @@ class PostsFixture extends TestFixture
             'meta_robots' => '',
             'meta_lang' => '',
             'is_published' => 1,
-            'publish_start_datetime' => '',
-            'publish_end_datetime' => '',
+            'publish_start_datetime' => null,
+            'publish_end_datetime' => null,
             'pos' => 2,
             'section' => '',
             'modified' => '2016-04-27 17:15:43',
@@ -183,8 +183,8 @@ class PostsFixture extends TestFixture
             'meta_robots' => '',
             'meta_lang' => '',
             'is_published' => 1,
-            'publish_start_datetime' => '',
-            'publish_end_datetime' => '',
+            'publish_start_datetime' => null,
+            'publish_end_datetime' => null,
             'pos' => 3,
             'section' => '',
             'modified' => '2016-04-27 17:15:43',
@@ -221,8 +221,8 @@ class PostsFixture extends TestFixture
             'meta_robots' => '',
             'meta_lang' => '',
             'is_published' => 1,
-            'publish_start_datetime' => '',
-            'publish_end_datetime' => '',
+            'publish_start_datetime' => null,
+            'publish_end_datetime' => null,
             'pos' => 4,
             'section' => '',
             'modified' => '2016-04-27 17:15:43',
