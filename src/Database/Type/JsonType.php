@@ -1,17 +1,21 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: flow
- * Date: 12/3/15
- * Time: 10:38 PM
- */
-
 namespace Banana\Database\Type;
 
 use Cake\Database\Driver;
 use Cake\Database\Type;
 use PDO;
 
+/**
+ * Class JsonType - DEPRECATED
+ *
+ * JSON database type for the cake's ORM
+ *
+ * ! DEPRECATION NOTICE !
+ * As of CakePHP v3.3.0 the JsonType is part of the official package.
+ *
+ * @package Banana\Database\Type
+ * @deprecated
+ */
 class JsonType extends Type
 {
 
