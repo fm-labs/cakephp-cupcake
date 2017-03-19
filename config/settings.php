@@ -16,6 +16,9 @@ return [
         ],
         'Site.theme' => [
             'type' => 'string',
+            'inputType' => 'select',
+            'inputModel' => 'Banana.Themes',
+            'inputModelFinder' => 'list',
             'default' => null
         ],
         /*

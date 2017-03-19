@@ -4,23 +4,24 @@ namespace Banana\Shell;
 
 
 use Banana\Lib\BananaPlugin;
+use Banana\Plugin\PluginLoader;
 use Cake\Console\Shell;
 use Cake\Core\App;
 
-class SetupShell extends Shell
+class PluginShell extends Shell
 {
 
     protected function _welcome()
     {
         $this->hr();
-        $this->out('Banana Setup Shell');
+        $this->out('Banana Plugin Shell');
         $this->hr();
     }
 
     public function getOptionParser()
     {
         $parser = parent::getOptionParser();
-        $parser->addSubcommand('installPlugin', [
+        $parser->addSubcommand('activate', [
             'parser' => [
                 'arguments' => [
                     'name' => [
@@ -34,12 +35,9 @@ class SetupShell extends Shell
         return $parser;
     }
 
-    public function installPlugin($pluginName = null)
+    public function activate($pluginName = null)
     {
-        $this->info('Install plugin ' . $pluginName);
-
-        BananaPlugin::install($pluginName);
-
-        $this->success('Installation complete');
+        $this->info('Activate plugin ' . $pluginName);
+        PluginLoader::activate($pluginName);
     }
 }
