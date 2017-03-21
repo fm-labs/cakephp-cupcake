@@ -38,4 +38,9 @@ class Status
     {
         return sprintf('<span class="label label-%s">%s</span>', $this->_class, $this->_label);
     }
+
+    public function __invoke()
+    {
+
+    }
 }

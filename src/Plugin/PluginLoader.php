@@ -2,19 +2,12 @@
 
 namespace Banana\Plugin;
 
-use Banana\Exception\InvalidPluginManifestException;
 use Banana\Exception\MissingPluginConfigException;
-use Banana\Exception\MissingPluginManifestException;
-use Cake\Core\App;
 use Cake\Core\Configure;
-use Cake\Core\Exception\MissingPluginException;
 use Cake\Core\Plugin;
-use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 use Cake\Event\EventManager;
-use Cake\Filesystem\Folder;
 use Cake\Utility\Inflector;
-use DirectoryIterator;
 
 class PluginLoader extends Plugin
 {
@@ -114,7 +107,8 @@ class PluginLoader extends Plugin
             'bootstrap' => true,
             'routes' => true,
             //'classBase' => 'src',
-            'ignoreMissing' => true
+            'ignoreMissing' => true,
+            'configs' => true,
         ];
         $config = array_merge($defaultConfig, $config);
 
@@ -148,17 +142,19 @@ class PluginLoader extends Plugin
 
 
             // autoload local plugin configs
-            //if ($config['config'] === true) {
+            if ($config['configs'] === true) {
+                $_underscored = Inflector::underscore($plugin);
                 $configFiles = [
-                    'plugins/' . $plugin . '/' . Inflector::underscore($plugin), // from local plugins config folder
-                    'local/' . Inflector::underscore($plugin) // from local config folder
+                    $_underscored, // from local config folder
+                    'plugins/' . $plugin . '/' . $_underscored, // from local plugins config folder
+                    'local/' . $_underscored // from local config folder
                 ];
                 foreach ($configFiles as $configFile) {
                     if (file_exists(CONFIG . $configFile . '.php')) {
                         Configure::load($configFile);
                     }
                 }
-            //}
+            }
 
         } catch (\Exception $ex) {
             $config += ['enabled' => false, 'error' => $ex->getMessage()];
