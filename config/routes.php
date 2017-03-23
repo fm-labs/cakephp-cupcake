@@ -1,15 +1,9 @@
 <?php
 use Cake\Routing\Router;
 
-/*
-Router::scope('/', function($routes) {
-    $routes->connect('/', ['plugin' => 'Banana', 'controller' => 'Pages', 'action' => 'display', 'home']);
+Router::extensions(['json']);
 
-    $routes->fallbacks('DashedRoute');
-});
-*/
-
-Router::scope('/banana/admin', ['plugin' => 'Banana', '_namePrefix' => 'banana:admin:', 'prefix' => 'admin'], function ($routes) {
+Router::scope('/core/admin', ['plugin' => 'Banana', '_namePrefix' => 'core:admin:', 'prefix' => 'admin'], function ($routes) {
 
     $routes->extensions(['json']);
 
