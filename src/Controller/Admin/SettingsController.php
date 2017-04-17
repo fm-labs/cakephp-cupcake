@@ -16,7 +16,7 @@ use Settings\Configure\Engine\SettingsConfig;
  */
 class SettingsController extends AppController
 {
-    public $modelClass = 'Settings.Settings';
+    public $modelClass = 'Banana.Settings';
 
 
     /**
@@ -26,9 +26,6 @@ class SettingsController extends AppController
      */
     public function index($scope = null)
     {
-        if (!Plugin::loaded('Settings')) {
-            throw new MissingPluginException(['plugin' => 'Settings']);
-        }
 
         $query = $this->Settings->find()
             ->order(['Settings.scope' => 'ASC', 'Settings.key' => 'ASC']);
@@ -61,11 +58,13 @@ class SettingsController extends AppController
             throw new BadRequestException();
         }
 
+        $compiled = $this->Settings->getCompiled();
+        $config = new SettingsConfig();
 
-        if ($written = $this->Settings->dump($scope)) {
-            $this->Flash->success(__('Dump settings {0}: {1} bytes written', $key, $written));
+        if ($written = $config->dump($scope, $compiled)) {
+            $this->Flash->success(__('Dump settings {0}: {1} bytes written', $scope, $written));
         } else {
-            $this->Flash->error(__('Dump settings {0}: Failed', $key));
+            $this->Flash->error(__('Dump settings {0}: Failed', $scope));
         }
         $this->redirect($this->referer(['action' => 'index']));
     }
@@ -107,7 +106,7 @@ class SettingsController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $setting = $this->Settings->patchEntity($setting, $this->request->data);
             if ($this->Settings->save($setting)) {
-                $this->Settings->dump();
+                //$this->Settings->dump();
                 $this->Flash->success(__d('banana','The {0} has been saved.', __d('banana','setting')));
                 return $this->redirect(['action' => 'index']);
             } else {

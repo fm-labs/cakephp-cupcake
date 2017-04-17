@@ -29,18 +29,18 @@ class Status
         return $this->_class;
     }
 
-    public function __toString()
+    public function getLabel()
     {
         return $this->_label;
+    }
+
+    public function __toString()
+    {
+        return (string) $this->getStatus();
     }
 
     public function toHtml()
     {
         return sprintf('<span class="label label-%s">%s</span>', $this->_class, $this->_label);
-    }
-
-    public function __invoke()
-    {
-
     }
 }

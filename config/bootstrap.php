@@ -106,8 +106,6 @@ if (Configure::read('debug')) {
 Plugin::load('Backend', ['bootstrap' => true, 'routes' => true]);
 Plugin::load('User', ['bootstrap' => true, 'routes' => true]);
 Plugin::load('Tree', ['bootstrap' => true, 'routes' => false]);
-Plugin::load('Settings', ['bootstrap' => true, 'routes' => true]);
-
 
 /**
  * Load themes
@@ -153,3 +151,18 @@ DispatcherFactory::add('Asset');
 DispatcherFactory::add('Routing');
 //DispatcherFactory::add('Content.ContentLocaleSelector');
 DispatcherFactory::add('ControllerFactory');
+
+/**
+ * Attach event listeners
+ */
+\Cake\Event\EventManager::instance()->on(new \Banana\Event\BackendEventListener());
+
+/**
+ * Settings
+ */
+try {
+    Configure::config('settings', new \Banana\Configure\Engine\SettingsConfig());
+    Configure::load('global', 'settings');
+} catch (\Exception $ex) {
+    die("Failed to load settings: " . $ex->getMessage());
+}
