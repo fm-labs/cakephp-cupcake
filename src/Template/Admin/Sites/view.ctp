@@ -1,37 +1,37 @@
 <?php $this->Breadcrumbs->add(__('Sites'), ['action' => 'index']); ?>
 <?php $this->Breadcrumbs->add($site->title); ?>
-<?= $this->Toolbar->addLink(
+<?php $this->Toolbar->addLink(
     __('Edit {0}', __('Site')),
     ['action' => 'edit', $site->id],
     ['data-icon' => 'edit']
 ) ?>
-<?= $this->Toolbar->addLink(
+<?php $this->Toolbar->addLink(
     __('Delete {0}', __('Site')),
     ['action' => 'delete', $site->id],
     ['data-icon' => 'trash', 'confirm' => __('Are you sure you want to delete # {0}?', $site->id)]) ?>
 
-<?= $this->Toolbar->addLink(
+<?php $this->Toolbar->addLink(
     __('List {0}', __('Sites')),
     ['action' => 'index'],
     ['data-icon' => 'list']
 ) ?>
-<?= $this->Toolbar->addLink(
+<?php $this->Toolbar->addLink(
     __('New {0}', __('Site')),
     ['action' => 'add'],
     ['data-icon' => 'plus']
 ) ?>
-<?= $this->Toolbar->startGroup(__('More')); ?>
-<?= $this->Toolbar->addLink(
+<?php $this->Toolbar->startGroup(__('More')); ?>
+<?php $this->Toolbar->addLink(
     __('List {0}', __('Parent Sites')),
     ['controller' => 'Sites', 'action' => 'index'],
     ['data-icon' => 'list']
 ) ?>
-<?= $this->Toolbar->addLink(
+<?php $this->Toolbar->addLink(
     __('New {0}', __('Parent Site')),
     ['controller' => 'Sites', 'action' => 'add'],
     ['data-icon' => 'plus']
 ) ?>
-<?= $this->Toolbar->endGroup(); ?>
+<?php $this->Toolbar->endGroup(); ?>
 <div class="sites view">
     <h2 class="ui header">
         <?= h($site->title) ?>
