@@ -49,10 +49,11 @@ class SettingsConfig extends PhpConfig
      */
     public function read($key)
     {
+        debug("settings: read $key");
         $file = $this->_buildSettingsFilePath($key);
 
         if (!is_file($file)) {
-            Log::warning("SettingsConfig: File $file not found");
+            //Log::warning("SettingsConfig: File $file not found");
             return [];
         }
 

@@ -14,6 +14,7 @@ use Cake\Utility\Security;
 use Cake\Routing\DispatcherFactory;
 
 
+
 // When debug = false the metadata cache should last
 // for a very very long time, as we don't want
 // to refresh the cache while users are doing requests.
@@ -159,10 +160,10 @@ DispatcherFactory::add('ControllerFactory');
 
 /**
  * Settings
- */
 try {
     Configure::config('settings', new \Banana\Configure\Engine\SettingsConfig());
     Configure::load('global', 'settings');
 } catch (\Exception $ex) {
     die("Failed to load settings: " . $ex->getMessage());
 }
+*/

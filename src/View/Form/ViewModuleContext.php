@@ -40,6 +40,7 @@ class ViewModuleContext implements ContextInterface
             'entity' => null,
         ];
         $this->_module = $context['entity'];
+        $this->_module->loadSources();
     }
 
     /**

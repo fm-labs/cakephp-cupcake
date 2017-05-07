@@ -141,18 +141,20 @@ class ClassRegistry
             $class = static::$_classes[$type][$key];
 
             if (!class_exists($class)) {
-                throw new \Exception('ClassRegistry: Class $class not found');
+                throw new \RuntimeException("ClassRegistry: Class $class not found");
             }
 
             if (func_num_args() == 2) {
                 $instance = new $class();
             } elseif (func_num_args() == 3) {
                 $instance = new $class(func_get_arg(2));
+            } else {
+                throw new \RuntimeException("ClassRegistry: Class $class could not be constructed");
             }
 
             return $instance;
         }
 
-        return null;
+        throw new \RuntimeException("ClassRegistry: Unknown class $key of type $type");
     }
 }
