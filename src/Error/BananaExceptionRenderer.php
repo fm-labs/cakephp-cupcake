@@ -7,10 +7,12 @@ use Cake\Error\ExceptionRenderer;
 
 class BananaExceptionRenderer extends ExceptionRenderer
 {
+    /*
     protected function _getController($exception)
     {
         return new ErrorController();
     }
+    */
 
     public function missingWidget($error)
     {
