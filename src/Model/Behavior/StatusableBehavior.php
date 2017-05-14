@@ -80,9 +80,9 @@ class StatusableBehavior extends Behavior
      */
     public function beforeFind(Event $event, Query $query, $options, $primary)
     {
-        //if (!isset($options['status']) || $options['status'] === false) {
-        //    return;
-        //}
+        if (!isset($options['status']) || $options['status'] === false) {
+            return;
+        }
 
         $mapper = function ($row, $key, MapReduce $mapReduce) {
 
@@ -96,7 +96,7 @@ class StatusableBehavior extends Behavior
                 foreach ($this->_fieldConfig[$fieldName] as $status) {
                     if ($status instanceof Status && $status->getStatus() == $rawVal) {
                         $row[$fieldName] = $status;
-                        $row[$fieldName . '_raw'] = $rawVal;
+                        $row[$fieldName . '__original'] = $rawVal;
                         break;
                     }
                 }
@@ -120,6 +120,7 @@ class StatusableBehavior extends Behavior
      */
     public function beforeSave(Event $event, EntityInterface $entity, ArrayObject $options)
     {
+        /*
         foreach (array_keys($this->_fieldConfig) as $fieldName) {
 
             if ($entity->get($fieldName) === null) {
@@ -130,19 +131,20 @@ class StatusableBehavior extends Behavior
             // and unset injected raw status field
             $status = $entity->get($fieldName);
             if ($status instanceof Status) {
-                $raw = $entity->get($fieldName . '_raw');
+                $raw = $entity->get($fieldName . '__original');
 
                 $entity->set($fieldName, $status->getStatus());
                 if ($status->getStatus() == $raw) {
                     $entity->dirty($fieldName, false);
                 }
 
-                $entity->set($fieldName.'_raw', null);
-                $entity->dirty($fieldName.'_raw', false);
+                $entity->set($fieldName.'__original', null);
+                $entity->dirty($fieldName.'__original', false);
 
             }
 
 
         }
+        */
     }
 }
