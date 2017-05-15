@@ -49,7 +49,6 @@ class SettingsConfig extends PhpConfig
      */
     public function read($key)
     {
-        debug("settings: read $key");
         $file = $this->_buildSettingsFilePath($key);
 
         if (!is_file($file)) {
