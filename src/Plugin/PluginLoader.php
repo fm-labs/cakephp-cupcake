@@ -4,6 +4,7 @@ namespace Banana\Plugin;
 
 use Banana\Exception\MissingPluginConfigException;
 use Banana\Exception\MissingPluginHandlerException;
+use Cake\Cache\Cache;
 use Cake\Core\Configure;
 use Cake\Core\Plugin;
 use Cake\Event\EventListenerInterface;
@@ -30,40 +31,47 @@ class PluginLoader extends Plugin
             return;
         }
 
-        // @TODO read plugins config to cache
-
         // Load CakePHP plugins (reads plugin paths from vendor/cakephp-plugins.php)
         parent::_loadConfig();
 
+        $plugins = Cache::read('plugins', 'banana');
+        //$plugins = [];
+        if (!$plugins) {
 
-        // if no custom Plugin configuration has been defined, attempt to find plugin config file
-        if (!Configure::check('Plugin')) {
-            // the first available config file will be used and others ignored
-            foreach(['local/plugins', 'plugins'] as $config) {
-                try {
-                    Configure::load($config);
-                    break;
-                } catch(\Exception $ex) {}
+            // if no custom Plugin configuration has been defined, attempt to find plugin config file
+            if (!Configure::check('Plugin')) {
+                // the first available config file will be used and others ignored
+                foreach(['local/plugins', 'plugins'] as $config) {
+                    try {
+                        Configure::load($config);
+                        break;
+                    } catch(\Exception $ex) {}
+                }
             }
-        }
 
-        // list of plugins has been intialized
-        $plugins = (array) Configure::consume('Plugin');
+            // list of plugins has been intialized
+            $plugins = (array) Configure::consume('Plugin');
 
-        // normalize plugin configurations
-        $defaultConfig = ['enabled' => false, 'bootstrap' => true, 'routes' => true];
-        foreach ($plugins as $plugin => &$pluginConfig) {
-            if (is_bool($pluginConfig)) { // Boolean value maps to enabled state
-                $pluginConfig = array_merge($defaultConfig, ['enabled' => $pluginConfig]);
-            } elseif (is_array($pluginConfig)) {
-                $pluginConfig = array_merge($defaultConfig, $pluginConfig);
-            } else {
-                throw new \InvalidArgumentException(sprintf("Plugin config for plugin '%s' MUST be array or boolean value", $plugin));
+            // normalize plugin configurations
+            $defaultConfig = ['enabled' => false, 'bootstrap' => true, 'routes' => true];
+            foreach ($plugins as $plugin => &$pluginConfig) {
+                if (is_bool($pluginConfig)) { // Boolean value maps to enabled state
+                    $pluginConfig = array_merge($defaultConfig, ['enabled' => $pluginConfig]);
+                } elseif (is_array($pluginConfig)) {
+                    $pluginConfig = array_merge($defaultConfig, $pluginConfig);
+                } else {
+                    throw new \InvalidArgumentException(sprintf("Plugin config for plugin '%s' MUST be array or boolean value", $plugin));
+                }
             }
+
+            Cache::write('plugins', $plugins, 'banana');
+        } else {
+            // If we got cached plugin configs, there might be a 'Plugin' config key set (e.g. from custom config files)
+            // so we clear that config key
+            Configure::delete('Plugin');
         }
 
         // write runtime configuration
-        // @TODO write plugins config to cache
         Configure::write('Banana.plugins',  $plugins);
 
         // init plugin registry
@@ -81,6 +89,7 @@ class PluginLoader extends Plugin
         }
         // update enabled state to TRUE
         Configure::write('Banana.plugins.'.$plugin.'.enabled', true);
+        Cache::delete('plugins', 'banana');
 
         $localPluginConfigFile = CONFIG . DS . 'local' . DS . 'plugins.php';
         $config = ['Plugin' => Configure::read('Banana.plugins')];

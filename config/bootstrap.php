@@ -111,3 +111,11 @@ DispatcherFactory::add('ControllerFactory');
  * Attach event listeners
  */
 //\Cake\Event\EventManager::instance()->on(new \Banana\Event\BackendEventListener());
+
+
+Cache::config('banana', [
+    'className' => 'File',
+    'duration' => '+1 hours',
+    'path' => CACHE,
+    'prefix' => 'banana_core_'
+]);
