@@ -1,12 +1,13 @@
 <?php
 
-namespace Banana\Event;
+namespace Banana;
 
 
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
+use Cake\Event\EventManager;
 
-class BackendEventListener implements EventListenerInterface
+class BananaPlugin implements EventListenerInterface
 {
 
     /**
@@ -20,7 +21,7 @@ class BackendEventListener implements EventListenerInterface
     public function implementedEvents()
     {
         return [
-            'Backend.Menu.get' => 'getBackendMenu'
+            'Backend.Menu.get' => ['callable' => 'getBackendMenu', 'priority' => 99 ]
         ];
     }
 

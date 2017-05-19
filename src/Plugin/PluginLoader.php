@@ -3,10 +3,12 @@
 namespace Banana\Plugin;
 
 use Banana\Exception\MissingPluginConfigException;
+use Banana\Exception\MissingPluginHandlerException;
 use Cake\Core\Configure;
 use Cake\Core\Plugin;
 use Cake\Event\EventListenerInterface;
 use Cake\Event\EventManager;
+use Cake\Log\Log;
 use Cake\Utility\Inflector;
 
 class PluginLoader extends Plugin
@@ -66,6 +68,7 @@ class PluginLoader extends Plugin
 
         // init plugin registry
         static::$_registry = new PluginRegistry();
+        static::$_registry->load('Banana');
     }
 
     /**
@@ -84,6 +87,13 @@ class PluginLoader extends Plugin
         self::_writePhpConfig($localPluginConfigFile, $config);
     }
 
+    /**
+     * Getter / Setter for plugin handlers
+     *
+     * @param $plugin
+     * @param object|null $handler
+     * @return PluginInterface|null
+     */
     static public function handler($plugin, object $handler = null)
     {
         if ($handler === null) {
@@ -93,6 +103,9 @@ class PluginLoader extends Plugin
         static::$_registry->set($plugin, $handler);
     }
 
+    /**
+     * Invoke all plugin handlers
+     */
     static public function runAll()
     {
         foreach (static::$_registry->loaded() as $plugin) {
@@ -115,6 +128,8 @@ class PluginLoader extends Plugin
     }
 
     /**
+     * Load banana plugin
+     *
      * @param array|string $plugin
      * @param array $config
      * @throws \Exception
@@ -151,30 +166,7 @@ class PluginLoader extends Plugin
 
             try {
                 static::$_registry->load($plugin, $config);
-            } catch (\Exception $ex) {}
-
-            // create plugin class instance
-            //if ($config['enabled'] === true) {
-            /*
-                $pluginClass = $plugin . '\\' . $plugin . 'Plugin';
-                if (class_exists($pluginClass)) {
-                    $pluginInst = new $pluginClass($config);
-
-                    if ($pluginInst instanceof EventListenerInterface) {
-                        EventManager::instance()->on($pluginInst);
-                    }
-
-                    if ($pluginInst instanceof PluginInterface) {
-                        $pluginInst->registerEvents(EventManager::instance());
-                    }
-
-                    if (is_callable($pluginInst)) {
-                        call_user_func($pluginInst, $config);
-                    }
-                }
-            */
-            //}
-
+            } catch (MissingPluginHandlerException $ex) {}
 
             // autoload local plugin configs
             if ($loadConfig === true) {
@@ -182,10 +174,13 @@ class PluginLoader extends Plugin
             }
 
         } catch (\Exception $ex) {
+            Log::error(__CLASS__ . ': ' . $ex->getMessage());
             $config += ['enabled' => false, 'error' => $ex->getMessage()];
-            throw $ex; //@TODO Handle plugin loading exception
-        }
 
+            if (Configure::read('debug')) {
+                throw $ex;
+            }
+        }
 
         Configure::write('Plugin.' . $plugin, $config);
     }
