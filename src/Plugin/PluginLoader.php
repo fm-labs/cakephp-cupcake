@@ -13,40 +13,42 @@ class PluginLoader extends Plugin
 {
 
     /**
-     * @return void
+     * @var PluginRegistry
      */
-    static protected function _loadPluginsConfig()
+    static protected $_registry;
+
+    /**
+     * Load and normalize plugin configurations
+     * @todo Config caching
+     */
+    protected static function _loadConfig()
     {
+        // Check if we already loaded Banana plugin configurations
         if (Configure::check('Banana.plugins')) {
             return;
         }
 
-        static::_loadConfig();
+        // @TODO read plugins config to cache
 
-        $plugins = [];
+        // Load CakePHP plugins (reads plugin paths from vendor/cakephp-plugins.php)
+        parent::_loadConfig();
 
 
+        // if no custom Plugin configuration has been defined, attempt to find plugin config file
         if (!Configure::check('Plugin')) {
-            // read plugins from plugins.php config
-            try {
-                Configure::load('plugins');
-            } catch(\Exception $ex) {}
-        }
-
-        $plugins = (array) Configure::consume('Plugin');
-
-        /*
-        $localPluginsConfigPath = CONFIG . 'plugins' . DS;
-        $dir = new DirectoryIterator($localPluginsConfigPath);
-        foreach ($dir as $_dir) {
-            if ($_dir->isFile() && !$_dir->isDot()) {
-                $plugin = $_dir->getBasename();
-                $pluginConfig = self::_readPhpConfig($_dir->getPathname());
-                $plugins[$plugin] = $pluginConfig;
+            // the first available config file will be used and others ignored
+            foreach(['local/plugins', 'plugins'] as $config) {
+                try {
+                    Configure::load($config);
+                    break;
+                } catch(\Exception $ex) {}
             }
         }
-        */
 
+        // list of plugins has been intialized
+        $plugins = (array) Configure::consume('Plugin');
+
+        // normalize plugin configurations
         $defaultConfig = ['enabled' => false, 'bootstrap' => true, 'routes' => true];
         foreach ($plugins as $plugin => &$pluginConfig) {
             if (is_bool($pluginConfig)) { // Boolean value maps to enabled state
@@ -54,13 +56,16 @@ class PluginLoader extends Plugin
             } elseif (is_array($pluginConfig)) {
                 $pluginConfig = array_merge($defaultConfig, $pluginConfig);
             } else {
-                //@TODO Throw exception indicating an invalid plugin configuration
-                $pluginConfig = $defaultConfig;
-                throw new \InvalidArgumentException(sprintf("Invalid plugin config data type given for plugin '%s'", $plugin));
+                throw new \InvalidArgumentException(sprintf("Plugin config for plugin '%s' MUST be array or boolean value", $plugin));
             }
         }
 
+        // write runtime configuration
+        // @TODO write plugins config to cache
         Configure::write('Banana.plugins',  $plugins);
+
+        // init plugin registry
+        static::$_registry = new PluginRegistry();
     }
 
     /**
@@ -74,9 +79,25 @@ class PluginLoader extends Plugin
         // update enabled state to TRUE
         Configure::write('Banana.plugins.'.$plugin.'.enabled', true);
 
-        $localPluginConfigFile = CONFIG . DS . 'plugins.php';
+        $localPluginConfigFile = CONFIG . DS . 'local' . DS . 'plugins.php';
         $config = ['Plugin' => Configure::read('Banana.plugins')];
         self::_writePhpConfig($localPluginConfigFile, $config);
+    }
+
+    static public function handler($plugin, object $handler = null)
+    {
+        if ($handler === null) {
+            return static::$_registry->get($plugin);
+        }
+
+        static::$_registry->set($plugin, $handler);
+    }
+
+    static public function runAll()
+    {
+        foreach (static::$_registry->loaded() as $plugin) {
+            static::$_registry->run($plugin);
+        }
     }
 
     /**
@@ -87,7 +108,7 @@ class PluginLoader extends Plugin
      */
     static public function loadAll(array $options = [])
     {
-        self::_loadPluginsConfig();
+        self::_loadConfig();
         foreach(Configure::read('Banana.plugins') as $pluginName => $pluginConfig) {
             static::load($pluginName, $pluginConfig);
         }
@@ -112,19 +133,32 @@ class PluginLoader extends Plugin
         ];
         $config = array_merge($defaultConfig, $config);
 
+        $enabled = $config['enabled'];
+        unset($config['enabled']);
+
+        $loadConfig = $config['configs'];
+        unset($config['configs']);
+
         // disable routes for disabled plugins
-        if ($config['enabled'] !== true) {
+        if ($enabled !== true) {
+            //$config['bootstrap'] = false;
+            //$config['routes'] = false;
             return;
         }
 
         try {
             parent::load($plugin, $config);
 
+            try {
+                static::$_registry->load($plugin, $config);
+            } catch (\Exception $ex) {}
+
             // create plugin class instance
             //if ($config['enabled'] === true) {
+            /*
                 $pluginClass = $plugin . '\\' . $plugin . 'Plugin';
                 if (class_exists($pluginClass)) {
-                    $pluginInst = new $pluginClass();
+                    $pluginInst = new $pluginClass($config);
 
                     if ($pluginInst instanceof EventListenerInterface) {
                         EventManager::instance()->on($pluginInst);
@@ -138,22 +172,13 @@ class PluginLoader extends Plugin
                         call_user_func($pluginInst, $config);
                     }
                 }
+            */
             //}
 
 
             // autoload local plugin configs
-            if ($config['configs'] === true) {
-                $_underscored = Inflector::underscore($plugin);
-                $configFiles = [
-                    $_underscored, // from local config folder
-                    'plugins/' . $plugin . '/' . $_underscored, // from local plugins config folder
-                    'local/' . $_underscored // from local config folder
-                ];
-                foreach ($configFiles as $configFile) {
-                    if (file_exists(CONFIG . $configFile . '.php')) {
-                        Configure::load($configFile);
-                    }
-                }
+            if ($loadConfig === true) {
+                static::_autoloadPluginConfig($plugin);
             }
 
         } catch (\Exception $ex) {
@@ -163,6 +188,27 @@ class PluginLoader extends Plugin
 
 
         Configure::write('Plugin.' . $plugin, $config);
+    }
+
+    /**
+     * Attempt to find a plugin config in app configs.
+     * All found configs will be merged.
+     *
+     * @param $plugin
+     */
+    static protected function _autoloadPluginConfig($plugin)
+    {
+        $_underscored = Inflector::underscore($plugin);
+        $configFiles = [
+            $_underscored, // from local config folder
+            'plugin/' . $_underscored, // from local plugins config folder
+            'local/' . $_underscored // from local config folder
+        ];
+        foreach ($configFiles as $configFile) {
+            if (file_exists(CONFIG . $configFile . '.php')) {
+                Configure::load($configFile);
+            }
+        }
     }
 
     /**

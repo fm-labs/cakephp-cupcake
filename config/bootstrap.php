@@ -15,14 +15,6 @@ use Cake\Routing\DispatcherFactory;
 
 
 
-// When debug = false the metadata cache should last
-// for a very very long time, as we don't want
-// to refresh the cache while users are doing requests.
-if (!Configure::read('debug')) {
-    Configure::write('Cache._cake_model_.duration', '+1 years');
-    Configure::write('Cache._cake_core_.duration', '+1 years');
-}
-
 /**
  * Set server timezone to UTC. You can change it to another timezone of your
  * choice but using UTC makes time calculations / conversions easier.
@@ -55,32 +47,6 @@ if ($isCli) {
     require __DIR__ . '/bootstrap_cli.php';
 }
 
-/**
- * Set the full base URL.
- * This URL is used as the base of all absolute links.
- *
- * If you define fullBaseUrl in your config file you can remove this.
- */
-if (!Configure::read('App.fullBaseUrl')) {
-    $s = null;
-    if (env('HTTPS')) {
-        $s = 's';
-    }
-
-    $httpHost = env('HTTP_HOST');
-    if (isset($httpHost)) {
-        Configure::write('App.fullBaseUrl', 'http' . $s . '://' . $httpHost);
-    }
-    unset($httpHost, $s);
-}
-
-
-Cache::config(Configure::consume('Cache'));
-ConnectionManager::config(Configure::consume('Datasources'));
-Log::config(Configure::consume('Log'));
-Security::salt(Configure::consume('Security.salt'));
-Email::configTransport(Configure::consume('EmailTransport'));
-Email::config(Configure::consume('Email'));
 
 
 /**
@@ -95,35 +61,23 @@ Request::addDetector('tablet', function ($request) {
     return $detector->isTablet();
 });
 
-// Only try to load DebugKit in development mode
-// Debug Kit should not be installed on a production system
-if (Configure::read('debug')) {
-    Plugin::load('DebugKit', ['bootstrap' => true]);
-}
 
 /**
  * Core Banana plugins (required)
  */
-Plugin::load('Backend', ['bootstrap' => true, 'routes' => true]);
-Plugin::load('User', ['bootstrap' => true, 'routes' => true]);
-Plugin::load('Tree', ['bootstrap' => true, 'routes' => false]);
+//Plugin::load('Backend', ['bootstrap' => true, 'routes' => true]);
+//Plugin::load('User', ['bootstrap' => true, 'routes' => true]);
+//Plugin::load('Tree', ['bootstrap' => true, 'routes' => false]);
 
 /**
  * Load themes
  */
-if (Configure::check('Site.theme')) {
-    try {
-        Plugin::load(Configure::read('Site.theme'), ['bootstrap' => true, 'routes' => true]);
-    } catch (\Cake\Core\Exception\Exception $ex) {
-        die ($ex->getMessage());
-    }
-}
 
 /**
  * User plugins
  * Plugins with an plugin config in config/plugins will be loaded now
  */
-PluginLoader::loadAll();
+//PluginLoader::loadAll();
 
 /**
  * Themes
@@ -156,14 +110,4 @@ DispatcherFactory::add('ControllerFactory');
 /**
  * Attach event listeners
  */
-\Cake\Event\EventManager::instance()->on(new \Banana\Event\BackendEventListener());
-
-/**
- * Settings
-try {
-    Configure::config('settings', new \Banana\Configure\Engine\SettingsConfig());
-    Configure::load('global', 'settings');
-} catch (\Exception $ex) {
-    die("Failed to load settings: " . $ex->getMessage());
-}
-*/
+//\Cake\Event\EventManager::instance()->on(new \Banana\Event\BackendEventListener());

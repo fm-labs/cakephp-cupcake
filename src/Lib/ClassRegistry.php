@@ -9,6 +9,7 @@ use Banana\Exception\ClassNotFoundException;
  * Register class-alias for class locations in namespaces
  *
  * @package Banana\Lib
+ * @deprecated Use CakePHP's built-in ObjectRegistry instead
  */
 class ClassRegistry
 {
