@@ -147,13 +147,11 @@ class PluginLoader extends Plugin
     public static function load($plugin, array $config = [])
     {
         $defaultConfig = [
-            'enabled' => false,
-            //'autoload' => false,
+            'enabled' => true,
+            'configs' => true,
             'bootstrap' => true,
             'routes' => true,
-            //'classBase' => 'src',
             'ignoreMissing' => true,
-            'configs' => true,
         ];
         $config = array_merge($defaultConfig, $config);
 
