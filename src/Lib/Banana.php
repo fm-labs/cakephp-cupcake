@@ -108,7 +108,7 @@ class Banana
     static public function loadThemes()
     {
         if (Configure::check('Site.theme')) {
-            Plugin::load(Configure::read(static::$themeKey), ['bootstrap' => true, 'routes' => true]);
+            PluginLoader::load(Configure::read(static::$themeKey), ['bootstrap' => true, 'routes' => true]);
         }
     }
 
