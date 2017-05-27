@@ -1,16 +1,10 @@
 <?php
-use Banana\Plugin\PluginLoader;
 use Cake\Core\Configure;
-use Cake\Core\Plugin;
 use Cake\Database\Type;
 use Cake\Cache\Cache;
 use Cake\Console\ConsoleErrorHandler;
-use Cake\Datasource\ConnectionManager;
 use Cake\Error\ErrorHandler;
-use Cake\Log\Log;
-use Cake\Mailer\Email;
 use Cake\Network\Request;
-use Cake\Utility\Security;
 use Cake\Routing\DispatcherFactory;
 
 
@@ -38,6 +32,10 @@ ini_set('intl.default_locale', 'de');
 $isCli = php_sapi_name() === 'cli';
 if ($isCli) {
     (new ConsoleErrorHandler(Configure::read('Error')))->register();
+} elseif (class_exists('\Gourmet\Whoops\Error\WhoopsHandler')) {
+    // Out-of-the-box support for "Whoops for CakePHP3" by "gourmet"
+    // https://github.com/gourmet/whoops
+    (new \Gourmet\Whoops\Error\WhoopsHandler(Configure::read('Error')))->register();
 } else {
     (new ErrorHandler(Configure::read('Error')))->register();
 }
