@@ -24,7 +24,7 @@ class BananaPlugin implements EventListenerInterface
             'Backend.Menu.get' => ['callable' => 'getBackendMenu', 'priority' => 99 ]
         ];
     }
-
+    
     public function getBackendMenu(Event $event)
     {
         $event->subject()->addItem([

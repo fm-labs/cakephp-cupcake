@@ -14,50 +14,21 @@
     ['action' => 'dump'],
     ['data-icon' => 'arrow down']
 ) ?>
+<?php
 
+$this->Form->addContextProvider('settings_form', function($request, $context) {
+    if ($context['entity'] instanceof \Settings\Form\SettingsForm) {
+        return new \Settings\View\Form\SettingsFormContext($request, $context);
+    }
+});
+?>
 <div class="settings index">
 
-    <?= $this->cell('Backend.DataTable', [[
-        'paginate' => false,
-        'model' => 'Settings.Settings',
-        'data' => $settings,
-        'fields' => [
-            'id',
-            'scope',
-            'key' => [
-                'formatter' => function($val, $row) {
-                    return $this->Html->link($val, ['action' => 'edit', $row->id]);
-                }
-            ],
-            'type',
-            'value' => [
-                'formatter' => function($val, $entity) {
+    <?php echo $this->Form->create($form, ['horizontal' => true]); ?>
+    <?php echo $this->Form->allInputs($form->inputs(), ['fieldset' => false] ); ?>
+    <?php echo $this->Form->button(__('Save')); ?>
+    <?php echo $this->Form->end(); ?>
 
-                    $currentValue = $val;
-                    switch (true) {
-                        case is_array($currentValue):
-                            $currentValue = print_r($currentValue, true);
-                            break;
-                        case is_object($currentValue):
-                            $currentValue = (string) $currentValue;
-                            break;
-                        case is_resource($currentValue):
-                        case is_callable($currentValue):
-                            $currentValue = "[" . gettype($currentValue) . "]";
-                            break;
-                    }
-                    return $currentValue;
-                }
-            ],
-            'default'
-        ],
-        'rowActions' => [
-            [__d('shop','Edit'), ['action' => 'edit', ':id'], ['class' => 'edit']],
-            [__d('shop','Reset'), ['action' => 'reset', ':id'], ['class' => 'reset', 'confirm' => __d('shop','Are you sure you want to reset # {0}?', ':name')]],
-            [__d('shop','Delete'), ['action' => 'delete', ':id'], ['class' => 'delete', 'confirm' => __d('shop','Are you sure you want to delete # {0}?', ':name')]]
-        ]
-    ]]);
-    ?>
-
-    <?php debug($settings); ?>
+    <?php debug($form->inputs()); ?>
+    <?php //debug($settings); ?>
 </div>

@@ -5,8 +5,10 @@ use Cake\Core\Configure;
 use Cake\Core\Exception\MissingPluginException;
 use Cake\Core\Plugin;
 use Cake\Network\Exception\BadRequestException;
-use Settings\Model\Table\SettingsTable;
+use Cake\Utility\Hash;
 use Settings\Configure\Engine\SettingsConfig;
+use Settings\Form\SettingsForm;
+use Settings\SettingsManager;
 
 
 /**
@@ -16,7 +18,7 @@ use Settings\Configure\Engine\SettingsConfig;
  */
 class SettingsController extends AppController
 {
-    public $modelClass = 'Banana.Settings';
+    public $modelClass = 'Settings.Settings';
 
 
     /**
@@ -27,14 +29,16 @@ class SettingsController extends AppController
     public function index($scope = null)
     {
 
-        $query = $this->Settings->find()
-            ->order(['Settings.scope' => 'ASC', 'Settings.key' => 'ASC']);
+        $settingsForm = new SettingsForm();
 
-        if ($scope) {
-            $query->where(['scope' => $scope]);
+        if ($this->request->is(['put', 'post'])) {
+            debug($this->request->data);
+            debug(Hash::flatten($this->request->data));
+            $settingsForm->execute($this->request->data);
         }
 
-        $this->set('settings', $query->all());
+        //$this->set('settings', $settings);
+        $this->set('form', $settingsForm);
         $this->set('_serialize', ['settings']);
     }
 
