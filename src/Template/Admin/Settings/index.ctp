@@ -1,18 +1,8 @@
 <?php $this->Breadcrumbs->add(__d('backend','Settings')); ?>
 <?php $this->Toolbar->addLink(
-    __d('backend','New {0}', __d('backend','Setting')),
-    ['action' => 'add'],
-    ['data-icon' => 'plus']
-) ?>
-<?php $this->Toolbar->addLink(
-    __d('backend','Import {0}', __d('backend','Settings')),
-    ['action' => 'import'],
-    ['data-icon' => 'download']
-) ?>
-<?php $this->Toolbar->addLink(
     __d('backend','Dump {0}', __d('backend','Settings')),
     ['action' => 'dump'],
-    ['data-icon' => 'arrow down']
+    ['data-icon' => 'download']
 ) ?>
 <?php
 

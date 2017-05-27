@@ -32,10 +32,10 @@ ini_set('intl.default_locale', 'de');
 $isCli = php_sapi_name() === 'cli';
 if ($isCli) {
     (new ConsoleErrorHandler(Configure::read('Error')))->register();
-} elseif (class_exists('\Gourmet\Whoops\Error\WhoopsHandler')) {
+//} elseif (class_exists('\Gourmet\Whoops\Error\WhoopsHandler')) {
     // Out-of-the-box support for "Whoops for CakePHP3" by "gourmet"
     // https://github.com/gourmet/whoops
-    (new \Gourmet\Whoops\Error\WhoopsHandler(Configure::read('Error')))->register();
+//    (new \Gourmet\Whoops\Error\WhoopsHandler(Configure::read('Error')))->register();
 } else {
     (new ErrorHandler(Configure::read('Error')))->register();
 }
@@ -44,7 +44,6 @@ if ($isCli) {
 if ($isCli) {
     require __DIR__ . '/bootstrap_cli.php';
 }
-
 
 
 /**
@@ -61,29 +60,6 @@ Request::addDetector('tablet', function ($request) {
 
 
 /**
- * Core Banana plugins (required)
- */
-//Plugin::load('Backend', ['bootstrap' => true, 'routes' => true]);
-//Plugin::load('User', ['bootstrap' => true, 'routes' => true]);
-//Plugin::load('Tree', ['bootstrap' => true, 'routes' => false]);
-
-/**
- * Load themes
- */
-
-/**
- * User plugins
- * Plugins with an plugin config in config/plugins will be loaded now
- */
-//PluginLoader::loadAll();
-
-/**
- * Themes
- */
-//BananaTheme::loadAll();
-
-
-/**
  * Register database types
  */
 //Type::map('json', 'Banana\Database\Type\JsonType');
@@ -96,7 +72,6 @@ Type::map('serialize', 'Banana\Database\Type\SerializeType');
 Type::build('datetime')->useLocaleParser();
 
 
-
 /**
  * Connect middleware/dispatcher filters.
  */
@@ -106,14 +81,13 @@ DispatcherFactory::add('Routing');
 DispatcherFactory::add('ControllerFactory');
 
 /**
- * Attach event listeners
+ * Cache config
  */
-//\Cake\Event\EventManager::instance()->on(new \Banana\Event\BackendEventListener());
-
-
-Cache::config('banana', [
-    'className' => 'File',
-    'duration' => '+1 hours',
-    'path' => CACHE,
-    'prefix' => 'banana_core_'
-]);
+if (!Cache::config('banana')) {
+    Cache::config('banana', [
+        'className' => 'File',
+        'duration' => '+1 hours',
+        'path' => CACHE,
+        'prefix' => 'banana_core_'
+    ]);
+}

@@ -8,6 +8,7 @@ use Cake\Network\Exception\BadRequestException;
 use Cake\Utility\Hash;
 use Settings\Configure\Engine\SettingsConfig;
 use Settings\Form\SettingsForm;
+use Settings\Model\Table\SettingsTable;
 use Settings\SettingsManager;
 
 
@@ -26,15 +27,25 @@ class SettingsController extends AppController
      *
      * @return void
      */
-    public function index($scope = null)
+    public function index($scope = 'default')
     {
 
         $settingsForm = new SettingsForm();
 
         if ($this->request->is(['put', 'post'])) {
-            debug($this->request->data);
-            debug(Hash::flatten($this->request->data));
+
+            // apply
             $settingsForm->execute($this->request->data);
+
+            // compile
+            $compiled = $settingsForm->manager()->getCompiled();
+            Configure::write($compiled);
+
+            // update
+            $this->Settings->updateSettings($compiled, $scope);
+
+            // dump
+            $settingsForm->manager()->dump();
         }
 
         //$this->set('settings', $settings);
@@ -42,33 +53,18 @@ class SettingsController extends AppController
         $this->set('_serialize', ['settings']);
     }
 
-    public function reset($id)
-    {
-        $setting = $this->Settings->get($id);
-        $setting->value = $setting->default;
 
-
-        if ($this->Settings->save($setting)) {
-            $this->Flash->success(__('Saved'));
-        } else {
-            $this->Flash->error(__('Failed'));
-        }
-        $this->redirect(['action' => 'index']);
-    }
-
-    public function dump($scope = 'global')
+    public function dump($scope = 'default')
     {
         if (!$scope) {
             throw new BadRequestException();
         }
 
-        $compiled = $this->Settings->getCompiled();
-        $config = new SettingsConfig();
-
-        if ($written = $config->dump($scope, $compiled)) {
-            $this->Flash->success(__('Dump settings {0}: {1} bytes written', $scope, $written));
+        $manager = new SettingsManager([], $scope);
+        if ($written = $manager->dump()) {
+            $this->Flash->success(__('Settings for {0} dumped: {1} bytes written', $scope, $written));
         } else {
-            $this->Flash->error(__('Dump settings {0}: Failed', $scope));
+            $this->Flash->error(__('Failed to dump settings for {0}', $scope));
         }
         $this->redirect($this->referer(['action' => 'index']));
     }

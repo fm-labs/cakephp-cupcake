@@ -21,10 +21,32 @@ class BananaPlugin implements EventListenerInterface
     public function implementedEvents()
     {
         return [
+            'Settings.get' => 'getSettings',
             'Backend.Menu.get' => ['callable' => 'getBackendMenu', 'priority' => 99 ]
         ];
     }
-    
+
+    public function getSettings(Event $event)
+    {
+        $event->result['Banana'] = [
+            'Site.enabled' => [
+                'type' => 'boolean',
+                'default' => false
+            ],
+            'Site.title' => [
+                'type' => 'string',
+                'default' => 'Untitled Site'
+            ],
+            'Site.theme' => [
+                'type' => 'string',
+                'inputType' => 'select',
+                'inputModel' => 'Banana.Themes',
+                'inputModelFinder' => 'list',
+                'default' => null
+            ]
+        ];
+    }
+
     public function getBackendMenu(Event $event)
     {
         $event->subject()->addItem([

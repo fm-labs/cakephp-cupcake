@@ -7,7 +7,6 @@
     <?php
     echo $this->Form->input('scope');
     echo $this->Form->input('key');
-    echo $this->Form->input('type', ['default' => 'string']);
     echo $this->Form->input('value');
     ?>
     <?= $this->Form->button(__d('banana','Submit')) ?>
