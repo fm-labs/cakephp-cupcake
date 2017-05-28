@@ -3,10 +3,12 @@
 namespace Banana\Model;
 
 use Cake\Collection\Collection;
-use Cake\Collection\Iterator\FilterIterator;
 use Cake\Datasource\EntityInterface;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Datasource\RepositoryInterface;
+use Cake\Database\Schema\Table as Schema;
+use Cake\ORM\AssociationCollection;
+use Cake\ORM\BehaviorRegistry;
 
 /**
  * Class ArrayTable
@@ -17,6 +19,16 @@ use Cake\Datasource\RepositoryInterface;
 abstract class ArrayTable implements RepositoryInterface
 {
     protected $_displayField = 'title';
+
+    /**
+     * @var \Cake\Database\Schema\Table
+     */
+    protected $_schema;
+
+    /**
+     * @var BehaviorRegistry
+     */
+    protected $_behaviors;
 
     /**
      * Required to work with TableRegistry
@@ -37,6 +49,87 @@ abstract class ArrayTable implements RepositoryInterface
         if (isset($config['displayField'])) {
             $this->displayField($config['displayField']);
         }
+
+        $this->_behaviors = new BehaviorRegistry();
+        $this->_behaviors->eventManager()->unsetEventList();
+
+        $this->intialize();
+    }
+
+    /**
+     * Custom table initializer method
+     */
+    public function intialize()
+    {
+        // Override in subclasses
+    }
+
+    /**
+     * Returns the schema table object describing this table's properties.
+     *
+     * If an \Cake\Database\Schema\Table is passed, it will be used for this table
+     * instead of the default one.
+     *
+     * If an array is passed, a new \Cake\Database\Schema\Table will be constructed
+     * out of it and used as the schema for this table.
+     *
+     * @param array|\Cake\Database\Schema\Table|null $schema New schema to be used for this table
+     * @return \Cake\Database\Schema\Table
+     */
+    public function schema($schema = null)
+    {
+        if ($schema === null) {
+            if ($this->_schema === null) {
+                $schema = new Schema($this->alias(), []);
+                $this->_schema = $this->_initializeSchema($schema);
+            }
+
+            return $this->_schema;
+        }
+
+        /*
+        if (is_array($schema)) {
+            $constraints = [];
+
+            if (isset($schema['_constraints'])) {
+                $constraints = $schema['_constraints'];
+                unset($schema['_constraints']);
+            }
+
+            $schema = new Schema($this->alias(), $schema);
+
+            foreach ($constraints as $name => $value) {
+                $schema->addConstraint($name, $value);
+            }
+        }
+       */
+
+        return $this->_schema = $schema;
+    }
+
+
+    /**
+     * Override this function in order to alter the schema used by this table.
+     * This function is only called after fetching the schema out of the database.
+     * If you wish to provide your own schema to this table without touching the
+     * database, you can override schema() or inject the definitions though that
+     * method.
+     *
+     * ### Example:
+     *
+     * ```
+     * protected function _initializeSchema(\Cake\Database\Schema\Table $table) {
+     *  $table->columnType('preferences', 'json');
+     *  return $table;
+     * }
+     * ```
+     *
+     * @param \Cake\Database\Schema\Table $table The table definition fetched from database.
+     * @return \Cake\Database\Schema\Table The altered schema.
+     */
+    protected function _initializeSchema(Schema $table)
+    {
+        return $table;
     }
 
     /**
@@ -388,5 +481,20 @@ abstract class ArrayTable implements RepositoryInterface
     {
         // TODO: Implement patchEntities() method.
         return $entities;
+    }
+
+    public function behaviors()
+    {
+        return $this->_behaviors;
+    }
+
+    /**
+     * Get the associations collection for this table.
+     *
+     * @return \Cake\ORM\AssociationCollection The collection of association objects.
+     */
+    public function associations()
+    {
+        return new AssociationCollection();
     }
 }

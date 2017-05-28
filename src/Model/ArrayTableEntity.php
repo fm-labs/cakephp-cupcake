@@ -91,7 +91,10 @@ class ArrayTableEntity extends \ArrayObject implements EntityInterface
      */
     public function &get($property)
     {
-        $val = $this->offsetGet($property);
+        $val = null;
+        if ($this->offsetExists($property)) {
+            $val = $this->offsetGet($property);
+        }
         return $val;
     }
 
@@ -162,7 +165,7 @@ class ArrayTableEntity extends \ArrayObject implements EntityInterface
      */
     public function visibleProperties()
     {
-        return array_keys($this);
+        return array_keys((array) $this);
     }
 
     /**

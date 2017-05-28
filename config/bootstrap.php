@@ -74,11 +74,12 @@ Type::build('datetime')->useLocaleParser();
 
 /**
  * Connect middleware/dispatcher filters.
+ * Deprecated as of CakePHP 3.3.0
  */
-DispatcherFactory::add('Asset');
-DispatcherFactory::add('Routing');
+//DispatcherFactory::add('Asset');
+//DispatcherFactory::add('Routing');
 //DispatcherFactory::add('Content.ContentLocaleSelector');
-DispatcherFactory::add('ControllerFactory');
+//DispatcherFactory::add('ControllerFactory');
 
 /**
  * Cache config
