@@ -2,11 +2,15 @@
 
 namespace Banana;
 
-
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
-use Cake\Event\EventManager;
+use Cake\Routing\Router;
 
+/**
+ * Class BananaPlugin
+ *
+ * @package Banana
+ */
 class BananaPlugin implements EventListenerInterface
 {
 
@@ -22,10 +26,14 @@ class BananaPlugin implements EventListenerInterface
     {
         return [
             'Settings.get' => 'getSettings',
-            'Backend.Menu.get' => ['callable' => 'getBackendMenu', 'priority' => 99 ]
+            'Backend.Menu.get' => ['callable' => 'getBackendMenu', 'priority' => 99 ],
+            'Backend.Routes.build' => 'buildBackendRoutes'
         ];
     }
 
+    /**
+     * @param Event $event
+     */
     public function getSettings(Event $event)
     {
         $event->result['Banana'] = [
@@ -47,6 +55,24 @@ class BananaPlugin implements EventListenerInterface
         ];
     }
 
+    /**
+     * Backend routes
+     */
+    public function buildBackendRoutes()
+    {
+        Router::scope('/core/admin', ['plugin' => 'Banana', '_namePrefix' => 'core:admin:', 'prefix' => 'admin'], function ($routes) {
+
+            $routes->extensions(['json']);
+
+            $routes->connect('/', ['controller' => 'Dashboard', 'action' => 'index'], ['_name' => 'index']);
+            //$routes->connect('/:controller');
+            $routes->fallbacks('DashedRoute');
+        });
+    }
+
+    /**
+     * @param Event $event
+     */
     public function getBackendMenu(Event $event)
     {
         $event->subject()->addItem([
