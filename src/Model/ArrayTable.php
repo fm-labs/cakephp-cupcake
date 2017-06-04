@@ -4,6 +4,7 @@ namespace Banana\Model;
 
 use Cake\Collection\Collection;
 use Cake\Datasource\EntityInterface;
+use Cake\Datasource\Exception\InvalidPrimaryKeyException;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Datasource\RepositoryInterface;
 use Cake\Database\Schema\Table as Schema;
@@ -31,6 +32,11 @@ abstract class ArrayTable implements RepositoryInterface
     protected $_behaviors;
 
     /**
+     * @var array
+     */
+    protected $_config;
+
+    /**
      * Required to work with TableRegistry
      * This static method is called by the TableLocator.
      *
@@ -49,6 +55,8 @@ abstract class ArrayTable implements RepositoryInterface
         if (isset($config['displayField'])) {
             $this->displayField($config['displayField']);
         }
+
+        $this->_config = $config;
 
         $this->_behaviors = new BehaviorRegistry();
         $this->_behaviors->eventManager()->unsetEventList();
@@ -129,6 +137,12 @@ abstract class ArrayTable implements RepositoryInterface
      */
     protected function _initializeSchema(Schema $table)
     {
+        if (isset($this->_config['schema'])) {
+            foreach ($this->_config['schema'] as $column => $attrs) {
+                $table->addColumn($column, $attrs);
+            }
+        }
+
         return $table;
     }
 
@@ -185,6 +199,11 @@ abstract class ArrayTable implements RepositoryInterface
     {
         $class = get_class($this);
         return substr($class, 0, -strlen('Table'));
+    }
+
+    public function table()
+    {
+        return $this->alias();
     }
 
     /**
@@ -295,7 +314,11 @@ abstract class ArrayTable implements RepositoryInterface
 
         $entity = $result->first();
         if (!$entity) {
-            throw new RecordNotFoundException($primaryKey);
+            throw new InvalidPrimaryKeyException(sprintf(
+                'Record not found in array table "%s" with primary key [%s]',
+                $this->table(),
+                $primaryKey
+            ));
         }
         return $this->newEntity($entity);
     }
