@@ -1,13 +1,11 @@
 <?php
-use Cake\Core\Configure;
-use Cake\Database\Type;
 use Cake\Cache\Cache;
+use Cake\Core\Configure;
 use Cake\Console\ConsoleErrorHandler;
+use Cake\Database\Type;
 use Cake\Error\ErrorHandler;
 use Cake\Network\Request;
-use Cake\Routing\DispatcherFactory;
-
-
+//use Cake\Routing\DispatcherFactory;
 
 /**
  * Set server timezone to UTC. You can change it to another timezone of your
