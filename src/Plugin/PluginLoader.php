@@ -36,7 +36,7 @@ class PluginLoader extends Plugin
 
         $plugins = Cache::read('plugins', 'banana');
         //$plugins = [];
-        if (!$plugins) {
+        if (!$plugins || Configure::read('Banana.disablePluginCache')) {
 
             // if no custom Plugin configuration has been defined, attempt to find plugin config file
             if (!Configure::check('Plugin')) {
