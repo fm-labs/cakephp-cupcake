@@ -1,17 +1,16 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: flow
- * Date: 5/15/17
- * Time: 12:23 AM
- */
-
 namespace Banana\Lib;
 
-
+/**
+ * Class SingletonTrait
+ *
+ * @package Banana\Lib
+ */
 class SingletonTrait
 {
-
+    /**
+     * @var array
+     */
     static protected $_instances = [];
 
     /**

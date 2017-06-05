@@ -1,17 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: flow
- * Date: 3/10/17
- * Time: 9:15 PM
- */
 
 namespace Banana\Model;
 
-
 use Cake\Datasource\EntityInterface;
-use Cake\Datasource\EntityTrait;
 
+/**
+ * Class ArrayTableEntity
+ *
+ * @package Banana\Model
+ */
 class ArrayTableEntity extends \ArrayObject implements EntityInterface
 {
 

@@ -1,16 +1,17 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: flow
- * Date: 5/22/15
- * Time: 10:10 PM
- */
 
 namespace Banana\Controller\Admin;
 
-
+/**
+ * Class DashboardController
+ * @package Banana\Controller\Admin
+ * @deprecated Use dashboard widgets instead
+ */
 class DashboardController extends AppController
 {
+    /**
+     * Default Banana dashboard controller
+     */
     public function index()
     {
     }

@@ -1,14 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: flow
- * Date: 9/5/15
- * Time: 12:33 PM
- */
-
 namespace Banana\Controller\Admin;
 
-
+/**
+ * Class SystemController
+ * @package Banana\Controller\Admin
+ * @deprecated Unused controller class
+ */
 class SystemController extends AppController
 {
     public function index()

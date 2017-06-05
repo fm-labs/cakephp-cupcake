@@ -1,18 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: flow
- * Date: 3/10/17
- * Time: 8:27 PM
- */
 
 namespace Banana\Test\TestCase\Model\Table;
-
 
 use Banana\Model\ArrayTable;
 
 class DummyArrayTable extends ArrayTable
 {
+    /**
+     * @var array
+     */
     protected $_items = [
         0 => [
             'title' => 'Test 1',
@@ -31,6 +27,9 @@ class DummyArrayTable extends ArrayTable
         ]
     ];
 
+    /**
+     * @return array
+     */
     public function getItems()
     {
         return $this->_items;
