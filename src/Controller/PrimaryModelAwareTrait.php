@@ -1,13 +1,19 @@
 <?php
 
-namespace Banana\Controller\Shared;
+namespace Banana\Controller;
 
+use Cake\ORM\Table;
 
-use Cake\Datasource\Exception\MissingModelException;
-
+/**
+ * Class PrimaryModelAwareTrait
+ *
+ * @package Banana\Controller
+ */
 trait PrimaryModelAwareTrait
 {
-
+    /**
+     * @return null|Table
+     */
     public function model()
     {
         $modelClass = $this->modelClass;
@@ -18,7 +24,6 @@ trait PrimaryModelAwareTrait
             return $this->{$alias};
         }
 
-        //throw new MissingModelException("The primary model has not been loaded");
         return $this->loadModel();
     }
 }

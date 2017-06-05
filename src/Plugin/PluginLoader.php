@@ -7,11 +7,14 @@ use Banana\Exception\MissingPluginHandlerException;
 use Cake\Cache\Cache;
 use Cake\Core\Configure;
 use Cake\Core\Plugin;
-use Cake\Event\EventListenerInterface;
-use Cake\Event\EventManager;
 use Cake\Log\Log;
 use Cake\Utility\Inflector;
 
+/**
+ * Class PluginLoader
+ *
+ * @package Banana\Plugin
+ */
 class PluginLoader extends Plugin
 {
 
@@ -100,7 +103,7 @@ class PluginLoader extends Plugin
      * Getter / Setter for plugin handlers
      *
      * @param $plugin
-     * @param object|null $handler
+     * @param null|object $handler
      * @return PluginInterface|null
      */
     static public function handler($plugin, object $handler = null)

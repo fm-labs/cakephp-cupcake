@@ -1,12 +1,14 @@
 <?php
-
 namespace Banana\Controller;
-
 
 use Cake\Controller\Controller;
 use Cake\Event\Event;
 
-
+/**
+ * Class ErrorController
+ *
+ * @package Banana\Controller
+ */
 class ErrorController extends \Cake\Controller\ErrorController
 {
 
