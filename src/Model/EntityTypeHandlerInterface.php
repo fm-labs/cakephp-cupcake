@@ -2,7 +2,11 @@
 
 namespace Banana\Model;
 
-
+/**
+ * Interface EntityTypeHandlerInterface
+ *
+ * @package Banana\Model
+ */
 interface EntityTypeHandlerInterface
 {
     /**

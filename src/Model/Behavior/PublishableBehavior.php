@@ -6,7 +6,6 @@ use Cake\Event\Event;
 use Cake\ORM\Behavior;
 use Cake\ORM\Entity;
 use Cake\ORM\Query;
-use Cake\Utility\Inflector;
 
 /**
  * Class PublishableBehavior
@@ -29,6 +28,11 @@ class PublishableBehavior extends Behavior
     {
     }
 
+    /**
+     * @param Query $query
+     * @param array $options
+     * @return $this
+     */
     public function findPublished(Query $query, array $options)
     {
         $statusField = $query->repository()->alias() . '.' . $this->config('statusField');

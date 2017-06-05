@@ -4,11 +4,15 @@ namespace Banana\Mailer;
 
 use Cake\Event\Event;
 use Cake\Event\EventManager;
-use Cake\Log\Log;
 use Cake\Mailer\Exception\MissingActionException;
 use Cake\Mailer\Mailer;
 use Cake\Mailer\Email;
 
+/**
+ * Class BananaMailer
+ *
+ * @package Banana\Mailer
+ */
 class BananaMailer extends Mailer
 {
     /**

@@ -3,6 +3,11 @@ namespace Banana\Model;
 
 use Cake\ORM\BehaviorRegistry;
 
+/**
+ * Class CsvTable
+ *
+ * @package Banana\Model
+ */
 class CsvTable extends ArrayTable
 {
 
@@ -33,6 +38,9 @@ class CsvTable extends ArrayTable
         $this->intialize();
     }
 
+    /**
+     * @return string
+     */
     public function table()
     {
         return basename($this->_file, '.csv');

@@ -19,6 +19,11 @@ use PDO;
 class JsonType extends Type
 {
 
+    /**
+     * @param mixed $value
+     * @param Driver $driver
+     * @return mixed|null
+     */
     public function toPHP($value, Driver $driver)
     {
         if ($value === null) {
@@ -27,6 +32,10 @@ class JsonType extends Type
         return json_decode($value, true);
     }
 
+    /**
+     * @param $value
+     * @return mixed
+     */
     public function marshal($value)
     {
         if (is_array($value) || $value === null) {
@@ -35,11 +44,21 @@ class JsonType extends Type
         return json_decode($value, true);
     }
 
+    /**
+     * @param $value
+     * @param Driver $driver
+     * @return string
+     */
     public function toDatabase($value, Driver $driver)
     {
         return json_encode($value);
     }
 
+    /**
+     * @param $value
+     * @param Driver $driver
+     * @return int
+     */
     public function toStatement($value, Driver $driver)
     {
         if ($value === null) {
@@ -47,5 +66,4 @@ class JsonType extends Type
         }
         return PDO::PARAM_STR;
     }
-
 }

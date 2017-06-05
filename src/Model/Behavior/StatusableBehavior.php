@@ -24,6 +24,9 @@ class StatusableBehavior extends Behavior
         'fields' => []
     ];
 
+    /**
+     * @var array
+     */
     protected $_fieldConfig = [];
 
     /**
@@ -43,6 +46,10 @@ class StatusableBehavior extends Behavior
         $this->_fieldConfig = call_user_func([$this->_table, 'implementedStati']);
     }
 
+    /**
+     * @param $field
+     * @param array $stati
+     */
     protected function _configureField($field, array $stati)
     {
         foreach ($stati as $status => $conf) {
@@ -51,6 +58,11 @@ class StatusableBehavior extends Behavior
         }
     }
 
+    /**
+     * @param Query $query
+     * @param array $options
+     * @return Query
+     */
     public function findStatus(Query $query, array $options)
     {
         return $query;

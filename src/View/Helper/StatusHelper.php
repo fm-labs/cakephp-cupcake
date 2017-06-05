@@ -2,12 +2,22 @@
 
 namespace Banana\View\Helper;
 
-
 use Banana\Lib\Status;
 use Cake\View\Helper;
 
+/**
+ * Class StatusHelper
+ *
+ * @package Banana\View\Helper
+ */
 class StatusHelper extends Helper
 {
+    /**
+     * Render status html
+     *
+     * @param $status
+     * @return string
+     */
     public function label($status)
     {
         if (is_object($status) && $status instanceof Status) {

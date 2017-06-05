@@ -6,6 +6,11 @@ use Cake\Form\Schema;
 use Cake\Log\Log;
 use Cake\ORM\TableRegistry;
 
+/**
+ * Class ViewModuleSchema
+ *
+ * @package Banana\View
+ */
 class ViewModuleSchema extends Schema
 {
 
@@ -16,6 +21,9 @@ class ViewModuleSchema extends Schema
      */
     protected $_fields = [];
 
+    /**
+     * @var array
+     */
     protected $_options = [];
 
     /**
@@ -29,6 +37,9 @@ class ViewModuleSchema extends Schema
         'precision' => null,
     ];
 
+    /**
+     * @var array
+     */
     protected $_optionDefaults = [
         'select' => [
             'model' => null,
@@ -80,6 +91,10 @@ class ViewModuleSchema extends Schema
         return $this;
     }
 
+    /**
+     * @param $field
+     * @return array
+     */
     public function options($field)
     {
         if (!isset($this->_options[$field])) {

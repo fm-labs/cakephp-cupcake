@@ -2,11 +2,21 @@
 
 namespace Banana\Controller\Admin;
 
-
 use Content\Setup\ContentSetup;
 
+/**
+ * Class SetupController
+ *
+ * @package Banana\Controller\Admin
+ *
+ * @TODO !Experimental!
+ */
 class SetupController extends AppController
 {
+    /**
+     * @return \Cake\Network\Response|null
+     * @throws \Exception
+     */
     public function activate()
     {
         $this->autoRender = false;

@@ -2,11 +2,14 @@
 
 namespace Banana\Model;
 
-
 use Banana\Lib\ClassRegistry;
-use Cake\Datasource\EntityInterface;
 use Cake\Utility\Inflector;
 
+/**
+ * Class EntityTypeHandlerTrait
+ *
+ * @package Banana\Model
+ */
 trait EntityTypeHandlerTrait
 {
     /**

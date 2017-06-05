@@ -77,7 +77,6 @@ class SluggableBehavior extends Behavior
         $this->slug($entity);
     }
 
-
     /**
      * Automatically slug when saving.
      *

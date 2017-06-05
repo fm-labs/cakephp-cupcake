@@ -3,7 +3,6 @@
 namespace Banana\Model\Table;
 
 use Banana\Model\ArrayTable;
-use Cake\ORM\Table;
 
 /**
  * Class ThemesTable

@@ -84,9 +84,6 @@ abstract class ViewModule extends Cell
         }
     }
 
-    //abstract public function display();
-
-
     /**
      * Render the cell.
      *
@@ -155,6 +152,10 @@ abstract class ViewModule extends Cell
         return $render();
     }
 
+    /**
+     * @param null $viewClass
+     * @return View
+     */
     public function createView($viewClass = NULL)
     {
         $builder = $this->viewBuilder();
@@ -317,7 +318,6 @@ abstract class ViewModule extends Cell
         return $this->_errors;
     }
 
-
     /**
      * Returns widget form inputs customization
      *
@@ -327,7 +327,6 @@ abstract class ViewModule extends Cell
     {
         return [];
     }
-
 
     /**
      * Build widget class name from path
@@ -341,5 +340,5 @@ abstract class ViewModule extends Cell
     {
         return App::className($path, 'View/Module', 'Module');
     }
-
 }
+

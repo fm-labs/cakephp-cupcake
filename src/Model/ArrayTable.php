@@ -19,6 +19,9 @@ use Cake\ORM\BehaviorRegistry;
  */
 abstract class ArrayTable implements RepositoryInterface
 {
+    /**
+     * @var string
+     */
     protected $_displayField = 'title';
 
     /**
@@ -506,6 +509,9 @@ abstract class ArrayTable implements RepositoryInterface
         return $entities;
     }
 
+    /**
+     * @return BehaviorRegistry
+     */
     public function behaviors()
     {
         return $this->_behaviors;

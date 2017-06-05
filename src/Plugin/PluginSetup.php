@@ -2,9 +2,15 @@
 
 namespace Banana\Plugin;
 
-
 use Cake\ORM\TableRegistry;
 
+/**
+ * Class PluginSetup
+ *
+ * @package Banana\Plugin
+ *
+ * @TODO !Experimental!
+ */
 class PluginSetup
 {
 

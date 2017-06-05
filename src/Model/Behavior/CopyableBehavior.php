@@ -4,7 +4,6 @@ namespace Banana\Model\Behavior;
 use Cake\Event\Event;
 use Cake\ORM\Behavior;
 use Cake\ORM\Entity;
-use Cake\Utility\Inflector;
 
 class CopyableBehavior extends Behavior
 {
@@ -57,13 +56,4 @@ class CopyableBehavior extends Behavior
 
         return $new;
     }
-
-    /**
-     * @param Event $event The event
-     * @param Entity $entity The entity
-     * @return void
-     */
-    //public function beforeSave(Event $event, Entity $entity)
-    //{
-    //}
 }

@@ -8,7 +8,7 @@ use InvalidArgumentException;
 use PDO;
 
 /**
- * Json type converter.
+ * Serialize type converter.
  *
  * Use to convert json data between PHP and the database types.
  */

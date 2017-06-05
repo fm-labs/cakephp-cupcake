@@ -2,9 +2,12 @@
 
 namespace Banana\Error;
 
-use Banana\Controller\ErrorController;
 use Cake\Error\ExceptionRenderer;
 
+/**
+ * Class BananaExceptionRenderer
+ * @package Banana\Error
+ */
 class BananaExceptionRenderer extends ExceptionRenderer
 {
     /*
@@ -14,11 +17,19 @@ class BananaExceptionRenderer extends ExceptionRenderer
     }
     */
 
+    /**
+     * @param $error
+     * @return string
+     */
     public function missingWidget($error)
     {
         return 'Oops that widget is missing!';
     }
 
+    /**
+     * @param $error
+     * @return string
+     */
     public function missingPlugin($error)
     {
         return 'Oops that widget is missing!';

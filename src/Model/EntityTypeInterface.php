@@ -13,5 +13,9 @@ use Cake\Datasource\EntityInterface;
  */
 interface EntityTypeInterface
 {
+    /**
+     * @param EntityInterface $entity
+     * @return mixed
+     */
     public function setEntity(EntityInterface $entity);
 }

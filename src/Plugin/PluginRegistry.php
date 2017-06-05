@@ -30,7 +30,6 @@ class PluginRegistry extends ObjectRegistry implements EventDispatcherInterface
         throw new MissingPluginHandlerException(sprintf('Could not load plugin handler class %s', $class));
     }
 
-
     /**
      * Should resolve the classname for a given object type.
      *

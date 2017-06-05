@@ -2,9 +2,11 @@
 
 namespace Banana\Plugin;
 
-
-use Cake\Event\EventManager;
-
+/**
+ * Interface PluginInterface
+ *
+ * @package Banana\Plugin
+ */
 interface PluginInterface
 {
     /**

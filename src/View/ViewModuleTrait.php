@@ -3,7 +3,6 @@ namespace Banana\View;
 
 use Cake\Controller\Controller;
 use Cake\Core\App;
-use Cake\Utility\Inflector;
 use Cake\View\View;
 use Cake\View\Exception;
 

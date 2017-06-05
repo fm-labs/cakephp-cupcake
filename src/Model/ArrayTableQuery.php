@@ -2,12 +2,16 @@
 
 namespace Banana\Model;
 
-
 use BadMethodCallException;
 use Cake\Datasource\QueryInterface;
 use Cake\Datasource\QueryTrait;
 use Cake\Datasource\RepositoryInterface;
 
+/**
+ * Class ArrayTableQuery
+ *
+ * @package Banana\Model
+ */
 class ArrayTableQuery implements QueryInterface
 {
     use QueryTrait;
@@ -146,7 +150,6 @@ class ArrayTableQuery implements QueryInterface
     {
         return $this->repository()->callFinder($finder, $this, $options);
     }
-
 
     /**
      * Returns the total amount of results for the query.
