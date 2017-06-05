@@ -2,7 +2,6 @@
 
 namespace Banana\Lib;
 
-
 use Banana\Plugin\PluginLoader;
 use Cake\Cache\Cache;
 use Cake\Core\Configure;
@@ -12,6 +11,11 @@ use Cake\Log\Log;
 use Cake\Mailer\Email;
 use Cake\Utility\Security;
 
+/**
+ * Class Banana
+ *
+ * @package Banana\Lib
+ */
 class Banana
 {
     /**
@@ -112,6 +116,9 @@ class Banana
         }
     }
 
+    /**
+     * Run all plugins
+     */
     static public function run()
     {
         PluginLoader::runAll();
@@ -126,5 +133,4 @@ class Banana
     {
         return new self::$mailerClass();
     }
-
 }

@@ -1,6 +1,7 @@
 <?php
 
 namespace Banana\Lib;
+
 use Banana\Exception\ClassNotFoundException;
 
 /**
