@@ -2,11 +2,14 @@
 
 namespace Banana\Test\TestCase\Model;
 
-
 use Banana\Model\ArrayTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
+/**
+ * Class ArrayTableEntityTest
+ * @package Banana\Test\TestCase\Model
+ */
 class ArrayTableEntityTest extends TestCase
 {
     /**
@@ -14,6 +17,9 @@ class ArrayTableEntityTest extends TestCase
      */
     public $Table;
 
+    /**
+     * @var array
+     */
     public $testData = [
         'title' => 'Test',
         'foo' => 'bar',
@@ -22,12 +28,15 @@ class ArrayTableEntityTest extends TestCase
         'int' => 1,
     ];
 
+    /**
+     * Setup test
+     */
     public function setUp()
     {
-        TableRegistry::config('Dummy', [
-            'className' => 'Banana\Test\TestCase\Model\Table\DummyArrayTable'
+        TableRegistry::config('TestArray', [
+            'className' => 'Banana\Test\TestCase\Model\Table\TestArrayTable'
         ]);
-        $this->Table = TableRegistry::get('Dummy');
+        $this->Table = TableRegistry::get('TestArray');
     }
 
     public function testNewEntity()

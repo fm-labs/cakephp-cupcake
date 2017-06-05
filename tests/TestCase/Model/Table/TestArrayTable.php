@@ -4,7 +4,11 @@ namespace Banana\Test\TestCase\Model\Table;
 
 use Banana\Model\ArrayTable;
 
-class DummyArrayTable extends ArrayTable
+/**
+ * Class TestArrayTable
+ * @package Banana\Test\TestCase\Model\Table
+ */
+class TestArrayTable extends ArrayTable
 {
     /**
      * @var array

@@ -26,7 +26,7 @@ class CsvTable extends ArrayTable
         }
 
         if (!isset($config['file']) || !is_file($config['file'])) {
-            throw new \RuntimeException('CsvTable: No file given or file does not exist');
+            throw new \RuntimeException('CsvTable: No file given or file does not exist: ' . $config['file']);
         }
 
         $this->_file = $config['file'];
@@ -82,12 +82,12 @@ class CsvTable extends ArrayTable
 
 
             // r0w
-            $id = $i - 1;
-            $row = ['id' => $id];
+            $idx = $i - 2;
+            $row = [];
             for ($j = 0; $j < count($header); $j++) {
                 $row[$header[$j]] = trim($line[$j]);
             }
-            $rows[$id] = $row;
+            $rows[$idx] = $row;
         }
 
         fclose($file);

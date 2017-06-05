@@ -11,8 +11,8 @@ class ArrayTableTest extends TestCase
 {
     public function setUp()
     {
-        TableRegistry::config('Dummy', [
-           'className' => 'Banana\Test\TestCase\Model\Table\DummyArrayTable'
+        TableRegistry::config('TestArray', [
+           'className' => 'Banana\Test\TestCase\Model\Table\TestArrayTable'
         ]);
     }
 
@@ -21,7 +21,7 @@ class ArrayTableTest extends TestCase
      */
     protected function _table()
     {
-        return TableRegistry::get('Dummy');
+        return TableRegistry::get('TestArray');
     }
 
     public function testConstruct()
