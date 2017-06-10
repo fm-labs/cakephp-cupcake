@@ -31,6 +31,7 @@ class PublishableBehaviorTest extends TestCase
     {
         TableRegistry::remove('Model');
         unset($this->Model);
+        parent::tearDown();
     }
 
     public function testFindPublished()

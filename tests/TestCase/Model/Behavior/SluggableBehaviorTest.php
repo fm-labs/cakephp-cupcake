@@ -31,6 +31,7 @@ class SluggableBehaviorTest extends TestCase
     {
         TableRegistry::remove('Model');
         unset($this->Model);
+        parent::tearDown();
     }
 
     public function testSlugOnSave()
