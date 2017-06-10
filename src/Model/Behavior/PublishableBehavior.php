@@ -24,9 +24,9 @@ class PublishableBehavior extends Behavior
      * @param array $config Behavior config
      * @return void
      */
-    public function initialize(array $config)
-    {
-    }
+    //public function initialize(array $config)
+    //{
+    //}
 
     /**
      * @param Query $query
@@ -66,16 +66,16 @@ class PublishableBehavior extends Behavior
      * @param $operation
      * @return void
      */
-    public function beforeRules(Event $event, Entity $entity, ArrayObject $options, $operation)
-    {
-    }
+    //public function beforeRules(Event $event, Entity $entity, ArrayObject $options, $operation)
+    //{
+    //}
 
     /**
      * @param Event $event The event
      * @param Entity $entity The entity
      * @return void
      */
-    public function beforeSave(Event $event, Entity $entity)
-    {
-    }
+    //public function beforeSave(Event $event, Entity $entity)
+    //{
+    //}
 }

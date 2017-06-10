@@ -22,15 +22,6 @@ class CopyableBehavior extends Behavior
     ];
 
     /**
-     * @param array $config Behavior config
-     * @return void
-     */
-    public function initialize(array $config)
-    {
-        // no op
-    }
-
-    /**
      * @param Entity $entity Entity to copy
      * @return Entity
      */
