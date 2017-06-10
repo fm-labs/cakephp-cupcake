@@ -24,7 +24,6 @@ trait EntityTypeHandlerTrait
     public function handler()
     {
         if ($this->_typeHandler === null) {
-
             //if (!($this instanceof EntityInterface)) {
             //    throw new \Exception(sprintf("EntityTypeHandler can only be applied to an instance of EntityInterface"));
             //}
@@ -47,6 +46,7 @@ trait EntityTypeHandlerTrait
             $this->_typeHandler = $handler;
             $this->_typeHandler->setEntity($this);
         }
+
         return $this->_typeHandler;
     }
 
@@ -88,8 +88,9 @@ trait EntityTypeHandlerTrait
      */
     protected function _getHandlerNamespace()
     {
-        list(,$class) = namespaceSplit(get_class($this));
+        list(, $class) = namespaceSplit(get_class($this));
         $ns = Inflector::camelize(Inflector::singularize($class)) . 'Type';
+
         return $ns;
     }
 }

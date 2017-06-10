@@ -25,12 +25,13 @@ class ClassRegistry
      * @param null $class
      * @throws \Exception
      */
-    static public function register($ns, $key, $class = null)
+    public static function register($ns, $key, $class = null)
     {
         if (is_array($key) && $class === null) {
             foreach ($key as $_key => $_class) {
                 static::register($ns, $_key, $_class);
             }
+
             return;
         }
 
@@ -52,7 +53,7 @@ class ClassRegistry
      * @param $key
      * @throws \Exception
      */
-    static public function unregister($ns, $key)
+    public static function unregister($ns, $key)
     {
         if (!isset(static::$_classes[$ns]) || !isset(static::$_classes[$ns][$key])) {
             throw new \Exception('ClassRegistry::unregister Class namespace or key not found ' . $ns . ':' . $key);
@@ -68,11 +69,12 @@ class ClassRegistry
      * @param $key
      * @return null|string
      */
-    static public function getClass($ns, $key)
+    public static function getClass($ns, $key)
     {
         if (isset(static::$_classes[$ns]) && isset(static::$_classes[$ns][$key])) {
             return static::$_classes[$ns][$key];
         }
+
         return null;
     }
 
@@ -82,11 +84,12 @@ class ClassRegistry
      * @param $ns string
      * @return array Registered classes for namespace
      */
-    static public function show($ns)
+    public static function show($ns)
     {
         if (isset(static::$_classes[$ns])) {
             return static::$_classes[$ns];
         }
+
         return [];
     }
 
@@ -98,7 +101,7 @@ class ClassRegistry
      * @return Object
      * @throws \Exception
      */
-    static public function &get($ns, $key)
+    public static function &get($ns, $key)
     {
         if (!isset(static::$_classes[$ns]) || !isset(static::$_classes[$ns][$key])) {
             throw new ClassNotFoundException(sprintf('Class namespace or key not found for %s:%s', $ns, $key));
@@ -112,9 +115,9 @@ class ClassRegistry
 
             static::$_instances[$ns][$key] = new $class();
         }
+
         return static::$_instances[$ns][$key];
     }
-
 
     /**
      * @param $type
@@ -136,7 +139,7 @@ class ClassRegistry
      * @throws \Exception
      * @deprecated Use get() instead
      */
-    public static function createInstance($type, $key) 
+    public static function createInstance($type, $key)
     {
         //trigger_error("ClassRegistry::" . __FUNCTION__ . " is deprecated. Use get() instead.");
         if (isset(static::$_classes[$type]) && isset(static::$_classes[$type][$key])) {

@@ -14,7 +14,7 @@ use RuntimeException;
  */
 class PluginRegistry extends ObjectRegistry implements EventDispatcherInterface
 {
-    
+
     /**
      * Throws an exception when a plugin handler is missing.
      *
@@ -33,12 +33,13 @@ class PluginRegistry extends ObjectRegistry implements EventDispatcherInterface
     /**
      * Should resolve the classname for a given object type.
      *
-     * @param string $class The class to resolve.
+     * @param string $plugin The class to resolve.
      * @return string|false The resolved name or false for failure.
      */
     protected function _resolveClassName($plugin)
     {
         $class = $plugin . '\\' . $plugin . 'Plugin';
+
         return (class_exists($class)) ? $class : false;
     }
 

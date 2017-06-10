@@ -77,6 +77,7 @@ class ArrayTableEntity extends \ArrayObject implements EntityInterface
             }
         }
         $this[$property] = $value;
+
         return $this;
     }
 
@@ -92,6 +93,7 @@ class ArrayTableEntity extends \ArrayObject implements EntityInterface
         if ($this->offsetExists($property)) {
             $val = $this->offsetGet($property);
         }
+
         return $val;
     }
 
@@ -118,6 +120,7 @@ class ArrayTableEntity extends \ArrayObject implements EntityInterface
         if (isset($this[$property])) {
             unset($this[$property]);
         }
+
         return $this;
     }
 
@@ -135,6 +138,7 @@ class ArrayTableEntity extends \ArrayObject implements EntityInterface
         if ($properties === null) {
             return [];
         }
+
         return $this;
     }
 
@@ -152,6 +156,7 @@ class ArrayTableEntity extends \ArrayObject implements EntityInterface
         if ($properties === null) {
             return [];
         }
+
         return $this;
     }
 
@@ -162,7 +167,7 @@ class ArrayTableEntity extends \ArrayObject implements EntityInterface
      */
     public function visibleProperties()
     {
-        return array_keys((array) $this);
+        return array_keys((array)$this);
     }
 
     /**
@@ -175,7 +180,7 @@ class ArrayTableEntity extends \ArrayObject implements EntityInterface
      */
     public function toArray()
     {
-        return (array) $this;
+        return (array)$this;
     }
 
     /**
@@ -258,6 +263,7 @@ class ArrayTableEntity extends \ArrayObject implements EntityInterface
         if ($errors === null) {
             return [];
         }
+
         return $this;
     }
 

@@ -62,7 +62,7 @@ class BananaMailer extends Mailer
      * Send email with Mailman hooks
      *
      * @param Email $email
-     * @param bool $throwExceptions
+     * @param bool $content
      * @return array
      * @throws \Exception
      */
@@ -74,7 +74,6 @@ class BananaMailer extends Mailer
         $result = null;
         $exception = null;
         try {
-
             $event = EventManager::instance()->dispatch(new Event('Email.beforeSend', $email));
             //@TODO Stop email sending when event is stopped / result is FALSE
 

@@ -99,7 +99,6 @@ class StatusableBehavior extends Behavior
         $mapper = function ($row, $key, MapReduce $mapReduce) {
 
             foreach (array_keys($this->_fieldConfig) as $fieldName) {
-
                 if (!isset($row[$fieldName])) {
                     continue;
                 }
@@ -111,7 +110,6 @@ class StatusableBehavior extends Behavior
                         break;
                     }
                 }
-
             }
 
             $mapReduce->emitIntermediate($row, $key);

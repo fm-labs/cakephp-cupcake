@@ -78,8 +78,7 @@ abstract class ViewModule extends Cell
 
         if ($parent instanceof View) {
             $this->_View = $parent;
-        }
-        elseif ($parent instanceof View) {
+        } elseif ($parent instanceof View) {
             $this->_Controller = $parent;
         }
     }
@@ -156,7 +155,7 @@ abstract class ViewModule extends Cell
      * @param null $viewClass
      * @return View
      */
-    public function createView($viewClass = NULL)
+    public function createView($viewClass = null)
     {
         $builder = $this->viewBuilder();
 
@@ -175,8 +174,7 @@ abstract class ViewModule extends Cell
 
             $class = get_class($this->_View);
             $builder->className($class);
-        }
-        elseif ($this->_Controller) {
+        } elseif ($this->_Controller) {
             $builder->helpers($this->_Controller->viewBuilder()->helpers());
             $builder->theme($this->_Controller->viewBuilder()->theme());
             $builder->className($this->_Controller->viewBuilder()->className());
@@ -341,4 +339,3 @@ abstract class ViewModule extends Cell
         return App::className($path, 'View/Module', 'Module');
     }
 }
-

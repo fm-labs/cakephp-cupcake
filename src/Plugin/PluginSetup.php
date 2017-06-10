@@ -31,6 +31,7 @@ class PluginSetup
         }
 
         $entityType = $EntityTypes->patchEntity($entityType, $config);
+
         return $EntityTypes->save($entityType);
     }
 
@@ -51,6 +52,7 @@ class PluginSetup
         }
 
         $attributeGroup = $AttributeGroups->patchEntity($attributeGroup, $config);
+
         return $AttributeGroups->save($attributeGroup);
     }
 
@@ -71,6 +73,7 @@ class PluginSetup
         }
 
         $attribute = $Attributes->patchEntity($attribute, $config);
+
         return $Attributes->save($attribute);
     }
 }

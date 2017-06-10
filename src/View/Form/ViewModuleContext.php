@@ -146,10 +146,10 @@ class ViewModuleContext implements ContextInterface
         return array_values((array)Hash::get($this->_module->errors(), $field, []));
     }
 
-
     public function options($field)
     {
         $options = $this->_module->schema()->options($field);
+
         return $options;
     }
 }

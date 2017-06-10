@@ -7,7 +7,6 @@ use Settings\Form\SettingsForm;
 use Settings\Model\Table\SettingsTable;
 use Settings\SettingsManager;
 
-
 /**
  * Settings Controller
  *
@@ -31,7 +30,6 @@ class SettingsController extends AppController
         $settingsForm = new SettingsForm();
 
         if ($this->request->is(['put', 'post'])) {
-
             // apply
             $settingsForm->execute($this->request->data);
 
@@ -50,7 +48,6 @@ class SettingsController extends AppController
         $this->set('form', $settingsForm);
         $this->set('_serialize', ['settings']);
     }
-
 
     /**
      * @param string $scope
@@ -81,10 +78,11 @@ class SettingsController extends AppController
         if ($this->request->is('post')) {
             $setting = $this->Settings->patchEntity($setting, $this->request->data);
             if ($this->Settings->save($setting)) {
-                $this->Flash->success(__d('banana','The {0} has been saved.', __d('banana','setting')));
+                $this->Flash->success(__d('banana', 'The {0} has been saved.', __d('banana', 'setting')));
+
                 return $this->redirect(['action' => 'edit', $setting->id]);
             } else {
-                $this->Flash->error(__d('banana','The {0} could not be saved. Please, try again.', __d('banana','setting')));
+                $this->Flash->error(__d('banana', 'The {0} could not be saved. Please, try again.', __d('banana', 'setting')));
             }
         }
         $this->set(compact('setting'));
@@ -108,10 +106,11 @@ class SettingsController extends AppController
             $setting = $this->Settings->patchEntity($setting, $this->request->data);
             if ($this->Settings->save($setting)) {
                 //$this->Settings->dump();
-                $this->Flash->success(__d('banana','The {0} has been saved.', __d('banana','setting')));
+                $this->Flash->success(__d('banana', 'The {0} has been saved.', __d('banana', 'setting')));
+
                 return $this->redirect(['action' => 'index']);
             } else {
-                $this->Flash->error(__d('banana','The {0} could not be saved. Please, try again.', __d('banana','setting')));
+                $this->Flash->error(__d('banana', 'The {0} could not be saved. Please, try again.', __d('banana', 'setting')));
             }
         }
         $this->set(compact('setting'));
@@ -131,10 +130,11 @@ class SettingsController extends AppController
         $this->request->allowMethod(['post', 'delete']);
         $setting = $this->Settings->get($id);
         if ($this->Settings->delete($setting)) {
-            $this->Flash->success(__d('banana','The {0} has been deleted.', __d('banana','setting')));
+            $this->Flash->success(__d('banana', 'The {0} has been deleted.', __d('banana', 'setting')));
         } else {
-            $this->Flash->error(__d('banana','The {0} could not be deleted. Please, try again.', __d('banana','setting')));
+            $this->Flash->error(__d('banana', 'The {0} could not be deleted. Please, try again.', __d('banana', 'setting')));
         }
+
         return $this->redirect(['action' => 'index']);
     }
 }

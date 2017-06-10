@@ -37,7 +37,6 @@ class ArrayTableQuery implements QueryInterface
      */
     const OVERWRITE = true;
 
-
     /**
      * @var array|callable
      */
@@ -295,6 +294,7 @@ class ArrayTableQuery implements QueryInterface
         }
 
         $this->_repository = $repository;
+
         return $this;
     }
 
@@ -416,6 +416,7 @@ class ArrayTableQuery implements QueryInterface
             throw new BadMethodCallException("Condition MUST be expressed as array or callable");
         }
         $this->_conditions = $conditions;
+
         return $this;
     }
 
@@ -429,12 +430,13 @@ class ArrayTableQuery implements QueryInterface
         $results = new ArrayTableResultSet($this->_repository->getItems());
 
         if (is_array($this->_conditions) && !empty($this->_conditions)) {
-            $results = $results->filter(function($v, $k) {
+            $results = $results->filter(function ($v, $k) {
                 foreach ($this->_conditions as $_f => $_v) {
                     if (!array_key_exists($_f, $v) || $v[$_f] != $_v) {
                         return false;
                     }
                 }
+
                 return true;
             });
         } elseif (is_callable($this->_conditions)) {

@@ -40,20 +40,20 @@ class PluginLoader extends Plugin
         $plugins = Cache::read('plugins', 'banana');
         //$plugins = [];
         if (!$plugins || Configure::read('Banana.disablePluginCache')) {
-
             // if no custom Plugin configuration has been defined, attempt to find plugin config file
             if (!Configure::check('Plugin')) {
                 // the first available config file will be used and others ignored
-                foreach(['local/plugins', 'plugins'] as $config) {
+                foreach (['local/plugins', 'plugins'] as $config) {
                     try {
                         Configure::load($config);
                         break;
-                    } catch(\Exception $ex) {}
+                    } catch (\Exception $ex) {
+                    }
                 }
             }
 
             // list of plugins has been intialized
-            $plugins = (array) Configure::consume('Plugin');
+            $plugins = (array)Configure::consume('Plugin');
 
             // normalize plugin configurations
             $defaultConfig = ['enabled' => false, 'bootstrap' => true, 'routes' => true];
@@ -75,7 +75,7 @@ class PluginLoader extends Plugin
         }
 
         // write runtime configuration
-        Configure::write('Banana.plugins',  $plugins);
+        Configure::write('Banana.plugins', $plugins);
 
         // init plugin registry
         static::$_registry = new PluginRegistry();
@@ -85,7 +85,7 @@ class PluginLoader extends Plugin
     /**
      * Activate plugin
      */
-    static public function activate($plugin = null)
+    public static function activate($plugin = null)
     {
         if (!Configure::check('Banana.plugins.'.$plugin)) {
             throw new MissingPluginConfigException(['plugin' => $plugin]);
@@ -106,7 +106,7 @@ class PluginLoader extends Plugin
      * @param null|object $handler
      * @return PluginInterface|null
      */
-    static public function handler($plugin, object $handler = null)
+    public static function handler($plugin, object $handler = null)
     {
         if ($handler === null) {
             return static::$_registry->get($plugin);
@@ -118,7 +118,7 @@ class PluginLoader extends Plugin
     /**
      * Invoke all plugin handlers
      */
-    static public function runAll()
+    public static function runAll()
     {
         foreach (static::$_registry->loaded() as $plugin) {
             static::$_registry->run($plugin);
@@ -131,10 +131,10 @@ class PluginLoader extends Plugin
      * @param array $options
      * @throws \Exception
      */
-    static public function loadAll(array $options = [])
+    public static function loadAll(array $options = [])
     {
         self::_loadConfig();
-        foreach(Configure::read('Banana.plugins') as $pluginName => $pluginConfig) {
+        foreach (Configure::read('Banana.plugins') as $pluginName => $pluginConfig) {
             static::load($pluginName, $pluginConfig);
         }
     }
@@ -176,13 +176,13 @@ class PluginLoader extends Plugin
 
             try {
                 static::$_registry->load($plugin, $config);
-            } catch (MissingPluginHandlerException $ex) {}
+            } catch (MissingPluginHandlerException $ex) {
+            }
 
             // autoload local plugin configs
             if ($loadConfig === true) {
                 static::_autoloadPluginConfig($plugin);
             }
-
         } catch (\Exception $ex) {
             Log::error(__CLASS__ . ': ' . $ex->getMessage());
             $config += ['enabled' => false, 'error' => $ex->getMessage()];
@@ -201,7 +201,7 @@ class PluginLoader extends Plugin
      *
      * @param $plugin
      */
-    static protected function _autoloadPluginConfig($plugin)
+    protected static function _autoloadPluginConfig($plugin)
     {
         $_underscored = Inflector::underscore($plugin);
         $configFiles = [
@@ -220,16 +220,18 @@ class PluginLoader extends Plugin
      * @param $path
      * @return mixed
      */
-    static protected function _readPhpConfig($path)
+    protected static function _readPhpConfig($path)
     {
-        $loader = function() use ($path) {
+        $loader = function () use ($path) {
             if (!file_exists($path)) {
                 return false;
             }
 
             $config = include $path;
+
             return $config;
         };
+
         return $loader();
     }
 
@@ -238,9 +240,10 @@ class PluginLoader extends Plugin
      * @param array $data
      * @return int
      */
-    static protected function _writePhpConfig($path, array $data)
+    protected static function _writePhpConfig($path, array $data)
     {
         $contents = '<?php' . "\n" . 'return ' . var_export($data, true) . ';' . "\n";
+
         return file_put_contents($path, $contents);
     }
 }

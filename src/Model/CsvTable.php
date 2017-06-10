@@ -54,7 +54,7 @@ class CsvTable extends ArrayTable
     public function getItems()
     {
 
-        $file = fopen($this->_file,"r");
+        $file = fopen($this->_file, "r");
         if (!$file) {
             throw new \RuntimeException("Failed to open file $this->_file");
         }
@@ -63,7 +63,7 @@ class CsvTable extends ArrayTable
         $rows = [];
         $columns = [];
         $i = 0;
-        while(! feof($file)) {
+        while (! feof($file)) {
             $line = fgetcsv($file, 1024, ";");
             if (!$line) {
                 break;
@@ -79,7 +79,6 @@ class CsvTable extends ArrayTable
                 }
                 continue;
             }
-
 
             // r0w
             $idx = $i - 2;

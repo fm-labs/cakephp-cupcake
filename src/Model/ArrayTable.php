@@ -45,7 +45,7 @@ abstract class ArrayTable implements RepositoryInterface
      *
      * @return string
      */
-    static public function defaultConnectionName()
+    public static function defaultConnectionName()
     {
         return 'default';
     }
@@ -118,7 +118,6 @@ abstract class ArrayTable implements RepositoryInterface
         return $this->_schema = $schema;
     }
 
-
     /**
      * Override this function in order to alter the schema used by this table.
      * This function is only called after fetching the schema out of the database.
@@ -162,6 +161,7 @@ abstract class ArrayTable implements RepositoryInterface
         }
 
         $this->_displayField = $field;
+
         return $this;
     }
 
@@ -201,6 +201,7 @@ abstract class ArrayTable implements RepositoryInterface
     public function alias($alias = null)
     {
         $class = get_class($this);
+
         return substr($class, 0, -strlen('Table'));
     }
 
@@ -237,6 +238,7 @@ abstract class ArrayTable implements RepositoryInterface
     public function find($type = 'all', $options = [])
     {
         $query = $this->query();
+
         return $this->callFinder($type, $query, $options);
     }
 
@@ -275,15 +277,15 @@ abstract class ArrayTable implements RepositoryInterface
     {
         $options = array_merge([
             'valueField' => $this->displayField()
-        ],$options);
+        ], $options);
 
         return $query->formatResults(function (Collection $results) use ($options) {
             $list = [];
-            $results->each(function($result, $key) use (&$list, &$options){
+            $results->each(function ($result, $key) use (&$list, &$options) {
                 $list[$key] = $result[$options['valueField']];
             });
-            return new ArrayTableResultSet($list);
 
+            return new ArrayTableResultSet($list);
         }, ArrayTableQuery::OVERWRITE);
     }
 
@@ -309,7 +311,7 @@ abstract class ArrayTable implements RepositoryInterface
      */
     public function get($primaryKey, $options = [])
     {
-        $result = $this->getCollection()->filter(function($item, $key) use ($primaryKey) {
+        $result = $this->getCollection()->filter(function ($item, $key) use ($primaryKey) {
             if ($key == $primaryKey) {
                 return true;
             }
@@ -323,6 +325,7 @@ abstract class ArrayTable implements RepositoryInterface
                 $primaryKey
             ));
         }
+
         return $this->newEntity($entity);
     }
 
@@ -434,6 +437,7 @@ abstract class ArrayTable implements RepositoryInterface
         if ($data === null) {
             $data = [];
         }
+
         return new ArrayTableEntity($data);
     }
 
@@ -459,6 +463,7 @@ abstract class ArrayTable implements RepositoryInterface
         foreach ($data as $row) {
             $entities[] = new ArrayTableEntity($row);
         }
+
         return $entities;
     }
 
@@ -482,6 +487,7 @@ abstract class ArrayTable implements RepositoryInterface
     public function patchEntity(EntityInterface $entity, array $data, array $options = [])
     {
         $entity->set($data);
+
         return $entity;
     }
 

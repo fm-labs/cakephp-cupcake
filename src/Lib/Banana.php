@@ -33,7 +33,7 @@ class Banana
      *
      * @return void
      */
-    static public function configure()
+    public static function configure()
     {
 
         // Set the full base URL.
@@ -79,7 +79,7 @@ class Banana
      *
      * @return void
      */
-    static public function load()
+    public static function load()
     {
         static::configure();
         static::loadPlugins();
@@ -92,7 +92,7 @@ class Banana
      * @return void
      * @throws \Exception If plugin loading failed
      */
-    static public function loadPlugins()
+    public static function loadPlugins()
     {
         // core plugins
         PluginLoader::load('Backend', ['bootstrap' => true, 'routes' => true]); //@todo remove hard plugin dependency
@@ -109,7 +109,7 @@ class Banana
      * @return void
      * @throws \Exception If plugin loading failed
      */
-    static public function loadThemes()
+    public static function loadThemes()
     {
         if (Configure::check('Site.theme')) {
             PluginLoader::load(Configure::read(static::$themeKey), ['bootstrap' => true, 'routes' => true]);
@@ -119,7 +119,7 @@ class Banana
     /**
      * Run all plugins
      */
-    static public function run()
+    public static function run()
     {
         PluginLoader::runAll();
     }
@@ -129,7 +129,7 @@ class Banana
      *
      * @return \Cake\Mailer\Mailer
      */
-    static public function getMailer()
+    public static function getMailer()
     {
         return new self::$mailerClass();
     }

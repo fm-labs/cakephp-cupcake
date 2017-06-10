@@ -26,6 +26,7 @@ class SetupController extends AppController
 
         $this->response->type('text');
         $this->response->body('Hello');
+
         return $this->response;
     }
 }

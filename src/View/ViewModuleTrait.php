@@ -18,7 +18,7 @@ trait ViewModuleTrait
      *
      * Modules behaves exactly like cell, except of a slightly different template structure
      *
-     * @param string $cell You must indicate cell name, and optionally a cell action. e.g.: `TagCloud::smallList`
+     * @param string $module You must indicate cell name, and optionally a cell action. e.g.: `TagCloud::smallList`
      * will invoke `View\Module\TagCloudModule::smallList()`, `display` action will be invoked by default when none is provided.
      * @param array $args Additional arguments for cell method. e.g.:
      *    `module('TagCloud::smallList', ['a1' => 'v1', 'a2' => 'v2'])` maps to `View\Module\TagCloud::smallList(['a1' => 'v1', 'a2' => 'v2'])`
@@ -85,6 +85,7 @@ trait ViewModuleTrait
             $instance = new $className($this, $this->request, $this->response, $this->eventManager(), $options);
             $instance->plugin = $plugin;
             $instance->action = $action;
+
             return $instance;
         }
 

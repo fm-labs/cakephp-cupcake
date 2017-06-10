@@ -39,15 +39,12 @@ class CopyableBehavior extends Behavior
         $config = $this->config();
 
         if (!empty($config['includeFields'])) {
-
             $new = $this->_table->newEntity();
             foreach ($config['includeFields'] as $field) {
                 $new->set($field, $entity->get($field));
                 //$new->dirty($field, false);
             }
-        }
-        elseif (!empty($config['excludeFields'])) {
-
+        } elseif (!empty($config['excludeFields'])) {
             $new = clone($entity);
             foreach ($config['excludeFields'] as $field) {
                 $new->set($field, null);

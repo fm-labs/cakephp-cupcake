@@ -39,6 +39,7 @@ class PublishableBehavior extends Behavior
         $options = array_merge([
             'published' => true
         ], $options);
+
         return $query->where([$statusField => $options['published']]);
     }
 
@@ -46,7 +47,7 @@ class PublishableBehavior extends Behavior
      * @param Event $event
      * @param Query $query
      * @param ArrayObject $options
-     * @param boolean $primary
+     * @param bool $primary
      */
     public function beforeFind(Event $event, Query $query, ArrayObject $options, $primary)
     {
@@ -68,7 +69,6 @@ class PublishableBehavior extends Behavior
     public function beforeRules(Event $event, Entity $entity, ArrayObject $options, $operation)
     {
     }
-
 
     /**
      * @param Event $event The event

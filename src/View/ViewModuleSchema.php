@@ -68,7 +68,7 @@ class ViewModuleSchema extends Schema
      * @param string $name The field name.
      * @param string|array $attrs The attributes for the field, or the type
      *   as a string.
-     * @param array $inputAttrs The input attributes fo the field
+     * @param array $options The input attributes fo the field
      * @return $this
      */
     public function addField($name, $attrs, array $options = [])
@@ -157,9 +157,9 @@ class ViewModuleSchema extends Schema
         if (!isset($this->_fields[$name])) {
             return null;
         }
+
         return $this->_fields[$name];
     }
-
 
     /**
      * Get the type of the named field.

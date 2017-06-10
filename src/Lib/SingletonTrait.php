@@ -16,11 +16,12 @@ class SingletonTrait
     /**
      * @return self
      */
-    static public function getInstance()
+    public static function getInstance()
     {
         if (!isset(self::$_instances[0])) {
             self::$_instances[0] = new self();
         }
+
         return self::$_instances[0];
     }
 }
