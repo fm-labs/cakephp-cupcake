@@ -95,9 +95,9 @@ class Banana
     static public function loadPlugins()
     {
         // core plugins
-        PluginLoader::load('Backend', ['bootstrap' => true, 'routes' => true]);
-        PluginLoader::load('User', ['bootstrap' => true, 'routes' => true]);
-        PluginLoader::load('Tree', ['bootstrap' => true, 'routes' => false]);
+        PluginLoader::load('Backend', ['bootstrap' => true, 'routes' => true]); //@todo remove hard plugin dependency
+        PluginLoader::load('User', ['bootstrap' => true, 'routes' => true]); //@todo remove hard plugin dependency
+        PluginLoader::load('Tree', ['bootstrap' => true, 'routes' => false]); //@todo remove hard plugin dependency
 
         // registered plugins
         PluginLoader::loadAll();

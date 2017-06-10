@@ -5,6 +5,11 @@ use Cake\Event\Event;
 use Cake\ORM\Behavior;
 use Cake\ORM\Entity;
 
+/**
+ * Class CopyableBehavior
+ *
+ * @package Banana\Model\Behavior
+ */
 class CopyableBehavior extends Behavior
 {
     /**

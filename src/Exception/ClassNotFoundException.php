@@ -2,11 +2,13 @@
 
 namespace Banana\Exception;
 
+use Cake\Core\Exception\Exception as CakeCoreException;
+
 /**
  * Class ClassNotFoundException
  * @package Banana\Exception
  */
-class ClassNotFoundException extends \Cake\Core\Exception\Exception
+class ClassNotFoundException extends CakeCoreException
 {
     /**
      * @var string

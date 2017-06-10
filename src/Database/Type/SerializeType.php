@@ -10,13 +10,13 @@ use PDO;
 /**
  * Serialize type converter.
  *
- * Use to convert json data between PHP and the database types.
+ * Use to convert serialized data between PHP and the database types.
  */
 class SerializeType extends Type implements TypeInterface
 {
 
     /**
-     * Convert a value data into a JSON string
+     * Convert a value data into a serialized string
      *
      * @param mixed $value The value to convert.
      * @param \Cake\Database\Driver $driver The driver instance to convert with.

@@ -2,15 +2,22 @@
 
 namespace Banana\Shell;
 
-
 use Banana\Lib\BananaPlugin;
 use Banana\Plugin\PluginLoader;
 use Cake\Console\Shell;
 use Cake\Core\App;
 
+/**
+ * Class PluginShell
+ * @package Banana\Shell
+ *
+ * @todo Implement PluginShell ! Experimental !
+ */
 class PluginShell extends Shell
 {
-
+    /**
+     * Print welcome message
+     */
     protected function _welcome()
     {
         $this->hr();
@@ -18,6 +25,9 @@ class PluginShell extends Shell
         $this->hr();
     }
 
+    /**
+     * @return \Cake\Console\ConsoleOptionParser
+     */
     public function getOptionParser()
     {
         $parser = parent::getOptionParser();
@@ -35,6 +45,9 @@ class PluginShell extends Shell
         return $parser;
     }
 
+    /**
+     * @param null $pluginName
+     */
     public function activate($pluginName = null)
     {
         $this->info('Activate plugin ' . $pluginName);
