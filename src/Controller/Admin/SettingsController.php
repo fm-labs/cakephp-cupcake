@@ -2,11 +2,7 @@
 namespace Banana\Controller\Admin;
 
 use Cake\Core\Configure;
-use Cake\Core\Exception\MissingPluginException;
-use Cake\Core\Plugin;
 use Cake\Network\Exception\BadRequestException;
-use Cake\Utility\Hash;
-use Settings\Configure\Engine\SettingsConfig;
 use Settings\Form\SettingsForm;
 use Settings\Model\Table\SettingsTable;
 use Settings\SettingsManager;
@@ -19,8 +15,10 @@ use Settings\SettingsManager;
  */
 class SettingsController extends AppController
 {
+    /**
+     * @var string
+     */
     public $modelClass = 'Settings.Settings';
-
 
     /**
      * Index method
@@ -54,6 +52,9 @@ class SettingsController extends AppController
     }
 
 
+    /**
+     * @param string $scope
+     */
     public function dump($scope = 'default')
     {
         if (!$scope) {
@@ -136,5 +137,4 @@ class SettingsController extends AppController
         }
         return $this->redirect(['action' => 'index']);
     }
-
 }
