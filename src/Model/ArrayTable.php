@@ -64,13 +64,13 @@ abstract class ArrayTable implements RepositoryInterface
         $this->_behaviors = new BehaviorRegistry();
         $this->_behaviors->eventManager()->unsetEventList();
 
-        $this->intialize();
+        $this->initialize();
     }
 
     /**
      * Custom table initializer method
      */
-    public function intialize()
+    public function initialize()
     {
         // Override in subclasses
     }

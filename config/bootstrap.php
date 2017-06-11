@@ -5,6 +5,8 @@ use Cake\Console\ConsoleErrorHandler;
 use Cake\Database\Type;
 use Cake\Error\ErrorHandler;
 use Cake\Network\Request;
+use Cake\ORM\TableRegistry;
+
 //use Cake\Routing\DispatcherFactory;
 
 /**
@@ -90,3 +92,4 @@ if (!Cache::config('banana')) {
         'prefix' => 'banana_core_'
     ]);
 }
+

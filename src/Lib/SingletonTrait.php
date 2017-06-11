@@ -6,7 +6,7 @@ namespace Banana\Lib;
  *
  * @package Banana\Lib
  */
-class SingletonTrait
+trait SingletonTrait
 {
     /**
      * @var array

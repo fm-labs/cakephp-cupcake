@@ -35,7 +35,7 @@ class CsvTable extends ArrayTable
         $this->_behaviors = new BehaviorRegistry();
         $this->_behaviors->eventManager()->unsetEventList();
 
-        $this->intialize();
+        $this->initialize();
     }
 
     /**

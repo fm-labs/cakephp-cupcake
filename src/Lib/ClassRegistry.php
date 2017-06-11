@@ -10,26 +10,46 @@ use Banana\Exception\ClassNotFoundException;
  * Register class-alias for class locations in namespaces
  *
  * @package Banana\Lib
- * @deprecated Use CakePHP's built-in ObjectRegistry instead
  */
 class ClassRegistry
 {
+    /**
+     * @var array
+     */
     static protected $_classes = [];
+
+    /**
+     * @var array
+     */
+    static protected $_factories = [];
+
+    /**
+     * @var array
+     */
     static protected $_instances = [];
+
+    /**
+     * @param $type
+     * @param callable $factory
+     */
+    public static function configure($type, callable $factory)
+    {
+        self::$_factories[$type] = $factory;
+    }
 
     /**
      * Register class in namespace
      *
-     * @param $ns
+     * @param $type
      * @param $key
      * @param null $class
      * @throws \Exception
      */
-    public static function register($ns, $key, $class = null)
+    public static function register($type, $key, $class = null)
     {
         if (is_array($key) && $class === null) {
             foreach ($key as $_key => $_class) {
-                static::register($ns, $_key, $_class);
+                static::register($type, $_key, $_class);
             }
 
             return;
@@ -43,36 +63,36 @@ class ClassRegistry
             throw new \Exception('ClassRegistry::register Class string MUST be a string value ' . $key);
         }
 
-        static::$_classes[$ns][$key] = $class;
+        static::$_classes[$type][$key] = $class;
     }
 
     /**
      * Unregister class in namespace
      *
-     * @param $ns
+     * @param $type
      * @param $key
      * @throws \Exception
      */
-    public static function unregister($ns, $key)
+    public static function unregister($type, $key)
     {
-        if (!isset(static::$_classes[$ns]) || !isset(static::$_classes[$ns][$key])) {
-            throw new \Exception('ClassRegistry::unregister Class namespace or key not found ' . $ns . ':' . $key);
+        if (!isset(static::$_classes[$type]) || !isset(static::$_classes[$type][$key])) {
+            throw new \Exception('ClassRegistry::unregister Class namespace or key not found ' . $type . ':' . $key);
         }
 
-        unset(static::$_classes[$ns][$key]);
+        unset(static::$_classes[$type][$key]);
     }
 
     /**
      * Returns class name for namespace key
      *
-     * @param $ns
+     * @param $type
      * @param $key
      * @return null|string
      */
-    public static function getClass($ns, $key)
+    public static function getClass($type, $key)
     {
-        if (isset(static::$_classes[$ns]) && isset(static::$_classes[$ns][$key])) {
-            return static::$_classes[$ns][$key];
+        if (isset(static::$_classes[$type]) && isset(static::$_classes[$type][$key])) {
+            return static::$_classes[$type][$key];
         }
 
         return null;
@@ -81,13 +101,13 @@ class ClassRegistry
     /**
      * Return a list of registered classes under a given namespace
      *
-     * @param $ns string
+     * @param $type string
      * @return array Registered classes for namespace
      */
-    public static function show($ns)
+    public static function show($type)
     {
-        if (isset(static::$_classes[$ns])) {
-            return static::$_classes[$ns];
+        if (isset(static::$_classes[$type])) {
+            return static::$_classes[$type];
         }
 
         return [];
@@ -96,27 +116,27 @@ class ClassRegistry
     /**
      * Get class instance
      *
-     * @param $ns
+     * @param $type
      * @param $key
      * @return Object
      * @throws \Exception
      */
-    public static function &get($ns, $key)
+    public static function &get($type, $key)
     {
-        if (!isset(static::$_classes[$ns]) || !isset(static::$_classes[$ns][$key])) {
-            throw new ClassNotFoundException(sprintf('Class namespace or key not found for %s:%s', $ns, $key));
+        if (!isset(static::$_classes[$type]) || !isset(static::$_classes[$type][$key])) {
+            throw new ClassNotFoundException(sprintf('Class namespace or key not found for %s:%s', $type, $key));
         }
 
-        if (!isset(static::$_instances[$ns]) || !isset(static::$_instances[$ns][$key])) {
-            $class = static::$_classes[$ns][$key];
+        if (!isset(static::$_instances[$type]) || !isset(static::$_instances[$type][$key])) {
+            $class = static::$_classes[$type][$key];
             if (!class_exists($class)) {
-                throw new ClassNotFoundException(sprintf('Class %s not found for %s:%s', $class, $ns, $key));
+                throw new ClassNotFoundException(sprintf('Class %s not found for %s:%s', $class, $type, $key));
             }
 
-            static::$_instances[$ns][$key] = new $class();
+            static::$_instances[$type][$key] = new $class();
         }
 
-        return static::$_instances[$ns][$key];
+        return static::$_instances[$type][$key];
     }
 
     /**
@@ -141,25 +161,34 @@ class ClassRegistry
      */
     public static function createInstance($type, $key)
     {
-        //trigger_error("ClassRegistry::" . __FUNCTION__ . " is deprecated. Use get() instead.");
-        if (isset(static::$_classes[$type]) && isset(static::$_classes[$type][$key])) {
-            $class = static::$_classes[$type][$key];
-
-            if (!class_exists($class)) {
-                throw new \RuntimeException("ClassRegistry: Class $class not found");
-            }
-
-            if (func_num_args() == 2) {
-                $instance = new $class();
-            } elseif (func_num_args() == 3) {
-                $instance = new $class(func_get_arg(2));
-            } else {
-                throw new \RuntimeException("ClassRegistry: Class $class could not be constructed");
-            }
-
-            return $instance;
+        if (!isset(static::$_classes[$type]) || !isset(static::$_classes[$type][$key])) {
+            throw new \RuntimeException(sprintf("ClassRegistry: Class not registered: %s:%s", $type, $key));
         }
 
-        throw new \RuntimeException("ClassRegistry: Unknown class $key of type $type");
+        $factory = (isset(static::$_factories[$type])) ? static::$_factories[$type] : function($class) {
+            return static::defaultFactory($class);
+        };
+
+        $class = static::$_classes[$type][$key];
+        return $factory($class);
+
+    }
+
+    public static function defaultFactory($class)
+    {
+
+        if (!class_exists($class)) {
+            throw new \RuntimeException("ClassRegistry: Class $class not found");
+        }
+
+        if (func_num_args() == 2) {
+            $instance = new $class();
+        } elseif (func_num_args() == 3) {
+            $instance = new $class(func_get_arg(2));
+        } else {
+            throw new \RuntimeException("ClassRegistry: Class $class could not be constructed");
+        }
+
+        return $instance;
     }
 }
