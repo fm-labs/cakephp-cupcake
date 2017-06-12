@@ -24,7 +24,7 @@ class BananaMailer extends Mailer
      * @return array
      * @throws \Cake\Mailer\Exception\MissingActionException
      * @throws \BadMethodCallException
-     * @observe
+     * @deprecated Use MailmanTransport instead
      */
     public function send($action, $args = [], $headers = [])
     {
@@ -41,7 +41,6 @@ class BananaMailer extends Mailer
         }
 
         call_user_func_array([$this, $action], $args);
-
         $result = $this->_send($this->_email);
 
         $this->reset();
@@ -52,6 +51,7 @@ class BananaMailer extends Mailer
     /**
      * @param Email $email
      * @return array
+     * @deprecated
      */
     public function sendEmail(Email $email, $content = null, $throwExceptions = false)
     {
@@ -59,18 +59,16 @@ class BananaMailer extends Mailer
     }
 
     /**
-     * Send email with Mailman hooks
+     * Send email
      *
      * @param Email $email
      * @param bool $content
      * @return array
      * @throws \Exception
+     * @deprecated Use MailmanTransport instead
      */
     protected function _send(Email $email, $content = null, $throwExceptions = false)
     {
-
-        //@TODO dispatch event 'Email.beforeSend'
-
         $result = null;
         $exception = null;
         try {
