@@ -58,7 +58,7 @@ class SettingsController extends AppController
             throw new BadRequestException();
         }
 
-        $manager = new SettingsManager([], $scope);
+        $manager = new SettingsManager($scope);
         if ($written = $manager->dump()) {
             $this->Flash->success(__('Settings for {0} dumped: {1} bytes written', $scope, $written));
         } else {
