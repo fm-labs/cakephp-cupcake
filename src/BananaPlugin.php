@@ -5,6 +5,7 @@ namespace Banana;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 use Cake\Routing\Router;
+use Content\Lib\ContentManager;
 
 /**
  * Class BananaPlugin
@@ -36,20 +37,21 @@ class BananaPlugin implements EventListenerInterface
      */
     public function getSettings(Event $event)
     {
-        $event->result['Banana'] = [
-            'Site.enabled' => [
+        $event->result['Site'] = [
+            'enabled' => [
                 'type' => 'boolean',
                 'default' => false
             ],
-            'Site.title' => [
+            'title' => [
                 'type' => 'string',
                 'default' => 'Untitled Site'
             ],
-            'Site.theme' => [
+            'theme' => [
                 'type' => 'string',
-                'inputType' => 'select',
-                'inputModel' => 'Banana.Themes',
-                'inputModelFinder' => 'list',
+                'input' => [
+                    'type' => 'select',
+                    'options' => ContentManager::getThemesAvailable()
+                ],
                 'default' => null
             ]
         ];

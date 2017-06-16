@@ -3,6 +3,7 @@
 namespace Banana\Model\Table;
 
 use Banana\Model\ArrayTable;
+use Content\Lib\ContentManager;
 
 /**
  * Class ThemesTable
@@ -18,7 +19,6 @@ class ThemesTable extends ArrayTable
      */
     public function getItems()
     {
-        // TODO: Implement getItems() method.
-        return [];
+        return ContentManager::getThemesAvailable()->toArray();
     }
 }

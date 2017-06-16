@@ -27,7 +27,7 @@ class SettingsController extends AppController
     public function index($scope = 'default')
     {
 
-        $settingsForm = new SettingsForm();
+        $settingsForm = new SettingsForm(new SettingsManager($scope));
 
         if ($this->request->is(['put', 'post'])) {
             // apply
@@ -35,16 +35,21 @@ class SettingsController extends AppController
 
             // compile
             $compiled = $settingsForm->manager()->getCompiled();
-            Configure::write($compiled);
+            //Configure::write($compiled);
 
             // update
-            $this->Settings->updateSettings($compiled, $scope);
+            if ($this->Settings->updateSettings($compiled, $scope)) {
 
-            // dump
-            $settingsForm->manager()->dump();
+                // dump
+                $settingsForm->manager()->dump();
+
+                $this->Flash->success('Settings updated');
+                $this->redirect(['action' => 'index', $scope]);
+            }
         }
 
         //$this->set('settings', $settings);
+        $this->set('scope', $scope);
         $this->set('form', $settingsForm);
         $this->set('_serialize', ['settings']);
     }

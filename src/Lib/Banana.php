@@ -84,6 +84,7 @@ class Banana
         static::configure();
         static::loadPlugins();
         static::loadThemes();
+        static::loadSettings();
     }
 
     /**
@@ -113,6 +114,27 @@ class Banana
     {
         if (Configure::check('Site.theme')) {
             PluginLoader::load(Configure::read(static::$themeKey), ['bootstrap' => true, 'routes' => true]);
+        }
+    }
+
+    /**
+     * Load settings for current site
+     * @return void
+     * @throws \Exception If settings loading failed
+     */
+    public static function loadSettings()
+    {
+        if (!Plugin::loaded('Settings')) {
+            // continue with default (manual) configuration
+            return;
+        }
+
+        try {
+            $site = (defined('ENV')) ? constant('ENV') : 'default';
+            Configure::load($site, 'settings');
+        } catch(\Exception $ex) {
+            // continue with default configuration
+            //debug($ex->getMessage());
         }
     }
 
