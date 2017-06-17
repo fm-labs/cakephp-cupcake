@@ -125,7 +125,6 @@ class Banana
     public static function loadSettings()
     {
         if (!Plugin::loaded('Settings')) {
-            debug("Settings plugin not loaded");
             // continue with default (manual) configuration
             return;
         }

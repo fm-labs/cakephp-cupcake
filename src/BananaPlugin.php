@@ -2,6 +2,7 @@
 
 namespace Banana;
 
+use Cake\Core\Plugin;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 use Cake\Routing\Router;
@@ -77,10 +78,12 @@ class BananaPlugin implements EventListenerInterface
      */
     public function getBackendMenu(Event $event)
     {
-        $event->subject()->addItem([
-            'title' => 'Settings',
-            'url' => ['plugin' => 'Banana', 'controller' => 'Settings', 'action' => 'index'],
-            'data-icon' => 'gears',
-        ]);
+        if (Plugin::loaded('Settings')) {
+            $event->subject()->addItem([
+                'title' => 'Settings',
+                'url' => ['plugin' => 'Banana', 'controller' => 'Settings', 'action' => 'index'],
+                'data-icon' => 'gears',
+            ]);
+        }
     }
 }
