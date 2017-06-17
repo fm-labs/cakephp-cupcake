@@ -1,6 +1,7 @@
 <?php
 namespace Banana\Controller;
 
+use Cake\Core\Configure;
 use Cake\Event\Event;
 
 /**
@@ -29,8 +30,9 @@ class ErrorController extends \Cake\Controller\ErrorController
      */
     public function beforeRender(Event $event)
     {
-        //$this->viewBuilder()->plugin('Banana');
-        //$this->viewBuilder()->layout('test_error');
+        $this->viewBuilder()->plugin('Banana');
+        $this->viewBuilder()->theme(Configure::read('Site.theme'));
+        $this->viewBuilder()->layout('error');
         $this->viewBuilder()->templatePath('Error');
     }
 }

@@ -32,17 +32,15 @@ ini_set('intl.default_locale', 'de');
 $isCli = php_sapi_name() === 'cli';
 if ($isCli) {
     (new ConsoleErrorHandler(Configure::read('Error')))->register();
+
+    // Include the CLI bootstrap overrides.
+    require __DIR__ . '/bootstrap_cli.php';
 //} elseif (class_exists('\Gourmet\Whoops\Error\WhoopsHandler')) {
     // Out-of-the-box support for "Whoops for CakePHP3" by "gourmet"
     // https://github.com/gourmet/whoops
 //    (new \Gourmet\Whoops\Error\WhoopsHandler(Configure::read('Error')))->register();
 } else {
     (new ErrorHandler(Configure::read('Error')))->register();
-}
-
-// Include the CLI bootstrap overrides.
-if ($isCli) {
-    require __DIR__ . '/bootstrap_cli.php';
 }
 
 
@@ -92,4 +90,3 @@ if (!Cache::config('banana')) {
         'prefix' => 'banana_core_'
     ]);
 }
-

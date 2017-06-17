@@ -2,20 +2,23 @@
 
 namespace Banana\Error;
 
-use Cake\Error\ExceptionRenderer;
+use Banana\Controller\ErrorController;
+use Cake\Error\ExceptionRenderer as CakeExceptionRenderer;
 
 /**
  * Class BananaExceptionRenderer
+ *
  * @package Banana\Error
  */
-class BananaExceptionRenderer extends ExceptionRenderer
+class ExceptionRenderer extends CakeExceptionRenderer
 {
-    /*
-    protected function _getController($exception)
+    /**
+     * @return ErrorController
+     */
+    protected function _getController()
     {
         return new ErrorController();
     }
-    */
 
     /**
      * @param $error
