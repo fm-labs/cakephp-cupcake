@@ -54,6 +54,11 @@ class Banana
         // Only try to load DebugKit in development mode
         // Debug Kit should not be installed on a production system
         if (Configure::read('debug')) {
+            // disable Mail panel by default, as it doesn't play nice with Mailman plugin
+            // @TODO Play nice with DebugKit
+            if (!Configure::check('DebugKit.panels')) {
+                Configure::write('DebugKit.panels', ['DebugKit.Mail' => false]);
+            }
             Plugin::load('DebugKit', ['bootstrap' => true]);
         }
 
