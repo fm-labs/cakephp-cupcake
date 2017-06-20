@@ -12,6 +12,7 @@ use Cake\Mailer\Email;
  * Class BananaMailer
  *
  * @package Banana\Mailer
+ * @deprecated Use CakePHP's built-in mailer instead
  */
 class BananaMailer extends Mailer
 {
