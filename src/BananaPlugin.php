@@ -39,14 +39,17 @@ class BananaPlugin implements EventListenerInterface
     public function getSettings(Event $event)
     {
         $event->result['Site'] = [
+            /*
             'enabled' => [
                 'type' => 'boolean',
                 'default' => false
             ],
+            */
             'title' => [
                 'type' => 'string',
                 'default' => 'Untitled Site'
             ],
+            /*
             'theme' => [
                 'type' => 'string',
                 'input' => [
@@ -55,6 +58,7 @@ class BananaPlugin implements EventListenerInterface
                 ],
                 'default' => null
             ]
+            */
         ];
     }
 

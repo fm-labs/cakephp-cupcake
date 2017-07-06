@@ -2,6 +2,8 @@
 namespace Banana\Controller\Admin;
 
 use Cake\Core\Configure;
+use Cake\Event\Event;
+use Cake\Form\Schema;
 use Cake\Network\Exception\BadRequestException;
 use Settings\Form\SettingsForm;
 use Settings\Model\Table\SettingsTable;
@@ -19,12 +21,53 @@ class SettingsController extends AppController
      */
     public $modelClass = 'Settings.Settings';
 
+
+    public $actions = [
+        'index' => 'Backend.Index',
+        'edit' => 'Backend.Edit',
+        'view' => 'Backend.View',
+    ];
+
+    public function manage($scope = 'default')
+    {
+        $manager = new SettingsManager($scope);
+
+        $settings = $manager->getSettings();
+        $schema = $manager->buildFormSchema(new Schema());
+        $inputs = $manager->buildFormInputs();
+
+
+        $result = [];
+        foreach ($settings as $namespace => $settings) {
+            foreach (array_keys($settings) as $key) {
+                $fieldKey = $namespace . '.' . $key;
+
+                $result[$fieldKey] = [
+                    'field' => $schema->field($fieldKey),
+                    'input' => $inputs[$fieldKey]
+                ];
+            }
+        }
+
+        $this->set('manager', $manager);
+        $this->set('result', $result);
+    }
+
+    public function index($scope = 'default')
+    {
+        $this->eventManager()->on('Backend.Action.Index.getActions', function(Event $event) use ($scope) {
+            $event->result[] =  [__('Edit'), ['action' => 'form', $scope]];
+            $event->result[] =  [__('Dump'), ['action' => 'dump', $scope]];
+        });
+        $this->Action->execute();
+    }
+
     /**
      * Index method
      *
      * @return void
      */
-    public function index($scope = 'default')
+    public function form($scope = 'default')
     {
 
         $settingsForm = new SettingsForm(new SettingsManager($scope));
@@ -119,7 +162,6 @@ class SettingsController extends AppController
             }
         }
         $this->set(compact('setting'));
-        $this->set('valueTypes', $this->Settings->listValueTypes());
         $this->set('_serialize', ['setting']);
     }
 
