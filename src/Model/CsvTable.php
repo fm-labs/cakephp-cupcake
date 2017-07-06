@@ -17,6 +17,11 @@ class CsvTable extends ArrayTable
     protected $_file;
 
     /**
+     * @var array
+     */
+    protected $_columns = [];
+
+    /**
      * @param array $config
      */
     public function __construct(array $config = [])
@@ -29,7 +34,12 @@ class CsvTable extends ArrayTable
             throw new \RuntimeException('CsvTable: No file given or file does not exist: ' . $config['file']);
         }
 
+        if (!isset($config['columns'])) {
+            $config['columns'] = [];
+        }
+
         $this->_file = $config['file'];
+        $this->_columns = $config['columns'];
         $this->_config = $config;
 
         $this->_behaviors = new BehaviorRegistry();
@@ -59,9 +69,8 @@ class CsvTable extends ArrayTable
             throw new \RuntimeException("Failed to open file $this->_file");
         }
 
-        $header = [];
+        $header = $this->_columns;
         $rows = [];
-        $columns = [];
         $i = 0;
         while (! feof($file)) {
             $line = fgetcsv($file, 1024, ";");
@@ -70,8 +79,10 @@ class CsvTable extends ArrayTable
             }
 
             // header
-            if ($i++ == 0) {
+            $i++;
+            if ($i == 1 && $header !== false && empty($header)) {
                 $header = $line;
+                $i--;
 
                 // get rid of last element if it is empty
                 if (empty($header[count($header) - 1])) {
@@ -81,12 +92,17 @@ class CsvTable extends ArrayTable
             }
 
             // r0w
-            $idx = $i - 2;
             $row = [];
-            for ($j = 0; $j < count($header); $j++) {
-                $row[$header[$j]] = trim($line[$j]);
+            for ($j = 0; $j < count($line); $j++) {
+                $val = trim($line[$j]);
+
+                $col = $j;
+                if ($header !== false && isset($header[$j])) {
+                    $col = $header[$j];
+                }
+                $row[$col] = $val;
             }
-            $rows[$idx] = $row;
+            $rows[$i-1] = $row;
         }
 
         fclose($file);
