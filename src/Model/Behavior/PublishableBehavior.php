@@ -2,6 +2,7 @@
 namespace Banana\Model\Behavior;
 
 use ArrayObject;
+use Backend\Action\EditAction;
 use Cake\Event\Event;
 use Cake\ORM\Behavior;
 use Cake\ORM\Entity;
@@ -78,4 +79,5 @@ class PublishableBehavior extends Behavior
     //public function beforeSave(Event $event, Entity $entity)
     //{
     //}
+
 }
