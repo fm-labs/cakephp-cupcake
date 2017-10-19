@@ -120,6 +120,7 @@ class PluginLoader extends Plugin
      */
     public static function runAll()
     {
+        self::_loadConfig();
         foreach (static::$_registry->loaded() as $plugin) {
             static::$_registry->run($plugin);
         }
@@ -152,9 +153,12 @@ class PluginLoader extends Plugin
         $defaultConfig = [
             'enabled' => true,
             'configs' => true,
+
             'bootstrap' => true,
             'routes' => true,
             'ignoreMissing' => true,
+            'autoload' => false,
+            'classBase' => 'src',
         ];
         $config = array_merge($defaultConfig, $config);
 

@@ -6,7 +6,7 @@ namespace Banana\Lib;
  *
  * @package Banana\Lib
  */
-class Status
+class Status implements \JsonSerializable
 {
     /**
      * @var int
@@ -77,5 +77,26 @@ class Status
     public function toHtml()
     {
         return sprintf('<span class="label label-%s">%s</span>', $this->_class, $this->_label);
+    }
+
+    public function toArray()
+    {
+        return [
+            'class' => $this->_class,
+            'label' => $this->_label,
+            'status' => $this->_status
+        ];
+    }
+
+    /**
+     * Specify data which should be serialized to JSON
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     * @since 5.4.0
+     */
+    function jsonSerialize()
+    {
+        return $this->toArray();
     }
 }

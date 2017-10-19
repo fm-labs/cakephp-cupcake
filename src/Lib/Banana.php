@@ -70,8 +70,8 @@ class Banana
             Configure::write('Cache._cake_core_.duration', '+1 years');
         }
 
-        Cache::config(Configure::consume('Cache'));
         ConnectionManager::config(Configure::consume('Datasources'));
+        Cache::config(Configure::consume('Cache'));
         Log::config(Configure::consume('Log'));
         Security::salt(Configure::consume('Security.salt'));
         Email::configTransport(Configure::consume('EmailTransport'));
@@ -101,6 +101,7 @@ class Banana
     public static function loadPlugins()
     {
         // core plugins
+        PluginLoader::load('Settings', ['bootstrap' => true, 'routes' => false]); //@todo remove hard plugin dependency
         PluginLoader::load('Backend', ['bootstrap' => true, 'routes' => true]); //@todo remove hard plugin dependency
         PluginLoader::load('User', ['bootstrap' => true, 'routes' => true]); //@todo remove hard plugin dependency
         PluginLoader::load('Tree', ['bootstrap' => true, 'routes' => false]); //@todo remove hard plugin dependency
@@ -117,7 +118,7 @@ class Banana
      */
     public static function loadThemes()
     {
-        if (Configure::check('Site.theme')) {
+        if (Configure::check(static::$themeKey)) {
             PluginLoader::load(Configure::read(static::$themeKey), ['bootstrap' => true, 'routes' => true]);
         }
     }
@@ -141,14 +142,6 @@ class Banana
             // continue with default configuration
             //debug($ex->getMessage());
         }
-    }
-
-    /**
-     * Run all plugins
-     */
-    public static function run()
-    {
-        PluginLoader::runAll();
     }
 
     /**

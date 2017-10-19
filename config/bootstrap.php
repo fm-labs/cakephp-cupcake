@@ -90,3 +90,6 @@ if (!Cache::config('banana')) {
         'prefix' => 'banana_core_'
     ]);
 }
+
+
+\Banana\Lib\Banana::load();

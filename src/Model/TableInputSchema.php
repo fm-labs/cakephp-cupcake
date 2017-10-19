@@ -2,6 +2,8 @@
 
 namespace Banana\Model;
 
+use Cake\Utility\Inflector;
+
 /**
  * Class TableInputSchema
  *
@@ -21,10 +23,26 @@ class TableInputSchema
      */
     public function addField($fieldName, array $config = [])
     {
-        $config = array_merge(['type' => 'text'], $config);
+        $config = array_merge([
+            'type' => 'text',
+            'label' => Inflector::humanize($fieldName),
+            'help' => null,
+            'required' => null,
+            'searchable' => false,
+            'sortable' => false,
+        ], $config);
         $this->_fields[$fieldName] = $config;
 
         return $this;
+    }
+
+    /**
+     * @param $fieldName
+     * @return array|null
+     */
+    public function field($fieldName)
+    {
+        return (isset($this->_fields[$fieldName])) ? $this->_fields[$fieldName] : null;
     }
 
     /**

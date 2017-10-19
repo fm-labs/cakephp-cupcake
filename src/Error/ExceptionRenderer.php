@@ -26,7 +26,7 @@ class ExceptionRenderer extends CakeExceptionRenderer
      */
     public function missingWidget($error)
     {
-        return 'Oops that widget is missing!';
+        return 'Oops that widget is missing! ' . $error;
     }
 
     /**
@@ -35,6 +35,6 @@ class ExceptionRenderer extends CakeExceptionRenderer
      */
     public function missingPlugin($error)
     {
-        return 'Oops that widget is missing!';
+        return 'Oops that plugin is missing! ' . $error;
     }
 }

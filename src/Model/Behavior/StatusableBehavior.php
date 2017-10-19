@@ -106,7 +106,7 @@ class StatusableBehavior extends Behavior
                 $rawVal = $row[$fieldName];
                 foreach ($this->_fieldConfig[$fieldName] as $status) {
                     if ($status instanceof Status && $status->getStatus() == $rawVal) {
-                        $row['_' . $fieldName] = $status;
+                        $row[$fieldName . '__status'] = $status;
                         break;
                     }
                 }
