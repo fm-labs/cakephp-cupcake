@@ -1,10 +1,12 @@
 <?php
 namespace Banana\Controller\Admin;
 
+use Banana\Lib\Banana;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Form\Schema;
 use Cake\Network\Exception\BadRequestException;
+use Cake\Utility\Hash;
 use Settings\Form\SettingsForm;
 use Settings\Model\Table\SettingsTable;
 use Settings\SettingsManager;
@@ -23,38 +25,131 @@ class SettingsController extends AppController
 
 
     public $actions = [
-        'index' => 'Backend.Index',
+        'index2' => 'Backend.FooTableIndex',
         'edit' => 'Backend.Edit',
         'view' => 'Backend.View',
     ];
 
-    public function manage($scope = 'default')
+    /**
+     * @var SettingsManager
+     */
+    public $sm;
+
+    public function beforeFilter(Event $event)
     {
-        $manager = new SettingsManager($scope);
+        parent::beforeFilter($event);
 
-        $settings = $manager->getSettings();
-        $schema = $manager->buildFormSchema(new Schema());
-        $inputs = $manager->buildFormInputs();
+        $manager = Banana::getInstance()->settingsManager();
+        $this->eventManager()->dispatch(new Event('Settings.build', $manager));
 
+        $scope = BC_SITE_ID;
+        //$settings = $manager->getSettings();
+        //$schema = $manager->buildFormSchema(new Schema());
+        //$inputs = $manager->buildFormInputs();
+        $values = $this->_loadValues($scope);
+        $manager->apply($values);
 
-        $result = [];
-        foreach ($settings as $namespace => $settings) {
-            foreach (array_keys($settings) as $key) {
-                $fieldKey = $namespace . '.' . $key;
+        $this->sm = $manager;
+    }
 
-                $result[$fieldKey] = [
-                    'field' => $schema->field($fieldKey),
-                    'input' => $inputs[$fieldKey]
-                ];
+    /**
+     * Load settings values from persistent storage
+     */
+    protected function _loadValues($scope)
+    {
+        $values = [];
+        $settings = $this->Settings
+            ->find()
+            ->where(['Settings.scope' => $scope])
+            ->all();
+
+        foreach ($settings as $setting) {
+            $values[$setting->key] = $setting->value;
+        }
+
+        return $values;
+    }
+
+    protected function _saveValues($scope, $compiled)
+    {
+        $settings = $this->Settings
+            ->find()
+            ->where(['Settings.scope' => $scope])
+            ->all();
+
+        $copy = $compiled;
+
+        foreach($settings as $setting) {
+            $key = $setting->key;
+            if (isset($compiled[$key])) {
+                $setting->set('value', $compiled[$key]);
+                unset($compiled[$key]);
+            } else {
+                $setting->set('value', null);
+            }
+
+            if (!$this->Settings->save($setting)) {
+                debug("Failed saving setting for key $key");
+                return false;
             }
         }
 
-        $this->set('manager', $manager);
-        $this->set('result', $result);
+        foreach ($compiled as $key => $val) {
+            $setting = $this->Settings->newEntity(['key' => $key, 'value' => $val, 'scope' => $scope]);
+            if (!$this->Settings->save($setting)) {
+                debug("Failed adding setting for key $key");
+                return false;
+            }
+        }
+
+        Configure::write($copy);
+
+        return $this->_dump($scope, $copy);
     }
 
-    public function index($scope = 'default')
+    /**
+     * @return int
+     * @TODO Refactor using config engine
+     */
+    protected function _dump($scope, $compiled)
     {
+        $path = SETTINGS . 'settings_' . $scope . '.php';
+        $contents = '<?php' . "\n" . 'return ' . var_export($compiled, true) . ';';
+
+        return file_put_contents($path, $contents);
+    }
+
+    public function manage($scope = null)
+    {
+        $scope = ($scope) ?: BC_SITE_ID;
+        if ($this->request->is('post')) {
+            debug(Hash::flatten($this->request->data()));
+            $values = Hash::flatten($this->request->data());
+            $this->sm->apply($values);
+            $compiled = $this->sm->getCompiled();
+            if (!$this->_saveValues($scope, $compiled)) {
+                $this->Flash->error("Failed to update values");
+            } else {
+                $this->Flash->success("Saved!");
+                $this->redirect(['action' => 'manage', $scope]);
+            }
+        }
+
+        $this->set('manager', $this->sm);
+        $this->set('result', $this->sm->describe());
+    }
+
+    public function index()
+    {
+        $this->set('manager', $this->sm);
+        $this->set('result', $this->sm->describe());
+    }
+
+    public function index2($scope = null)
+    {
+        $scope = ($scope) ?: BC_SITE_ID;
+        $this->set('fields.whitelist', ['id', 'scope', 'key', 'value']);
+
         $this->eventManager()->on('Backend.Action.Index.getActions', function(Event $event) use ($scope) {
             $event->result[] =  [__('Edit'), ['action' => 'form', $scope]];
             $event->result[] =  [__('Dump'), ['action' => 'dump', $scope]];
@@ -95,24 +190,6 @@ class SettingsController extends AppController
         $this->set('scope', $scope);
         $this->set('form', $settingsForm);
         $this->set('_serialize', ['settings']);
-    }
-
-    /**
-     * @param string $scope
-     */
-    public function dump($scope = 'default')
-    {
-        if (!$scope) {
-            throw new BadRequestException();
-        }
-
-        $manager = new SettingsManager($scope);
-        if ($written = $manager->dump()) {
-            $this->Flash->success(__('Settings for {0} dumped: {1} bytes written', $scope, $written));
-        } else {
-            $this->Flash->error(__('Failed to dump settings for {0}', $scope));
-        }
-        $this->redirect($this->referer(['action' => 'index']));
     }
 
     /**

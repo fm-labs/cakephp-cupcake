@@ -2,146 +2,50 @@
 
 namespace Banana\Lib;
 
-use Banana\Plugin\PluginLoader;
-use Cake\Cache\Cache;
 use Cake\Core\Configure;
-use Cake\Core\Plugin;
-use Cake\Datasource\ConnectionManager;
-use Cake\Log\Log;
-use Cake\Mailer\Email;
-use Cake\Utility\Security;
+use Cake\Event\Event;
+use Cake\Event\EventDispatcherInterface;
+use Cake\Event\EventManager;
+use Cake\Http\BaseApplication;
+use Settings\SettingsManager;
 
 /**
  * Class Banana
  *
  * @package Banana\Lib
  */
-class Banana
+class Banana implements EventDispatcherInterface
 {
+    use SingletonTrait {
+        getInstance as _getInstance;
+    }
+
     /**
      * @var string Default mailer class
      */
     static $mailerClass = 'Cake\Mailer\Mailer';
 
     /**
-     * @var string Default theme config key
+     * @var SettingsManager
      */
-    static $themeKey = 'Site.theme';
+    protected $_settingsManager;
 
     /**
-     * Basic CakePHP bootstrap config
-     *
-     * @return void
+     * @var EventManager
      */
-    public static function configure()
-    {
-
-        // Set the full base URL.
-        // This URL is used as the base of all absolute links.
-        if (!Configure::read('App.fullBaseUrl')) {
-            $s = null;
-            if (env('HTTPS')) {
-                $s = 's';
-            }
-
-            $httpHost = env('HTTP_HOST');
-            if (isset($httpHost)) {
-                Configure::write('App.fullBaseUrl', 'http' . $s . '://' . $httpHost);
-            }
-            unset($httpHost, $s);
-        }
-
-        // Only try to load DebugKit in development mode
-        // Debug Kit should not be installed on a production system
-        if (Configure::read('debug')) {
-            // disable Mail panel by default, as it doesn't play nice with Mailman plugin
-            // @TODO Play nice with DebugKit
-            if (!Configure::check('DebugKit.panels')) {
-                Configure::write('DebugKit.panels', ['DebugKit.Mail' => false]);
-            }
-            Plugin::load('DebugKit', ['bootstrap' => true]);
-        }
-
-        // When debug = false the metadata cache should last
-        // for a very very long time, as we don't want
-        // to refresh the cache while users are doing requests.
-        if (!Configure::read('debug')) {
-            Configure::write('Cache._cake_model_.duration', '+1 years');
-            Configure::write('Cache._cake_core_.duration', '+1 years');
-        }
-
-        ConnectionManager::config(Configure::consume('Datasources'));
-        Cache::config(Configure::consume('Cache'));
-        Log::config(Configure::consume('Log'));
-        Security::salt(Configure::consume('Security.salt'));
-        Email::configTransport(Configure::consume('EmailTransport'));
-        Email::config(Configure::consume('Email'));
-    }
+    protected $_eventManager;
 
     /**
-     * Convenience method to load all banana-related stuff.
-     * Best pratice is to use this method right after loading the Banana plugin in your app's bootstrap process
-     *
-     * @return void
+     * @var BaseApplication
      */
-    public static function load()
-    {
-        static::configure();
-        static::loadPlugins();
-        static::loadThemes();
-        static::loadSettings();
-    }
+    protected $_app;
 
     /**
-     * Load registered Banana plugins
-     *
-     * @return void
-     * @throws \Exception If plugin loading failed
+     * @return Banana
      */
-    public static function loadPlugins()
+    static public function getInstance()
     {
-        // core plugins
-        PluginLoader::load('Settings', ['bootstrap' => true, 'routes' => false]); //@todo remove hard plugin dependency
-        PluginLoader::load('Backend', ['bootstrap' => true, 'routes' => true]); //@todo remove hard plugin dependency
-        PluginLoader::load('User', ['bootstrap' => true, 'routes' => true]); //@todo remove hard plugin dependency
-        PluginLoader::load('Tree', ['bootstrap' => true, 'routes' => false]); //@todo remove hard plugin dependency
-
-        // registered plugins
-        PluginLoader::loadAll();
-    }
-
-    /**
-     * Load registered Banana themes
-     *
-     * @return void
-     * @throws \Exception If plugin loading failed
-     */
-    public static function loadThemes()
-    {
-        if (Configure::check(static::$themeKey)) {
-            PluginLoader::load(Configure::read(static::$themeKey), ['bootstrap' => true, 'routes' => true]);
-        }
-    }
-
-    /**
-     * Load settings for current site
-     * @return void
-     * @throws \Exception If settings loading failed
-     */
-    public static function loadSettings()
-    {
-        if (!Plugin::loaded('Settings')) {
-            // continue with default (manual) configuration
-            return;
-        }
-
-        try {
-            $site = (defined('ENV')) ? constant('ENV') : 'default';
-            Configure::load($site, 'settings');
-        } catch(\Exception $ex) {
-            // continue with default configuration
-            //debug($ex->getMessage());
-        }
+        return self::_getInstance();
     }
 
     /**
@@ -153,4 +57,84 @@ class Banana
     {
         return new self::$mailerClass();
     }
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->settingsManager();
+        $this->eventManager();
+    }
+
+    /**
+     * Get / Set application instance
+     */
+    public function application(BaseApplication $app = null)
+    {
+        if ($app !== null) {
+            $this->_app = $app;
+        }
+        return $this->_app;
+    }
+
+    /**
+     * Get / Set settings mananager instance
+     */
+    public function settingsManager(SettingsManager $settingsManager = null)
+    {
+        if ($settingsManager !== null) {
+            $this->_settingsManager = $settingsManager;
+        } elseif (!$this->_settingsManager) {
+            $this->_settingsManager = new SettingsManager(BC_SITE_ID);
+        }
+        return $this->_settingsManager;
+    }
+
+    /**
+     * Returns the Cake\Event\EventManager manager instance for this object.
+     *
+     * You can use this instance to register any new listeners or callbacks to the
+     * object events, or create your own events and trigger them at will.
+     *
+     * @param \Cake\Event\EventManager|null $eventManager the eventManager to set
+     * @return \Cake\Event\EventManager
+     */
+    public function eventManager(EventManager $eventManager = null)
+    {
+        if ($eventManager !== null) {
+            $this->_eventManager = $eventManager;
+        } elseif (!$this->_eventManager) {
+            $this->_eventManager = EventManager::instance();
+        }
+        return $this->_eventManager;
+    }
+    
+    /**
+     * Wrapper for creating and dispatching events.
+     *
+     * Returns a dispatched event.
+     *
+     * @param string $name Name of the event.
+     * @param array|null $data Any value you wish to be transported with this event to
+     * it can be read by listeners.
+     * @param object|null $subject The object that this event applies to
+     * ($this by default).
+     *
+     * @return \Cake\Event\Event
+     */
+    public function dispatchEvent($name, $data = null, $subject = null)
+    {
+        if ($subject === null) {
+            $subject = $this;
+        }
+        return $this->eventManager()->dispatch(new Event($name, $subject, $data));
+    }
+
+
+    public function getSettings()
+    {
+
+    }
+
 }

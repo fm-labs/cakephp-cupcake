@@ -39,20 +39,21 @@ class PluginLoader extends Plugin
 
         $plugins = Cache::read('plugins', 'banana');
         //$plugins = [];
-        if (!$plugins || Configure::read('Banana.disablePluginCache')) {
+        if (!$plugins || Configure::read('Banana.disablePluginCache') || !Cache::enabled()) {
             // if no custom Plugin configuration has been defined, attempt to find plugin config file
             if (!Configure::check('Plugin')) {
                 // the first available config file will be used and others ignored
-                foreach (['local/plugins', 'plugins'] as $config) {
+                //foreach (['local/plugins', 'plugins'] as $config) {
                     try {
-                        Configure::load($config);
-                        break;
+                        Configure::load('plugins');
+                //        break;
                     } catch (\Exception $ex) {
+                        // no plugins configured. strange, but ok. should work, too.
                     }
-                }
+                //}
             }
 
-            // list of plugins has been intialized
+            // list of plugins has been initialized
             $plugins = (array)Configure::consume('Plugin');
 
             // normalize plugin configurations
@@ -93,6 +94,8 @@ class PluginLoader extends Plugin
         // update enabled state to TRUE
         Configure::write('Banana.plugins.'.$plugin.'.enabled', true);
         Cache::delete('plugins', 'banana');
+
+        //@todo Dispatch activation event
 
         $localPluginConfigFile = CONFIG . DS . 'local' . DS . 'plugins.php';
         $config = ['Plugin' => Configure::read('Banana.plugins')];
@@ -181,11 +184,12 @@ class PluginLoader extends Plugin
             try {
                 static::$_registry->load($plugin, $config);
             } catch (MissingPluginHandlerException $ex) {
+                //debug($ex->getMessage());
             }
 
             // autoload local plugin configs
             if ($loadConfig === true) {
-                static::_autoloadPluginConfig($plugin);
+                static::_autoloadPluginConfig($plugin, true);
             }
         } catch (\Exception $ex) {
             Log::error(__CLASS__ . ': ' . $ex->getMessage());
@@ -205,17 +209,26 @@ class PluginLoader extends Plugin
      *
      * @param $plugin
      */
-    protected static function _autoloadPluginConfig($plugin)
+    protected static function _autoloadPluginConfig($plugin, $ignoreMissing = true)
     {
         $_underscored = Inflector::underscore($plugin);
-        $configFiles = [
-            $_underscored, // from local config folder
-            'plugin/' . $_underscored, // from local plugins config folder
-            'local/' . $_underscored // from local config folder
-        ];
-        foreach ($configFiles as $configFile) {
-            if (file_exists(CONFIG . $configFile . '.php')) {
-                Configure::load($configFile);
+        // @todo Remove legacy code
+        //$configFiles = [
+        //    $_underscored, // from local config folder
+        //    'plugin/' . $_underscored, // from local plugins config folder
+        //    'local/' . $_underscored // from local config folder
+        //];
+        //foreach ($configFiles as $configFile) {
+        //    if (file_exists(CONFIG . $configFile . '.php')) {
+        //        Configure::load('plugin/' . $_underscored);
+        //    }
+        //}
+        try {
+            Configure::load('plugin/' . $_underscored);
+        } catch (\Exception $ex) {
+            //debug($ex->getMessage());
+            if (!$ignoreMissing) {
+                throw $ex;
             }
         }
     }

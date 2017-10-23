@@ -31,7 +31,7 @@ class ErrorController extends \Cake\Controller\ErrorController
     public function beforeRender(Event $event)
     {
         $this->viewBuilder()->plugin('Banana');
-        $this->viewBuilder()->theme(Configure::read('Site.theme'));
+        //$this->viewBuilder()->theme(Configure::read('Site.theme'));
         $this->viewBuilder()->layout('error');
         $this->viewBuilder()->templatePath('Error');
     }

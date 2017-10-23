@@ -7,6 +7,7 @@ use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 use Cake\Routing\Router;
 use Content\Lib\ContentManager;
+use Settings\SettingsManager;
 
 /**
  * Class BananaPlugin
@@ -27,7 +28,7 @@ class BananaPlugin implements EventListenerInterface
     public function implementedEvents()
     {
         return [
-            'Settings.get' => 'getSettings',
+            'Settings.build' => 'buildSettings',
             'Backend.Menu.get' => ['callable' => 'getBackendMenu', 'priority' => 99 ],
             'Backend.Routes.build' => 'buildBackendRoutes'
         ];
@@ -36,30 +37,15 @@ class BananaPlugin implements EventListenerInterface
     /**
      * @param Event $event
      */
-    public function getSettings(Event $event)
+    public function buildSettings(Event $event)
     {
-        $event->result['Site'] = [
-            /*
-            'enabled' => [
-                'type' => 'boolean',
-                'default' => false
-            ],
-            */
-            'title' => [
+        if ($event->subject() instanceof SettingsManager) {
+            $event->subject()->add('Site', 'title', [
+                'label' => 'Site title',
                 'type' => 'string',
                 'default' => 'Untitled Site'
-            ],
-            /*
-            'theme' => [
-                'type' => 'string',
-                'input' => [
-                    'type' => 'select',
-                    'options' => ContentManager::getThemesAvailable()
-                ],
-                'default' => null
-            ]
-            */
-        ];
+            ]);
+        }
     }
 
     /**

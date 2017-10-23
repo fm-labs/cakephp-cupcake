@@ -14,7 +14,7 @@ trait SingletonTrait
     static protected $_instances = [];
 
     /**
-     * @return self
+     * @return object
      */
     public static function getInstance()
     {
