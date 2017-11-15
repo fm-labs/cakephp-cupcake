@@ -153,6 +153,11 @@ class PluginLoader extends Plugin
      */
     public static function load($plugin, array $config = [])
     {
+        self::_loadConfig();
+        if (static::$_registry->has($plugin)) {
+            return;
+        }
+
         $defaultConfig = [
             'enabled' => true,
             'configs' => true,
@@ -184,7 +189,7 @@ class PluginLoader extends Plugin
             try {
                 static::$_registry->load($plugin, $config);
             } catch (MissingPluginHandlerException $ex) {
-                //debug($ex->getMessage());
+                debug($ex->getMessage());
             }
 
             // autoload local plugin configs
