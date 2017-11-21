@@ -61,7 +61,7 @@ class BananaApplication extends BaseApplication
     {
         // determine site id from environment
         $siteId = (defined('BC_SITE_ID')) ? constant('BC_SITE_ID') : null;
-        $siteId = (getenv('BC_SITE_ID')) ? getenv('BC_SITE_ID') : null;
+        $siteId = ($siteId === null && getenv('BC_SITE_ID')) ? getenv('BC_SITE_ID') : $siteId;
         $siteId = ($siteId === null && defined('ENV')) ? constant('ENV') : $siteId; //@deprecated @legacy
         $host = self::getSiteHost();
 
@@ -96,6 +96,10 @@ class BananaApplication extends BaseApplication
      */
     static public function getSiteHost()
     {
+        if (defined('BC_SITE_HOST')) {
+            return constant('BC_SITE_HOST');
+        }
+
         if (getenv('BC_SITE_HOST')) {
             return getenv('BC_SITE_HOST');
         }
@@ -122,8 +126,8 @@ class BananaApplication extends BaseApplication
     public function __construct($configDir)
     {
         //@TODO Remove . Dev only
-        ini_set('display_errors', 1);
-        error_reporting(E_ALL);
+        //ini_set('display_errors', 1);
+        //error_reporting(E_ALL);
 
         $this->baseConfigDir = $configDir;
         $this->siteId = self::getSiteId();
