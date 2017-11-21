@@ -68,12 +68,5 @@ class BananaPlugin implements EventListenerInterface
      */
     public function getBackendMenu(Event $event)
     {
-        if (Plugin::loaded('Settings')) {
-            $event->subject()->addItem([
-                'title' => 'Settings',
-                'url' => ['plugin' => 'Banana', 'controller' => 'Settings', 'action' => 'index'],
-                'data-icon' => 'gears',
-            ]);
-        }
     }
 }

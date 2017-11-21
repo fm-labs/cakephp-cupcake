@@ -25,7 +25,7 @@ class SettingsController extends AppController
 
 
     public $actions = [
-        'index2' => 'Backend.FooTableIndex',
+        'index2' => 'Backend.Index',
         'edit' => 'Backend.Edit',
         'view' => 'Backend.View',
     ];
@@ -42,12 +42,6 @@ class SettingsController extends AppController
         $manager = Banana::getInstance()->settingsManager();
         $this->eventManager()->dispatch(new Event('Settings.build', $manager));
 
-        $scope = BC_SITE_ID;
-        //$settings = $manager->getSettings();
-        //$schema = $manager->buildFormSchema(new Schema());
-        //$inputs = $manager->buildFormInputs();
-        $values = $this->_loadValues($scope);
-        $manager->apply($values);
 
         $this->sm = $manager;
     }
@@ -122,8 +116,11 @@ class SettingsController extends AppController
     public function manage($scope = null)
     {
         $scope = ($scope) ?: BC_SITE_ID;
+        $values = $this->_loadValues($scope);
+        $this->sm->apply($values);
+
         if ($this->request->is('post')) {
-            debug(Hash::flatten($this->request->data()));
+            //debug(Hash::flatten($this->request->data()));
             $values = Hash::flatten($this->request->data());
             $this->sm->apply($values);
             $compiled = $this->sm->getCompiled();
@@ -131,7 +128,7 @@ class SettingsController extends AppController
                 $this->Flash->error("Failed to update values");
             } else {
                 $this->Flash->success("Saved!");
-                $this->redirect(['action' => 'manage', $scope]);
+                //$this->redirect(['action' => 'manage', $scope]);
             }
         }
 
