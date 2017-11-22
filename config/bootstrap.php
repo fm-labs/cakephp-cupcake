@@ -12,3 +12,12 @@ if (!Cache::config('banana')) {
         'prefix' => 'banana_core_'
     ]);
 }
+
+
+/**
+ * Register FormatterHelper formatters
+ */
+\Backend\View\Helper\FormatterHelper::register('status', function ($val, $extra, $params, $view) {
+    $view->loadHelper('Banana.Status');
+    return $view->Status->label($val);
+});
