@@ -32,7 +32,7 @@ class MenuItem implements \ArrayAccess
     protected $_attr;
 
     /**
-     * @var Collection
+     * @var array
      */
     protected $_children;
 
@@ -56,7 +56,8 @@ class MenuItem implements \ArrayAccess
         $this->_title = $title;
         $this->_url = $url;
         $this->_attr = $attr;
-        $this->_children = new Collection($children);
+
+        $this->setChildren($children);
     }
 
     /**
@@ -84,19 +85,39 @@ class MenuItem implements \ArrayAccess
     }
 
     /**
-     * @return Collection
+     * @return array
      */
-    public function &getChildren()
+    public function getChildren()
     {
         return $this->_children;
     }
 
     /**
-     * @param Menu|Collection $children
+     * @param Menu|Collection|array $children
      */
     public function setChildren($children)
     {
+        if (is_array($children)) {
+            $_children = [];
+            foreach($children as $child) {
+                $_children[] = MenuItem::fromArray($child);
+            }
+            $children = $_children;
+        }
+
         $this->_children = $children;
+    }
+
+    public function addChild($title, $url = null, $attr = [], $children = [])
+    {
+        if (is_array($title)) {
+            $item = MenuItem::fromArray($title);
+        } else {
+            $item = new MenuItem($title, $url, $attr, $children);
+        }
+
+        $this->_children[spl_object_hash($item)] = $item;
+        return $this;
     }
 
     /**
@@ -108,7 +129,7 @@ class MenuItem implements \ArrayAccess
             'title' => $this->_title,
             'url' => $this->_url,
             'attr' => $this->_attr,
-            'children' => $this->_children->toArray()
+            'children' => $this->_children
         ];
     }
 
@@ -180,7 +201,20 @@ class MenuItem implements \ArrayAccess
      */
     public function offsetSet($offset, $value)
     {
-        throw new \RuntimeException('Can not set value for this object');
+        //@TODO Remove offsetSet method and restore read-only mode
+        //throw new \RuntimeException('Can not unset value for this object');
+        switch ($offset) {
+            case 'title':
+            case 'url':
+            case 'attr':
+                $key = "_" . $offset;
+                $this->{$key} = $value;
+                break;
+            case 'children':
+                $this->setChildren($value);
+                break;
+            default:
+        }
     }
 
     /**
@@ -196,5 +230,34 @@ class MenuItem implements \ArrayAccess
     public function offsetUnset($offset)
     {
         throw new \RuntimeException('Can not unset value for this object');
+    }
+
+    /**
+     * Create menu item from array
+     *
+     * Accepts:
+     *
+     * [TITLE, URL, ATTR, CHILDREN]
+     *
+     * ['title' => TITLE, 'url' => URL, 'children' => CHILDREN, 'foo' =>'bar']
+     *
+     * ['title' => TITLE, 'url' => URL, 'children' => CHILDREN, 'attr' => ['foo' => 'bar']]
+     */
+    static public function fromArray(array $item)
+    {
+        $title = $url = $attr = $children = null;
+        if (isset($item[0])) {
+            list($title, $url, $attr, $children) = $item;
+        } else {
+            $item['foo'] = 'bar';
+            $title = (isset($item['title'])) ? $item['title'] : null;
+            $url = (isset($item['url'])) ? $item['url'] : null;
+            $children = (isset($item['children'])) ? $item['children'] : [];
+
+            $attr = (isset($item['attr'])) ? $item['attr'] : [];
+            $attr += array_diff_key($item, ['title' => null, 'url' => null, 'children' => null, 'attr' => null]);
+        }
+
+        return new MenuItem($title, $url, (array) $attr, (array) $children);
     }
 }

@@ -86,12 +86,12 @@ class Menu implements \Iterator
      */
     public function &addItem($title, $url = null, $attr = [], $children = [])
     {
-        if (!is_object($title)) {
-            $item = new MenuItem($title, $url, $attr, $children);
-        } elseif ($title instanceof MenuItem) {
+        if ($title instanceof MenuItem) {
             $item = $title;
+        } elseif (is_array($title)) {
+            $item = MenuItem::fromArray($title);
         } else {
-            throw new \InvalidArgumentException("Menu::addItem failed: Invalid MenuItem instance");
+            $item = new MenuItem($title, $url, $attr, $children);
         }
         $hash = spl_object_hash($item);
         $this->_items[$hash] = $item;
