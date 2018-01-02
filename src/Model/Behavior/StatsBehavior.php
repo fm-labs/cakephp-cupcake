@@ -6,19 +6,45 @@ use Cake\Event\Event;
 use Cake\ORM\Behavior;
 use Cake\ORM\Entity;
 use Cake\ORM\Query;
+use Cake\ORM\Table;
 
 /**
- * Class PublishableBehavior
+ * Class StatsBehavior
  * @package Banana\Model\Behavior
  */
-class PublishableBehavior extends Behavior
+class StatsBehavior extends Behavior
 {
     /**
      * @var array
      */
     protected $_defaultConfig = [
-        'statusField' => 'is_published', // the field to store published flag
+        'implementedMethods' => [
+            'getStats' => 'getStats',
+        ],
+        'implementedFinders' => []
     ];
+
+    public function getStats()
+    {
+        $statFilters = [];
+        $statFilters['count'] = function(Table $t) {
+            return $t->find()->count();
+        };
+
+        $stats = [];
+        foreach($statFilters as $filterName => $filter) {
+            try {
+                if (!is_callable($filter)) {
+                    throw new \InvalidArgumentException("Stats filter not callable");
+                }
+
+                $stats[$filterName] = $filter($this->_table);
+            } catch (\Exception $ex) {
+                $stats[$filterName] = ['error' => $ex->getMessage()];
+            }
+        }
+        return $stats;
+    }
 
     /**
      * @param array $config Behavior config
@@ -29,35 +55,14 @@ class PublishableBehavior extends Behavior
     //}
 
     /**
-     * @param Query $query
-     * @param array $options
-     * @return $this
-     */
-    public function findPublished(Query $query, array $options)
-    {
-        $statusField = $query->repository()->alias() . '.' . $this->config('statusField');
-        $options = array_merge([
-            'published' => true
-        ], $options);
-
-        return $query->where([$statusField => $options['published']]);
-    }
-
-    /**
      * @param Event $event
      * @param Query $query
      * @param ArrayObject $options
      * @param bool $primary
      */
-    public function beforeFind(Event $event, Query $query, ArrayObject $options, $primary)
-    {
-
-        if (isset($options['published'])) {
-            $this->findPublished($query, [
-                'published' => $options['published']
-            ]);
-        }
-    }
+    //public function beforeFind(Event $event, Query $query, ArrayObject $options, $primary)
+    //{
+    //}
 
     /**
      * @param Event $event The event
