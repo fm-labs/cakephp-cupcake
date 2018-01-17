@@ -13,7 +13,6 @@ if (!Cache::config('banana')) {
     ]);
 }
 
-
 /**
  * Register FormatterHelper formatters
  */

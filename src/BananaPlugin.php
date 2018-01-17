@@ -2,6 +2,8 @@
 
 namespace Banana;
 
+use Backend\Event\RouteBuilderEvent;
+use Banana\Backend\BananaBackend;
 use Cake\Core\Plugin;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
@@ -29,7 +31,7 @@ class BananaPlugin implements EventListenerInterface
     {
         return [
             'Settings.build' => 'buildSettings',
-            'Backend.Menu.get' => ['callable' => 'getBackendMenu', 'priority' => 99 ],
+            //'Backend.Menu.get' => ['callable' => 'getBackendMenu', 'priority' => 99 ],
             'Backend.Routes.build' => 'buildBackendRoutes'
         ];
     }
@@ -51,9 +53,9 @@ class BananaPlugin implements EventListenerInterface
     /**
      * Backend routes
      */
-    public function buildBackendRoutes()
+    public function buildBackendRoutes(RouteBuilderEvent $event)
     {
-        Router::scope('/core/admin', ['plugin' => 'Banana', '_namePrefix' => 'core:admin:', 'prefix' => 'admin'], function ($routes) {
+        $event->subject()->scope('/core', ['plugin' => 'Banana', '_namePrefix' => 'core:admin:', 'prefix' => 'admin'], function ($routes) {
 
             $routes->extensions(['json']);
 
@@ -66,7 +68,11 @@ class BananaPlugin implements EventListenerInterface
     /**
      * @param Event $event
      */
-    public function getBackendMenu(Event $event)
+//    public function getBackendMenu(Event $event)
+//    {
+//    }
+
+    public function __invoke()
     {
     }
 }

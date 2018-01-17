@@ -14,6 +14,7 @@ use Cake\Utility\Inflector;
  * Class PluginLoader
  *
  * @package Banana\Plugin
+ * @deprecated Use PluginManager instead
  */
 class PluginLoader extends Plugin
 {

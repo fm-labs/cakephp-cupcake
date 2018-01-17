@@ -1,9 +1,8 @@
 <?php
 namespace Banana;
 
-use Banana\Lib\Banana;
+use Banana\Banana;
 use Banana\Middleware\PluginMiddleware;
-use Banana\Plugin\PluginLoader;
 use Cake\Cache\Cache;
 use Cake\Console\ConsoleErrorHandler;
 use Cake\Core\Configure;
@@ -14,6 +13,8 @@ use Cake\Datasource\ConnectionManager;
 use Cake\Database\Type;
 use Cake\Error\ErrorHandler;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
+use Cake\Event\Event;
+use Cake\Event\EventManager;
 use Cake\Http\BaseApplication;
 use Cake\Log\Log;
 use Cake\Mailer\Email;
@@ -28,98 +29,8 @@ use Cake\Utility\Security;
  * This defines the bootstrapping logic and middleware layers you
  * want to use in your application.
  */
-class BananaApplication extends BaseApplication
+class Application extends BaseApplication
 {
-    /**
-     * Site definitions
-     */
-    static protected $_sites = [];
-
-    /**
-     * @var string Path to base config dir
-     */
-    protected $baseConfigDir;
-
-    /**
-     * @var string Currently selected siteId
-     */
-    protected $siteId;
-
-    /**
-     * Add site configuration
-     */
-    static public function addSite($siteId, array $config = [])
-    {
-        $config = array_merge(['hosts' => []], $config);
-        static::$_sites[$siteId] = $config;
-    }
-
-    /**
-     * Return active site ID
-     */
-    static public function getSiteId()
-    {
-        // determine site id from environment
-        $siteId = (defined('BC_SITE_ID')) ? constant('BC_SITE_ID') : null;
-        $siteId = ($siteId === null && getenv('BC_SITE_ID')) ? getenv('BC_SITE_ID') : $siteId;
-        $siteId = ($siteId === null && defined('ENV')) ? constant('ENV') : $siteId; //@deprecated @legacy
-        $host = self::getSiteHost();
-
-        // determine site id from HTTP request
-        if ($siteId === null) {
-            foreach (static::$_sites as $_siteId => $site) {
-                $hosts = (array) static::$_sites[$_siteId]['hosts'];
-                if (in_array($host, $hosts)) {
-                    $siteId = $_siteId;
-                    break;
-                }
-            }
-        }
-
-        // fallback to default
-        if ($siteId === null) {
-            $siteId = 'default';
-        }
-
-        defined('BC_SITE_ID') or define('BC_SITE_ID', $siteId);
-        defined('BC_SITE_HOST') or define('BC_SITE_HOST', $host);
-        // @TODO remove legacy constants
-        defined('ENV') or define('ENV', BC_SITE_ID);
-        defined('BANANA_HOST') or define('BANANA_HOST', BC_SITE_HOST);
-
-        // fallback to default site
-        return $siteId;
-    }
-
-    /**
-     * Return active site host name
-     */
-    static public function getSiteHost()
-    {
-        if (defined('BC_SITE_HOST')) {
-            return constant('BC_SITE_HOST');
-        }
-
-        if (getenv('BC_SITE_HOST')) {
-            return getenv('BC_SITE_HOST');
-        }
-
-        //@deprecated Legacy code
-        if (getenv('BANANA_HOST')) {
-            return getenv('BANANA_HOST');
-        }
-
-        if (getenv('OVERRIDE_HTTP_HOST')) {
-            return getenv('OVERRIDE_HTTP_HOST');
-        }
-
-        if (getenv('HTTP_HOST')) {
-            return getenv('HTTP_HOST');
-        }
-
-        return (isset($_SERVER['HTTP_HOST'])) ? $_SERVER['HTTP_HOST'] : null;
-    }
-
     /**
      * @param string $configDir
      */
@@ -129,10 +40,6 @@ class BananaApplication extends BaseApplication
         //ini_set('display_errors', 1);
         //error_reporting(E_ALL);
 
-        $this->baseConfigDir = $configDir;
-        $this->siteId = self::getSiteId();
-
-        $configDir =  $configDir . '/sites/' . $this->siteId;
         parent::__construct($configDir);
     }
 
@@ -146,35 +53,33 @@ class BananaApplication extends BaseApplication
     public function bootstrap()
     {
         /**
+         * NOW: ENTERING NEXT RUN LEVEL 1 (BOOTSTRAPPING)
+         */
+
+
+        /**
          * Load path definitions
          */
-        require_once $this->baseConfigDir . "/paths.php"; // global
-        require_once $this->configDir . "/paths.php"; // site
+        require_once $this->configDir . "/paths.php";
 
         /**
          * Bootstrap cake core
          */
         if (!defined('CORE_PATH')) {
-            die('CORE_PATH is not defined. [SITE ID: ' . $this->siteId . ']');
+            die('CORE_PATH is not defined. [SITE ID: ' . BC_SITE_ID . ']');
         }
         require CORE_PATH . 'config' . DS . 'bootstrap.php';
 
         /**
          * Setup default config engine and load configs
          */
-        Configure::config('default', $this->getDefaultConfigEngine());
-        $this->loadConfiguration();
-
-        /**
-         * Bootstrap site
-         */
-        require_once $this->configDir . '/bootstrap.php';
-
-        /**
-         * Override site config
-         */
-        if (file_exists($this->baseConfigDir . '/' . $this->siteId . ".local.php")) {
-            require $this->baseConfigDir . '/' . $this->siteId . ".local.php";
+        try {
+            Configure::config('default', $this->getDefaultConfigEngine());
+            $this->bootstrapConfig();
+        //} catch (\Cake\Core\Exception\Exception $ex) {
+        //    die ($ex->getMessage());
+        } catch (\Exception $ex) {
+            die ($ex->getMessage());
         }
 
         // Set the full base URL.
@@ -191,6 +96,7 @@ class BananaApplication extends BaseApplication
             }
             unset($httpHost, $s);
         }
+
 
         /**
          * Set server timezone to UTC. You can change it to another timezone of your
@@ -226,6 +132,11 @@ class BananaApplication extends BaseApplication
         } else {
             (new ErrorHandler(Configure::read('Error')))->register();
         }
+        
+        /**
+         * Bootstrap site
+         */
+        require_once $this->configDir . '/bootstrap.php';
 
         /**
          * Setup detectors for mobile and tablet.
@@ -252,6 +163,7 @@ class BananaApplication extends BaseApplication
          */
         Type::build('datetime')->useLocaleParser();
 
+
         /**
          * Debug mode
          */
@@ -260,6 +172,7 @@ class BananaApplication extends BaseApplication
         /**
          * Consume configurations
          */
+        //debug(Configure::read());
         ConnectionManager::config(Configure::consume('Datasources'));
         Cache::config(Configure::consume('Cache'));
         Log::config(Configure::consume('Log'));
@@ -268,30 +181,27 @@ class BananaApplication extends BaseApplication
         Email::config(Configure::consume('Email'));
 
         /**
-         * Initialize Banana
+         * At this point:
+         * Path constants have been set
+         * Cake's bootstrap code executed (start timer, load functions, ...)
+         * App configurations have been loaded
+         * Configuration settings for locale, time and encoding have been set
+         * App's bootstrap executed
+         * Debug mode configured
+         * Configurations consumed by components
+         *
+         * NOW: ENTERING NEXT RUN LEVEL 2 (PLUGIN LOADING)
          */
+
+        // load core plugins with routes enabled
         Plugin::load('Banana', ['bootstrap' => true, 'routes' => true]);
+        Banana::init($this);
 
-        // load core plugins
-        PluginLoader::load('Settings', ['bootstrap' => true, 'routes' => false]); //@todo remove hard plugin dependency
-        PluginLoader::load('Backend', ['bootstrap' => true, 'routes' => true]); //@todo remove hard plugin dependency
-        PluginLoader::load('User', ['bootstrap' => true, 'routes' => true]); //@todo remove hard plugin dependency
-
-        // load configured plugins
-        PluginLoader::loadAll();
-
-        // load site theme
-        if (Configure::check('Site.theme')) {
-            PluginLoader::load(Configure::read('Site.theme'), ['bootstrap' => true, 'routes' => true]);
-        }
-
-        // local site settings override
-        try { Configure::load(BC_SITE_ID, 'settings'); } catch(\Exception $ex) { debug($ex->getMessage()); }
-
-        // Init Banana obj
-        //Banana::config(Configure::consume('Banana'));
-        $B = Banana::getInstance();
-        $B->application($this);
+        /**
+         * At this point:
+         * All available plugins have been LOADED
+         * The banana core plugins have been ACTIVATED
+         */
     }
 
     /**
@@ -309,11 +219,12 @@ class BananaApplication extends BaseApplication
      * Sub-routine to auto-load configurations
      * Override in sub-classes to change config loading behavior
      */
-    protected function loadConfiguration()
+    protected function bootstrapConfig()
     {
         // app config
         Configure::load('app', 'default', false);
         Configure::load('site');
+        Configure::load('plugins');
 
         // beta config overrides
         // @TODO Replace with environment configs
@@ -339,7 +250,7 @@ class BananaApplication extends BaseApplication
             if (!Configure::check('DebugKit.panels')) {
                 Configure::write('DebugKit.panels', ['DebugKit.Mail' => false]);
             }
-            Plugin::load('DebugKit', ['bootstrap' => true]);
+            Plugin::load('DebugKit', ['bootstrap' => true, 'routes' => true]);
 
         } else {
             // When debug = false the metadata cache should last
@@ -367,7 +278,7 @@ class BananaApplication extends BaseApplication
             ->add(new AssetMiddleware())
 
             // Auto-wire banana plugins
-            ->add(new PluginMiddleware())
+            //->add(new PluginMiddleware())
 
             // Apply routing
             ->add(new RoutingMiddleware());

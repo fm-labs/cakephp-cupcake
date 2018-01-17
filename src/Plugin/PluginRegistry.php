@@ -12,7 +12,7 @@ use RuntimeException;
 /**
  * Registry of loaded plugin handlers
  */
-class PluginRegistry extends ObjectRegistry implements EventDispatcherInterface
+class PluginRegistry extends ObjectRegistry
 {
 
     /**
@@ -68,8 +68,6 @@ class PluginRegistry extends ObjectRegistry implements EventDispatcherInterface
             $instance = new $class($settings);
         }
 
-        return $instance;
-
         /*
         if ($instance instanceof PluginInterface) {
             return $instance;
@@ -79,6 +77,7 @@ class PluginRegistry extends ObjectRegistry implements EventDispatcherInterface
             'Plugin handler must be set directly.'
         );
         */
+        return $instance;
     }
 
     /**
@@ -87,55 +86,8 @@ class PluginRegistry extends ObjectRegistry implements EventDispatcherInterface
      * @param string $name
      * @return null|PluginInterface
      */
-    public function get($name)
-    {
-        return parent::get($name);
-    }
-
-    /**
-     * Attach event listeners and invoke the handler instance
-     *
-     * @param $name
-     */
-    public function run($name)
-    {
-        $inst = $this->get($name);
-
-        if ($inst instanceof EventListenerInterface) {
-            $this->eventManager()->on($inst);
-        }
-
-        if (is_callable($inst)) {
-            call_user_func($inst);
-        }
-    }
-
-    /**
-     * Wrapper for creating and dispatching events.
-     *
-     * Returns a dispatched event.
-     *
-     * @param string $name Name of the event.
-     * @param array|null $data Any value you wish to be transported with this event to
-     * it can be read by listeners.
-     * @param object|null $subject The object that this event applies to
-     * ($this by default).
-     *
-     * @return \Cake\Event\Event
-     */
-    public function dispatchEvent($name, $data = null, $subject = null)
-    {
-        return $this->eventManager()->dispatch(new Event($name, $subject, $data));
-    }
-
-    /**
-     * Returns the global Cake\Event\EventManager manager instance.
-     *
-     * @param \Cake\Event\EventManager|null $eventManager the eventManager to set
-     * @return \Cake\Event\EventManager
-     */
-    public function eventManager(EventManager $eventManager = null)
-    {
-        return EventManager::instance();
-    }
+//    public function get($name)
+//    {
+//        return parent::get($name);
+//    }
 }

@@ -1,7 +1,7 @@
 <?php
 namespace Banana\Controller\Admin;
 
-use Banana\Lib\Banana;
+use Banana\Banana;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Form\Schema;
