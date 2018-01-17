@@ -31,7 +31,7 @@ class BananaPlugin implements EventListenerInterface
     {
         return [
             'Settings.build' => 'buildSettings',
-            //'Backend.Menu.get' => ['callable' => 'getBackendMenu', 'priority' => 99 ],
+            'Backend.Menu.get' => ['callable' => 'getBackendMenu', 'priority' => 80 ],
             'Backend.Routes.build' => 'buildBackendRoutes'
         ];
     }
@@ -46,6 +46,23 @@ class BananaPlugin implements EventListenerInterface
                 'label' => 'Site title',
                 'type' => 'string',
                 'default' => 'Untitled Site'
+            ]);
+
+        }
+    }
+    /**
+     * @param Event $event
+     */
+    public function getBackendMenu(Event $event)
+    {
+        if ($event->subject() instanceof \Banana\Menu\Menu) {
+            $event->subject()->addItem([
+                'title' => 'Settings',
+                'url' => ['plugin' => 'Banana', 'controller' => 'Settings', 'action' => 'manage'],
+                'data-icon' => 'sliders',
+                'children' => [
+                    // @todo add menu children from registered settings sections --
+                ]
             ]);
         }
     }
