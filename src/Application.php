@@ -119,19 +119,19 @@ class Application extends BaseApplication
          * Register application error and exception handlers.
          * @todo Inject cli configurations from banana
          */
-        $isCli = php_sapi_name() === 'cli';
-        if ($isCli) {
-            (new ConsoleErrorHandler(Configure::read('Error')))->register();
-
-            // Include the CLI bootstrap overrides.
-            require $this->configDir . '/bootstrap_cli.php';
-            //} elseif (class_exists('\Gourmet\Whoops\Error\WhoopsHandler')) {
-            // Out-of-the-box support for "Whoops for CakePHP3" by "gourmet"
-            // https://github.com/gourmet/whoops
-            //    (new \Gourmet\Whoops\Error\WhoopsHandler(Configure::read('Error')))->register();
-        } else {
+//        $isCli = php_sapi_name() === 'cli';
+//        if ($isCli) {
+//            (new ConsoleErrorHandler(Configure::read('Error')))->register();
+//
+//            // Include the CLI bootstrap overrides.
+//            require $this->configDir . '/bootstrap_cli.php';
+//            //} elseif (class_exists('\Gourmet\Whoops\Error\WhoopsHandler')) {
+//            // Out-of-the-box support for "Whoops for CakePHP3" by "gourmet"
+//            // https://github.com/gourmet/whoops
+//            //    (new \Gourmet\Whoops\Error\WhoopsHandler(Configure::read('Error')))->register();
+//        } else {
             (new ErrorHandler(Configure::read('Error')))->register();
-        }
+//        }
         
         /**
          * Bootstrap site

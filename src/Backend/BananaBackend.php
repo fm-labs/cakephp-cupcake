@@ -6,6 +6,9 @@ use Backend\Event\RouteBuilderEvent;
 use Cake\Event\EventListenerInterface;
 use Cake\Routing\RouteBuilder;
 
+/**
+ * !! UNUSED !!
+ */
 class BananaBackend implements EventListenerInterface
 {
     public function implementedEvents()

@@ -31,7 +31,8 @@ class BananaPlugin implements EventListenerInterface
     {
         return [
             'Settings.build' => 'buildSettings',
-            'Backend.Menu.get' => ['callable' => 'getBackendMenu', 'priority' => 80 ],
+            //'Backend.Menu.get' => ['callable' => 'getBackendMenu', 'priority' => 80 ],
+            'Backend.Sidebar.get' => ['callable' => 'getBackendSidebarMenu', 'priority' => 80 ],
             'Backend.Routes.build' => 'buildBackendRoutes'
         ];
     }
@@ -53,7 +54,7 @@ class BananaPlugin implements EventListenerInterface
     /**
      * @param Event $event
      */
-    public function getBackendMenu(Event $event)
+    public function getBackendSidebarMenu(Event $event)
     {
         if ($event->subject() instanceof \Banana\Menu\Menu) {
             $event->subject()->addItem([
@@ -81,13 +82,6 @@ class BananaPlugin implements EventListenerInterface
             $routes->fallbacks('DashedRoute');
         });
     }
-
-    /**
-     * @param Event $event
-     */
-//    public function getBackendMenu(Event $event)
-//    {
-//    }
 
     public function __invoke()
     {

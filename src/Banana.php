@@ -14,6 +14,9 @@ use Settings\SettingsManager;
  * Class Banana
  *
  * @package Banana
+ * @todo Refactor as (service) container
+ * @todo Caching service
+ * @todo Log service
  */
 class Banana implements EventDispatcherInterface
 {
@@ -21,7 +24,6 @@ class Banana implements EventDispatcherInterface
 
     /**
      * @var string Default mailer class
-     * @todo Move
      */
     static public $mailerClass = 'Cake\Mailer\Mailer';
 
@@ -62,15 +64,17 @@ class Banana implements EventDispatcherInterface
 
     /**
      * Singleton initializer
-     * @return void
+     * @param Application $app
+     * @param PluginManager $plugins
+     * @param SettingsManager $settings
      */
-    static public function init(Application $app)
+    static public function init(Application $app, PluginManager $plugins = null, SettingsManager $settings = null)
     {
         if (isset(self::$_instances[0])) {
             throw new \RuntimeException("Banana already initialized");
         }
 
-        self::$_instances[0] = new self($app);
+        self::$_instances[0] = new self($app, $plugins, $settings);
     }
 
     /**
@@ -88,60 +92,65 @@ class Banana implements EventDispatcherInterface
     /**
      * Singleton instance constructor
      * @param Application $app
+     * @param PluginManager $plugins
+     * @param SettingsManager $settings
      */
-    public function __construct(Application $app)
+    public function __construct(Application $app, PluginManager $plugins = null, SettingsManager $settings = null)
     {
-        $this->_app = $app;
+        // set application context
+        $this->application($app);
 
-        $this->_pluginManager = new PluginManager();
-        $this->eventManager()->on($this->_pluginManager);
+        // connect plugin- and settings-manager
+        $this->eventManager()->on($this->pluginManager($plugins));
+        $this->eventManager()->on($this->settingsManager($settings));
 
-        $this->_settingsManager = new SettingsManager();
-        $this->eventManager()->on($this->_settingsManager);
+        // connect backend
+        $this->eventManager()->on($this->backend());
 
-        $this->_backend = new Backend();
-        $this->eventManager()->on($this->_backend);
-
-        $this->dispatchEvent('Banana.init');
+        // broadcast to all services that we are ready :)
+        $this->dispatchEvent('Banana.init', [], $this);
     }
 
     /**
      * Get / Set application instance
+     * @param Application $app
      * @return Application
      */
-    public function application(/* Application $app = null */)
+    public function application(Application $app = null)
     {
-//        if ($app !== null) {
-//            $this->_app = $app;
-//        }
+        if ($app !== null) {
+            $this->_app = $app;
+        }
         return $this->_app;
     }
 
     /**
      * Get / Set plugin mananager instance
+     * @param PluginManager $pluginManager
      * @return PluginManager
      */
-    public function pluginManager(/*SettingsManager $pluginManager = null*/)
+    public function pluginManager(PluginManager $pluginManager = null)
     {
-//        if ($pluginManager !== null) {
-//            $this->_pluginManager = $pluginManager;
-//        } elseif (!$this->_pluginManager) {
-//            $this->_pluginManager = new SettingsManager();
-//        }
+        if ($pluginManager !== null) {
+            $this->_pluginManager = $pluginManager;
+        } elseif (!$this->_pluginManager) {
+            $this->_pluginManager = new PluginManager();
+        }
         return $this->_pluginManager;
     }
-    
+
     /**
      * Get / Set settings mananager instance
+     * @param SettingsManager $settingsManager
      * @return SettingsManager
      */
-    public function settingsManager(/*SettingsManager $settingsManager = null*/)
+    public function settingsManager(SettingsManager $settingsManager = null)
     {
-//        if ($settingsManager !== null) {
-//            $this->_settingsManager = $settingsManager;
-//        } elseif (!$this->_settingsManager) {
-//            $this->_settingsManager = new SettingsManager();
-//        }
+        if ($settingsManager !== null) {
+            $this->_settingsManager = $settingsManager;
+        } elseif (!$this->_settingsManager) {
+            $this->_settingsManager = new SettingsManager();
+        }
         return $this->_settingsManager;
     }
 
@@ -151,46 +160,9 @@ class Banana implements EventDispatcherInterface
      */
     public function backend()
     {
+        if (!$this->_backend) {
+            $this->_backend = new Backend();
+        }
         return $this->_backend;
     }
-
-    /**
-     * Returns the Cake\Event\EventManager manager instance for this object.
-     *
-     * You can use this instance to register any new listeners or callbacks to the
-     * object events, or create your own events and trigger them at will.
-     *
-     * @param \Cake\Event\EventManager|null $eventManager the eventManager to set
-     * @return \Cake\Event\EventManager
-     */
-//    public function eventManager(EventManager $eventManager = null)
-//    {
-//        if ($eventManager !== null) {
-//            $this->_eventManager = $eventManager;
-//        } elseif (!$this->_eventManager) {
-//            $this->_eventManager = EventManager::instance();
-//        }
-//        return $this->_eventManager;
-//    }
-    
-    /**
-     * Wrapper for creating and dispatching events.
-     *
-     * Returns a dispatched event.
-     *
-     * @param string $name Name of the event.
-     * @param array|null $data Any value you wish to be transported with this event to
-     * it can be read by listeners.
-     * @param object|null $subject The object that this event applies to
-     * ($this by default).
-     *
-     * @return \Cake\Event\Event
-     */
-//    public function dispatchEvent($name, $data = null, $subject = null)
-//    {
-//        if ($subject === null) {
-//            $subject = $this;
-//        }
-//        return $this->eventManager()->dispatch(new Event($name, $subject, $data));
-//    }
 }
