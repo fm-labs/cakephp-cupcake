@@ -17,6 +17,7 @@ class StatusHelper extends Helper
      *
      * @param $status
      * @return string
+     * @todo Make use of UiHelper::label() or LabelHelper::status() from Bootstrap plugin
      */
     public function label($status)
     {

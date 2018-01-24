@@ -106,7 +106,8 @@ class StatusableBehavior extends Behavior
                 $rawVal = $row[$fieldName];
                 foreach ($this->_fieldConfig[$fieldName] as $status) {
                     if ($status instanceof Status && $status->getStatus() == $rawVal) {
-                        $row[$fieldName . '__status'] = $status;
+                        $row[$fieldName . '__original'] = $rawVal;
+                        $row[$fieldName] = $status;
                         break;
                     }
                 }
@@ -129,7 +130,6 @@ class StatusableBehavior extends Behavior
      */
     public function beforeSave(Event $event, EntityInterface $entity, ArrayObject $options)
     {
-        /*
         foreach (array_keys($this->_fieldConfig) as $fieldName) {
 
             if ($entity->get($fieldName) === null) {
@@ -140,20 +140,10 @@ class StatusableBehavior extends Behavior
             // and unset injected raw status field
             $status = $entity->get($fieldName);
             if ($status instanceof Status) {
-                $raw = $entity->get($fieldName . '__original');
-
-                $entity->set($fieldName, $status->getStatus());
-                if ($status->getStatus() == $raw) {
-                    $entity->dirty($fieldName, false);
-                }
-
                 $entity->set($fieldName.'__original', null);
                 $entity->dirty($fieldName.'__original', false);
-
+                $entity->set($fieldName, $status->getStatus());
             }
-
-
         }
-        */
     }
 }
