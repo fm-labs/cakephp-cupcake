@@ -99,6 +99,13 @@ class Menu implements \Iterator
         return $this->_items[$hash];
     }
 
+    public function addItems(array $items)
+    {
+        foreach ($items as $item) {
+            $this->addItem($item);
+        }
+    }
+
     /**
      * @param MenuItem $item
      */

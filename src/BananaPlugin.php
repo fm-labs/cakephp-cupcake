@@ -31,8 +31,8 @@ class BananaPlugin implements EventListenerInterface
     {
         return [
             'Settings.build' => 'buildSettings',
-            //'Backend.Menu.get' => ['callable' => 'getBackendMenu', 'priority' => 80 ],
-            'Backend.Sidebar.get' => ['callable' => 'getBackendSidebarMenu', 'priority' => 80 ],
+            //'Backend.Menu.build' => ['callable' => 'buildBackendMenu', 'priority' => 80 ],
+            'Backend.Sidebar.build' => ['callable' => 'buildBackendSidebarMenu', 'priority' => 80 ],
             'Backend.Routes.build' => 'buildBackendRoutes'
         ];
     }
@@ -51,21 +51,22 @@ class BananaPlugin implements EventListenerInterface
 
         }
     }
+
     /**
      * @param Event $event
      */
-    public function getBackendSidebarMenu(Event $event)
+    public function buildBackendSidebarMenu(Event $event)
     {
-        if ($event->subject() instanceof \Banana\Menu\Menu) {
-            $event->subject()->addItem([
-                'title' => 'Settings',
-                'url' => ['plugin' => 'Banana', 'controller' => 'Settings', 'action' => 'manage'],
-                'data-icon' => 'sliders',
-                'children' => [
-                    // @todo add menu children from registered settings sections --
-                ]
-            ]);
-        }
+//        if ($event->subject() instanceof \Banana\Menu\Menu) {
+//            $event->subject()->addItem([
+//                'title' => 'Settings',
+//                'url' => ['plugin' => 'Banana', 'controller' => 'Settings', 'action' => 'manage'],
+//                'data-icon' => 'sliders',
+//                'children' => [
+//                    // @todo add menu children from registered settings sections --
+//                ]
+//            ]);
+//        }
     }
 
     /**

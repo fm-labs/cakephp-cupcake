@@ -100,7 +100,10 @@ class MenuItem implements \ArrayAccess
         if (is_array($children)) {
             $_children = [];
             foreach($children as $child) {
-                $_children[] = MenuItem::fromArray($child);
+                if (!is_object($child)) {
+                    $child = MenuItem::fromArray($child);
+                }
+                $_children[] = $child;
             }
             $children = $_children;
         }
