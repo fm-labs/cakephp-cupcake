@@ -37,7 +37,7 @@ class MenuItem implements \ArrayAccess
     protected $_children;
 
     /**
-     * @param $title
+     * @param string|array $title
      * @param null $url
      * @param array $attr
      * @param array $children
