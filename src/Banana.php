@@ -33,6 +33,12 @@ class Banana implements EventDispatcherInterface
     static protected $_instances = [];
 
     /**
+     * Core plugins config
+     * @var array
+     */
+    static protected $_corePlugins = ['Banana', 'Settings', 'Backend', 'User'];
+
+    /**
      * @var BaseApplication
      */
     protected $_app;
@@ -63,52 +69,55 @@ class Banana implements EventDispatcherInterface
     }
 
     /**
-     * Singleton initializer
-     * @param Application $app
-     * @param PluginManager $plugins
-     * @param SettingsManager $settings
-     */
-    static public function init(Application $app, PluginManager $plugins = null, SettingsManager $settings = null)
-    {
-        if (isset(self::$_instances[0])) {
-            throw new \RuntimeException("Banana already initialized");
-        }
-
-        self::$_instances[0] = new self($app, $plugins, $settings);
-    }
-
-    /**
      * Singleton getter
      * @return Banana
      */
     static public function getInstance()
     {
         if (!isset(self::$_instances[0])) {
-            throw new \RuntimeException("Banana not initialized");
+            self::$_instances[0] = new self();
         }
         return self::$_instances[0];
     }
 
     /**
      * Singleton instance constructor
-     * @param Application $app
-     * @param PluginManager $plugins
-     * @param SettingsManager $settings
      */
-    public function __construct(Application $app, PluginManager $plugins = null, SettingsManager $settings = null)
+    public function __construct()
+    {
+    }
+
+    /**
+     * Banana bootstrap process
+     * @param Application $app
+     */
+    public function bootstrap(Application $app)
     {
         // set application context
         $this->application($app);
 
-        // connect plugin- and settings-manager
-        $this->eventManager()->on($this->pluginManager($plugins));
-        $this->eventManager()->on($this->settingsManager($settings));
+        // connect plugin manager
+        //$this->extend('pluginManager', '\Banana\Plugin\PluginManager');
+        $this->pluginManager();
+        foreach (self::$_corePlugins as $pluginName) {
+            $this->pluginManager()->load($pluginName, ['bootstrap' => true, 'routes' => true, 'protected' => true]);
+        }
+        $this->pluginManager()->bootstrap();
+
+        // connect settings manager
+        $this->settingsManager();
+    }
+
+    public function run()
+    {
+        $this->eventManager()->on($this->pluginManager());
 
         // connect backend
+        //$this->backend();
         $this->eventManager()->on($this->backend());
 
         // broadcast to all services that we are ready :)
-        $this->dispatchEvent('Banana.init', [], $this);
+        $this->dispatchEvent('Banana.startup', [], $this);
     }
 
     /**

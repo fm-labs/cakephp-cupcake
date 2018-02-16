@@ -3,6 +3,7 @@ namespace Banana;
 
 use Banana\Banana;
 use Banana\Middleware\PluginMiddleware;
+use Banana\Plugin\PluginManager;
 use Cake\Cache\Cache;
 use Cake\Console\ConsoleErrorHandler;
 use Cake\Core\Configure;
@@ -22,6 +23,7 @@ use Cake\Network\Request;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
 use Cake\Utility\Security;
+use Settings\SettingsManager;
 
 /**
  * Application setup class.
@@ -195,13 +197,21 @@ class Application extends BaseApplication
 
         // load core plugins with routes enabled
         Plugin::load('Banana', ['bootstrap' => true, 'routes' => true]);
-        Banana::init($this);
 
+        $B = Banana::getInstance();
+        $B->pluginManager(new PluginManager()); //new PluginManager(Configure::consume('Banana.plugins'))
+        $B->settingsManager(new SettingsManager()); // new SettingsManager(Configure::consume('Settings'))
+        $B->bootstrap($this);
+        //$B->run($this);
+
+        //Banana::init($this);
         /**
          * At this point:
          * All available plugins have been LOADED
          * The banana core plugins have been ACTIVATED
          */
+
+        //Banana::run($this);
     }
 
     /**
@@ -278,7 +288,7 @@ class Application extends BaseApplication
             ->add(new AssetMiddleware())
 
             // Auto-wire banana plugins
-            //->add(new PluginMiddleware())
+            ->add(new PluginMiddleware())
 
             // Apply routing
             ->add(new RoutingMiddleware());
