@@ -4,7 +4,6 @@ namespace Banana\Plugin;
 
 use Cake\Core\Configure;
 use Cake\Core\Plugin;
-use Cake\Core\StaticConfigTrait;
 use Cake\Event\Event;
 use Cake\Event\EventDispatcherInterface;
 use Cake\Event\EventDispatcherTrait;
@@ -15,7 +14,6 @@ use Cake\Utility\Inflector;
 
 /**
  * Plugin Manager
- * //@TODO Implement 'core' and 'protected' plugin directives
  */
 class PluginManager implements EventListenerInterface, EventDispatcherInterface
 {
@@ -88,7 +86,6 @@ class PluginManager implements EventListenerInterface, EventDispatcherInterface
         // and avoids dependency issues as the class namespaces are still available
         // (e.g. if another plugin has a hard dependency on a deactivated plugin).
         // This behaviour might change in future versions.
-        // @todo Test performance
         //Plugin::loadAll(['bootstrap' => false, 'routes' => false]);
     }
 
@@ -112,6 +109,7 @@ class PluginManager implements EventListenerInterface, EventDispatcherInterface
         }
 
         // load plugin
+        $pluginSettings += ['ignoreMissing' => true];
         Plugin::load($pluginName, $pluginSettings);
 
         // load plugin config
