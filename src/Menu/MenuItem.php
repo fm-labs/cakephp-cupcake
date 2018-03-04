@@ -252,7 +252,7 @@ class MenuItem implements \ArrayAccess
         if (isset($item[0])) {
             list($title, $url, $attr, $children) = $item;
         } else {
-            $item['foo'] = 'bar';
+            //$item['foo'] = 'bar';
             $title = (isset($item['title'])) ? $item['title'] : null;
             $url = (isset($item['url'])) ? $item['url'] : null;
             $children = (isset($item['children'])) ? $item['children'] : [];

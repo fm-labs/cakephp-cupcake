@@ -3,11 +3,10 @@
 namespace Banana\Middleware;
 
 use Banana\Banana;
-use Banana\Plugin\PluginLoader;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class PluginMiddleware
+class BananaMiddleware
 {
     /**
      * @param \Psr\Http\Message\ServerRequestInterface $request The request.
@@ -17,8 +16,6 @@ class PluginMiddleware
      */
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $next)
     {
-        //PluginLoader::runAll();
-
         Banana::getInstance()->run();
 
         return $next($request, $response);

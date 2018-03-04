@@ -30,11 +30,17 @@ class BananaPlugin implements EventListenerInterface
     public function implementedEvents()
     {
         return [
+            'Plugin.init' => 'initPlugin',
             'Settings.build' => 'buildSettings',
             //'Backend.Menu.build' => ['callable' => 'buildBackendMenu', 'priority' => 80 ],
             'Backend.Sidebar.build' => ['callable' => 'buildBackendSidebarMenu', 'priority' => 80 ],
             'Backend.Routes.build' => 'buildBackendRoutes'
         ];
+    }
+
+    public function initPlugin()
+    {
+        debug("initPlugin");
     }
 
     /**
@@ -57,16 +63,6 @@ class BananaPlugin implements EventListenerInterface
      */
     public function buildBackendSidebarMenu(Event $event)
     {
-//        if ($event->subject() instanceof \Banana\Menu\Menu) {
-//            $event->subject()->addItem([
-//                'title' => 'Settings',
-//                'url' => ['plugin' => 'Banana', 'controller' => 'Settings', 'action' => 'manage'],
-//                'data-icon' => 'sliders',
-//                'children' => [
-//                    // @todo add menu children from registered settings sections --
-//                ]
-//            ]);
-//        }
     }
 
     /**
@@ -74,12 +70,7 @@ class BananaPlugin implements EventListenerInterface
      */
     public function buildBackendRoutes(RouteBuilderEvent $event)
     {
-        $event->subject()->scope('/core', ['plugin' => 'Banana', '_namePrefix' => 'core:admin:', 'prefix' => 'admin'], function ($routes) {
-
-            $routes->extensions(['json']);
-
-            $routes->connect('/', ['controller' => 'Dashboard', 'action' => 'index'], ['_name' => 'index']);
-            //$routes->connect('/:controller');
+        $event->subject()->scope('/system', ['plugin' => 'Banana', '_namePrefix' => 'system:admin:', 'prefix' => 'admin'], function ($routes) {
             $routes->fallbacks('DashedRoute');
         });
     }

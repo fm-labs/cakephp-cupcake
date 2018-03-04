@@ -2,7 +2,7 @@
 namespace Banana;
 
 use Banana\Banana;
-use Banana\Middleware\PluginMiddleware;
+use Banana\Middleware\BananaMiddleware;
 use Banana\Plugin\PluginManager;
 use Cake\Cache\Cache;
 use Cake\Console\ConsoleErrorHandler;
@@ -55,7 +55,20 @@ class Application extends BaseApplication
     public function bootstrap()
     {
         /**
-         * NOW: ENTERING NEXT RUN LEVEL 1 (BOOTSTRAPPING)
+         * NOW: ENTERING RUNLEVEL 1 (BOOTSTRAPPING)
+         * - setup paths
+         * - bootstrap cake core
+         * - setup default config engine
+         * - load configurations
+         * - setup full base url in configuration
+         * - configure: timezone, encoding, locale, error handler
+         * - include user's bootstrap file
+         * - configure: request detectors, database types, debugmode
+         * - consume configurations: ConnectionManager, Cache, Email, Log, Security
+         * - load banana plugin
+         * - setup banana (init plugin- and settings- manager)
+         * - bootstrap banana
+         *
          */
 
 
@@ -197,21 +210,17 @@ class Application extends BaseApplication
 
         // load core plugins with routes enabled
         Plugin::load('Banana', ['bootstrap' => true, 'routes' => true]);
+        //$B = Banana::getInstance();
 
-        $B = Banana::getInstance();
-        $B->pluginManager(new PluginManager()); //new PluginManager(Configure::consume('Banana.plugins'))
-        $B->settingsManager(new SettingsManager()); // new SettingsManager(Configure::consume('Settings'))
-        $B->bootstrap($this);
-        //$B->run($this);
 
-        //Banana::init($this);
+        $B = Banana::init($this);
+        $B->bootstrap();
+
         /**
          * At this point:
-         * All available plugins have been LOADED
-         * The banana core plugins have been ACTIVATED
+         * The banana core plugins have been LOADED and ACTIVATED
+         * All activated banana plugins have been LOADED
          */
-
-        //Banana::run($this);
     }
 
     /**
@@ -288,7 +297,7 @@ class Application extends BaseApplication
             ->add(new AssetMiddleware())
 
             // Auto-wire banana plugins
-            ->add(new PluginMiddleware())
+            ->add(new BananaMiddleware())
 
             // Apply routing
             ->add(new RoutingMiddleware());

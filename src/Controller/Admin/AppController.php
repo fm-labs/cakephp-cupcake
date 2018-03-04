@@ -2,7 +2,6 @@
 
 namespace Banana\Controller\Admin;
 
-use Backend\Controller\BackendActionsTrait;
 use Cake\Controller\Controller;
 
 /**
@@ -11,8 +10,6 @@ use Cake\Controller\Controller;
  */
 class AppController extends Controller
 {
-    use BackendActionsTrait;
-
     /**
      * Intitialize
      */

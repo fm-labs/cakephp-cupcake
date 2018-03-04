@@ -27,7 +27,7 @@ class PluginRegistry extends ObjectRegistry
      */
     protected function _throwMissingClassError($class, $plugin)
     {
-        throw new MissingPluginHandlerException(sprintf('Could not load plugin handler class %s', $class));
+        throw new MissingPluginHandlerException(['class' => $class, 'plugin' => $plugin]);
     }
 
     /**

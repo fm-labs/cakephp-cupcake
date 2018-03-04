@@ -3,6 +3,8 @@ namespace Banana\View;
 
 use Cake\Controller\Controller;
 use Cake\Core\App;
+use Cake\Core\Exception\MissingPluginException;
+use Cake\Core\Plugin;
 use Cake\View\View;
 use Cake\View\Exception;
 
@@ -29,45 +31,56 @@ trait ViewModuleTrait
      */
     public function module($module, array $args = [], array $options = [])
     {
-        $moduleEntityClass = "\\Content\\Model\\Entity\\Module";
-        if (class_exists($moduleEntityClass) && $module instanceof $moduleEntityClass) {
-            $options = $module->params_arr;
-            $module = $module->cellClass;
-        }
-
-        $parts = explode('::', $module);
-
-        if (count($parts) === 2) {
-            list($pluginAndModule, $action) = [$parts[0], $parts[1]];
-        } else {
-            list($pluginAndModule, $action) = [$parts[0], 'display'];
-        }
-
-        list($plugin) = pluginSplit($pluginAndModule);
-        $className = App::className($pluginAndModule, 'View/Module', 'Module');
-
-        if (!$className) {
-            //@todo MissingModuleException
-            throw new Exception\MissingCellException(['className' => $pluginAndModule . 'Module']);
-        }
-
-        $module = $this->_createModule($className, $action, $plugin, $options);
-        $module->args = $args;
-
-        /*
         try {
-            $reflect = new \ReflectionMethod($module, $action);
-            $reflect->invokeArgs($module, $args); // ViewModule::display(array $args = [])
+
+            $moduleEntityClass = "\\Content\\Model\\Entity\\Module";
+            if (class_exists($moduleEntityClass) && $module instanceof $moduleEntityClass) {
+                $options = $module->params_arr;
+                $module = $module->cellClass;
+            }
+
+            $parts = explode('::', $module);
+
+            if (count($parts) === 2) {
+                list($pluginAndModule, $action) = [$parts[0], $parts[1]];
+            } else {
+                list($pluginAndModule, $action) = [$parts[0], 'display'];
+            }
+
+            list($plugin) = pluginSplit($pluginAndModule);
+
+            if (!Plugin::loaded($plugin)) {
+                throw new MissingPluginException(['plugin' => $plugin]);
+            }
+
+            $className = App::className($pluginAndModule, 'View/Module', 'Module');
+
+            if (!$className) {
+                //@todo MissingModuleException
+                throw new Exception\MissingCellException(['className' => $pluginAndModule . 'Module']);
+            }
+
+            $module = $this->_createModule($className, $action, $plugin, $options);
+            $module->args = $args;
+
+            /*
+            try {
+                $reflect = new \ReflectionMethod($module, $action);
+                $reflect->invokeArgs($module, $args); // ViewModule::display(array $args = [])
+                return $module;
+            } catch (\ReflectionException $e) {
+                throw new \BadMethodCallException(sprintf(
+                    'Module %s does not have a "%s" method.',
+                    $className,
+                    $action
+                ));
+            }
+            */
             return $module;
-        } catch (\ReflectionException $e) {
-            throw new \BadMethodCallException(sprintf(
-                'Module %s does not have a "%s" method.',
-                $className,
-                $action
-            ));
+        } catch (\Exception $ex) {
+            return sprintf("Module $module error: %s", $ex->getMessage());
         }
-        */
-        return $module;
+
     }
 
     /**

@@ -13,5 +13,5 @@ class MissingPluginHandlerException extends MissingPluginException
     /**
      * @var string
      */
-    protected $_messageTemplate = 'Plugin handler for %s could not be found.';
+    protected $_messageTemplate = 'Plugin handler class %s for plugin %s could not be found.';
 }

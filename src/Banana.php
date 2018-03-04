@@ -36,7 +36,12 @@ class Banana implements EventDispatcherInterface
      * Core plugins config
      * @var array
      */
-    static protected $_corePlugins = ['Banana', 'Settings', 'Backend', 'User'];
+    static protected $_corePlugins = [
+        'Banana'    => ['bootstrap' => true, 'routes' => true, 'protected' => true],
+        'Settings'  => ['bootstrap' => true, 'routes' => true, 'protected' => true],
+        'Backend'   => ['bootstrap' => true, 'routes' => true, 'protected' => true],
+        'User'      => ['bootstrap' => true, 'routes' => true, 'protected' => true]
+    ];
 
     /**
      * @var BaseApplication
@@ -71,41 +76,57 @@ class Banana implements EventDispatcherInterface
     /**
      * Singleton getter
      * @return Banana
+     * @throws \Exception
+     */
+    static public function init(Application $app, PluginManager $pluginManager = null)
+    {
+        if (isset(self::$_instances[0])) {
+            throw new \Exception('Banana::init: Already initialized');
+        }
+
+        return self::$_instances[0] = new self($app);
+    }
+
+    /**
+     * Singleton getter
+     * @return Banana
+     * @throws \Exception
      */
     static public function getInstance()
     {
         if (!isset(self::$_instances[0])) {
-            self::$_instances[0] = new self();
+            throw new \Exception('Banana::getInstance: Not initialized');
         }
         return self::$_instances[0];
     }
 
     /**
      * Singleton instance constructor
+     * @param Application $app
+     * @param PluginManager $pluginManager
      */
-    public function __construct()
+    public function __construct(Application $app, PluginManager $pluginManager = null)
     {
+        $this->application($app);
+
+        // init plugin manager
+        $this->pluginManager($pluginManager);
+
+        // init settings manager
+        $this->settingsManager();
     }
 
     /**
      * Banana bootstrap process
-     * @param Application $app
      */
-    public function bootstrap(Application $app)
+    public function bootstrap()
     {
-        // set application context
-        $this->application($app);
+        // load the core plugins instantly
+        $this->pluginManager()->load(self::$_corePlugins);
 
-        // connect plugin manager
-        //$this->extend('pluginManager', '\Banana\Plugin\PluginManager');
-        $this->pluginManager();
-        foreach (self::$_corePlugins as $pluginName) {
-            $this->pluginManager()->load($pluginName, ['bootstrap' => true, 'routes' => true, 'protected' => true]);
-        }
-        $this->pluginManager()->bootstrap();
-
-        // connect settings manager
-        $this->settingsManager();
+        // register banana plugins
+        $plugins = (array) Configure::read('Banana.plugins') + (array) Configure::read('Plugin'); // legacy
+        $this->pluginManager()->load($plugins);
     }
 
     public function run()
@@ -173,5 +194,13 @@ class Banana implements EventDispatcherInterface
             $this->_backend = new Backend();
         }
         return $this->_backend;
+    }
+
+    /**
+     * @return object|null
+     */
+    static public function Plugin($pluginName)
+    {
+        return self::getInstance()->pluginManager()->get($pluginName);
     }
 }
