@@ -269,7 +269,10 @@ class Application extends BaseApplication
             if (!Configure::check('DebugKit.panels')) {
                 Configure::write('DebugKit.panels', ['DebugKit.Mail' => false]);
             }
-            Plugin::load('DebugKit', ['bootstrap' => true, 'routes' => true]);
+
+            try {
+                Plugin::load('DebugKit', ['bootstrap' => true, 'routes' => true]);
+            } catch (\Exception $ex) {}
 
         } else {
             // When debug = false the metadata cache should last
