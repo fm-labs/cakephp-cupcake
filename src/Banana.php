@@ -132,13 +132,13 @@ class Banana implements EventDispatcherInterface
     public function run()
     {
         $this->eventManager()->on($this->pluginManager());
-
-        // connect backend
-        //$this->backend();
-        $this->eventManager()->on($this->backend());
-
-        // broadcast to all services that we are ready :)
         $this->dispatchEvent('Banana.startup', [], $this);
+    }
+
+    public function runBackend()
+    {
+        $this->eventManager()->on($this->backend());
+        $this->dispatchEvent('Backend.startup', [], $this);
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php
 namespace Banana;
 
+use Backend\Routing\Middleware\BackendMiddleware;
 use Banana\Banana;
 use Banana\Middleware\BananaMiddleware;
 use Banana\Plugin\PluginManager;
@@ -272,7 +273,9 @@ class Application extends BaseApplication
 
             try {
                 Plugin::load('DebugKit', ['bootstrap' => true, 'routes' => true]);
-            } catch (\Exception $ex) {}
+            } catch (\Exception $ex) {
+                //debug("DebugKit: " . $ex->getMessage());
+            }
 
         } else {
             // When debug = false the metadata cache should last
@@ -301,9 +304,11 @@ class Application extends BaseApplication
 
             // Auto-wire banana plugins
             ->add(new BananaMiddleware())
+            ->add(new BackendMiddleware())
 
             // Apply routing
             ->add(new RoutingMiddleware());
+
 
         return $middleware;
     }
