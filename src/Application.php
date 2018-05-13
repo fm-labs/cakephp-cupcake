@@ -1,26 +1,24 @@
 <?php
 namespace Banana;
 
+use Backend\Backend;
 use Backend\Routing\Middleware\BackendMiddleware;
-use Banana\Banana;
-use Banana\Middleware\BananaMiddleware;
 use Banana\Plugin\PluginManager;
 use Cake\Cache\Cache;
-use Cake\Console\ConsoleErrorHandler;
 use Cake\Core\Configure;
 use Cake\Core\Configure\ConfigEngineInterface;
 use Cake\Core\Configure\Engine\PhpConfig;
 use Cake\Core\Plugin;
 use Cake\Datasource\ConnectionManager;
 use Cake\Database\Type;
-use Cake\Error\ErrorHandler;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Event\Event;
+use Cake\Event\EventDispatcherInterface;
+use Cake\Event\EventDispatcherTrait;
 use Cake\Event\EventManager;
 use Cake\Http\BaseApplication;
 use Cake\Log\Log;
 use Cake\Mailer\Email;
-use Cake\Network\Request;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
 use Cake\Utility\Security;
@@ -32,18 +30,34 @@ use Settings\SettingsManager;
  * This defines the bootstrapping logic and middleware layers you
  * want to use in your application.
  */
-class Application extends BaseApplication
+class Application extends BaseApplication implements EventDispatcherInterface
 {
+    use EventDispatcherTrait;
+
+    /**
+     * @var PluginManager
+     */
+    protected $_pluginManager;
+
+    /**
+     * @var SettingsManager
+     */
+    protected $_settingsManager;
+
+    /**
+     * @var Backend
+     */
+    protected $_backend;
+
     /**
      * @param string $configDir
      */
     public function __construct($configDir)
     {
-        //@TODO Remove . Dev only
-        //ini_set('display_errors', 1);
-        //error_reporting(E_ALL);
-
         parent::__construct($configDir);
+
+        //$this->_pluginManager = new PluginManager($this->eventManager());
+        //$this->_settingsManager = new SettingsManager();
     }
 
     /**
@@ -72,7 +86,6 @@ class Application extends BaseApplication
          *
          */
 
-
         /**
          * Load path definitions
          */
@@ -89,101 +102,27 @@ class Application extends BaseApplication
         /**
          * Setup default config engine and load configs
          */
-        try {
-            Configure::config('default', $this->getDefaultConfigEngine());
-            $this->bootstrapConfig();
+        //try {
+        Configure::config('default', $this->getDefaultConfigEngine());
+        $this->_loadConfigs();
         //} catch (\Cake\Core\Exception\Exception $ex) {
         //    die ($ex->getMessage());
-        } catch (\Exception $ex) {
-            die ($ex->getMessage());
-        }
+        //} catch (\Exception $ex) {
+        //    die ($ex->getMessage());
+        //}
 
-        // Set the full base URL.
-        // This URL is used as the base of all absolute links.
-        if (!Configure::read('App.fullBaseUrl')) {
-            $s = null;
-            if (env('HTTPS')) {
-                $s = 's';
-            }
-
-            $httpHost = env('HTTP_HOST');
-            if (isset($httpHost)) {
-                Configure::write('App.fullBaseUrl', 'http' . $s . '://' . $httpHost);
-            }
-            unset($httpHost, $s);
-        }
-
-
-        /**
-         * Set server timezone to UTC. You can change it to another timezone of your
-         * choice but using UTC makes time calculations / conversions easier.
-         */
-        date_default_timezone_set('UTC'); // @TODO Make default timezone configurable
-
-        /**
-         * Configure the mbstring extension to use the correct encoding.
-         */
-        mb_internal_encoding(Configure::read('App.encoding'));
-
-        /**
-         * Set the default locale. This controls how dates, number and currency is
-         * formatted and sets the default language to use for translations.
-         */
-        ini_set('intl.default_locale', 'de'); //@TODO Make default locale configurable
-
-        /**
-         * Register application error and exception handlers.
-         * @todo Inject cli configurations from banana
-         */
-//        $isCli = php_sapi_name() === 'cli';
-//        if ($isCli) {
-//            (new ConsoleErrorHandler(Configure::read('Error')))->register();
-//
-//            // Include the CLI bootstrap overrides.
-//            require $this->configDir . '/bootstrap_cli.php';
-//            //} elseif (class_exists('\Gourmet\Whoops\Error\WhoopsHandler')) {
-//            // Out-of-the-box support for "Whoops for CakePHP3" by "gourmet"
-//            // https://github.com/gourmet/whoops
-//            //    (new \Gourmet\Whoops\Error\WhoopsHandler(Configure::read('Error')))->register();
-//        } else {
-            (new ErrorHandler(Configure::read('Error')))->register();
-//        }
-        
         /**
          * Bootstrap site
          */
-        require_once $this->configDir . '/bootstrap.php';
-
-        /**
-         * Setup detectors for mobile and tablet.
-         * @todo Remove mobile request detectors from banana. Move to site's bootstrap
-         */
-        Request::addDetector('mobile', function ($request) {
-            $detector = new \Detection\MobileDetect();
-            return $detector->isMobile();
-        });
-        Request::addDetector('tablet', function ($request) {
-            $detector = new \Detection\MobileDetect();
-            return $detector->isTablet();
-        });
-
-        /**
-         * Register database types
-         */
-        //Type::map('json', 'Banana\Database\Type\JsonType'); // obsolete since CakePHP 3.3
-        Type::map('serialize', 'Banana\Database\Type\SerializeType');
-
-        /**
-         * Enable default locale format parsing.
-         * This is needed for matching the auto-localized string output of Time() class when parsing dates.
-         */
-        Type::build('datetime')->useLocaleParser();
+        //require_once $this->configDir . '/bootstrap.php';
+        parent::bootstrap();
 
 
         /**
          * Debug mode
          */
         $this->setDebugMode(Configure::read('debug'));
+
 
         /**
          * Consume configurations
@@ -195,6 +134,8 @@ class Application extends BaseApplication
         Security::salt(Configure::consume('Security.salt'));
         Email::configTransport(Configure::consume('EmailTransport'));
         Email::config(Configure::consume('Email'));
+
+
 
         /**
          * At this point:
@@ -209,19 +150,32 @@ class Application extends BaseApplication
          * NOW: ENTERING NEXT RUN LEVEL 2 (PLUGIN LOADING)
          */
 
-        // load core plugins with routes enabled
-        Plugin::load('Banana', ['bootstrap' => true, 'routes' => true]);
-        //$B = Banana::getInstance();
-
-
-        $B = Banana::init($this);
-        $B->bootstrap();
-
         /**
-         * At this point:
-         * The banana core plugins have been LOADED and ACTIVATED
-         * All activated banana plugins have been LOADED
+         * Load plugins
          */
+        //new PluginManager(Configure::consume('Banana.plugins'));
+
+        // Load and Init Banana runtime
+        $this->plugins()->load([
+            'Banana'    => ['bootstrap' => true, 'routes' => true],
+
+            'Settings'  => ['bootstrap' => true, 'routes' => true],
+            'Backend'   => ['bootstrap' => true, 'routes' => true],
+            'User'      => ['bootstrap' => true, 'routes' => true]
+        ], [], true);
+
+        // Load and enable plugins configured in plugins.php
+        $plugins = (array) Configure::read('Banana.plugins')
+            + (array) Configure::read('Plugin'); // legacy
+        $this->plugins()->load($plugins, [], true);
+
+        // Load all other available plugins the cake way,
+        // to make them visible, but with bootstrap and routes configs disabled
+        Plugin::loadAll(['bootstrap' => false, 'routes' => false, 'ignoreMissing' => true]);
+
+        Banana::init($this);
+        //$this->plugins()->bootstrap($this); // bootstrap enabled plugins
+        //$this->eventManager()->dispatch(new Event('Application.bootstrap', $this));
     }
 
     /**
@@ -239,16 +193,15 @@ class Application extends BaseApplication
      * Sub-routine to auto-load configurations
      * Override in sub-classes to change config loading behavior
      */
-    protected function bootstrapConfig()
+    protected function _loadConfigs()
     {
         // app config
         Configure::load('app', 'default', false);
-        Configure::load('site');
         Configure::load('plugins');
+        Configure::load('site'); //@TODO Remove dependency on this file
 
         // beta config overrides
-        // @TODO Replace with environment configs
-        if (defined('ENV_BETA')) {
+        if (defined('ENV_BETA')) { // @TODO Replace with environment configs
             Configure::load('beta');
             Configure::write('App.beta', ENV_BETA);
         }
@@ -258,23 +211,24 @@ class Application extends BaseApplication
         try { Configure::load('local/cake-plugins'); } catch(\Exception $ex) {}
     }
 
+
     /**
      * Enables / Disables debug mode
      * Override in sub-classes to change debug mode behavior
      */
-    protected function setDebugMode($enabled = true)
+    public function setDebugMode($enabled = true)
     {
         if ($enabled) {
             // disable Mail panel by default, as it doesn't play nice with Mailman plugin
             // @TODO Play nice with DebugKit
-            if (!Configure::check('DebugKit.panels')) {
-                Configure::write('DebugKit.panels', ['DebugKit.Mail' => false]);
-            }
+            //if (!Configure::check('DebugKit.panels')) {
+            //    Configure::write('DebugKit.panels', ['DebugKit.Mail' => false]);
+            //}
 
             try {
                 Plugin::load('DebugKit', ['bootstrap' => true, 'routes' => true]);
             } catch (\Exception $ex) {
-                //debug("DebugKit: " . $ex->getMessage());
+                debug("DebugKit: " . $ex->getMessage());
             }
 
         } else {
@@ -285,6 +239,51 @@ class Application extends BaseApplication
             Configure::write('Cache._cake_core_.duration', '+1 years');
         }
     }
+
+    public function eventManager(EventManager $eventManager = null)
+    {
+        if (!$this->_eventManager) {
+            $this->_eventManager = EventManager::instance();
+        }
+        return $this->_eventManager;
+    }
+
+    /**
+     * Get plugin mananager instance
+     * @return PluginManager
+     */
+    public function plugins()
+    {
+        if (!$this->_pluginManager) {
+            $this->_pluginManager = new PluginManager($this->eventManager());
+        }
+        return $this->_pluginManager;
+    }
+
+    /**
+     * Get settings mananager instance
+     * @return SettingsManager
+     */
+    public function settings()
+    {
+        if (!$this->_settingsManager) {
+            $this->_settingsManager = new SettingsManager();
+        }
+        return $this->_settingsManager;
+    }
+
+    /**
+     * Get Backend instance
+     * @return Backend
+     */
+    public function backend()
+    {
+        if (!$this->_backend) {
+            $this->_backend = new Backend();
+        }
+        return $this->_backend;
+    }
+
 
     /**
      * Setup the middleware your application will use.
@@ -303,7 +302,7 @@ class Application extends BaseApplication
             ->add(new AssetMiddleware())
 
             // Auto-wire banana plugins
-            ->add(new BananaMiddleware())
+            //->add(new BananaMiddleware())
             ->add(new BackendMiddleware())
 
             // Apply routing

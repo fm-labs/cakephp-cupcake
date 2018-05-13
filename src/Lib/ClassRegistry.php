@@ -3,6 +3,7 @@
 namespace Banana\Lib;
 
 use Banana\Exception\ClassNotFoundException;
+use Cake\Core\App;
 
 /**
  * Class ClassRegistry
@@ -32,7 +33,7 @@ class ClassRegistry
      * @param $type
      * @param callable $factory
      */
-    public static function configure($type, callable $factory)
+    public static function setFactory($type, callable $factory)
     {
         self::$_factories[$type] = $factory;
     }
@@ -51,7 +52,6 @@ class ClassRegistry
             foreach ($key as $_key => $_class) {
                 static::register($type, $_key, $_class);
             }
-
             return;
         }
 
@@ -63,7 +63,11 @@ class ClassRegistry
             throw new \Exception('ClassRegistry::register Class string MUST be a string value ' . $key);
         }
 
-        static::$_classes[$type][$key] = $class;
+        $className = App::className($class, $type);
+        if ($className) {
+            throw new ClassNotFoundException(sprintf("%s of type %s", $class, $type));
+        }
+        static::$_classes[$type][$key] = $className;
     }
 
     /**

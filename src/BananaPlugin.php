@@ -2,13 +2,8 @@
 
 namespace Banana;
 
-use Backend\Event\RouteBuilderEvent;
-use Banana\Backend\BananaBackend;
-use Cake\Core\Plugin;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
-use Cake\Routing\Router;
-use Content\Lib\ContentManager;
 use Settings\SettingsManager;
 
 /**
@@ -30,17 +25,47 @@ class BananaPlugin implements EventListenerInterface
     public function implementedEvents()
     {
         return [
-            'Plugin.init' => 'initPlugin',
+            'Application.initialize' => 'initialize',
             'Settings.build' => 'buildSettings',
             //'Backend.Menu.build' => ['callable' => 'buildBackendMenu', 'priority' => 80 ],
-            'Backend.Sidebar.build' => ['callable' => 'buildBackendSidebarMenu', 'priority' => 80 ],
-            'Backend.Routes.build' => 'buildBackendRoutes'
+            //'Backend.Sidebar.build' => ['callable' => 'buildBackendSidebarMenu', 'priority' => 80 ],
+            //'Backend.Routes.build' => 'buildBackendRoutes'
         ];
     }
 
-    public function initPlugin()
+    public function setup(Application $app) {} // provides full access to the application. called externally.
+
+    //public function plugins(PluginManager $plugins) {} // direct access to plugin manager. called externally.
+
+    //public function routes(RouteBuilder $routes) {} // direct access to route builder. called externally.
+
+
+    public function initialize(Event $event)
     {
-        debug("initPlugin");
+        if ($event->subject() instanceof Application) {
+            $app = $event->subject();
+            $app->plugins()
+                ->load('Bootstrap');
+
+            $app->settings()
+                ->addGroup('banana', 'Banana')
+                ->add('banana', 'Site.title', [])
+                ->add('banana', 'Site.title', [])
+                ->add('banana', 'Site.title', [])
+                ->add('banana', 'Site.title', [])
+                ->add('banana', 'Site.title', []);
+
+            $app->cache()
+                ->configure('banana', [])
+                ->configure('banana_session', []);
+
+
+            $app->logs()
+                ->configure('banana', []);
+
+
+
+        }
     }
 
     /**
@@ -56,23 +81,6 @@ class BananaPlugin implements EventListenerInterface
             ]);
 
         }
-    }
-
-    /**
-     * @param Event $event
-     */
-    public function buildBackendSidebarMenu(Event $event)
-    {
-    }
-
-    /**
-     * Backend routes
-     */
-    public function buildBackendRoutes(RouteBuilderEvent $event)
-    {
-        $event->subject()->scope('/system', ['plugin' => 'Banana', '_namePrefix' => 'system:admin:', 'prefix' => 'admin'], function ($routes) {
-            $routes->fallbacks('DashedRoute');
-        });
     }
 
     public function __invoke()

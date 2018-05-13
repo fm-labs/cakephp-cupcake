@@ -5,7 +5,6 @@ namespace Banana\Plugin;
 use Banana\Exception\MissingPluginHandlerException;
 use Cake\Core\Configure;
 use Cake\Core\Plugin;
-use Cake\Event\Event;
 use Cake\Event\EventDispatcherInterface;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Event\EventListenerInterface;
@@ -16,7 +15,7 @@ use Cake\Utility\Inflector;
 /**
  * Plugin Manager
  */
-class PluginManager implements EventListenerInterface, EventDispatcherInterface
+class PluginManager implements EventDispatcherInterface
 {
     use EventDispatcherTrait;
 
@@ -25,11 +24,11 @@ class PluginManager implements EventListenerInterface, EventDispatcherInterface
      */
     protected $_registry;
 
-    /**
-     * Array of plugin configurations
-     * @var array
-     */
-    protected $_plugins = [];
+//    /**
+//     * Array of plugin configurations
+//     * @var array
+//     */
+//    protected $_plugins = [];
 
     /**
      * List of loaded plugins
@@ -44,65 +43,27 @@ class PluginManager implements EventListenerInterface, EventDispatcherInterface
     protected $_enabled = [];
 
 
-    public function __construct(array $plugins = [])
+    public function __construct(EventManager $eventManager)
     {
         $this->_registry = new PluginRegistry();
 
-        //@todo Use LocalEventManager instead
-        $this->_eventManager = EventManager::instance();
-
-//        if ($plugins === null) {
-//            //@todo Move direct configuration access out of PluginManager scope. Assign empty array instead by default
-//            $plugins = (array) Configure::read('Banana.plugins')
-//                + (array) Configure::read('Plugin'); // legacy
-//        }
-        $this->_plugins = $plugins;
+        $this->eventManager($eventManager);
     }
 
-    public function implementedEvents()
-    {
-        return ['Banana.startup' => 'startup'];
-    }
-
-    public function startup(Event $event)
-    {
-        // load configured plugins
-        $this->load($this->_plugins);
-
-        // Load all other available plugins, but with bootstrapping and routing disabled
-        // this makes it easier to detect disabled/deactivated plugins
-        // and avoids dependency issues as the class namespaces are still available
-        // (e.g. if another plugin has a hard dependency on a deactivated plugin).
-        // This behaviour might change in future versions.
-        //Plugin::loadAll(['bootstrap' => false, 'routes' => false]);
-
-        // enable all loaded plugins
-        foreach (array_keys($this->_loaded) as $pluginName) {
-            $this->enable($pluginName);
-        }
-    }
-
-    public function load($pluginName, $pluginSettings = [])
+    public function load($pluginName, $pluginSettings = [], $enable = false)
     {
         if (is_array($pluginName)) {
             foreach ($pluginName as $_pluginName => $_pluginSettings) {
-                $this->load($_pluginName, (array) $_pluginSettings);
+                $this->load($_pluginName, (array) $_pluginSettings, $enable);
             }
-            return;
+            return $this;
         }
 
-        $this->_loadPlugin($pluginName, $pluginSettings, false);
-
-        return $this;
-    }
-
-    protected function _loadPlugin($pluginName, $pluginSettings = [], $enable = false)
-    {
         if (isset($this->_loaded[$pluginName])) {
-            return;
+            return $this;
         }
 
-        $defaultSettings = ['bootstrap' => true, 'routes' => false, 'ignoreMissing' => true];
+        $defaultSettings = ['bootstrap' => true, 'routes' => true, 'ignoreMissing' => true];
 
         // load plugin
         // if the plugin has been loaded manually before, we won't load it again
@@ -115,54 +76,33 @@ class PluginManager implements EventListenerInterface, EventDispatcherInterface
         } else {
             //debug("PluginManager::_loadPlugin: Plugin $pluginName already loaded");
         }
+        $this->_loaded[$pluginName] = true;
 
-        // load plugin config
-        try {
-            Configure::load('local/plugin/' . Inflector::underscore($pluginName));
-        } catch (\Exception $ex) {
-            try {
-                Configure::load('plugin/' . Inflector::underscore($pluginName));
-            } catch (\Exception $ex) {}
+        if ($enable === true) {
+            return $this->enable($pluginName);
         }
-
-        // load plugin handler
-        try {
-            $this->_registry->load($pluginName, $pluginSettings);
-            $this->_loaded[$pluginName] = true;
-            $this->_plugins[$pluginName] = $pluginSettings;
-
-            // enable-on-load
-            if ($enable === true) {
-                $this->enable($pluginName);
-            }
-        } catch (MissingPluginHandlerException $ex) {
-            // the plugin obviously has no plugin handler
-            // so ignore this exception
-        } catch (\Exception $ex) {
-            Log::error("[PluginManager] PLUGIN_LOAD_FAILED " . $ex->getMessage(), ['banana', 'plugin']);
-            //debug("PluginManager::_loadPlugin: PluginHandler error for $pluginName: " . $ex->getMessage());
-            //throw $ex;
-            return;
-        }
-    }
-
-    /**
-     * Registers a new plugin
-     * @return $this
-     */
-    public function register($pluginName, array $settings = [])
-    {
-        if (is_array($pluginName)) {
-            foreach ($pluginName as $_pluginName => $_settings) {
-                $this->register($_pluginName, (array) $_settings);
-            }
-            return $this;
-        }
-
-        $this->_plugins[$pluginName] = $settings;
 
         return $this;
     }
+
+//    /**
+//     * Registers a new plugin.
+//     * This method has no effect if called after the startup event has been triggered.
+//     * @return $this
+//     */
+//    public function register($pluginName, array $settings = [])
+//    {
+//        if (is_array($pluginName)) {
+//            foreach ($pluginName as $_pluginName => $_settings) {
+//                $this->register($_pluginName, (array) $_settings);
+//            }
+//            return $this;
+//        }
+//
+//        $this->_plugins[$pluginName] = $settings;
+//
+//        return $this;
+//    }
 
     /**
      * Enable plugin
@@ -173,12 +113,39 @@ class PluginManager implements EventListenerInterface, EventDispatcherInterface
      */
     public function enable($pluginName)
     {
+        if (is_array($pluginName)) {
+            foreach ($pluginName as $_plugin) {
+                $this->enable($_plugin);
+            }
+            return $this;
+        }
+
         if (isset($this->_enabled[$pluginName])) {
             return $this;
         }
 
         if (!$this->_registry->has($pluginName)) {
-            throw new \Exception("PluginManager::enable: FAILED: Plugin $pluginName not registered");
+
+            // load plugin config
+            try {
+                Configure::load('local/plugin/' . Inflector::underscore($pluginName));
+            } catch (\Exception $ex) {
+                try {
+                    Configure::load('plugin/' . Inflector::underscore($pluginName));
+                } catch (\Exception $ex) {}
+            }
+
+            // load plugin handler
+            try {
+                $this->_registry->load($pluginName);
+            } catch (MissingPluginHandlerException $ex) {
+                // the plugin obviously has no plugin handler
+                // so ignore this exception
+            } catch (\Exception $ex) {
+                Log::error("[PluginManager] PLUGIN_LOAD_FAILED " . $ex->getMessage(), ['banana', 'plugin']);
+                //debug("PluginManager::_loadPlugin: PluginHandler error for $pluginName: " . $ex->getMessage());
+                //throw $ex;
+            }
         }
 
         $plugin = $this->_registry->get($pluginName);
@@ -219,17 +186,23 @@ class PluginManager implements EventListenerInterface, EventDispatcherInterface
     }
 
     /**
+     * Get plugin handler object
      * @return object|null
      */
     public function get($pluginName)
     {
         //if (!$this->_registry->has($pluginName)) {
-        //    throw new \Exception("PluginManger::get: FAILED: Plugin $pluginName not registered");
+        //    //throw new \Exception("PluginManger::get: FAILED: Plugin $pluginName not registered");
+        //    return null;
         //}
 
         return $this->_registry->get($pluginName);
     }
 
+    /**
+     * Get plugin info
+     * @return array
+     */
     public function getInfo($pluginName)
     {
         $info = [];

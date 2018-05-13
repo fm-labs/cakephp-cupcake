@@ -3,6 +3,7 @@
 namespace Banana;
 
 use Backend\Backend;
+use Banana\Plugin\PluginInterface;
 use Banana\Plugin\PluginManager;
 use Cake\Core\Configure;
 use Cake\Event\EventDispatcherInterface;
@@ -78,7 +79,7 @@ class Banana implements EventDispatcherInterface
      * @return Banana
      * @throws \Exception
      */
-    static public function init(Application $app, PluginManager $pluginManager = null)
+    static public function init(Application $app)
     {
         if (isset(self::$_instances[0])) {
             throw new \Exception('Banana::init: Already initialized');
@@ -103,36 +104,22 @@ class Banana implements EventDispatcherInterface
     /**
      * Singleton instance constructor
      * @param Application $app
-     * @param PluginManager $pluginManager
      */
-    public function __construct(Application $app, PluginManager $pluginManager = null)
+    public function __construct(Application $app)
     {
-        $this->application($app);
+        $this->_app = $app;
 
-        // init plugin manager
-        $this->pluginManager($pluginManager);
-
-        // init settings manager
-        $this->settingsManager();
-    }
-
-    /**
-     * Banana bootstrap process
-     */
-    public function bootstrap()
-    {
-        // load the core plugins instantly
-        $this->pluginManager()->load(self::$_corePlugins);
-
-        // register banana plugins
-        $plugins = (array) Configure::read('Banana.plugins') + (array) Configure::read('Plugin'); // legacy
-        $this->pluginManager()->load($plugins);
+        // bootstrap plugins
+        foreach ($this->pluginManager()->enabled() as $pluginName) {
+            $plugin = $this->pluginManager()->get($pluginName);
+            if ($plugin instanceof PluginInterface) {
+                $plugin->bootstrap($this->_app);
+            }
+        }
     }
 
     public function run()
     {
-        $this->eventManager()->on($this->pluginManager());
-        $this->dispatchEvent('Banana.startup', [], $this);
     }
 
     public function runBackend()
@@ -161,12 +148,7 @@ class Banana implements EventDispatcherInterface
      */
     public function pluginManager(PluginManager $pluginManager = null)
     {
-        if ($pluginManager !== null) {
-            $this->_pluginManager = $pluginManager;
-        } elseif (!$this->_pluginManager) {
-            $this->_pluginManager = new PluginManager();
-        }
-        return $this->_pluginManager;
+        return $this->_app->plugins();
     }
 
     /**
@@ -176,12 +158,7 @@ class Banana implements EventDispatcherInterface
      */
     public function settingsManager(SettingsManager $settingsManager = null)
     {
-        if ($settingsManager !== null) {
-            $this->_settingsManager = $settingsManager;
-        } elseif (!$this->_settingsManager) {
-            $this->_settingsManager = new SettingsManager();
-        }
-        return $this->_settingsManager;
+        return $this->_app->settings();
     }
 
     /**
@@ -190,17 +167,24 @@ class Banana implements EventDispatcherInterface
      */
     public function backend()
     {
-        if (!$this->_backend) {
-            $this->_backend = new Backend();
-        }
-        return $this->_backend;
+        return $this->_app->backend();
     }
 
     /**
+     * Static direct accessor to plugin handler
      * @return object|null
      */
     static public function Plugin($pluginName)
     {
         return self::getInstance()->pluginManager()->get($pluginName);
+    }
+
+    /**
+     * Static direct accessor to Application instance
+     * @return Application
+     */
+    static public function App()
+    {
+        return self::getInstance()->application();
     }
 }
