@@ -4,6 +4,7 @@ namespace Banana\Lib;
 
 use Banana\Exception\ClassNotFoundException;
 use Cake\Core\App;
+use Cake\Log\Log;
 
 /**
  * Class ClassRegistry
@@ -64,7 +65,8 @@ class ClassRegistry
         }
 
         $className = App::className($class, $type);
-        if ($className) {
+        if (!$className) {
+            Log::error("ClassRegistry::register() Class not found: " . $class . " of type " . $type);
             throw new ClassNotFoundException(sprintf("%s of type %s", $class, $type));
         }
         static::$_classes[$type][$key] = $className;

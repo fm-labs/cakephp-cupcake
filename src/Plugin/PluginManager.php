@@ -5,6 +5,7 @@ namespace Banana\Plugin;
 use Banana\Exception\MissingPluginHandlerException;
 use Cake\Core\Configure;
 use Cake\Core\Plugin;
+use Cake\Core\StaticConfigTrait;
 use Cake\Event\EventDispatcherInterface;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Event\EventListenerInterface;
@@ -17,6 +18,8 @@ use Cake\Utility\Inflector;
  */
 class PluginManager implements EventDispatcherInterface
 {
+    use StaticConfigTrait;
+
     use EventDispatcherTrait;
 
     /**
@@ -42,6 +45,36 @@ class PluginManager implements EventDispatcherInterface
      */
     protected $_enabled = [];
 
+
+    static public function loadAll()
+    {
+        foreach(self::$_config as $plugin => $pluginConfig) {
+
+            if (is_bool($pluginConfig)) {
+                $pluginConfig = [];
+            }
+
+            try {
+
+                $pluginConfig = array_merge(['bootstrap' => true, 'routes' => false, 'ignoreMissing' => true], $pluginConfig);
+                //debug($plugin);
+                //debug($pluginConfig);
+                Plugin::load($plugin, $pluginConfig);
+
+                // load plugin config
+                try {
+                    Configure::load('plugin/' . Inflector::underscore($plugin));
+                } catch (\Exception $ex) {}
+                try {
+                    Configure::load('local/plugin/' . Inflector::underscore($plugin));
+                } catch (\Exception $ex) {}
+
+            } catch (\Exception $ex) {
+                Log::error('PluginManager: Failed loading plugin ' . $plugin . ':' . $ex->getMessage());
+            }
+
+        }
+    }
 
     public function __construct(EventManager $eventManager)
     {
@@ -126,21 +159,23 @@ class PluginManager implements EventDispatcherInterface
 
         if (!$this->_registry->has($pluginName)) {
 
-            // load plugin config
-            try {
-                Configure::load('local/plugin/' . Inflector::underscore($pluginName));
-            } catch (\Exception $ex) {
-                try {
-                    Configure::load('plugin/' . Inflector::underscore($pluginName));
-                } catch (\Exception $ex) {}
-            }
-
             // load plugin handler
             try {
                 $this->_registry->load($pluginName);
+
+                // load plugin config
+                try {
+                    Configure::load('plugin/' . Inflector::underscore($pluginName));
+                } catch (\Exception $ex) {}
+                try {
+                    Configure::load('local/plugin/' . Inflector::underscore($pluginName));
+                } catch (\Exception $ex) {
+                }
+
             } catch (MissingPluginHandlerException $ex) {
                 // the plugin obviously has no plugin handler
                 // so ignore this exception
+                //debug($ex->getMessage());
             } catch (\Exception $ex) {
                 Log::error("[PluginManager] PLUGIN_LOAD_FAILED " . $ex->getMessage(), ['banana', 'plugin']);
                 //debug("PluginManager::_loadPlugin: PluginHandler error for $pluginName: " . $ex->getMessage());

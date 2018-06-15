@@ -102,3 +102,4 @@ if (!Cache::config('banana')) {
     $view->loadHelper('Banana.Status');
     return $view->Status->label($val);
 });
+

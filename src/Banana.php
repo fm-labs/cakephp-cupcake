@@ -9,6 +9,7 @@ use Cake\Core\Configure;
 use Cake\Event\EventDispatcherInterface;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\BaseApplication;
+use Cake\Routing\Router;
 use Settings\SettingsManager;
 
 /**
@@ -34,17 +35,6 @@ class Banana implements EventDispatcherInterface
     static protected $_instances = [];
 
     /**
-     * Core plugins config
-     * @var array
-     */
-    static protected $_corePlugins = [
-        'Banana'    => ['bootstrap' => true, 'routes' => true, 'protected' => true],
-        'Settings'  => ['bootstrap' => true, 'routes' => true, 'protected' => true],
-        'Backend'   => ['bootstrap' => true, 'routes' => true, 'protected' => true],
-        'User'      => ['bootstrap' => true, 'routes' => true, 'protected' => true]
-    ];
-
-    /**
      * @var BaseApplication
      */
     protected $_app;
@@ -65,6 +55,11 @@ class Banana implements EventDispatcherInterface
     protected $_backend;
 
     /**
+     * @var array
+     */
+    static protected $_plugins = [];
+
+    /**
      * Banana-app wide common mailer instance
      *
      * @return \Cake\Mailer\Mailer
@@ -72,6 +67,14 @@ class Banana implements EventDispatcherInterface
     static public function getMailer()
     {
         return new self::$mailerClass();
+    }
+
+    /**
+     * Register a plugin handler
+     */
+    static public function plugin($plugin, $handler)
+    {
+        static::$_plugins[$plugin] = $handler;
     }
 
     /**
@@ -109,29 +112,50 @@ class Banana implements EventDispatcherInterface
     {
         $this->_app = $app;
 
-        // bootstrap plugins
-        foreach ($this->pluginManager()->enabled() as $pluginName) {
-            $plugin = $this->pluginManager()->get($pluginName);
-            if ($plugin instanceof PluginInterface) {
-                $plugin->bootstrap($this->_app);
+//        // bootstrap plugins
+//        foreach ($this->pluginManager()->enabled() as $pluginName) {
+//            $plugin = $this->pluginManager()->get($pluginName);
+//            if ($plugin instanceof PluginInterface) {
+//                $plugin->bootstrap($this->_app);
+//            }
+//        }
+
+        //Router::routes(); // <-- required workaround. need to call routes() first, otherwise all existing routes are vanished
+        foreach (static::$_plugins as $plugin => $handler) {
+            // bootstrap plugin handler
+            if ($handler instanceof PluginInterface) {
+                //$handler->bootstrap($this->_app);
             }
+
+            // plugin handler routes
+
+            //Router::scope(static::$urlPrefix, ['prefix' => 'admin'], function(RouteBuilder $routes) {
+            //    EventManager::instance()->dispatch(new \Backend\Event\RouteBuilderEvent('Backend.Routes.build', $routes));
+            //});
+            //Router::plugin($plugin, [], [$handler, 'routes']);
         }
+
     }
 
     public function run()
     {
     }
 
+    /**
+     * @deprecated
+     */
     public function runBackend()
     {
-        $this->eventManager()->on($this->backend());
-        $this->dispatchEvent('Backend.startup', [], $this);
+        //$this->eventManager()->on($this->backend());
+        //$this->dispatchEvent('Backend.startup', [], $this);
+        $this->backend()->run();
     }
 
     /**
      * Get / Set application instance
      * @param Application $app
      * @return Application
+     * @deprecated
      */
     public function application(Application $app = null)
     {
@@ -145,6 +169,7 @@ class Banana implements EventDispatcherInterface
      * Get / Set plugin mananager instance
      * @param PluginManager $pluginManager
      * @return PluginManager
+     * @deprecated
      */
     public function pluginManager(PluginManager $pluginManager = null)
     {
@@ -155,6 +180,7 @@ class Banana implements EventDispatcherInterface
      * Get / Set settings mananager instance
      * @param SettingsManager $settingsManager
      * @return SettingsManager
+     * @deprecated
      */
     public function settingsManager(SettingsManager $settingsManager = null)
     {
@@ -164,6 +190,7 @@ class Banana implements EventDispatcherInterface
     /**
      * Get Backend instance
      * @return Backend
+     * @deprecated
      */
     public function backend()
     {
@@ -173,15 +200,17 @@ class Banana implements EventDispatcherInterface
     /**
      * Static direct accessor to plugin handler
      * @return object|null
+     * @deprecated
      */
-    static public function Plugin($pluginName)
-    {
-        return self::getInstance()->pluginManager()->get($pluginName);
-    }
+    //static public function Plugin($pluginName)
+    //{
+    //    return self::getInstance()->pluginManager()->get($pluginName);
+    //}
 
     /**
      * Static direct accessor to Application instance
      * @return Application
+     * @deprecated
      */
     static public function App()
     {

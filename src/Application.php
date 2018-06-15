@@ -112,6 +112,11 @@ class Application extends BaseApplication implements EventDispatcherInterface
         //}
 
         /**
+         * Load Banana plugin (handles default bootstrap behavior)
+         */
+        Plugin::load('Banana', ['bootstrap' => true, 'routes' => false]);
+
+        /**
          * Bootstrap site
          */
         //require_once $this->configDir . '/bootstrap.php';
@@ -150,6 +155,13 @@ class Application extends BaseApplication implements EventDispatcherInterface
          * NOW: ENTERING NEXT RUN LEVEL 2 (PLUGIN LOADING)
          */
 
+        //PluginManager::config(Configure::read('Banana.plugins'));
+        //PluginManager::loadAll();
+
+
+        //debug(Plugin::loaded());
+        //debug(Configure::read());
+
         /**
          * Load plugins
          */
@@ -157,11 +169,11 @@ class Application extends BaseApplication implements EventDispatcherInterface
 
         // Load and Init Banana runtime
         $this->plugins()->load([
-            'Banana'    => ['bootstrap' => true, 'routes' => true],
+            'Banana'    => ['bootstrap' => true, 'routes' => false],
 
             'Settings'  => ['bootstrap' => true, 'routes' => true],
-            'Backend'   => ['bootstrap' => true, 'routes' => true],
-            'User'      => ['bootstrap' => true, 'routes' => true]
+            'User'      => ['bootstrap' => true, 'routes' => true],
+            'Backend'   => ['bootstrap' => true, 'routes' => true]
         ], [], true);
 
         // Load and enable plugins configured in plugins.php
