@@ -16,8 +16,6 @@ class BananaMiddleware
      */
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $next)
     {
-        Banana::getInstance()->run();
-
         return $next($request, $response);
     }
 }

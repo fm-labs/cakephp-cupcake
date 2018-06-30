@@ -40,7 +40,7 @@ class PluginRegistry extends ObjectRegistry
     {
         $class = $plugin . '\\' . $plugin . 'Plugin';
 
-        return (class_exists($class)) ? $class : false;
+        return (class_exists($class)) ? $class : 'Banana\\Plugin\\GenericPlugin';
     }
 
     /**
@@ -86,8 +86,8 @@ class PluginRegistry extends ObjectRegistry
      * @param string $name
      * @return null|PluginInterface
      */
-//    public function get($name)
-//    {
-//        return parent::get($name);
-//    }
+    public function get($name)
+    {
+        return parent::get($name);
+    }
 }

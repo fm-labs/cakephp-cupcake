@@ -3,7 +3,9 @@ namespace Banana;
 
 use Backend\Backend;
 use Backend\Routing\Middleware\BackendMiddleware;
+use Banana\Plugin\PluginInterface;
 use Banana\Plugin\PluginManager;
+use Banana\Plugin\PluginRegistry;
 use Cake\Cache\Cache;
 use Cake\Core\Configure;
 use Cake\Core\Configure\ConfigEngineInterface;
@@ -12,7 +14,6 @@ use Cake\Core\Plugin;
 use Cake\Datasource\ConnectionManager;
 use Cake\Database\Type;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
-use Cake\Event\Event;
 use Cake\Event\EventDispatcherInterface;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Event\EventManager;
@@ -21,8 +22,14 @@ use Cake\Log\Log;
 use Cake\Mailer\Email;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
+use Cake\Routing\RouteBuilder;
+use Cake\Routing\RouteCollection;
+use Cake\Routing\Router;
 use Cake\Utility\Security;
 use Settings\SettingsManager;
+use Cake\Console\ConsoleErrorHandler;
+use Cake\Error\ErrorHandler;
+use Cake\Network\Request;
 
 /**
  * Application setup class.
@@ -33,16 +40,6 @@ use Settings\SettingsManager;
 class Application extends BaseApplication implements EventDispatcherInterface
 {
     use EventDispatcherTrait;
-
-    /**
-     * @var PluginManager
-     */
-    protected $_pluginManager;
-
-    /**
-     * @var SettingsManager
-     */
-    protected $_settingsManager;
 
     /**
      * @var Backend
@@ -58,6 +55,9 @@ class Application extends BaseApplication implements EventDispatcherInterface
 
         //$this->_pluginManager = new PluginManager($this->eventManager());
         //$this->_settingsManager = new SettingsManager();
+
+        $this->_configEngine = new PhpConfig($this->configDir . DS);
+        $this->_plugins = new PluginRegistry();
     }
 
     /**
@@ -103,7 +103,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
          * Setup default config engine and load configs
          */
         //try {
-        Configure::config('default', $this->getDefaultConfigEngine());
+        Configure::config('default', $this->_configEngine);
         $this->_loadConfigs();
         //} catch (\Cake\Core\Exception\Exception $ex) {
         //    die ($ex->getMessage());
@@ -115,6 +115,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
          * Load Banana plugin (handles default bootstrap behavior)
          */
         Plugin::load('Banana', ['bootstrap' => true, 'routes' => false]);
+        Plugin::load(Configure::read('Plugin'), ['bootstrap' => true, 'routes' => true, 'ignoreMissing' => true]);
 
         /**
          * Bootstrap site
@@ -122,11 +123,158 @@ class Application extends BaseApplication implements EventDispatcherInterface
         //require_once $this->configDir . '/bootstrap.php';
         parent::bootstrap();
 
+        $this->_pluginLoad();
+        $this->_pluginBootstrap();
+        $this->_pluginRoutes();
 
+        Banana::init($this);
+        $this->_initialize();
+    }
+
+    /**
+     * Load the plugin handler for all loaded plugins
+     */
+    protected function _pluginLoad()
+    {
+        foreach (Plugin::loaded() as $name) {
+            $pluginConfig = Configure::read($name);
+            try {
+                $this->plugins()->load($name, $pluginConfig);
+            } catch (\Exception $ex) {
+                Log::error('Application: ' . $ex->getMessage());
+            }
+        }
+    }
+
+    protected function _pluginBootstrap()
+    {
+        foreach ($this->plugins()->loaded() as $name) {
+            $instance = $this->plugins()->get($name);
+            if ($instance instanceof PluginInterface) {
+                $instance->bootstrap($this);
+            }
+        }
+    }
+
+    protected function _pluginRoutes()
+    {
+        //$routes = new RouteBuilder(new RouteCollection(), '/');
+        foreach ($this->plugins()->loaded() as $name) {
+            $instance = $this->plugins()->get($name);
+            if ($instance instanceof PluginInterface) {
+                Router::plugin($name, [], [$instance, 'routes']);
+                //$instance->routes($routes);
+            }
+        }
+    }
+
+    public function addPlugin($name, array $config)
+    {
+        $this->plugins()->load($name, $config);
+        return $this;
+    }
+
+    /**
+     * Get plugin info
+     * @return array
+     */
+    public function getPluginInfo($pluginName)
+    {
+        $info = [];
+        $info['name'] = $pluginName;
+        $info['loaded'] = Plugin::loaded($pluginName);
+        $info['path'] = Plugin::path($pluginName);
+        $info['config'] = Plugin::configPath($pluginName);
+        $info['classPath'] = Plugin::classPath($pluginName);
+        //$info['registered'] = in_array($pluginName, Plugin::loaded());
+        $info['registered'] = true;
+        $info['handler_loaded'] = $this->plugins()->has($pluginName);
+        $info['handler_class'] = get_class($this->plugins()->get($pluginName));
+        $info['handler_enabled'] = true;
+
+        return $info;
+    }
+
+    protected function _initialize()
+    {
         /**
          * Debug mode
          */
         $this->setDebugMode(Configure::read('debug'));
+
+        // Set the full base URL.
+        // This URL is used as the base of all absolute links.
+        if (!Configure::read('App.fullBaseUrl')) {
+            $s = null;
+            if (env('HTTPS')) {
+                $s = 's';
+            }
+
+            $httpHost = env('HTTP_HOST');
+            if (isset($httpHost)) {
+                Configure::write('App.fullBaseUrl', 'http' . $s . '://' . $httpHost);
+            }
+            unset($httpHost, $s);
+        }
+
+
+        /**
+         * Set server timezone to UTC. You can change it to another timezone of your
+         * choice but using UTC makes time calculations / conversions easier.
+         */
+        date_default_timezone_set('UTC'); // @TODO Make default timezone configurable
+
+        /**
+         * Configure the mbstring extension to use the correct encoding.
+         */
+        mb_internal_encoding(Configure::read('App.encoding'));
+
+        /**
+         * Set the default locale. This controls how dates, number and currency is
+         * formatted and sets the default language to use for translations.
+         */
+        ini_set('intl.default_locale', 'de'); //@TODO Make default locale configurable
+
+
+        /**
+         * Setup detectors for mobile and tablet.
+         * @todo Remove mobile request detectors from banana. Move to site's bootstrap
+        Request::addDetector('mobile', function ($request) {
+            $detector = new \Detection\MobileDetect();
+            return $detector->isMobile();
+        });
+        Request::addDetector('tablet', function ($request) {
+            $detector = new \Detection\MobileDetect();
+            return $detector->isTablet();
+        });
+        */
+
+        /**
+         * Register database types
+         */
+        //Type::map('json', 'Banana\Database\Type\JsonType'); // obsolete since CakePHP 3.3
+        Type::map('serialize', 'Banana\Database\Type\SerializeType');
+
+        /**
+         * Enable default locale format parsing.
+         * This is needed for matching the auto-localized string output of Time() class when parsing dates.
+         */
+        Type::build('datetime')->useLocaleParser();
+
+
+        $isCli = php_sapi_name() === 'cli';
+        if ($isCli) {
+            (new ConsoleErrorHandler(Configure::read('Error')))->register();
+
+            // Include the CLI bootstrap overrides.
+            //require $this->configDir . '/bootstrap_cli.php';
+            //} elseif (class_exists('\Gourmet\Whoops\Error\WhoopsHandler')) {
+            // Out-of-the-box support for "Whoops for CakePHP3" by "gourmet"
+            // https://github.com/gourmet/whoops
+            //    (new \Gourmet\Whoops\Error\WhoopsHandler(Configure::read('Error')))->register();
+        } else {
+            (new ErrorHandler(Configure::read('Error')))->register();
+        }
 
 
         /**
@@ -140,66 +288,8 @@ class Application extends BaseApplication implements EventDispatcherInterface
         Email::configTransport(Configure::consume('EmailTransport'));
         Email::config(Configure::consume('Email'));
 
-
-
-        /**
-         * At this point:
-         * Path constants have been set
-         * Cake's bootstrap code executed (start timer, load functions, ...)
-         * App configurations have been loaded
-         * Configuration settings for locale, time and encoding have been set
-         * App's bootstrap executed
-         * Debug mode configured
-         * Configurations consumed by components
-         *
-         * NOW: ENTERING NEXT RUN LEVEL 2 (PLUGIN LOADING)
-         */
-
-        //PluginManager::config(Configure::read('Banana.plugins'));
-        //PluginManager::loadAll();
-
-
-        //debug(Plugin::loaded());
-        //debug(Configure::read());
-
-        /**
-         * Load plugins
-         */
-        //new PluginManager(Configure::consume('Banana.plugins'));
-
-        // Load and Init Banana runtime
-        $this->plugins()->load([
-            'Banana'    => ['bootstrap' => true, 'routes' => false],
-
-            'Settings'  => ['bootstrap' => true, 'routes' => true],
-            'User'      => ['bootstrap' => true, 'routes' => true],
-            'Backend'   => ['bootstrap' => true, 'routes' => true]
-        ], [], true);
-
-        // Load and enable plugins configured in plugins.php
-        $plugins = (array) Configure::read('Banana.plugins')
-            + (array) Configure::read('Plugin'); // legacy
-        $this->plugins()->load($plugins, [], true);
-
-        // Load all other available plugins the cake way,
-        // to make them visible, but with bootstrap and routes configs disabled
-        Plugin::loadAll(['bootstrap' => false, 'routes' => false, 'ignoreMissing' => true]);
-
-        Banana::init($this);
-        //$this->plugins()->bootstrap($this); // bootstrap enabled plugins
-        //$this->eventManager()->dispatch(new Event('Application.bootstrap', $this));
     }
 
-    /**
-     * Get default config engine
-     * Override in sub-classes to change default config engine
-     *
-     * @return ConfigEngineInterface
-     */
-    protected function getDefaultConfigEngine()
-    {
-        return new PhpConfig($this->configDir . DS);
-    }
 
     /**
      * Sub-routine to auto-load configurations
@@ -207,20 +297,22 @@ class Application extends BaseApplication implements EventDispatcherInterface
      */
     protected function _loadConfigs()
     {
-        // app config
+        // app configs
         Configure::load('app', 'default', false);
         Configure::load('plugins');
-        Configure::load('site'); //@TODO Remove dependency on this file
 
-        // beta config overrides
-        if (defined('ENV_BETA')) { // @TODO Replace with environment configs
-            Configure::load('beta');
-            Configure::write('App.beta', ENV_BETA);
+        // load config files from standard config directories
+        foreach (['plugin', 'local', 'local/plugin'] as $dir) {
+            if (!is_dir($this->configDir . DS . $dir)) continue;
+            $files = scandir($this->configDir . DS . $dir);
+            foreach ($files as $file) {
+                if ($file == '.' || $file == '..') continue;
+
+                if (preg_match('/^(.*)\.php$/', $file, $matches)) {
+                    Configure::load($dir . '/' . $matches[1]);
+                }
+            }
         }
-
-        // local config overrides
-        try { Configure::load('local/app'); } catch(\Exception $ex) {}
-        try { Configure::load('local/cake-plugins'); } catch(\Exception $ex) {}
     }
 
 
@@ -237,11 +329,13 @@ class Application extends BaseApplication implements EventDispatcherInterface
             //    Configure::write('DebugKit.panels', ['DebugKit.Mail' => false]);
             //}
 
+            /*
             try {
                 Plugin::load('DebugKit', ['bootstrap' => true, 'routes' => true]);
             } catch (\Exception $ex) {
                 debug("DebugKit: " . $ex->getMessage());
             }
+            */
 
         } else {
             // When debug = false the metadata cache should last
@@ -252,50 +346,14 @@ class Application extends BaseApplication implements EventDispatcherInterface
         }
     }
 
-    public function eventManager(EventManager $eventManager = null)
-    {
-        if (!$this->_eventManager) {
-            $this->_eventManager = EventManager::instance();
-        }
-        return $this->_eventManager;
-    }
-
     /**
-     * Get plugin mananager instance
-     * @return PluginManager
+     * Get plugin registry instance
+     * @return PluginRegistry
      */
     public function plugins()
     {
-        if (!$this->_pluginManager) {
-            $this->_pluginManager = new PluginManager($this->eventManager());
-        }
-        return $this->_pluginManager;
+        return $this->_plugins;
     }
-
-    /**
-     * Get settings mananager instance
-     * @return SettingsManager
-     */
-    public function settings()
-    {
-        if (!$this->_settingsManager) {
-            $this->_settingsManager = new SettingsManager();
-        }
-        return $this->_settingsManager;
-    }
-
-    /**
-     * Get Backend instance
-     * @return Backend
-     */
-    public function backend()
-    {
-        if (!$this->_backend) {
-            $this->_backend = new Backend();
-        }
-        return $this->_backend;
-    }
-
 
     /**
      * Setup the middleware your application will use.
@@ -315,12 +373,23 @@ class Application extends BaseApplication implements EventDispatcherInterface
 
             // Auto-wire banana plugins
             //->add(new BananaMiddleware())
-            ->add(new BackendMiddleware())
+            ->add(new BackendMiddleware($this))
 
             // Apply routing
             ->add(new RoutingMiddleware());
 
+        $this->_pluginMiddleware($middleware);
 
         return $middleware;
+    }
+
+    protected function _pluginMiddleware($middleware)
+    {
+        foreach ($this->plugins()->loaded() as $name) {
+            $instance = $this->plugins()->get($name);
+            if ($instance instanceof PluginInterface) {
+                $instance->middleware($middleware);
+            }
+        }
     }
 }
