@@ -209,7 +209,7 @@ class MultisiteApplication extends BaseApplication
          * Set the default locale. This controls how dates, number and currency is
          * formatted and sets the default language to use for translations.
          */
-        ini_set('intl.default_locale', 'de'); //@TODO Make default locale configurable
+        ini_set('intl.default_locale', Configure::read('App.defaultLocale'));
 
         /**
          * Register application error and exception handlers.
@@ -275,7 +275,7 @@ class MultisiteApplication extends BaseApplication
         Plugin::load('Banana', ['bootstrap' => true, 'routes' => true]);
 
         // load core plugins
-        PluginLoader::load('Settings', ['bootstrap' => true, 'routes' => false]); //@todo remove hard plugin dependency
+        //PluginLoader::load('Settings', ['bootstrap' => true, 'routes' => false]); //@todo remove hard plugin dependency
         PluginLoader::load('Backend', ['bootstrap' => true, 'routes' => true]); //@todo remove hard plugin dependency
         PluginLoader::load('User', ['bootstrap' => true, 'routes' => true]); //@todo remove hard plugin dependency
 

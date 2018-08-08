@@ -26,7 +26,6 @@ use Cake\Routing\RouteBuilder;
 use Cake\Routing\RouteCollection;
 use Cake\Routing\Router;
 use Cake\Utility\Security;
-use Settings\SettingsManager;
 use Cake\Console\ConsoleErrorHandler;
 use Cake\Error\ErrorHandler;
 use Cake\Network\Request;
@@ -47,6 +46,11 @@ class Application extends BaseApplication implements EventDispatcherInterface
     protected $_backend;
 
     /**
+     * @var boolean
+     */
+    protected $_debug = false;
+
+    /**
      * @param string $configDir
      */
     public function __construct($configDir)
@@ -54,8 +58,6 @@ class Application extends BaseApplication implements EventDispatcherInterface
         parent::__construct($configDir);
 
         //$this->_pluginManager = new PluginManager($this->eventManager());
-        //$this->_settingsManager = new SettingsManager();
-
         $this->_configEngine = new PhpConfig($this->configDir . DS);
         $this->_plugins = new PluginRegistry();
     }
@@ -115,58 +117,26 @@ class Application extends BaseApplication implements EventDispatcherInterface
          * Load Banana plugin (handles default bootstrap behavior)
          */
         Plugin::load('Banana', ['bootstrap' => true, 'routes' => false]);
-        Plugin::load(Configure::read('Plugin'), ['bootstrap' => true, 'routes' => true, 'ignoreMissing' => true]);
 
         /**
          * Bootstrap site
          */
-        //require_once $this->configDir . '/bootstrap.php';
-        parent::bootstrap();
+        $this->_debugMode(Configure::read('debug'));
+        $this->_bootstrap();
 
-        $this->_pluginLoad();
-        $this->_pluginBootstrap();
-        $this->_pluginRoutes();
+        //parent::bootstrap();
+        require_once $this->configDir . '/bootstrap.php';
+
+        $this->_applyConfig();
 
         Banana::init($this);
-        $this->_initialize();
+        Plugin::load(Configure::read('Plugin'), ['bootstrap' => true, 'routes' => true, 'ignoreMissing' => true]);
+        $this->_pluginsLoad();
+        $this->_pluginsBootstrap();
+        $this->_pluginsRoutes();
+
     }
 
-    /**
-     * Load the plugin handler for all loaded plugins
-     */
-    protected function _pluginLoad()
-    {
-        foreach (Plugin::loaded() as $name) {
-            $pluginConfig = Configure::read($name);
-            try {
-                $this->plugins()->load($name, $pluginConfig);
-            } catch (\Exception $ex) {
-                Log::error('Application: ' . $ex->getMessage());
-            }
-        }
-    }
-
-    protected function _pluginBootstrap()
-    {
-        foreach ($this->plugins()->loaded() as $name) {
-            $instance = $this->plugins()->get($name);
-            if ($instance instanceof PluginInterface) {
-                $instance->bootstrap($this);
-            }
-        }
-    }
-
-    protected function _pluginRoutes()
-    {
-        //$routes = new RouteBuilder(new RouteCollection(), '/');
-        foreach ($this->plugins()->loaded() as $name) {
-            $instance = $this->plugins()->get($name);
-            if ($instance instanceof PluginInterface) {
-                Router::plugin($name, [], [$instance, 'routes']);
-                //$instance->routes($routes);
-            }
-        }
-    }
 
     public function addPlugin($name, array $config)
     {
@@ -195,13 +165,69 @@ class Application extends BaseApplication implements EventDispatcherInterface
         return $info;
     }
 
-    protected function _initialize()
+    /**
+     * Get plugin registry instance
+     * @return PluginRegistry
+     */
+    public function plugins()
     {
-        /**
-         * Debug mode
-         */
-        $this->setDebugMode(Configure::read('debug'));
+        return $this->_plugins;
+    }
 
+    /**
+     * Setup the middleware your application will use.
+     *
+     * @param \Cake\Http\MiddlewareQueue $middleware The middleware queue to setup.
+     * @return \Cake\Http\MiddlewareQueue The updated middleware.
+     */
+    public function middleware($middleware)
+    {
+        $middleware
+            // Catch any exceptions in the lower layers,
+            // and make an error page/response
+            ->add(new ErrorHandlerMiddleware(Configure::read('Error.exceptionRenderer')))
+
+            // Handle plugin/theme assets like CakePHP normally does.
+            ->add(new AssetMiddleware())
+
+            // Auto-wire banana plugins
+            //->add(new BananaMiddleware())
+            ->add(new BackendMiddleware($this))
+
+            // Apply routing
+            ->add(new RoutingMiddleware());
+
+        $this->_pluginsMiddleware($middleware);
+
+        return $middleware;
+    }
+
+    /**
+     * Sub-routine to auto-load configurations
+     * Override in sub-classes to change config loading behavior
+     */
+    protected function _loadConfigs()
+    {
+        // app configs
+        Configure::load('app', 'default', false);
+        Configure::load('plugins');
+
+        // load config files from standard config directories
+        foreach (['plugin', 'local', 'local/plugin'] as $dir) {
+            if (!is_dir($this->configDir . DS . $dir)) continue;
+            $files = scandir($this->configDir . DS . $dir);
+            foreach ($files as $file) {
+                if ($file == '.' || $file == '..') continue;
+
+                if (preg_match('/^(.*)\.php$/', $file, $matches)) {
+                    Configure::load($dir . '/' . $matches[1]);
+                }
+            }
+        }
+    }
+
+    protected function _bootstrap()
+    {
         // Set the full base URL.
         // This URL is used as the base of all absolute links.
         if (!Configure::read('App.fullBaseUrl')) {
@@ -233,7 +259,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
          * Set the default locale. This controls how dates, number and currency is
          * formatted and sets the default language to use for translations.
          */
-        ini_set('intl.default_locale', 'de'); //@TODO Make default locale configurable
+        ini_set('intl.default_locale', Configure::read('App.defaultLocale'));
 
 
         /**
@@ -276,7 +302,10 @@ class Application extends BaseApplication implements EventDispatcherInterface
             (new ErrorHandler(Configure::read('Error')))->register();
         }
 
+    }
 
+    protected function _applyConfig()
+    {
         /**
          * Consume configurations
          */
@@ -287,40 +316,9 @@ class Application extends BaseApplication implements EventDispatcherInterface
         Security::salt(Configure::consume('Security.salt'));
         Email::configTransport(Configure::consume('EmailTransport'));
         Email::config(Configure::consume('Email'));
-
     }
 
-
-    /**
-     * Sub-routine to auto-load configurations
-     * Override in sub-classes to change config loading behavior
-     */
-    protected function _loadConfigs()
-    {
-        // app configs
-        Configure::load('app', 'default', false);
-        Configure::load('plugins');
-
-        // load config files from standard config directories
-        foreach (['plugin', 'local', 'local/plugin'] as $dir) {
-            if (!is_dir($this->configDir . DS . $dir)) continue;
-            $files = scandir($this->configDir . DS . $dir);
-            foreach ($files as $file) {
-                if ($file == '.' || $file == '..') continue;
-
-                if (preg_match('/^(.*)\.php$/', $file, $matches)) {
-                    Configure::load($dir . '/' . $matches[1]);
-                }
-            }
-        }
-    }
-
-
-    /**
-     * Enables / Disables debug mode
-     * Override in sub-classes to change debug mode behavior
-     */
-    public function setDebugMode($enabled = true)
+    protected function _debugmode($enabled)
     {
         if ($enabled) {
             // disable Mail panel by default, as it doesn't play nice with Mailman plugin
@@ -347,43 +345,41 @@ class Application extends BaseApplication implements EventDispatcherInterface
     }
 
     /**
-     * Get plugin registry instance
-     * @return PluginRegistry
+     * Load the plugin handler for all loaded plugins
      */
-    public function plugins()
+    protected function _pluginsLoad()
     {
-        return $this->_plugins;
+        foreach (Plugin::loaded() as $name) {
+            $pluginConfig = Configure::read($name);
+            try {
+                $this->plugins()->load($name, $pluginConfig);
+            } catch (\Exception $ex) {
+                Log::error('Application: ' . $ex->getMessage());
+            }
+        }
     }
 
-    /**
-     * Setup the middleware your application will use.
-     *
-     * @param \Cake\Http\MiddlewareQueue $middleware The middleware queue to setup.
-     * @return \Cake\Http\MiddlewareQueue The updated middleware.
-     */
-    public function middleware($middleware)
+    protected function _pluginsBootstrap()
     {
-        $middleware
-            // Catch any exceptions in the lower layers,
-            // and make an error page/response
-            ->add(new ErrorHandlerMiddleware(Configure::read('Error.exceptionRenderer')))
-
-            // Handle plugin/theme assets like CakePHP normally does.
-            ->add(new AssetMiddleware())
-
-            // Auto-wire banana plugins
-            //->add(new BananaMiddleware())
-            ->add(new BackendMiddleware($this))
-
-            // Apply routing
-            ->add(new RoutingMiddleware());
-
-        $this->_pluginMiddleware($middleware);
-
-        return $middleware;
+        foreach ($this->plugins()->loaded() as $name) {
+            $instance = $this->plugins()->get($name);
+            if ($instance instanceof PluginInterface) {
+                $instance->bootstrap($this);
+            }
+        }
     }
 
-    protected function _pluginMiddleware($middleware)
+    protected function _pluginsRoutes()
+    {
+        foreach ($this->plugins()->loaded() as $name) {
+            $instance = $this->plugins()->get($name);
+            if ($instance instanceof PluginInterface) {
+                Router::plugin($name, ['plugin' => $name], [$instance, 'routes']);
+            }
+        }
+    }
+
+    protected function _pluginsMiddleware($middleware)
     {
         foreach ($this->plugins()->loaded() as $name) {
             $instance = $this->plugins()->get($name);
@@ -392,4 +388,6 @@ class Application extends BaseApplication implements EventDispatcherInterface
             }
         }
     }
+
+
 }
