@@ -106,7 +106,8 @@ class Application extends BaseApplication implements EventDispatcherInterface
          */
         //try {
         Configure::config('default', $this->_configEngine);
-        $this->_loadConfigs();
+        Configure::load('app', 'default', false);
+        Configure::load('plugins');
         //} catch (\Cake\Core\Exception\Exception $ex) {
         //    die ($ex->getMessage());
         //} catch (\Exception $ex) {
@@ -127,6 +128,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
         //parent::bootstrap();
         require_once $this->configDir . '/bootstrap.php';
 
+        $this->_localConfigs();
         $this->_applyConfig();
 
         Banana::init($this);
@@ -203,15 +205,10 @@ class Application extends BaseApplication implements EventDispatcherInterface
     }
 
     /**
-     * Sub-routine to auto-load configurations
-     * Override in sub-classes to change config loading behavior
+     * Auto-load local configurations
      */
-    protected function _loadConfigs()
+    protected function _localConfigs()
     {
-        // app configs
-        Configure::load('app', 'default', false);
-        Configure::load('plugins');
-
         // load config files from standard config directories
         foreach (['plugin', 'local', 'local/plugin'] as $dir) {
             if (!is_dir($this->configDir . DS . $dir)) continue;
@@ -226,6 +223,9 @@ class Application extends BaseApplication implements EventDispatcherInterface
         }
     }
 
+    /**
+     * Common bootstrap stuff
+     */
     protected function _bootstrap()
     {
         // Set the full base URL.
