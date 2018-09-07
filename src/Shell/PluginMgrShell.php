@@ -13,7 +13,7 @@ use Cake\Core\App;
  *
  * @todo Implement PluginShell ! Experimental !
  */
-class PluginShell extends Shell
+class PluginMgrShell extends Shell
 {
     /**
      * Print welcome message
