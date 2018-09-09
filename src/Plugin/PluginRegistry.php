@@ -33,14 +33,31 @@ class PluginRegistry extends ObjectRegistry
     /**
      * Should resolve the classname for a given object type.
      *
-     * @param string $plugin The class to resolve.
+     * @param string $class The class to resolve.
      * @return string|false The resolved name or false for failure.
      */
-    protected function _resolveClassName($plugin)
+    protected function _resolveClassName($class)
     {
-        $class = $plugin . '\\' . $plugin . 'Plugin';
+        if (!$class) { // if FALSE is passed as a className we skip plugin loading
+            return '\\Banana\\Plugin\\GenericPlugin';
+        }
 
-        return (class_exists($class)) ? $class : 'Banana\\Plugin\\GenericPlugin';
+        if (is_string($class)) {
+            if (class_exists($class)) { // enables class path definition
+                return $class;
+            }
+
+            $plugin = $class;
+            $class = $plugin . '\\' . $plugin . 'Plugin';
+            if (class_exists($class)) {
+                return $class;
+            }
+
+            // Fallback to generic
+            return '\\Banana\\Plugin\\GenericPlugin';
+        }
+
+        return $class;
     }
 
     /**

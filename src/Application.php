@@ -345,14 +345,23 @@ class Application extends BaseApplication implements EventDispatcherInterface
     }
 
     /**
-     * Load the plugin handler for all loaded plugins
+     * Load the plugin handler for all loaded plugins.
+     * Uses reflection on the Cake's Plugin class to read the plugin config.
+     * Automatically passes plugin config
      */
     protected function _pluginsLoad()
     {
-        foreach (Plugin::loaded() as $name) {
+        $r = new \ReflectionClass('\\Cake\\Core\\Plugin');
+        $sProps = $r->getStaticProperties();
+        $loadedPlugins = (isset($sProps['_plugins'])) ? $sProps['_plugins'] : [];
+        //debug($loadedPlugins);
+
+        //foreach (Plugin::loaded() as $name) {
+        foreach ($loadedPlugins as $name => $config) {
             $pluginConfig = Configure::read($name);
+            $config['config'] = (array) $pluginConfig;
             try {
-                $this->plugins()->load($name, $pluginConfig);
+                $this->plugins()->load($name, $config);
             } catch (\Exception $ex) {
                 Log::error('Application: ' . $ex->getMessage());
             }
