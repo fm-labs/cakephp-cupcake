@@ -40,6 +40,8 @@ class Application extends BaseApplication implements EventDispatcherInterface
 {
     use EventDispatcherTrait;
 
+    static $_bootstrapped = false;
+
     /**
      * @var Backend
      */
@@ -71,6 +73,12 @@ class Application extends BaseApplication implements EventDispatcherInterface
      */
     public function bootstrap()
     {
+
+        if (self::$_bootstrapped == true) {
+            return;
+        }
+        self::$_bootstrapped = true;
+
         /**
          * NOW: ENTERING RUNLEVEL 1 (BOOTSTRAPPING)
          * - setup paths
@@ -99,7 +107,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
         if (!defined('CORE_PATH')) {
             die('CORE_PATH is not defined. [SITE ID: ' . BC_SITE_ID . ']');
         }
-        require CORE_PATH . 'config' . DS . 'bootstrap.php';
+        require_once CORE_PATH . 'config' . DS . 'bootstrap.php';
 
         /**
          * Setup default config engine and load configs
