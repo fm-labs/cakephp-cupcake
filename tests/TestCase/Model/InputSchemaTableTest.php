@@ -54,10 +54,20 @@ class InputSchemaTableTest extends TestCase
         $result = $this->_table()->inputs()->fields();
         $expected = [
             'id' => [
-                'type' => 'hidden'
+                'type' => 'hidden',
+                'label' => 'Id',
+                'help' => null,
+                'required' => null,
+                'searchable' => false,
+                'sortable' => false,
             ],
             'title' => [
-                'type' => 'text'
+                'type' => 'text',
+                'label' => 'Title',
+                'help' => null,
+                'required' => null,
+                'searchable' => false,
+                'sortable' => false,
             ]
         ];
 
