@@ -110,7 +110,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
         require_once CORE_PATH . 'config' . DS . 'bootstrap.php';
 
         /**
-         * Setup default config engine and load configs
+         * Setup default config engine and load core configs
          */
         //try {
         Configure::config('default', $this->_configEngine);
@@ -123,28 +123,36 @@ class Application extends BaseApplication implements EventDispatcherInterface
         //}
 
         /**
-         * Load Banana plugin (handles default bootstrap behavior)
-         */
-        Plugin::load('Banana', ['bootstrap' => true, 'routes' => false]);
-
-        /**
-         * Bootstrap site
+         * Common bootstrapping tasks
          */
         $this->_debugMode(Configure::read('debug'));
         $this->_bootstrap();
 
-        //parent::bootstrap();
-        require_once $this->configDir . '/bootstrap.php';
-
+        /**
+         * Load and apply app configs
+         */
         $this->_localConfigs();
         $this->_applyConfig();
 
+        /**
+         * Load Banana plugin
+         */
+        Plugin::load('Banana', ['bootstrap' => true, 'routes' => false]);
         Banana::init($this);
+
+        /**
+         * App specific bootstrapping
+         */
+        //parent::bootstrap();
+        require_once $this->configDir . '/bootstrap.php';
+
+        /**
+         * Load Banana plugins
+         */
         Plugin::load(Configure::read('Plugin'), ['bootstrap' => true, 'routes' => true, 'ignoreMissing' => true]);
         $this->_pluginsLoad();
         $this->_pluginsBootstrap();
         $this->_pluginsRoutes();
-
     }
 
 
