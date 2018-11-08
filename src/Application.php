@@ -135,10 +135,10 @@ class Application extends BaseApplication implements EventDispatcherInterface
         $this->_applyConfig();
 
         /**
-         * Load Banana plugin
+         * Load Banana plugin and other plugins defined in core config
          */
         Plugin::load('Banana', ['bootstrap' => true, 'routes' => false]);
-        Banana::init($this);
+        Plugin::load(Configure::read('Plugin'), ['bootstrap' => true, 'routes' => true, 'ignoreMissing' => true]);
 
         /**
          * App specific bootstrapping
@@ -147,9 +147,9 @@ class Application extends BaseApplication implements EventDispatcherInterface
         require_once $this->configDir . '/bootstrap.php';
 
         /**
-         * Load Banana plugins
+         * Init Banana plugins
          */
-        Plugin::load(Configure::read('Plugin'), ['bootstrap' => true, 'routes' => true, 'ignoreMissing' => true]);
+        Banana::init($this);
         $this->_pluginsLoad();
         $this->_pluginsBootstrap();
         $this->_pluginsRoutes();
