@@ -125,7 +125,6 @@ class Application extends BaseApplication implements EventDispatcherInterface
         /**
          * Common bootstrapping tasks
          */
-        $this->_debugMode(Configure::read('debug'));
         $this->_bootstrap();
 
         /**
@@ -133,6 +132,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
          */
         $this->_localConfigs();
         $this->_applyConfig();
+        $this->_debugMode(Configure::read('debug'));
 
         /**
          * Load Banana plugin and other plugins defined in core config
@@ -152,7 +152,14 @@ class Application extends BaseApplication implements EventDispatcherInterface
         Banana::init($this);
         $this->_pluginsLoad();
         $this->_pluginsBootstrap();
-        $this->_pluginsRoutes();
+
+        /**
+         * Init Routes
+         * @todo move routes out of bootstrap block
+         */
+        Router::routes(); // Make sure app 'routes.php' is loaded
+        Plugin::routes(); // Make sure 'routes.php' is included for each loaded plugin
+        $this->_pluginsRoutes(); // Invoke 'routes' method on each enabled plugin handler
     }
 
 
@@ -343,13 +350,15 @@ class Application extends BaseApplication implements EventDispatcherInterface
             //    Configure::write('DebugKit.panels', ['DebugKit.Mail' => false]);
             //}
 
-            /*
-            try {
-                Plugin::load('DebugKit', ['bootstrap' => true, 'routes' => true]);
-            } catch (\Exception $ex) {
-                debug("DebugKit: " . $ex->getMessage());
+            if (Configure::read('DebugKit.enabled')) {
+                try {
+                    // set 'routes' to FALSE to prevent the routes to be added twice,
+                    // as DebugKit routes are already enforced by it's bootstrap file
+                    Plugin::load('DebugKit', ['bootstrap' => true, 'routes' => false]);
+                } catch (\Exception $ex) {
+                    //debug("DebugKit: " . $ex->getMessage());
+                }
             }
-            */
 
         } else {
             // When debug = false the metadata cache should last
