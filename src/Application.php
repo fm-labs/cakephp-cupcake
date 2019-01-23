@@ -141,10 +141,10 @@ class Application extends BaseApplication implements EventDispatcherInterface
         Plugin::load(Configure::read('Plugin'), ['bootstrap' => true, 'routes' => true, 'ignoreMissing' => true]);
 
         /**
-         * App specific bootstrapping
+         * Include app's bootstrap file
          */
-        //parent::bootstrap();
-        require_once $this->configDir . '/bootstrap.php';
+        parent::bootstrap();
+        //require_once $this->configDir . '/bootstrap.php';
 
         /**
          * Init Banana plugins
@@ -222,7 +222,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
             // Apply routing
             ->add(new RoutingMiddleware());
 
-        $this->_pluginsMiddleware($middleware);
+        $middleware = $this->_pluginsMiddleware($middleware);
 
         return $middleware;
     }
@@ -418,9 +418,14 @@ class Application extends BaseApplication implements EventDispatcherInterface
         foreach ($this->plugins()->loaded() as $name) {
             $instance = $this->plugins()->get($name);
             if ($instance instanceof PluginInterface) {
-                $instance->middleware($middleware);
+                $_middleware = $instance->middleware($middleware);
+                if ($_middleware) {
+                    $middleware = $_middleware;
+                }
             }
         }
+
+        return $middleware;
     }
 
 
