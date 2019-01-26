@@ -344,13 +344,13 @@ class Application extends BaseApplication implements EventDispatcherInterface
     protected function _debugmode($enabled)
     {
         if ($enabled) {
-            // disable Mail panel by default, as it doesn't play nice with Mailman plugin
-            // @TODO Play nice with DebugKit
-            //if (!Configure::check('DebugKit.panels')) {
-            //    Configure::write('DebugKit.panels', ['DebugKit.Mail' => false]);
-            //}
-
             if (Configure::read('DebugKit.enabled')) {
+                // disable Mail panel by default, as it doesn't play nice with Mailman plugin
+                // @TODO Play nice with DebugKit's Mail preview
+                if (!Configure::check('DebugKit.panels')) {
+                    Configure::write('DebugKit.panels', ['DebugKit.Mail' => false]);
+                }
+
                 try {
                     // set 'routes' to FALSE to prevent the routes to be added twice,
                     // as DebugKit routes are already enforced by it's bootstrap file
@@ -359,7 +359,6 @@ class Application extends BaseApplication implements EventDispatcherInterface
                     //debug("DebugKit: " . $ex->getMessage());
                 }
             }
-
         } else {
             // When debug = false the metadata cache should last
             // for a very very long time, as we don't want
