@@ -12,7 +12,8 @@ use Cake\Utility\Hash;
  *
  * Supports translation definition in the email profile config
  *
- * If the config contains `_localized` key, an array of translations is expected
+ * If the config contains `_localized` key, a list of email profile parameters is expected,
+ * which will override the default profile parameters.
  * [
  *  'subject' => 'Hello!'
  *  '_localized' => ['de' => ['subject' => 'Hallo', 'layout' => 'default_de', ... ]]
@@ -35,11 +36,11 @@ class LocalizedEmail extends Email
     protected $_locale;
 
     /**
-     * Translation map
+     * Localized profile
      *
      * @var array
      */
-    protected $_translations = [];
+    protected $_localized = [];
 
     /**
      * Constructor
@@ -70,13 +71,17 @@ class LocalizedEmail extends Email
     }
 
     /**
-     * Overloading parent profile() method
+     * Overriding parent profile() method
      */
     public function profile($config = null)
     {
         return parent::profile($config);
     }
 
+    /**
+     * Overriding parent send() method.
+     * Preserve original subject before sending.
+     */
     public function send($content = null)
     {
         $subject = $this->getOriginalSubject();
@@ -94,7 +99,7 @@ class LocalizedEmail extends Email
     {
         parent::reset();
         $this->_locale = $this->_originalLocale;
-        $this->_translations = [];
+        $this->_localized = [];
     }
 
     /**
@@ -108,7 +113,7 @@ class LocalizedEmail extends Email
         parent::_applyConfig($config);
 
         if (is_array($config) && array_key_exists('_localized', $config)) {
-            $this->_translations = Hash::merge($this->_translations, $config['_localized']);
+            $this->_localized = Hash::merge($this->_localized, $config['_localized']);
         }
 
         if (is_array($config) && array_key_exists('locale', $config)) {
@@ -123,8 +128,8 @@ class LocalizedEmail extends Email
      */
     protected function _applyLocalizedConfig($locale)
     {
-        if ($locale !== null && !empty($this->_translations) && array_key_exists($locale, $this->_translations)) {
-            $config = $this->_translations[$locale];
+        if ($locale !== null && !empty($this->_localized) && array_key_exists($locale, $this->_localized)) {
+            $config = $this->_localized[$locale];
 
             // make sure there are no nested _localized/locale definitions,
             // which could potentially lead to an infinite loop
