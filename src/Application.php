@@ -40,7 +40,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
 {
     use EventDispatcherTrait;
 
-    static $_bootstrapped = false;
+    protected static $_bootstrapped = false;
 
     /**
      * @var Backend
@@ -79,7 +79,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
         }
         self::$_bootstrapped = true;
 
-        /**
+        /*
          * NOW: ENTERING RUNLEVEL 1 (BOOTSTRAPPING)
          * - setup paths
          * - bootstrap cake core
@@ -96,12 +96,12 @@ class Application extends BaseApplication implements EventDispatcherInterface
          *
          */
 
-        /**
+        /*
          * Load path definitions
          */
         require_once $this->configDir . "/paths.php";
 
-        /**
+        /*
          * Bootstrap cake core
          */
         if (!defined('CORE_PATH')) {
@@ -109,7 +109,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
         }
         require_once CORE_PATH . 'config' . DS . 'bootstrap.php';
 
-        /**
+        /*
          * Setup default config engine and load core configs
          */
         //try {
@@ -122,50 +122,57 @@ class Application extends BaseApplication implements EventDispatcherInterface
         //    die ($ex->getMessage());
         //}
 
-        /**
+        /*
          * Common bootstrapping tasks
          */
         $this->_bootstrap();
 
-        /**
+        /*
          * Load and apply app configs
          */
         $this->_localConfigs();
         $this->_applyConfig();
         $this->_debugMode(Configure::read('debug'));
 
-        /**
+        /*
          * Load Banana plugin and other plugins defined in core config
          */
         Plugin::load('Banana', ['bootstrap' => true, 'routes' => false]);
         Plugin::load(Configure::read('Plugin'), ['bootstrap' => true, 'routes' => true, 'ignoreMissing' => true]);
 
-        /**
+        /*
          * Include app's bootstrap file
          */
         parent::bootstrap();
         //require_once $this->configDir . '/bootstrap.php';
 
-        /**
+        /*
          * Init Banana plugins
          */
         Banana::init($this);
         $this->_pluginsLoad();
         $this->_pluginsBootstrap();
 
-        /**
+        /*
          * Init Routes
          * @todo move routes out of bootstrap block
          */
         Router::routes(); // Make sure app 'routes.php' is loaded
-        Plugin::routes(); // Make sure 'routes.php' is included for each loaded plugin
+        //Plugin::routes(); // Make sure 'routes.php' is included for each loaded plugin
         $this->_pluginsRoutes(); // Invoke 'routes' method on each enabled plugin handler
     }
 
-
+    /**
+     * Dynamically load plugin
+     *
+     * @param string $name Plugin anem
+     * @param array $config Plugin config
+     * @return $this
+     */
     public function addPlugin($name, array $config)
     {
         $this->plugins()->load($name, $config);
+
         return $this;
     }
 
