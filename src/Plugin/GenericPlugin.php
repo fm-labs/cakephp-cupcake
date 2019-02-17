@@ -10,16 +10,13 @@ class GenericPlugin implements PluginInterface
 
     public function bootstrap(Application $app)
     {
-
     }
 
     public function routes(RouteBuilder $routes)
     {
-
     }
 
     public function middleware(MiddlewareQueue $middleware)
     {
-
     }
 }

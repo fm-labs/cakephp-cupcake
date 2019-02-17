@@ -2,7 +2,6 @@
 
 namespace Banana\Test\TestCase\Model;
 
-
 use Banana\Model\ArrayTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
@@ -28,7 +27,7 @@ class ArrayTableTest extends TestCase
     {
         $this->_table();
     }
-    
+
     public function testFindAll()
     {
         $Table = $this->_table();
@@ -80,7 +79,7 @@ class ArrayTableTest extends TestCase
         ];
 
         $result = $Table->find()
-            ->where(function($result) {
+            ->where(function ($result) {
                 return ($result['foo'] == 'bar') ? true : false;
             })
             ->all()
@@ -121,7 +120,6 @@ class ArrayTableTest extends TestCase
         ];
         $this->assertEquals($expected, $Table->find('list')->where(['foo' => 'bar'])->all()->toArray());
     }
-
 
     public function testNewEntity()
     {

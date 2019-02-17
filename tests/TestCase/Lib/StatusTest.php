@@ -40,7 +40,7 @@ class StatusTest extends TestCase
     public function testToString()
     {
         $status = new Status(0, 'Test Label', 'test-class');
-        $this->assertEquals("0", (string) $status);
+        $this->assertEquals("0", (string)$status);
     }
 
     /**

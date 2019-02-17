@@ -45,12 +45,12 @@ class PluginLoader extends Plugin
             if (!Configure::check('Plugin')) {
                 // the first available config file will be used and others ignored
                 //foreach (['local/plugins', 'plugins'] as $config) {
-                    try {
-                        Configure::load('plugins');
+                try {
+                    Configure::load('plugins');
                 //        break;
-                    } catch (\Exception $ex) {
-                        // no plugins configured. strange, but ok. should work, too.
-                    }
+                } catch (\Exception $ex) {
+                    // no plugins configured. strange, but ok. should work, too.
+                }
                 //}
             }
 

@@ -2,7 +2,6 @@
 
 namespace Banana\Test\TestCase\Database;
 
-
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;

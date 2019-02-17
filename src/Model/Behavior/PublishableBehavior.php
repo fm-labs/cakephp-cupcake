@@ -78,5 +78,4 @@ class PublishableBehavior extends Behavior
     //public function beforeSave(Event $event, Entity $entity)
     //{
     //}
-
 }

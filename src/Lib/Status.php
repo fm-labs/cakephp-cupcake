@@ -68,7 +68,7 @@ class Status implements \JsonSerializable
      */
     public function __toString()
     {
-        return (string) $this->getStatus();
+        return (string)$this->getStatus();
     }
 
     /**

@@ -2,7 +2,8 @@
 
 namespace Banana\Model;
 
-interface TableInputDataSourceInterface {
+interface TableInputDataSourceInterface
+{
 
     /**
      * Returns a list of data options
@@ -10,5 +11,4 @@ interface TableInputDataSourceInterface {
      * @return array
      */
     public function getInputList($fieldName);
-
 }

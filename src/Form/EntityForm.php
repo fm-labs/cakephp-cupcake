@@ -86,7 +86,6 @@ class EntityForm extends Form
         return $schema;
     }
 
-
     /**
      * @param \Cake\Validation\Validator $validator The validator to customize.
      * @return \Cake\Validation\Validator The validator to use.

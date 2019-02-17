@@ -29,7 +29,8 @@ class LocalEventManager extends EventManager
         return static::$_generalLocalManager;
     }
 
-    public function dispatch($event) {
+    public function dispatch($event)
+    {
         //debug("dispatching event " . $event->name());
         return parent::dispatch($event);
     }

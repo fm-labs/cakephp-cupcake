@@ -131,7 +131,6 @@ class StatusableBehavior extends Behavior
     public function beforeSave(Event $event, EntityInterface $entity, ArrayObject $options)
     {
         foreach (array_keys($this->_fieldConfig) as $fieldName) {
-
             if ($entity->get($fieldName) === null) {
                 continue;
             }

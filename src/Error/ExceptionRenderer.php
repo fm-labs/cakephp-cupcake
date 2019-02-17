@@ -36,6 +36,7 @@ class ExceptionRenderer extends CakeExceptionRenderer
     public function missingPlugin($error)
     {
         var_dump(debug_backtrace());
+
         return 'Oops that plugin is missing! ' . $error;
     }
 }

@@ -50,7 +50,7 @@ class MultisiteApplication extends BaseApplication
     /**
      * Add site configuration
      */
-    static public function addSite($siteId, array $config = [])
+    public static function addSite($siteId, array $config = [])
     {
         $config = array_merge(['hosts' => []], $config);
         static::$_sites[$siteId] = $config;
@@ -59,7 +59,7 @@ class MultisiteApplication extends BaseApplication
     /**
      * Return active site ID
      */
-    static public function getSiteId()
+    public static function getSiteId()
     {
         // determine site id from environment
         $siteId = (defined('BC_SITE_ID')) ? constant('BC_SITE_ID') : null;
@@ -70,7 +70,7 @@ class MultisiteApplication extends BaseApplication
         // determine site id from HTTP request
         if ($siteId === null) {
             foreach (static::$_sites as $_siteId => $site) {
-                $hosts = (array) static::$_sites[$_siteId]['hosts'];
+                $hosts = (array)static::$_sites[$_siteId]['hosts'];
                 if (in_array($host, $hosts)) {
                     $siteId = $_siteId;
                     break;
@@ -96,7 +96,7 @@ class MultisiteApplication extends BaseApplication
     /**
      * Return active site host name
      */
-    static public function getSiteHost()
+    public static function getSiteHost()
     {
         if (defined('BC_SITE_HOST')) {
             return constant('BC_SITE_HOST');
@@ -235,10 +235,12 @@ class MultisiteApplication extends BaseApplication
          */
         Request::addDetector('mobile', function ($request) {
             $detector = new \Detection\MobileDetect();
+
             return $detector->isMobile();
         });
         Request::addDetector('tablet', function ($request) {
             $detector = new \Detection\MobileDetect();
+
             return $detector->isTablet();
         });
 
@@ -288,7 +290,11 @@ class MultisiteApplication extends BaseApplication
         }
 
         // local site settings override
-        try { Configure::load(BC_SITE_ID, 'settings'); } catch(\Exception $ex) { debug($ex->getMessage()); }
+        try {
+            Configure::load(BC_SITE_ID, 'settings');
+        } catch (\Exception $ex) {
+            debug($ex->getMessage());
+        }
 
         // Init Banana obj
         //Banana::config(Configure::consume('Banana'));
@@ -325,8 +331,14 @@ class MultisiteApplication extends BaseApplication
         }
 
         // local config overrides
-        try { Configure::load('local/app'); } catch(\Exception $ex) {}
-        try { Configure::load('local/cake-plugins'); } catch(\Exception $ex) {}
+        try {
+            Configure::load('local/app');
+        } catch (\Exception $ex) {
+        }
+        try {
+            Configure::load('local/cake-plugins');
+        } catch (\Exception $ex) {
+        }
     }
 
     /**
@@ -342,7 +354,6 @@ class MultisiteApplication extends BaseApplication
                 Configure::write('DebugKit.panels', ['DebugKit.Mail' => false]);
             }
             Plugin::load('DebugKit', ['bootstrap' => true]);
-
         } else {
             // When debug = false the metadata cache should last
             // for a very very long time, as we don't want

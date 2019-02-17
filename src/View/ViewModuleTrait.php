@@ -32,7 +32,6 @@ trait ViewModuleTrait
     public function module($module, array $args = [], array $options = [])
     {
         try {
-
             $moduleEntityClass = "\\Content\\Model\\Entity\\Module";
             if (class_exists($moduleEntityClass) && $module instanceof $moduleEntityClass) {
                 $options = $module->params_arr;
@@ -80,7 +79,6 @@ trait ViewModuleTrait
         } catch (\Exception $ex) {
             return sprintf("Module $module error: %s", $ex->getMessage());
         }
-
     }
 
     /**

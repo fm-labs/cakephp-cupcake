@@ -42,7 +42,6 @@ class InputSchemaBehavior extends Behavior
 
         // init from table schema
         foreach ($this->_table->schema()->columns() as $colName) {
-
             $col = $this->_table->schema()->column($colName);
             $input = $this->_detectInputSchema($colName, $col);
             $this->_inputs->addField($colName, $input);
@@ -63,7 +62,6 @@ class InputSchemaBehavior extends Behavior
         return $this->_inputs;
     }
 
-
     protected function _detectInputSchema($colName, $col)
     {
         $input = [
@@ -74,54 +72,40 @@ class InputSchemaBehavior extends Behavior
 
         // belongsTo association
         if (substr($colName, -3) === "_id") {
-
             $belongsTo = $this->_table->associations()->type('belongsTo');
-            foreach($belongsTo as $assoc) {
-
+            foreach ($belongsTo as $assoc) {
                 if ($assoc->foreignKey() == $colName) {
                     $input['type'] = 'ChosenSelect'; // 'Select';
                     $input['options'] = $assoc->find('list')->toArray();
                     $input['placeholder'] = true; //@TODO Check default model validator, if field can be empty
+
                     return $input;
                 }
             }
-
         }
 
         // guess by field name conventions
         if ($colName == 'id') {
             $input['type'] = 'Hidden';
-        }
-        elseif ($colName === "created" || $colName === "modified" || $colName === "updated") {
+        } elseif ($colName === "created" || $colName === "modified" || $colName === "updated") {
             $input['type'] = 'Hidden';
-        }
-        elseif (substr($colName, -5) === "_date") {
+        } elseif (substr($colName, -5) === "_date") {
             $input['type'] = 'DatePicker'; // 'Date';
-        }
-        elseif (substr($colName, 0, 3) === "is_") {
+        } elseif (substr($colName, 0, 3) === "is_") {
             $input['type'] = 'Checkbox';
-        }
-        elseif (substr($colName, 0, 4) === "has_") {
+        } elseif (substr($colName, 0, 4) === "has_") {
             $input['type'] = 'Checkbox';
-        }
-        elseif (substr($colName, -5) === "_text") {
+        } elseif (substr($colName, -5) === "_text") {
             $input['type'] = 'Textarea';
-        }
-        elseif (substr($colName, -5) === "_html") {
+        } elseif (substr($colName, -5) === "_html") {
             $input['type'] = 'Html';
-        }
-        elseif ($this->_table->hasBehavior('Tree') && in_array($colName, ['lft', 'rght', 'level'])) {
+        } elseif ($this->_table->hasBehavior('Tree') && in_array($colName, ['lft', 'rght', 'level'])) {
             $input['type'] = 'Hidden';
-        }
-        // guess by column type
+        } // guess by column type
         elseif (isset(self::$typeMap[$col['type']])) {
             $input['type'] = self::$typeMap[$col['type']];
         }
 
-
         return $input;
-
     }
-
-
 }

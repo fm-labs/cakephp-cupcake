@@ -14,10 +14,9 @@ class BananaBackend implements EventListenerInterface
     public function implementedEvents()
     {
         return [
-            'Backend.init' => function() {
-
+            'Backend.init' => function () {
             },
-            'Backend.Router.init' => function(RouteBuilderEvent $event) {
+            'Backend.Router.init' => function (RouteBuilderEvent $event) {
                 $event->subject()->scope('/core', ['plugin' => 'Banana', '_namePrefix' => 'core:admin:', 'prefix' => 'admin'], function (RouteBuilder $routes) {
 
                     $routes->extensions(['json']);

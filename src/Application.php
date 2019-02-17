@@ -241,10 +241,14 @@ class Application extends BaseApplication implements EventDispatcherInterface
     {
         // load config files from standard config directories
         foreach (['plugin', 'local', 'local/plugin'] as $dir) {
-            if (!is_dir($this->configDir . DS . $dir)) continue;
+            if (!is_dir($this->configDir . DS . $dir)) {
+                continue;
+            }
             $files = scandir($this->configDir . DS . $dir);
             foreach ($files as $file) {
-                if ($file == '.' || $file == '..') continue;
+                if ($file == '.' || $file == '..') {
+                    continue;
+                }
 
                 if (preg_match('/^(.*)\.php$/', $file, $matches)) {
                     Configure::load($dir . '/' . $matches[1]);
@@ -273,7 +277,6 @@ class Application extends BaseApplication implements EventDispatcherInterface
             unset($httpHost, $s);
         }
 
-
         /**
          * Set server timezone to UTC. You can change it to another timezone of your
          * choice but using UTC makes time calculations / conversions easier.
@@ -290,7 +293,6 @@ class Application extends BaseApplication implements EventDispatcherInterface
          * formatted and sets the default language to use for translations.
          */
         ini_set('intl.default_locale', Configure::read('App.defaultLocale'));
-
 
         /**
          * Setup detectors for mobile and tablet.
@@ -317,7 +319,6 @@ class Application extends BaseApplication implements EventDispatcherInterface
          */
         Type::build('datetime')->useLocaleParser();
 
-
         $isCli = php_sapi_name() === 'cli';
         if ($isCli) {
             (new ConsoleErrorHandler(Configure::read('Error')))->register();
@@ -331,7 +332,6 @@ class Application extends BaseApplication implements EventDispatcherInterface
         } else {
             (new ErrorHandler(Configure::read('Error')))->register();
         }
-
     }
 
     protected function _applyConfig()
@@ -390,7 +390,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
         //foreach (Plugin::loaded() as $name) {
         foreach ($loadedPlugins as $name => $config) {
             $pluginConfig = Configure::read($name);
-            $config['config'] = (array) $pluginConfig;
+            $config['config'] = (array)$pluginConfig;
             try {
                 $this->plugins()->load($name, $config);
             } catch (\Exception $ex) {
@@ -433,6 +433,4 @@ class Application extends BaseApplication implements EventDispatcherInterface
 
         return $middleware;
     }
-
-
 }

@@ -45,17 +45,14 @@ class PluginManager implements EventDispatcherInterface
      */
     protected $_enabled = [];
 
-
-    static public function loadAll()
+    public static function loadAll()
     {
-        foreach(self::$_config as $plugin => $pluginConfig) {
-
+        foreach (self::$_config as $plugin => $pluginConfig) {
             if (is_bool($pluginConfig)) {
                 $pluginConfig = [];
             }
 
             try {
-
                 $pluginConfig = array_merge(['bootstrap' => true, 'routes' => false, 'ignoreMissing' => true], $pluginConfig);
                 //debug($plugin);
                 //debug($pluginConfig);
@@ -64,15 +61,15 @@ class PluginManager implements EventDispatcherInterface
                 // load plugin config
                 try {
                     Configure::load('plugin/' . Inflector::underscore($plugin));
-                } catch (\Exception $ex) {}
+                } catch (\Exception $ex) {
+                }
                 try {
                     Configure::load('local/plugin/' . Inflector::underscore($plugin));
-                } catch (\Exception $ex) {}
-
+                } catch (\Exception $ex) {
+                }
             } catch (\Exception $ex) {
                 Log::error('PluginManager: Failed loading plugin ' . $plugin . ':' . $ex->getMessage());
             }
-
         }
     }
 
@@ -87,8 +84,9 @@ class PluginManager implements EventDispatcherInterface
     {
         if (is_array($pluginName)) {
             foreach ($pluginName as $_pluginName => $_pluginSettings) {
-                $this->load($_pluginName, (array) $_pluginSettings, $enable);
+                $this->load($_pluginName, (array)$_pluginSettings, $enable);
             }
+
             return $this;
         }
 
@@ -150,6 +148,7 @@ class PluginManager implements EventDispatcherInterface
             foreach ($pluginName as $_plugin) {
                 $this->enable($_plugin);
             }
+
             return $this;
         }
 
@@ -158,7 +157,6 @@ class PluginManager implements EventDispatcherInterface
         }
 
         if (!$this->_registry->has($pluginName)) {
-
             // load plugin handler
             try {
                 $this->_registry->load($pluginName);
@@ -166,12 +164,12 @@ class PluginManager implements EventDispatcherInterface
                 // load plugin config
                 try {
                     Configure::load('plugin/' . Inflector::underscore($pluginName));
-                } catch (\Exception $ex) {}
+                } catch (\Exception $ex) {
+                }
                 try {
                     Configure::load('local/plugin/' . Inflector::underscore($pluginName));
                 } catch (\Exception $ex) {
                 }
-
             } catch (MissingPluginHandlerException $ex) {
                 // the plugin obviously has no plugin handler
                 // so ignore this exception
@@ -263,6 +261,7 @@ class PluginManager implements EventDispatcherInterface
         if ($pluginName !== null) {
             return (isset($this->_loaded[$pluginName])) ? true : false;
         }
+
         return array_keys($this->_loaded);
     }
 
@@ -276,6 +275,7 @@ class PluginManager implements EventDispatcherInterface
         if ($pluginName !== null) {
             return (isset($this->_enabled[$pluginName])) ? true : false;
         }
+
         return array_keys($this->_enabled);
     }
 }

@@ -428,7 +428,7 @@ class ArrayTableQuery implements QueryInterface
     protected function _execute()
     {
         $items = $this->_repository->getItems();
-        $results = new ArrayTableResultSet((array) $items);
+        $results = new ArrayTableResultSet((array)$items);
 
         if (is_array($this->_conditions) && !empty($this->_conditions)) {
             $results = $results->filter(function ($v, $k) {

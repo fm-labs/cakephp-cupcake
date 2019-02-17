@@ -53,6 +53,7 @@ class ClassRegistry
             foreach ($key as $_key => $_class) {
                 static::register($type, $_key, $_class);
             }
+
             return;
         }
 
@@ -171,13 +172,13 @@ class ClassRegistry
             throw new \RuntimeException(sprintf("ClassRegistry: Class not registered: %s:%s", $type, $key));
         }
 
-        $factory = (isset(static::$_factories[$type])) ? static::$_factories[$type] : function($class) {
+        $factory = (isset(static::$_factories[$type])) ? static::$_factories[$type] : function ($class) {
             return static::defaultFactory($class);
         };
 
         $class = static::$_classes[$type][$key];
-        return $factory($class);
 
+        return $factory($class);
     }
 
     public static function defaultFactory($class)

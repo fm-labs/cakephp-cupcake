@@ -102,7 +102,7 @@ class CsvTable extends ArrayTable
                 }
                 $row[$col] = $val;
             }
-            $rows[$i-1] = $row;
+            $rows[$i - 1] = $row;
         }
 
         fclose($file);

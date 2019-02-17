@@ -99,7 +99,7 @@ class MenuItem implements \ArrayAccess
     {
         if (is_array($children)) {
             $_children = [];
-            foreach($children as $child) {
+            foreach ($children as $child) {
                 if (!is_object($child)) {
                     $child = MenuItem::fromArray($child);
                 }
@@ -120,6 +120,7 @@ class MenuItem implements \ArrayAccess
         }
 
         $this->_children[spl_object_hash($item)] = $item;
+
         return $this;
     }
 
@@ -246,7 +247,7 @@ class MenuItem implements \ArrayAccess
      *
      * ['title' => TITLE, 'url' => URL, 'children' => CHILDREN, 'attr' => ['foo' => 'bar']]
      */
-    static public function fromArray(array $item)
+    public static function fromArray(array $item)
     {
         $title = $url = $attr = $children = null;
         if (isset($item[0])) {
@@ -261,6 +262,6 @@ class MenuItem implements \ArrayAccess
             $attr += array_diff_key($item, ['title' => null, 'url' => null, 'children' => null, 'attr' => null]);
         }
 
-        return new MenuItem($title, $url, (array) $attr, (array) $children);
+        return new MenuItem($title, $url, (array)$attr, (array)$children);
     }
 }

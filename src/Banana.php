@@ -29,7 +29,7 @@ class Banana
      *
      * @return \Cake\Mailer\Mailer
      */
-    static public function getMailer()
+    public static function getMailer()
     {
         return new self::$mailerClass();
     }
@@ -39,7 +39,7 @@ class Banana
      * @return Banana
      * @throws \Exception
      */
-    static public function init(Application $app)
+    public static function init(Application $app)
     {
         if (isset(self::$_instances[0])) {
             throw new \Exception('Banana::init: Already initialized');
@@ -53,18 +53,19 @@ class Banana
      * @return Banana
      * @throws \Exception
      */
-    static public function getInstance()
+    public static function getInstance()
     {
         if (!isset(self::$_instances[0])) {
             throw new \Exception('Banana::getInstance: Not initialized');
         }
+
         return self::$_instances[0];
     }
 
     /**
      * Static access to the plugin handler
      */
-    static public function plugin($pluginName)
+    public static function plugin($pluginName)
     {
         return self::getInstance()->app()->plugins()->get($pluginName);
     }
@@ -72,11 +73,10 @@ class Banana
     /**
      * Static access to the plugin info
      */
-    static public function pluginInfo($pluginName)
+    public static function pluginInfo($pluginName)
     {
         return self::getInstance()->app()->getPluginInfo($pluginName);
     }
-
 
     /**
      * Singleton instance constructor

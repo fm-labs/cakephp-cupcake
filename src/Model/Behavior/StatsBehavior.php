@@ -27,12 +27,12 @@ class StatsBehavior extends Behavior
     public function getStats()
     {
         $statFilters = [];
-        $statFilters['count'] = function(Table $t) {
+        $statFilters['count'] = function (Table $t) {
             return $t->find()->count();
         };
 
         $stats = [];
-        foreach($statFilters as $filterName => $filter) {
+        foreach ($statFilters as $filterName => $filter) {
             try {
                 if (!is_callable($filter)) {
                     throw new \InvalidArgumentException("Stats filter not callable");
@@ -43,6 +43,7 @@ class StatsBehavior extends Behavior
                 $stats[$filterName] = ['error' => $ex->getMessage()];
             }
         }
+
         return $stats;
     }
 
@@ -83,5 +84,4 @@ class StatsBehavior extends Behavior
     //public function beforeSave(Event $event, Entity $entity)
     //{
     //}
-
 }
