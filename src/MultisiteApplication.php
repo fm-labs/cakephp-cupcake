@@ -29,6 +29,7 @@ use Cake\Utility\Security;
  * want to use in your application.
  *
  * @todo ! Experimental ! Do not use in production !
+ * @codeCoverageIgnore
  */
 class MultisiteApplication extends BaseApplication
 {
@@ -147,13 +148,13 @@ class MultisiteApplication extends BaseApplication
      */
     public function bootstrap()
     {
-        /**
+        /*
          * Load path definitions
          */
         require_once $this->baseConfigDir . "/paths.php"; // global
         require_once $this->configDir . "/paths.php"; // site
 
-        /**
+        /*
          * Bootstrap cake core
          */
         if (!defined('CORE_PATH')) {
@@ -161,18 +162,18 @@ class MultisiteApplication extends BaseApplication
         }
         require CORE_PATH . 'config' . DS . 'bootstrap.php';
 
-        /**
+        /*
          * Setup default config engine and load configs
          */
         Configure::config('default', $this->getDefaultConfigEngine());
         $this->loadConfiguration();
 
-        /**
+        /*
          * Bootstrap site
          */
         require_once $this->configDir . '/bootstrap.php';
 
-        /**
+        /*
          * Override site config
          */
         if (file_exists($this->baseConfigDir . '/' . $this->siteId . ".local.php")) {
@@ -194,24 +195,24 @@ class MultisiteApplication extends BaseApplication
             unset($httpHost, $s);
         }
 
-        /**
+        /*
          * Set server timezone to UTC. You can change it to another timezone of your
          * choice but using UTC makes time calculations / conversions easier.
          */
         date_default_timezone_set('UTC'); // @TODO Make default timezone configurable
 
-        /**
+        /*
          * Configure the mbstring extension to use the correct encoding.
          */
         mb_internal_encoding(Configure::read('App.encoding'));
 
-        /**
+        /*
          * Set the default locale. This controls how dates, number and currency is
          * formatted and sets the default language to use for translations.
          */
         ini_set('intl.default_locale', Configure::read('App.defaultLocale'));
 
-        /**
+        /*
          * Register application error and exception handlers.
          * @todo Inject cli configurations from banana
          */
@@ -229,7 +230,7 @@ class MultisiteApplication extends BaseApplication
             (new ErrorHandler(Configure::read('Error')))->register();
         }
 
-        /**
+        /*
          * Setup detectors for mobile and tablet.
          * @todo Remove mobile request detectors from banana. Move to site's bootstrap
          */
@@ -244,24 +245,24 @@ class MultisiteApplication extends BaseApplication
             return $detector->isTablet();
         });
 
-        /**
+        /*
          * Register database types
          */
         //Type::map('json', 'Banana\Database\Type\JsonType'); // obsolete since CakePHP 3.3
         Type::map('serialize', 'Banana\Database\Type\SerializeType');
 
-        /**
+        /*
          * Enable default locale format parsing.
          * This is needed for matching the auto-localized string output of Time() class when parsing dates.
          */
         Type::build('datetime')->useLocaleParser();
 
-        /**
+        /*
          * Debug mode
          */
         $this->setDebugMode(Configure::read('debug'));
 
-        /**
+        /*
          * Consume configurations
          */
         ConnectionManager::config(Configure::consume('Datasources'));
@@ -271,7 +272,7 @@ class MultisiteApplication extends BaseApplication
         Email::configTransport(Configure::consume('EmailTransport'));
         Email::config(Configure::consume('Email'));
 
-        /**
+        /*
          * Initialize Banana
          */
         Plugin::load('Banana', ['bootstrap' => true, 'routes' => true]);

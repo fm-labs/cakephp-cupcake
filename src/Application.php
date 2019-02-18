@@ -4,11 +4,9 @@ namespace Banana;
 use Backend\Backend;
 use Backend\Routing\Middleware\BackendMiddleware;
 use Banana\Plugin\PluginInterface;
-use Banana\Plugin\PluginManager;
 use Banana\Plugin\PluginRegistry;
 use Cake\Cache\Cache;
 use Cake\Core\Configure;
-use Cake\Core\Configure\ConfigEngineInterface;
 use Cake\Core\Configure\Engine\PhpConfig;
 use Cake\Core\Plugin;
 use Cake\Datasource\ConnectionManager;
@@ -16,19 +14,15 @@ use Cake\Database\Type;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Event\EventDispatcherInterface;
 use Cake\Event\EventDispatcherTrait;
-use Cake\Event\EventManager;
 use Cake\Http\BaseApplication;
 use Cake\Log\Log;
 use Cake\Mailer\Email;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
-use Cake\Routing\RouteBuilder;
-use Cake\Routing\RouteCollection;
 use Cake\Routing\Router;
 use Cake\Utility\Security;
 use Cake\Console\ConsoleErrorHandler;
 use Cake\Error\ErrorHandler;
-use Cake\Network\Request;
 
 /**
  * Application setup class.
@@ -277,24 +271,24 @@ class Application extends BaseApplication implements EventDispatcherInterface
             unset($httpHost, $s);
         }
 
-        /**
+        /*
          * Set server timezone to UTC. You can change it to another timezone of your
          * choice but using UTC makes time calculations / conversions easier.
          */
         date_default_timezone_set('UTC'); // @TODO Make default timezone configurable
 
-        /**
+        /*
          * Configure the mbstring extension to use the correct encoding.
          */
         mb_internal_encoding(Configure::read('App.encoding'));
 
-        /**
+        /*
          * Set the default locale. This controls how dates, number and currency is
          * formatted and sets the default language to use for translations.
          */
         ini_set('intl.default_locale', Configure::read('App.defaultLocale'));
 
-        /**
+        /*
          * Setup detectors for mobile and tablet.
          * @todo Remove mobile request detectors from banana. Move to site's bootstrap
         Request::addDetector('mobile', function ($request) {
@@ -307,13 +301,13 @@ class Application extends BaseApplication implements EventDispatcherInterface
         });
         */
 
-        /**
+        /*
          * Register database types
          */
         //Type::map('json', 'Banana\Database\Type\JsonType'); // obsolete since CakePHP 3.3
         Type::map('serialize', 'Banana\Database\Type\SerializeType');
 
-        /**
+        /*
          * Enable default locale format parsing.
          * This is needed for matching the auto-localized string output of Time() class when parsing dates.
          */
@@ -336,7 +330,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
 
     protected function _applyConfig()
     {
-        /**
+        /*
          * Consume configurations
          */
         //debug(Configure::read());
