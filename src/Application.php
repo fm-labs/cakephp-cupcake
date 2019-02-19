@@ -6,11 +6,13 @@ use Backend\Routing\Middleware\BackendMiddleware;
 use Banana\Plugin\PluginInterface;
 use Banana\Plugin\PluginRegistry;
 use Cake\Cache\Cache;
+use Cake\Console\ConsoleErrorHandler;
 use Cake\Core\Configure;
 use Cake\Core\Configure\Engine\PhpConfig;
 use Cake\Core\Plugin;
-use Cake\Datasource\ConnectionManager;
 use Cake\Database\Type;
+use Cake\Datasource\ConnectionManager;
+use Cake\Error\ErrorHandler;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Event\EventDispatcherInterface;
 use Cake\Event\EventDispatcherTrait;
@@ -21,8 +23,6 @@ use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
 use Cake\Routing\Router;
 use Cake\Utility\Security;
-use Cake\Console\ConsoleErrorHandler;
-use Cake\Error\ErrorHandler;
 
 /**
  * Application setup class.
@@ -47,7 +47,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
     protected $_debug = false;
 
     /**
-     * @param string $configDir
+     * @param string $configDir Path to config directory
      */
     public function __construct($configDir)
     {
@@ -67,7 +67,6 @@ class Application extends BaseApplication implements EventDispatcherInterface
      */
     public function bootstrap()
     {
-
         if (self::$_bootstrapped == true) {
             return;
         }
