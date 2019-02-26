@@ -1,7 +1,6 @@
 <?php
 use Cake\Cache\Cache;
 
-
 /**
  * Cache config
  */
@@ -20,6 +19,6 @@ if (!Cache::config('banana')) {
  */
 \Backend\View\Helper\FormatterHelper::register('status', function ($val, $extra, $params, $view) {
     $view->loadHelper('Banana.Status');
+
     return $view->Status->label($val);
 });
-
