@@ -45,7 +45,7 @@ class LocalizedEmail extends Email
     /**
      * Constructor
      *
-     * @param null $config
+     * @param null|string|array $config Email config
      */
     public function __construct($config = null)
     {
@@ -56,6 +56,7 @@ class LocalizedEmail extends Email
     /**
      * Get/Set the current email locale
      *
+     * @param null|string $locale Locale for email localization
      * @return null|string|$this
      */
     public function locale($locale = null)
@@ -71,7 +72,7 @@ class LocalizedEmail extends Email
     }
 
     /**
-     * Overriding parent profile() method
+     * {@inheritDoc}
      */
     public function profile($config = null)
     {
@@ -81,6 +82,9 @@ class LocalizedEmail extends Email
     /**
      * Overriding parent send() method.
      * Preserve original subject before sending.
+     *
+     * @param null|string $content Email content
+     * @return array
      */
     public function send($content = null)
     {
@@ -93,7 +97,7 @@ class LocalizedEmail extends Email
     /**
      * Reset locale on email reset
      *
-     * @return void;
+     * @return void
      */
     public function reset()
     {
@@ -106,6 +110,7 @@ class LocalizedEmail extends Email
      * Overloading parent _applyConfig() method
      * to parse translations config
      *
+     * @param array $config Email config
      * @return void
      */
     protected function _applyConfig($config)
@@ -124,6 +129,7 @@ class LocalizedEmail extends Email
     /**
      * Apply localized profile
      *
+     * @param string $locale Email locale
      * @return void
      */
     protected function _applyLocalizedConfig($locale)
