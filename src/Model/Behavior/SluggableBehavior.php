@@ -26,14 +26,6 @@ class SluggableBehavior extends Behavior
     ];
 
     /**
-     * @param array $config Behavior config
-     * @return void
-     */
-    public function initialize(array $config)
-    {
-    }
-
-    /**
      * Create an URL-friendly slug string
      *
      * @param Entity $entity Entity to create a slug for
@@ -76,7 +68,6 @@ class SluggableBehavior extends Behavior
     {
         $this->slug($entity);
     }
-
 
     /**
      * Automatically slug when saving.

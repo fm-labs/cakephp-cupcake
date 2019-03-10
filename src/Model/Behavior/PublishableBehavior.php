@@ -6,7 +6,6 @@ use Cake\Event\Event;
 use Cake\ORM\Behavior;
 use Cake\ORM\Entity;
 use Cake\ORM\Query;
-use Cake\Utility\Inflector;
 
 /**
  * Class PublishableBehavior
@@ -25,16 +24,22 @@ class PublishableBehavior extends Behavior
      * @param array $config Behavior config
      * @return void
      */
-    public function initialize(array $config)
-    {
-    }
+    //public function initialize(array $config)
+    //{
+    //}
 
+    /**
+     * @param Query $query
+     * @param array $options
+     * @return $this
+     */
     public function findPublished(Query $query, array $options)
     {
         $statusField = $query->repository()->alias() . '.' . $this->config('statusField');
         $options = array_merge([
             'published' => true
         ], $options);
+
         return $query->where([$statusField => $options['published']]);
     }
 
@@ -42,7 +47,7 @@ class PublishableBehavior extends Behavior
      * @param Event $event
      * @param Query $query
      * @param ArrayObject $options
-     * @param boolean $primary
+     * @param bool $primary
      */
     public function beforeFind(Event $event, Query $query, ArrayObject $options, $primary)
     {
@@ -61,17 +66,16 @@ class PublishableBehavior extends Behavior
      * @param $operation
      * @return void
      */
-    public function beforeRules(Event $event, Entity $entity, ArrayObject $options, $operation)
-    {
-    }
-
+    //public function beforeRules(Event $event, Entity $entity, ArrayObject $options, $operation)
+    //{
+    //}
 
     /**
      * @param Event $event The event
      * @param Entity $entity The entity
      * @return void
      */
-    public function beforeSave(Event $event, Entity $entity)
-    {
-    }
+    //public function beforeSave(Event $event, Entity $entity)
+    //{
+    //}
 }

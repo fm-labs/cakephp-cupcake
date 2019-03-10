@@ -2,6 +2,7 @@
 <html>
 <head>
     <?= $this->Html->charset() ?>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
         <?= $this->fetch('title') ?>
     </title>
@@ -12,17 +13,22 @@
     <?= $this->fetch('script') ?>
 </head>
 <body>
-<div id="container">
-    <div id="header">
-        <h1><?= $this->fetch('title') ?></h1>
-    </div>
-    <div id="content">
-        <?= $this->Flash->render() ?>
+    <header>
+        <div class="header-title">
+            <span><?= $this->fetch('title') ?></span>
+        </div>
+    </header>
+    <div id="container">
 
-        <?= $this->fetch('content') ?>
+        <div id="content">
+            <?= $this->Flash->render() ?>
+
+            <div class="row">
+                <?= $this->fetch('content') ?>
+            </div>
+        </div>
+        <footer>
+        </footer>
     </div>
-    <div id="footer">
-    </div>
-</div>
 </body>
 </html>

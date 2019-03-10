@@ -1,1 +1,0 @@
-<?php $this->extend('/Admin/Content/add_content_module'); ?>

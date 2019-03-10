@@ -1,5 +1,5 @@
 {
-    "name": "fm-labs/cakephp3-banana",
+    "name": "fm-labs/cakephp-banana",
     "description": "Banana plugin for CakePHP",
     "type": "cakephp-plugin",
     "require": {

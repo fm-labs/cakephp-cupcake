@@ -4,8 +4,12 @@ namespace Banana\Model\Behavior;
 use Cake\Event\Event;
 use Cake\ORM\Behavior;
 use Cake\ORM\Entity;
-use Cake\Utility\Inflector;
 
+/**
+ * Class CopyableBehavior
+ *
+ * @package Banana\Model\Behavior
+ */
 class CopyableBehavior extends Behavior
 {
     /**
@@ -18,15 +22,6 @@ class CopyableBehavior extends Behavior
     ];
 
     /**
-     * @param array $config Behavior config
-     * @return void
-     */
-    public function initialize(array $config)
-    {
-        // no op
-    }
-
-    /**
      * @param Entity $entity Entity to copy
      * @return Entity
      */
@@ -35,15 +30,12 @@ class CopyableBehavior extends Behavior
         $config = $this->config();
 
         if (!empty($config['includeFields'])) {
-
             $new = $this->_table->newEntity();
             foreach ($config['includeFields'] as $field) {
                 $new->set($field, $entity->get($field));
                 //$new->dirty($field, false);
             }
-        }
-        elseif (!empty($config['excludeFields'])) {
-
+        } elseif (!empty($config['excludeFields'])) {
             $new = clone($entity);
             foreach ($config['excludeFields'] as $field) {
                 $new->set($field, null);
@@ -57,13 +49,4 @@ class CopyableBehavior extends Behavior
 
         return $new;
     }
-
-    /**
-     * @param Event $event The event
-     * @param Entity $entity The entity
-     * @return void
-     */
-    //public function beforeSave(Event $event, Entity $entity)
-    //{
-    //}
 }
