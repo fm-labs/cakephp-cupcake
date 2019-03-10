@@ -1,27 +1,6 @@
 # BananaCake Core plugin
 
-A management plugin for [CakePHP](http://cakephp.org) applications with some extra batteries included.
-
-
-## Core Features
-
-- Plugin Manager
-- Theme Manager
-- Settings Manager
-- Multi-Site
-
-## Optional Features
-
-- Administration Interface
-- Content Manager
-- Mailman
-- MediaManager
-- Newsletter
-- Shop
-- Sitemap
-- File Upload
-- PDF Generator (with Tcpdf)
-- User Manager
+An extension for the awesome [CakePHP](http://cakephp.org) framework with some extra sugar added.
 
 ## Installation
 
