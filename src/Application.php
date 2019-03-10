@@ -1,8 +1,6 @@
 <?php
 namespace Banana;
 
-use Backend\Backend;
-use Backend\Routing\Middleware\BackendMiddleware;
 use Banana\Plugin\PluginInterface;
 use Banana\Plugin\PluginRegistry;
 use Cake\Cache\Cache;
@@ -35,11 +33,6 @@ class Application extends BaseApplication implements EventDispatcherInterface
     use EventDispatcherTrait;
 
     protected static $_bootstrapped = false;
-
-    /**
-     * @var Backend
-     */
-    protected $_backend;
 
     /**
      * @var boolean
@@ -214,10 +207,6 @@ class Application extends BaseApplication implements EventDispatcherInterface
 
             // Handle plugin/theme assets like CakePHP normally does.
             ->add(new AssetMiddleware())
-
-            // Auto-wire banana plugins
-            //->add(new BananaMiddleware())
-            ->add(new BackendMiddleware($this))
 
             // Apply routing
             ->add(new RoutingMiddleware());

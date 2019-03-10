@@ -278,9 +278,9 @@ class MultisiteApplication extends BaseApplication
         Plugin::load('Banana', ['bootstrap' => true, 'routes' => true]);
 
         // load core plugins
-        //PluginLoader::load('Settings', ['bootstrap' => true, 'routes' => false]); //@todo remove hard plugin dependency
-        PluginLoader::load('Backend', ['bootstrap' => true, 'routes' => true]); //@todo remove hard plugin dependency
-        PluginLoader::load('User', ['bootstrap' => true, 'routes' => true]); //@todo remove hard plugin dependency
+        //PluginLoader::load('Settings', ['bootstrap' => true, 'routes' => false]);
+        //PluginLoader::load('Backend', ['bootstrap' => true, 'routes' => true]);
+        //PluginLoader::load('User', ['bootstrap' => true, 'routes' => true]);
 
         // load configured plugins
         PluginLoader::loadAll();
