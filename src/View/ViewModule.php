@@ -78,7 +78,7 @@ abstract class ViewModule extends Cell
 
         if ($parent instanceof View) {
             $this->_View = $parent;
-        } elseif ($parent instanceof View) {
+        } elseif ($parent instanceof Controller) {
             $this->_Controller = $parent;
         }
     }

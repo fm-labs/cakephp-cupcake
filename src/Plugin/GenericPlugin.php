@@ -1,31 +1,14 @@
 <?php
 namespace Banana\Plugin;
 
-use Banana\Application;
-use Cake\Http\MiddlewareQueue;
-use Cake\Routing\RouteBuilder;
-
-class GenericPlugin implements PluginInterface
+class GenericPlugin extends BasePlugin
 {
-
-    /**
-     * {@inheritDoc}
-     */
-    public function bootstrap(Application $app)
+    public function __construct(array $config)
     {
-    }
+        if (isset($config['name'])) {
+            $this->_name = $config['name'];
+        }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function routes(RouteBuilder $routes)
-    {
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function middleware(MiddlewareQueue $middleware)
-    {
+        parent::__construct($config);
     }
 }

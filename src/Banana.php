@@ -2,6 +2,7 @@
 
 namespace Banana;
 
+use Banana\Plugin\PluginRegistry;
 use Cake\Core\Configure;
 
 /**
@@ -14,6 +15,8 @@ use Cake\Core\Configure;
  */
 class Banana
 {
+    const VERSION = "0.4.0";
+
     /**
      * @var string Default mailer class
      */
@@ -79,6 +82,16 @@ class Banana
     }
 
     /**
+     * Get Banana Cake version
+     *
+     * @return string
+     */
+    public static function version()
+    {
+        return self::VERSION;
+    }
+
+    /**
      * Singleton instance constructor
      * @param Application $app
      */
@@ -87,11 +100,17 @@ class Banana
         $this->_app = $app;
     }
 
+    /**
+     * @return PluginRegistry
+     */
     public function plugins()
     {
         return $this->_app->plugins();
     }
 
+    /**
+     * @return Application
+     */
     public function app()
     {
         return $this->_app;

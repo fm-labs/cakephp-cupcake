@@ -17,5 +17,5 @@ interface EntityTypeInterface
      * @param EntityInterface $entity
      * @return mixed
      */
-    public function setEntity(EntityInterface $entity);
+    public function __construct(EntityInterface $entity);
 }

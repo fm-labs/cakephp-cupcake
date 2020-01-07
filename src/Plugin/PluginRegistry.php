@@ -3,10 +3,6 @@ namespace Banana\Plugin;
 
 use Banana\Exception\MissingPluginHandlerException;
 use Cake\Core\ObjectRegistry;
-use Cake\Event\Event;
-use Cake\Event\EventDispatcherInterface;
-use Cake\Event\EventListenerInterface;
-use Cake\Event\EventManager;
 use RuntimeException;
 
 /**
@@ -14,6 +10,7 @@ use RuntimeException;
  */
 class PluginRegistry extends ObjectRegistry
 {
+    static public $fallbackPluginClass = "\\Banana\\Plugin\\GenericPlugin";
 
     /**
      * Throws an exception when a plugin handler is missing.
@@ -38,23 +35,38 @@ class PluginRegistry extends ObjectRegistry
      */
     protected function _resolveClassName($class)
     {
-        if (!$class) { // if FALSE is passed as a className we skip plugin loading
-            return '\\Banana\\Plugin\\GenericPlugin';
+        // Fallback if FALSE has been passed as a className
+        if (!$class) {
+            return self::$fallbackPluginClass;
         }
 
         if (is_string($class)) {
-            if (class_exists($class)) { // enables class path definition
+            // custom className
+            if (class_exists($class)) {
+                return $class;
+            }
+            // custom class not found
+            //if (strpos($class, "\\") !== false) {
+            //    return false;
+            //}
+
+            $plugin = $class;
+
+            // Find plugin class by CakePHP convention: {PluginName}\\Plugin
+            // Compatibility with CakePHP 3.6+
+            $class = $plugin . '\\Plugin';
+            if (class_exists($class)) {
                 return $class;
             }
 
-            $plugin = $class;
+            // Find plugin class by Banana convention: {PluginName}\\{PluginName}Plugin
             $class = $plugin . '\\' . $plugin . 'Plugin';
             if (class_exists($class)) {
                 return $class;
             }
 
-            // Fallback to generic
-            return '\\Banana\\Plugin\\GenericPlugin';
+            // Fallback
+            return self::$fallbackPluginClass;
         }
 
         return $class;
@@ -85,26 +97,38 @@ class PluginRegistry extends ObjectRegistry
             $instance = new $class($settings);
         }
 
-        /*
         if ($instance instanceof PluginInterface) {
             return $instance;
         }
 
         throw new RuntimeException(
-            'Plugin handler must be set directly.'
+            'Plugin handler for ' . $alias . ' must be a subclass of \\Banana\\Plugin\\BasePlugin'
         );
-        */
-        return $instance;
     }
 
     /**
-     * Get loaded plugin handler instance
+     * Get plugin handler instance.
      *
-     * @param string $name
+     * @param string $name Plugin name
      * @return null|PluginInterface
      */
     public function get($name)
     {
         return parent::get($name);
+    }
+
+    /**
+     * Load plugin.
+     * Injects plugin name into plugin config.
+     *
+     * @param string $objectName Plugin name
+     * @param array $config Plugin config
+     * @return null|PluginInterface
+     */
+    public function load($objectName, $config = [])
+    {
+        $config['name'] = $objectName;
+
+        return parent::load($objectName, $config);
     }
 }

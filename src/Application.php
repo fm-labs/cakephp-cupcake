@@ -15,11 +15,13 @@ use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Event\EventDispatcherInterface;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\BaseApplication;
+use Cake\Http\MiddlewareQueue;
 use Cake\Log\Log;
 use Cake\Mailer\Email;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
 use Cake\Routing\Router;
+use Cake\Utility\Inflector;
 use Cake\Utility\Security;
 
 /**
@@ -46,7 +48,6 @@ class Application extends BaseApplication implements EventDispatcherInterface
     {
         parent::__construct($configDir);
 
-        //$this->_pluginManager = new PluginManager($this->eventManager());
         $this->_configEngine = new PhpConfig($this->configDir . DS);
         $this->_plugins = new PluginRegistry();
     }
@@ -91,7 +92,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
          * Bootstrap cake core
          */
         if (!defined('CORE_PATH')) {
-            die('CORE_PATH is not defined. [SITE ID: ' . BC_SITE_ID . ']');
+            die('CORE_PATH is not defined');
         }
         require_once CORE_PATH . 'config' . DS . 'bootstrap.php';
 
@@ -119,33 +120,24 @@ class Application extends BaseApplication implements EventDispatcherInterface
         $this->_localConfigs();
         $this->_applyConfig();
         $this->_debugMode(Configure::read('debug'));
-
         /*
          * Load Banana plugin and other plugins defined in core config
          */
-        Plugin::load('Banana', ['bootstrap' => true, 'routes' => false]);
-        Plugin::load(Configure::read('Plugin'), ['bootstrap' => true, 'routes' => true, 'ignoreMissing' => true]);
+        $this->addPlugin('Banana');
+        $this->addPlugin(Configure::read('Plugin'));
 
         /*
          * Include app's bootstrap file
          */
         parent::bootstrap();
-        //require_once $this->configDir . '/bootstrap.php';
+
+        $this->initLegacyPlugins();
+        $this->initRoutes();
 
         /*
          * Init Banana plugins
          */
         Banana::init($this);
-        $this->_pluginsLoad();
-        $this->_pluginsBootstrap();
-
-        /*
-         * Init Routes
-         * @todo move routes out of bootstrap block
-         */
-        Router::routes(); // Make sure app 'routes.php' is loaded
-        //Plugin::routes(); // Make sure 'routes.php' is included for each loaded plugin
-        $this->_pluginsRoutes(); // Invoke 'routes' method on each enabled plugin handler
     }
 
     /**
@@ -155,15 +147,38 @@ class Application extends BaseApplication implements EventDispatcherInterface
      * @param array $config Plugin config
      * @return $this
      */
-    public function addPlugin($name, array $config)
+    public function addPlugin($name, array $config = [])
     {
-        $this->plugins()->load($name, $config);
+        if (is_array($name)) {
+            foreach ($name as $_name => $_config) {
+                if (is_numeric($_name)) {
+                    $_name = $_config;
+                    $_config = [];
+                }
+                $this->addPlugin($_name, $_config);
+            }
+
+            return $this;
+        }
+
+        if (!Plugin::loaded($name)) {
+            Plugin::load($name, ['bootstrap' => false, 'routes' => true, 'ignoreMissing' => true]);
+        }
+
+        if (!$this->plugins()->has($name)) {
+            $Plugin = $this->plugins()->load($name, $config);
+
+            if ($Plugin instanceof PluginInterface) {
+                $Plugin->bootstrap($this);
+            }
+        }
 
         return $this;
     }
 
     /**
      * Get plugin info
+     * @param string $pluginName Plugin name
      * @return array
      */
     public function getPluginInfo($pluginName)
@@ -211,7 +226,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
             // Apply routing
             ->add(new RoutingMiddleware());
 
-        $middleware = $this->_pluginsMiddleware($middleware);
+        $middleware = $this->initMiddleware($middleware);
 
         return $middleware;
     }
@@ -330,6 +345,12 @@ class Application extends BaseApplication implements EventDispatcherInterface
         Email::config(Configure::consume('Email'));
     }
 
+    /**
+     * Enable / Disable debug mode
+     *
+     * @param bool $enabled Debug mode flag
+     * @return void
+     */
     protected function _debugmode($enabled)
     {
         if ($enabled) {
@@ -361,8 +382,10 @@ class Application extends BaseApplication implements EventDispatcherInterface
      * Load the plugin handler for all loaded plugins.
      * Uses reflection on the Cake's Plugin class to read the plugin config.
      * Automatically passes plugin config
+     *
+     * @return void
      */
-    protected function _pluginsLoad()
+    protected function initLegacyPlugins()
     {
         $r = new \ReflectionClass('\\Cake\\Core\\Plugin');
         $sProps = $r->getStaticProperties();
@@ -371,37 +394,50 @@ class Application extends BaseApplication implements EventDispatcherInterface
 
         //foreach (Plugin::loaded() as $name) {
         foreach ($loadedPlugins as $name => $config) {
-            $pluginConfig = Configure::read($name);
-            $config['config'] = (array)$pluginConfig;
+            //$pluginConfig = Configure::read($name);
+            //$config['config'] = (array)$pluginConfig;
+            //debug($config);
             try {
-                $this->plugins()->load($name, $config);
+                //$this->plugins()->load($name, $config);
+                $this->addPlugin($name, $config);
             } catch (\Exception $ex) {
                 Log::error('Application: ' . $ex->getMessage());
             }
         }
     }
 
-    protected function _pluginsBootstrap()
+    /**
+     * Initialize plugin routes
+     *
+     * @return void
+     */
+    protected function initRoutes()
     {
+        Router::routes(); // Make sure app 'routes.php' is loaded
+
         foreach ($this->plugins()->loaded() as $name) {
             $instance = $this->plugins()->get($name);
             if ($instance instanceof PluginInterface) {
-                $instance->bootstrap($this);
+                Router::plugin(
+                    $name,
+                    [
+                        'plugin' => $name,
+                        //'path' => '/' . Inflector::underscore($name),
+                        //'_namePrefix' => Inflector::underscore($name) . ':'
+                    ],
+                    [$instance, 'routes']
+                );
             }
         }
     }
 
-    protected function _pluginsRoutes()
-    {
-        foreach ($this->plugins()->loaded() as $name) {
-            $instance = $this->plugins()->get($name);
-            if ($instance instanceof PluginInterface) {
-                Router::plugin($name, ['plugin' => $name], [$instance, 'routes']);
-            }
-        }
-    }
-
-    protected function _pluginsMiddleware($middleware)
+    /**
+     * Initialize plugin middlewares
+     *
+     * @param MiddlewareQueue $middleware The middleware stack
+     * @return MiddlewareQueue
+     */
+    protected function initMiddleware($middleware)
     {
         foreach ($this->plugins()->loaded() as $name) {
             $instance = $this->plugins()->get($name);

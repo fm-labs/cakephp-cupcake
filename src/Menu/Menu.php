@@ -30,8 +30,8 @@ class Menu implements \Iterator
     private $_itpos;
 
     /**
-     * @param array $items
-     * @param array $attr
+     * @param array $items Initial item list
+     * @param array $attr Menu attributes
      */
     public function __construct($items = [], $attr = [])
     {
@@ -42,7 +42,7 @@ class Menu implements \Iterator
     }
 
     /**
-     * @param $key
+     * @param string $key Attribute name
      * @return mixed
      */
     public function __get($key)
@@ -51,7 +51,7 @@ class Menu implements \Iterator
     }
 
     /**
-     * @param $key
+     * @param string $key Attribute name
      * @return mixed
      */
     public function getAttribute($key)
@@ -59,6 +59,8 @@ class Menu implements \Iterator
         if (isset($this->_attr[$key])) {
             return $this->_attr[$key];
         }
+
+        return null;
     }
 
     /**
@@ -78,10 +80,10 @@ class Menu implements \Iterator
     }
 
     /**
-     * @param $title
-     * @param null $url
-     * @param array $attr
-     * @param array $children
+     * @param string|array|MenuItem $title A menu item array or object or title string
+     * @param null $url Item url
+     * @param array $attr Item attributes
+     * @param array|Menu $children Item subitems
      * @return MenuItem
      */
     public function &addItem($title, $url = null, $attr = [], $children = [])
@@ -99,15 +101,23 @@ class Menu implements \Iterator
         return $this->_items[$hash];
     }
 
+    /**
+     * @param array $items List of menu items
+     * @return $this
+     */
     public function addItems(array $items)
     {
         foreach ($items as $item) {
             $this->addItem($item);
         }
+
+        return $this;
     }
 
     /**
-     * @param MenuItem $item
+     * @param MenuItem $item The instance of the item to remove
+     *
+     * @return $this
      */
     public function removeItem(MenuItem $item)
     {
@@ -115,6 +125,8 @@ class Menu implements \Iterator
         if (isset($this->_items[$hash])) {
             unset($this->_items[$hash]);
         }
+
+        return $this;
     }
 
     /**
@@ -179,7 +191,7 @@ class Menu implements \Iterator
      * (PHP 5 &gt;= 5.0.0)<br/>
      * Checks if current position is valid
      * @link http://php.net/manual/en/iterator.valid.php
-     * @return boolean The return value will be casted to boolean and then evaluated.
+     * @return bool The return value will be casted to boolean and then evaluated.
      * Returns true on success or false on failure.
      */
     public function valid()

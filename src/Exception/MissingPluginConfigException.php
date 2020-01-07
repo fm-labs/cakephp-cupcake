@@ -2,13 +2,13 @@
 
 namespace Banana\Exception;
 
-use Cake\Core\Exception\MissingPluginException;
+use Cake\Core\Exception\Exception;
 
 /**
  * Class MissingPluginConfigException
  * @package Banana\Exception
  */
-class MissingPluginConfigException extends MissingPluginException
+class MissingPluginConfigException extends Exception
 {
     /**
      * @var string

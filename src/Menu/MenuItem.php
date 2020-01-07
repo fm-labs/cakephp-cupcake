@@ -2,8 +2,6 @@
 
 namespace Banana\Menu;
 
-use Cake\Collection\Collection;
-
 /**
  * Class MenuItem
  * @package Banana\Menu
@@ -32,7 +30,7 @@ class MenuItem implements \ArrayAccess
     protected $_attr;
 
     /**
-     * @var array
+     * @var Menu
      */
     protected $_children;
 
@@ -40,7 +38,7 @@ class MenuItem implements \ArrayAccess
      * @param string|array $title
      * @param null $url
      * @param array $attr
-     * @param array $children
+     * @param Menu|array $children
      */
     public function __construct($title, $url = null, array $attr = [], $children = [])
     {
@@ -56,7 +54,6 @@ class MenuItem implements \ArrayAccess
         $this->_title = $title;
         $this->_url = $url;
         $this->_attr = $attr;
-
         $this->setChildren($children);
     }
 
@@ -93,33 +90,42 @@ class MenuItem implements \ArrayAccess
     }
 
     /**
-     * @param Menu|Collection|array $children
+     * @param Menu|array $children Menu item children
+     * @param bool $append If True, append children instead of replacing existing items (default: false)
+     * @return $this
      */
-    public function setChildren($children)
+    public function setChildren($children, $append = false)
     {
-        if (is_array($children)) {
-            $_children = [];
-            foreach ($children as $child) {
-                if (!is_object($child)) {
-                    $child = MenuItem::fromArray($child);
-                }
-                $_children[] = $child;
-            }
-            $children = $_children;
+        if ($append == false) {
+            $this->_children = new Menu();
         }
 
-        $this->_children = $children;
+        if ($children instanceof Menu) {
+            $this->_children = $children;
+        } elseif (is_array($children)) {
+            $this->_children->addItems($children);
+        }
+
+        return $this;
     }
 
+    /**
+     * Alias for setChildren (auto-append)
+     *
+     * @param Menu|array $children Menu item children
+     * @return $this
+     */
+    public function addChildren($children)
+    {
+        return $this->setChildren($children, true);
+    }
+
+    /**
+     * @return $this
+     */
     public function addChild($title, $url = null, $attr = [], $children = [])
     {
-        if (is_array($title)) {
-            $item = MenuItem::fromArray($title);
-        } else {
-            $item = new MenuItem($title, $url, $attr, $children);
-        }
-
-        $this->_children[spl_object_hash($item)] = $item;
+        $this->_children->addItem($title, $url, $attr, $children);
 
         return $this;
     }
@@ -133,12 +139,12 @@ class MenuItem implements \ArrayAccess
             'title' => $this->_title,
             'url' => $this->_url,
             'attr' => $this->_attr,
-            'children' => $this->_children
+            'children' => $this->_children->toArray()
         ];
     }
 
     /**
-     * @param $key
+     * @param string $key Property name
      * @return mixed
      */
     public function __get($key)
@@ -153,7 +159,7 @@ class MenuItem implements \ArrayAccess
      * @param mixed $offset <p>
      * An offset to check for.
      * </p>
-     * @return boolean true on success or false on failure.
+     * @return bool true on success or false on failure.
      * </p>
      * <p>
      * The return value will be casted to boolean if non-boolean was returned.
@@ -218,6 +224,7 @@ class MenuItem implements \ArrayAccess
                 $this->setChildren($value);
                 break;
             default:
+                break;
         }
     }
 
@@ -246,10 +253,15 @@ class MenuItem implements \ArrayAccess
      * ['title' => TITLE, 'url' => URL, 'children' => CHILDREN, 'foo' =>'bar']
      *
      * ['title' => TITLE, 'url' => URL, 'children' => CHILDREN, 'attr' => ['foo' => 'bar']]
+     *
+     * @param array $item Menu item array
+     * @return self
      */
     public static function fromArray(array $item)
     {
-        $title = $url = $attr = $children = null;
+        $title = $url = null;
+        $attr = $children = [];
+
         if (isset($item[0])) {
             list($title, $url, $attr, $children) = $item;
         } else {
@@ -262,6 +274,6 @@ class MenuItem implements \ArrayAccess
             $attr += array_diff_key($item, ['title' => null, 'url' => null, 'children' => null, 'attr' => null]);
         }
 
-        return new MenuItem($title, $url, (array)$attr, (array)$children);
+        return new self($title, $url, $attr, $children);
     }
 }

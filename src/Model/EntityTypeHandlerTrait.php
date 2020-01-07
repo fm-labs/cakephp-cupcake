@@ -12,6 +12,9 @@ use Cake\Utility\Inflector;
  */
 trait EntityTypeHandlerTrait
 {
+    //protected $_typeField = 'type';
+    //protected $_typeNamespace = null;
+
     /**
      * @var EntityTypeInterface Type handler instance
      */
@@ -21,7 +24,7 @@ trait EntityTypeHandlerTrait
      * @return EntityTypeInterface
      * @throws \Exception
      */
-    public function handler()
+    protected function handler()
     {
         if ($this->_typeHandler === null) {
             //if (!($this instanceof EntityInterface)) {
@@ -38,13 +41,23 @@ trait EntityTypeHandlerTrait
                 throw new \InvalidArgumentException('Type handler namespace not defined');
             }
 
-            $handler = ClassRegistry::get($ns, $type);
+            //$handler = ClassRegistry::get($ns, $type);
+            $handlerClass = ClassRegistry::getClass($ns, $type);
+            if (!$handlerClass) {
+                throw new \Exception("No type handler class for $ns:$type");
+            }
+            if (!class_exists($handlerClass)) {
+                throw new \Exception("Type handler class not found $ns:$type");
+            }
+
+            $handler = new $handlerClass($this);
+
             if (!($handler instanceof EntityTypeInterface)) {
                 throw new \Exception(sprintf("Type handler MUST be an instance of EntityTypeInterface"));
             }
 
             $this->_typeHandler = $handler;
-            $this->_typeHandler->setEntity($this);
+            //$this->_typeHandler->setEntity($this);
         }
 
         return $this->_typeHandler;
