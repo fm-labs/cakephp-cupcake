@@ -35,7 +35,7 @@ class PublishableBehavior extends Behavior
      */
     public function findPublished(Query $query, array $options)
     {
-        $statusField = $query->repository()->alias() . '.' . $this->config('statusField');
+        $statusField = $query->repository()->alias() . '.' . $this->getConfig('statusField');
         $options = array_merge([
             'published' => true
         ], $options);

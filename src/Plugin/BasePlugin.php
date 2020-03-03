@@ -25,7 +25,7 @@ abstract class BasePlugin /*implements PluginInterface*/ extends \Cake\Core\Base
             throw new Exception("Misconfigured plugin: Undefined name in " . get_class($this));
         }
 
-        $this->config($config);
+        $this->setConfig($config);
     }
 
     public function bootstrap(Application $app)

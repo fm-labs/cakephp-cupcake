@@ -27,7 +27,7 @@ class CopyableBehavior extends Behavior
      */
     public function copyEntity(Entity $entity)
     {
-        $config = $this->config();
+        $config = $this->getConfig();
 
         if (!empty($config['includeFields'])) {
             $new = $this->_table->newEntity();

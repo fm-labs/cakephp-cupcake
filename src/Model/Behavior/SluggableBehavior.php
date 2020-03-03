@@ -33,7 +33,7 @@ class SluggableBehavior extends Behavior
      */
     public function slug(Entity $entity)
     {
-        $config = $this->config();
+        $config = $this->getConfig();
         $slug = $entity->get($config['slug']);
 
         if ($slug && !$entity->dirty($config['slug'])) {
