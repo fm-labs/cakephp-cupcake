@@ -18,6 +18,7 @@ use Cake\Http\BaseApplication;
 use Cake\Http\MiddlewareQueue;
 use Cake\Log\Log;
 use Cake\Mailer\Email;
+use Cake\Mailer\TransportFactory;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
 use Cake\Routing\Router;
@@ -49,7 +50,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
         parent::__construct($configDir);
 
         $this->_configEngine = new PhpConfig($this->configDir . DS);
-        $this->_plugins = new PluginRegistry();
+        //$this->_plugins = new PluginRegistry();
     }
 
     /**
@@ -124,15 +125,15 @@ class Application extends BaseApplication implements EventDispatcherInterface
          * Load Banana plugin and other plugins defined in core config
          */
         $this->addPlugin('Banana');
-        $this->addPlugin(Configure::read('Plugin'));
+        $this->addPlugin(Configure::read('Plugin'), ['bootstrap' => true, 'routes' => true]);
 
         /*
          * Include app's bootstrap file
          */
         parent::bootstrap();
 
-        $this->initLegacyPlugins();
-        $this->initRoutes();
+        //$this->initLegacyPlugins();
+        //$this->initRoutes();
 
         /*
          * Init Banana plugins
@@ -161,6 +162,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
             return $this;
         }
 
+        /*
         if (!Plugin::loaded($name)) {
             Plugin::load($name, ['bootstrap' => false, 'routes' => true, 'ignoreMissing' => true]);
         }
@@ -174,6 +176,9 @@ class Application extends BaseApplication implements EventDispatcherInterface
         }
 
         return $this;
+        */
+
+        return parent::addPlugin($name, $config);
     }
 
     /**
@@ -191,8 +196,8 @@ class Application extends BaseApplication implements EventDispatcherInterface
         $info['classPath'] = Plugin::classPath($pluginName);
         //$info['registered'] = in_array($pluginName, Plugin::loaded());
         $info['registered'] = true;
-        $info['handler_loaded'] = $this->plugins()->has($pluginName);
-        $info['handler_class'] = get_class($this->plugins()->get($pluginName));
+        $info['handler_loaded'] = $this->getPlugins()->has($pluginName);
+        $info['handler_class'] = get_class($this->getPlugins()->get($pluginName));
         $info['handler_enabled'] = true;
 
         return $info;
@@ -200,37 +205,42 @@ class Application extends BaseApplication implements EventDispatcherInterface
 
     /**
      * Get plugin registry instance
+     * @deprecated Use getPlugins() instead. getPlugins() returns PluginCollection
      * @return PluginRegistry
      */
     public function plugins()
     {
-        return $this->_plugins;
+        return $this->getPlugins();
     }
 
     /**
-     * Setup the middleware your application will use.
+     * Setup the middleware queue your application will use.
      *
-     * @param \Cake\Http\MiddlewareQueue $middleware The middleware queue to setup.
-     * @return \Cake\Http\MiddlewareQueue The updated middleware.
+     * @param \Cake\Http\MiddlewareQueue $middlewareQueue The middleware queue to setup.
+     * @return \Cake\Http\MiddlewareQueue The updated middleware queue.
      */
-    public function middleware($middleware)
+    public function middleware($middlewareQueue)
     {
-        $middleware
+        $middlewareQueue
             // Catch any exceptions in the lower layers,
             // and make an error page/response
-            ->add(new ErrorHandlerMiddleware(Configure::read('Error.exceptionRenderer')))
+            ->add(new ErrorHandlerMiddleware(null, Configure::read('Error')))
 
             // Handle plugin/theme assets like CakePHP normally does.
-            ->add(new AssetMiddleware())
+            ->add(new AssetMiddleware([
+                'cacheTime' => Configure::read('Asset.cacheTime')
+            ]))
 
-            // Apply routing
-            ->add(new RoutingMiddleware());
+            // Add routing middleware.
+            // If you have a large number of routes connected, turning on routes
+            // caching in production could improve performance. For that when
+            // creating the middleware instance specify the cache config name by
+            // using it's second constructor argument:
+            // `new RoutingMiddleware($this, '_cake_routes_')`
+            ->add(new RoutingMiddleware($this));
 
-        $middleware = $this->initMiddleware($middleware);
-
-        return $middleware;
+        return $middlewareQueue;
     }
-
     /**
      * Auto-load local configurations
      */
@@ -337,12 +347,12 @@ class Application extends BaseApplication implements EventDispatcherInterface
          * Consume configurations
          */
         //debug(Configure::read());
-        ConnectionManager::config(Configure::consume('Datasources'));
-        Cache::config(Configure::consume('Cache'));
-        Log::config(Configure::consume('Log'));
-        Security::salt(Configure::consume('Security.salt'));
-        Email::configTransport(Configure::consume('EmailTransport'));
-        Email::config(Configure::consume('Email'));
+        ConnectionManager::setConfig(Configure::consume('Datasources'));
+        Cache::setConfig(Configure::consume('Cache'));
+        Log::setConfig(Configure::consume('Log'));
+        Security::setSalt(Configure::consume('Security.salt'));
+        TransportFactory::setConfig(Configure::consume('EmailTransport'));
+        Email::setConfig(Configure::consume('Email'));
     }
 
     /**
@@ -362,9 +372,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
                 }
 
                 try {
-                    // set 'routes' to FALSE to prevent the routes to be added twice,
-                    // as DebugKit routes are already enforced by it's bootstrap file
-                    Plugin::load('DebugKit', ['bootstrap' => true, 'routes' => false]);
+                    $this->addPlugin('DebugKit');
                 } catch (\Exception $ex) {
                     //debug("DebugKit: " . $ex->getMessage());
                 }

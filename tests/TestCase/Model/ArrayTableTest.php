@@ -20,7 +20,7 @@ class ArrayTableTest extends TestCase
      */
     protected function _table()
     {
-        return TableRegistry::get('TestArray');
+        return TableRegistry::getTableLocator()->get('TestArray');
     }
 
     public function testConstruct()

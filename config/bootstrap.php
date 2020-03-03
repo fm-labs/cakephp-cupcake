@@ -4,8 +4,8 @@ use Cake\Cache\Cache;
 /**
  * Cache config
  */
-if (!Cache::config('banana')) {
-    Cache::config('banana', [
+if (!Cache::getConfig('banana')) {
+    Cache::setConfig('banana', [
         'className' => 'File',
         'duration' => '+1 hours',
         'path' => CACHE,

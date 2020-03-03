@@ -23,7 +23,7 @@ class PluginSetup
      */
     public function setupEntityType($typeName, $config)
     {
-        $EntityTypes = TableRegistry::get('Eav.EntityTypes');
+        $EntityTypes = TableRegistry::getTableLocator()->get('Eav.EntityTypes');
 
         $entityType = $EntityTypes->find()->where(['name' => $typeName])->first();
         if (!$entityType) {
@@ -44,7 +44,7 @@ class PluginSetup
      */
     public function setupAttributeGroup($code, $config)
     {
-        $AttributeGroups = TableRegistry::get('Eav.AttributeGroups');
+        $AttributeGroups = TableRegistry::getTableLocator()->get('Eav.AttributeGroups');
 
         $attributeGroup = $AttributeGroups->find()->where(['name' => $code])->first();
         if (!$attributeGroup) {
@@ -65,7 +65,7 @@ class PluginSetup
      */
     public function setupAttribute($code, $config)
     {
-        $Attributes = TableRegistry::get('Eav.Attributes');
+        $Attributes = TableRegistry::getTableLocator()->get('Eav.Attributes');
 
         $attribute = $Attributes->find()->where(['name' => $code])->first();
         if (!$attribute) {

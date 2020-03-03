@@ -35,7 +35,7 @@ class InputSchemaTableTest extends TestCase
      */
     protected function _table()
     {
-        return TableRegistry::get('TestInputSchema');
+        return TableRegistry::getTableLocator()->get('TestInputSchema');
     }
 
     /**

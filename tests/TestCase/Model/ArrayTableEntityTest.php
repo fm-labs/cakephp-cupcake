@@ -36,7 +36,7 @@ class ArrayTableEntityTest extends TestCase
         TableRegistry::config('TestArray', [
             'className' => 'Banana\Test\TestCase\Model\Table\TestArrayTable'
         ]);
-        $this->Table = TableRegistry::get('TestArray');
+        $this->Table = TableRegistry::getTableLocator()->get('TestArray');
     }
 
     public function testNewEntity()

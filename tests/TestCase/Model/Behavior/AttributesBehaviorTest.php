@@ -29,7 +29,7 @@ class AttributesBehaviorTest extends TestCase
     {
         parent::setUp();
 
-        $this->table = TableRegistry::get('Banana.Posts');
+        $this->table = TableRegistry::getTableLocator()->get('Banana.Posts');
         $this->table->behaviors()->load('Banana.Attributes');
     }
 

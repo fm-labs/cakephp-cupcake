@@ -23,7 +23,7 @@ class PublishableBehaviorTest extends TestCase
 
     public function setUp()
     {
-        $this->Model = TableRegistry::get('Posts');
+        $this->Model = TableRegistry::getTableLocator()->get('Posts');
         $this->Model->addBehavior('Banana.Publishable', []);
     }
 

@@ -17,7 +17,7 @@ class DatatypesTest extends TestCase
 
     public function setUp()
     {
-        $this->table = TableRegistry::get('Banana.Datatypes');
+        $this->table = TableRegistry::getTableLocator()->get('Banana.Datatypes');
         $this->table->schema()->columnType('json', 'json');
         $this->table->schema()->columnType('serialized', 'serialize');
         //$this->table->schema()->columnType('base64', 'base64');

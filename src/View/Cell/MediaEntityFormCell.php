@@ -14,7 +14,7 @@ class MediaEntityFormCell extends Cell
         $fields = [];
 
         if ($params['modelClass']) {
-            $Model = TableRegistry::get($params['modelClass']);
+            $Model = TableRegistry::getTableLocator()->get($params['modelClass']);
             if ($Model->hasBehavior('Media')) {
                 $fields = $Model->getMediaFields();
             }

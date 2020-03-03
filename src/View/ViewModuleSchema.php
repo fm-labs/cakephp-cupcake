@@ -106,7 +106,7 @@ class ViewModuleSchema extends Schema
         if (array_key_exists('model', $options)) {
             try {
                 //@ todo Implement custom finder for view modules
-                $options['options'] = TableRegistry::get($options['model'])->find('list')->toArray();
+                $options['options'] = TableRegistry::getTableLocator()->get($options['model'])->find('list')->toArray();
             } catch (\Exception $ex) {
                 Log::error(sprintf('ViewModuleSchema: Unable to read select option list from model %s', $options['model']));
             }

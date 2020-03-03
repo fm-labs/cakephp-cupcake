@@ -27,6 +27,6 @@ class CsvTableTest extends ArrayTableTest
      */
     protected function _table()
     {
-        return TableRegistry::get('TestCsv');
+        return TableRegistry::getTableLocator()->get('TestCsv');
     }
 }

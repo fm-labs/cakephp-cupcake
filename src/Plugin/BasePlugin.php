@@ -1,15 +1,18 @@
 <?php
 namespace Banana\Plugin;
 
+/*
 use Banana\Application;
 use Cake\Core\Exception\Exception;
 use Cake\Core\InstanceConfigTrait;
 use Cake\Core\Plugin;
 use Cake\Http\MiddlewareQueue;
 use Cake\Routing\RouteBuilder;
+*/
 
-abstract class BasePlugin implements PluginInterface
+abstract class BasePlugin /*implements PluginInterface*/ extends \Cake\Core\BasePlugin
 {
+    /*
     use InstanceConfigTrait;
 
     protected $_defaultConfig = [];
@@ -25,9 +28,6 @@ abstract class BasePlugin implements PluginInterface
         $this->config($config);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function bootstrap(Application $app)
     {
         $file = Plugin::configPath($this->_name) . 'bootstrap.php';
@@ -36,19 +36,14 @@ abstract class BasePlugin implements PluginInterface
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function routes(RouteBuilder $routes)
     {
         return $routes;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function middleware(MiddlewareQueue $middleware)
     {
         return $middleware;
     }
+    */
 }
