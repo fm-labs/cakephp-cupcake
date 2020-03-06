@@ -21,8 +21,8 @@ class TestInputSchemaTable extends Table implements TableInputSchemaInterface
      */
     public function initialize(array $config)
     {
-        $this->table('posts');
-        $this->primaryKey('id');
+        $this->setTable('posts');
+        $this->setPrimaryKey('id');
         $this->addBehavior('Timestamp');
     }
 

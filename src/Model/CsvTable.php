@@ -43,7 +43,7 @@ class CsvTable extends ArrayTable
         $this->_config = $config;
 
         $this->_behaviors = new BehaviorRegistry();
-        $this->_behaviors->eventManager()->unsetEventList();
+        $this->_behaviors->getEventManager()->unsetEventList();
 
         $this->initialize();
     }

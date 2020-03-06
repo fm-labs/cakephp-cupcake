@@ -15,6 +15,9 @@ use Cake\Core\Configure;
  */
 class Banana
 {
+    /**
+     * @deprecated
+     */
     const VERSION = "0.4.0";
 
     /**

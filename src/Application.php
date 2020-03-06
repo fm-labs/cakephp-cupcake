@@ -154,7 +154,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
             foreach ($name as $_name => $_config) {
                 if (is_numeric($_name)) {
                     $_name = $_config;
-                    $_config = [];
+                    $_config = $config;
                 }
                 $this->addPlugin($_name, $_config);
             }
@@ -195,10 +195,12 @@ class Application extends BaseApplication implements EventDispatcherInterface
         $info['config'] = Plugin::configPath($pluginName);
         $info['classPath'] = Plugin::classPath($pluginName);
         //$info['registered'] = in_array($pluginName, Plugin::loaded());
-        $info['registered'] = true;
+        //$info['registered'] = true;
         $info['handler_loaded'] = $this->getPlugins()->has($pluginName);
-        $info['handler_class'] = get_class($this->getPlugins()->get($pluginName));
-        $info['handler_enabled'] = true;
+        $info['handler_class'] = $this->getPlugins()->has($pluginName) ? get_class($this->getPlugins()->get($pluginName)) : null;
+        $info['handler_bootstrap'] = $this->getPlugins()->has($pluginName) ? $this->getPlugins()->get($pluginName)->isEnabled('bootstrap') : null;
+        $info['handler_routes'] = $this->getPlugins()->has($pluginName) ? $this->getPlugins()->get($pluginName)->isEnabled('routes') : null;
+        //$info['handler_enabled'] = true;
 
         return $info;
     }

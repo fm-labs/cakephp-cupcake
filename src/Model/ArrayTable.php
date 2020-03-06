@@ -62,7 +62,7 @@ abstract class ArrayTable implements RepositoryInterface
         $this->_config = $config;
 
         $this->_behaviors = new BehaviorRegistry();
-        $this->_behaviors->eventManager()->unsetEventList();
+        $this->_behaviors->getEventManager()->unsetEventList();
 
         $this->initialize();
     }
@@ -276,7 +276,7 @@ abstract class ArrayTable implements RepositoryInterface
     public function findList(ArrayTableQuery $query, array $options = [])
     {
         $options = array_merge([
-            'valueField' => $this->displayField()
+            'valueField' => $this->getDisplayField()
         ], $options);
 
         return $query->formatResults(function (Collection $results) use ($options) {

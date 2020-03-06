@@ -7,8 +7,8 @@ use Cake\Cache\Cache;
 use Cake\Controller\Controller;
 use Cake\Core\App;
 use Cake\Event\EventManager;
-use Cake\Network\Request;
-use Cake\Network\Response;
+use Cake\Http\ServerRequest as Request;
+use Cake\Http\Response;
 use Cake\View\Cell;
 use Cake\View\Exception\MissingTemplateException;
 use Cake\View\Exception\MissingCellViewException;
@@ -124,7 +124,7 @@ abstract class ViewModule extends Cell
             if ($template === null) {
                 $template = $this->action;
             }
-            $builder->layout(false)
+            $builder->setLayout(false)
                 ->template($template);
 
             $className = get_class($this);
@@ -184,7 +184,7 @@ abstract class ViewModule extends Cell
             $this->viewVars,
             $this->request,
             $this->response,
-            null //$this->eventManager()
+            null //$this->getEventManager()
         );
     }
 
@@ -311,7 +311,7 @@ abstract class ViewModule extends Cell
      *
      * @return array Last set validation errors.
      */
-    public function errors()
+    public function getErrors()
     {
         return $this->_errors;
     }

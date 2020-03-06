@@ -2,7 +2,7 @@
 
 namespace Banana\View\Form;
 
-use Cake\Network\Request;
+use Cake\Http\ServerRequest as Request;
 use Cake\Utility\Hash;
 use Cake\View\Form\ContextInterface;
 
@@ -18,7 +18,7 @@ class ViewModuleContext implements ContextInterface
     /**
      * The request object.
      *
-     * @var \Cake\Network\Request
+     * @var \Cake\Http\ServerRequest
      */
     protected $_request;
 
@@ -30,7 +30,7 @@ class ViewModuleContext implements ContextInterface
     /**
      * Constructor.
      *
-     * @param \Cake\Network\Request $request The request object.
+     * @param \Cake\Http\ServerRequest $request The request object.
      * @param array $context Context info.
      */
     public function __construct(Request $request, array $context)
@@ -143,7 +143,7 @@ class ViewModuleContext implements ContextInterface
      */
     public function error($field)
     {
-        return array_values((array)Hash::get($this->_module->errors(), $field, []));
+        return array_values((array)Hash::get($this->_module->getErrors(), $field, []));
     }
 
     public function options($field)

@@ -7,7 +7,7 @@ namespace Banana\Menu;
  *
  * @package Banana\Menu
  */
-class Menu implements \Iterator
+class Menu implements \Iterator, \Countable
 {
     /**
      * @var MenuItem[]

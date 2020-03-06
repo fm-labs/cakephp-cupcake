@@ -17,7 +17,7 @@ use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\BaseApplication;
 use Cake\Log\Log;
 use Cake\Mailer\Email;
-use Cake\Network\Request;
+use Cake\Http\ServerRequest as Request;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
 use Cake\Utility\Security;

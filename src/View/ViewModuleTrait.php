@@ -93,7 +93,7 @@ trait ViewModuleTrait
     protected function _createModule($className, $action, $plugin, $options)
     {
         if ($this instanceof View || $this instanceof Controller) {
-            $instance = new $className($this, $this->request, $this->response, $this->eventManager(), $options);
+            $instance = new $className($this, $this->request, $this->response, $this->getEventManager(), $options);
             $instance->plugin = $plugin;
             $instance->action = $action;
 

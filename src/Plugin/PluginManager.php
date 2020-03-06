@@ -184,11 +184,11 @@ class PluginManager implements EventDispatcherInterface
         $plugin = $this->_registry->get($pluginName);
 
         if ($plugin instanceof EventListenerInterface) {
-            $this->eventManager()->on($plugin);
+            $this->getEventManager()->on($plugin);
         }
 
         if (is_callable($plugin)) {
-            call_user_func($plugin, $this->eventManager());
+            call_user_func($plugin, $this->getEventManager());
         }
 
         $this->_enabled[$pluginName] = true;
@@ -210,7 +210,7 @@ class PluginManager implements EventDispatcherInterface
 
         $plugin = $this->_registry->get($pluginName);
         if ($plugin instanceof EventListenerInterface) {
-            $this->eventManager()->off($plugin);
+            $this->getEventManager()->off($plugin);
         }
 
         $this->_enabled[$pluginName] = false;
