@@ -48,7 +48,7 @@ trait ViewModuleTrait
 
             list($plugin) = pluginSplit($pluginAndModule);
 
-            if (!Plugin::loaded($plugin)) {
+            if (!Plugin::isLoaded($plugin)) {
                 throw new MissingPluginException(['plugin' => $plugin]);
             }
 

@@ -12,6 +12,6 @@ class MenuBuilder
         $menu = new Menu();
         $event = EventManager::instance()->dispatch(new Event($eventName, null, ['menu' => $menu, 'menuId' => $id]));
 
-        return $event->data['menu'];
+        return $event->getData('menu');
     }
 }

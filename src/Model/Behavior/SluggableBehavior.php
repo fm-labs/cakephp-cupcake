@@ -5,7 +5,7 @@ use ArrayObject;
 use Cake\Event\Event;
 use Cake\ORM\Behavior;
 use Cake\ORM\Entity;
-use Cake\Utility\Inflector;
+use Cake\Utility\Text;
 
 /**
  * Class SluggableBehavior
@@ -52,7 +52,7 @@ class SluggableBehavior extends Behavior
             $slug = strtolower($slug);
         }
 
-        $entity->set($config['slug'], Inflector::slug($slug, $config['replacement']));
+        $entity->set($config['slug'], Text::slug($slug, $config['replacement']));
     }
 
     /**

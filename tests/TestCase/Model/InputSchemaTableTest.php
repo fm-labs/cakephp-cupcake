@@ -25,7 +25,7 @@ class InputSchemaTableTest extends TestCase
      */
     public function setUp()
     {
-        TableRegistry::config('TestInputSchema', [
+        TableRegistry::setConfig('TestInputSchema', [
            'className' => 'Banana\Test\TestCase\Model\Table\TestInputSchemaTable'
         ]);
     }

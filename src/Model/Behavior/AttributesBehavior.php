@@ -44,7 +44,7 @@ class AttributesBehavior extends Behavior
         $this->_table->hasMany('Attributes', [
             'className' => 'Banana.Attributes',
             'foreignKey' => 'foreign_key',
-            'conditions' => ['Attributes.model' => $this->_table->registryAlias()]
+            'conditions' => ['Attributes.model' => $this->_table->getRegistryAlias()]
         ]);
     }
 
@@ -65,7 +65,7 @@ class AttributesBehavior extends Behavior
     public function addAttribute(EntityInterface $entity, $name, $value = null)
     {
         return $this->attributesTable()->findOrCreate([
-            'model' => $this->_table->registryAlias(),
+            'model' => $this->_table->getRegistryAlias(),
             'foreign_key' => $entity->id,
             'name' => $name
         ], function($entity) use ($value) {

@@ -163,7 +163,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
         }
 
         /*
-        if (!Plugin::loaded($name)) {
+        if (!Plugin::isLoaded($name)) {
             Plugin::load($name, ['bootstrap' => false, 'routes' => true, 'ignoreMissing' => true]);
         }
 
@@ -190,7 +190,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
     {
         $info = [];
         $info['name'] = $pluginName;
-        $info['loaded'] = Plugin::loaded($pluginName);
+        $info['loaded'] = Plugin::isLoaded($pluginName);
         $info['path'] = Plugin::path($pluginName);
         $info['config'] = Plugin::configPath($pluginName);
         $info['classPath'] = Plugin::classPath($pluginName);

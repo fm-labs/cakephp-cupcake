@@ -49,7 +49,7 @@ class LocalizedEmail extends Email
      */
     public function __construct($config = null)
     {
-        $this->_originalLocale = I18n::locale();
+        $this->_originalLocale = I18n::getLocale();
         parent::__construct($config);
     }
 
@@ -76,7 +76,11 @@ class LocalizedEmail extends Email
      */
     public function profile($config = null)
     {
-        return parent::profile($config);
+        if ($config === null) {
+            return parent::getProfile();
+        }
+
+        return parent::setProfile($config);
     }
 
     /**

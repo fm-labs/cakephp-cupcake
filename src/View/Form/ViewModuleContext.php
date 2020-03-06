@@ -46,7 +46,7 @@ class ViewModuleContext implements ContextInterface
     /**
      * {@inheritDoc}
      */
-    public function primaryKey()
+    public function getPrimaryKey()
     {
         return [];
     }

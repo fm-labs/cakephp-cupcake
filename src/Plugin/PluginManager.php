@@ -98,7 +98,7 @@ class PluginManager implements EventDispatcherInterface
 
         // load plugin
         // if the plugin has been loaded manually before, we won't load it again
-        if (!Plugin::loaded($pluginName)) {
+        if (!Plugin::isLoaded($pluginName)) {
             if (is_bool($pluginSettings)) {
                 $pluginSettings = [];
             }
@@ -240,7 +240,7 @@ class PluginManager implements EventDispatcherInterface
     {
         $info = [];
         $info['name'] = $pluginName;
-        $info['loaded'] = Plugin::loaded($pluginName);
+        $info['loaded'] = Plugin::isLoaded($pluginName);
         $info['path'] = Plugin::path($pluginName);
         $info['config'] = Plugin::configPath($pluginName);
         $info['classPath'] = Plugin::classPath($pluginName);
