@@ -41,8 +41,8 @@ class InputSchemaBehavior extends Behavior
         //debug($this->_table->associations());
 
         // init from table schema
-        foreach ($this->_table->schema()->columns() as $colName) {
-            $col = $this->_table->schema()->column($colName);
+        foreach ($this->_table->getSchema()->columns() as $colName) {
+            $col = $this->_table->getSchema()->column($colName);
             $input = $this->_detectInputSchema($colName, $col);
             $this->_inputs->addField($colName, $input);
         }

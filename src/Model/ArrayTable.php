@@ -7,7 +7,7 @@ use Cake\Datasource\EntityInterface;
 use Cake\Datasource\Exception\InvalidPrimaryKeyException;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Datasource\RepositoryInterface;
-use Cake\Database\Schema\Table as Schema;
+use Cake\Database\Schema\TableSchema as Schema;
 use Cake\ORM\AssociationCollection;
 use Cake\ORM\BehaviorRegistry;
 
@@ -17,7 +17,7 @@ use Cake\ORM\BehaviorRegistry;
  *
  * @todo Cleanup annotations
  */
-abstract class ArrayTable implements RepositoryInterface
+class ArrayTable implements RepositoryInterface
 {
     /**
      * @var string
@@ -25,7 +25,7 @@ abstract class ArrayTable implements RepositoryInterface
     protected $_displayField = 'title';
 
     /**
-     * @var \Cake\Database\Schema\Table
+     * @var \Cake\Database\Schema\TableSchema
      */
     protected $_schema;
 
@@ -78,20 +78,20 @@ abstract class ArrayTable implements RepositoryInterface
     /**
      * Returns the schema table object describing this table's properties.
      *
-     * If an \Cake\Database\Schema\Table is passed, it will be used for this table
+     * If an \Cake\Database\Schema\TableSchema is passed, it will be used for this table
      * instead of the default one.
      *
-     * If an array is passed, a new \Cake\Database\Schema\Table will be constructed
+     * If an array is passed, a new \Cake\Database\Schema\TableSchema will be constructed
      * out of it and used as the schema for this table.
      *
-     * @param array|\Cake\Database\Schema\Table|null $schema New schema to be used for this table
-     * @return \Cake\Database\Schema\Table
+     * @param array|\Cake\Database\Schema\TableSchema|null $schema New schema to be used for this table
+     * @return \Cake\Database\Schema\TableSchema
      */
     public function schema($schema = null)
     {
         if ($schema === null) {
             if ($this->_schema === null) {
-                $schema = new Schema($this->alias(), []);
+                $schema = new Schema($this->getAlias(), []);
                 $this->_schema = $this->_initializeSchema($schema);
             }
 
@@ -107,7 +107,7 @@ abstract class ArrayTable implements RepositoryInterface
                 unset($schema['_constraints']);
             }
 
-            $schema = new Schema($this->alias(), $schema);
+            $schema = new Schema($this->getAlias(), $schema);
 
             foreach ($constraints as $name => $value) {
                 $schema->addConstraint($name, $value);
@@ -122,20 +122,20 @@ abstract class ArrayTable implements RepositoryInterface
      * Override this function in order to alter the schema used by this table.
      * This function is only called after fetching the schema out of the database.
      * If you wish to provide your own schema to this table without touching the
-     * database, you can override schema() or inject the definitions though that
+     * database, you can override getSchema() or inject the definitions though that
      * method.
      *
      * ### Example:
      *
      * ```
-     * protected function _initializeSchema(\Cake\Database\Schema\Table $table) {
-     *  $table->columnType('preferences', 'json');
+     * protected function _initializeSchema(\Cake\Database\Schema\TableSchema $table) {
+     *  $table->setColumnType('preferences', 'json');
      *  return $table;
      * }
      * ```
      *
-     * @param \Cake\Database\Schema\Table $table The table definition fetched from database.
-     * @return \Cake\Database\Schema\Table The altered schema.
+     * @param \Cake\Database\Schema\TableSchema $table The table definition fetched from database.
+     * @return \Cake\Database\Schema\TableSchema The altered schema.
      */
     protected function _initializeSchema(Schema $table)
     {
@@ -207,7 +207,7 @@ abstract class ArrayTable implements RepositoryInterface
 
     public function table()
     {
-        return $this->alias();
+        return $this->getAlias();
     }
 
     /**
@@ -531,5 +531,43 @@ abstract class ArrayTable implements RepositoryInterface
     public function associations()
     {
         return new AssociationCollection();
+    }
+
+    function __call($name, $arguments)
+    {
+        // TODO: Implement @method $this setAlias(string $alias)
+        // TODO: Implement @method string getAlias()
+        // TODO: Implement @method $this setRegistryAlias(string $alias)
+        // TODO: Implement @method string getRegistryAlias()
+    }
+
+    /**
+     * @return $this
+     */
+    public function setAlias(string $alias)
+    {
+        $this->alias($alias);
+
+        return $this;
+    }
+
+    public function getAlias()
+    {
+        return $this->alias();
+    }
+
+    /**
+     * @return $this
+     */
+    public function setRegistryAlias(string $alias)
+    {
+        $this->alias($alias);
+
+        return $this;
+    }
+
+    public function getRegistryAlias()
+    {
+        return $this->getAlias();
     }
 }

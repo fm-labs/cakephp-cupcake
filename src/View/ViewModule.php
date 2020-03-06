@@ -81,6 +81,28 @@ abstract class ViewModule extends Cell
         } elseif ($parent instanceof Controller) {
             $this->_Controller = $parent;
         }
+
+    }
+
+    public function setPlugin($plugin)
+    {
+        $this->viewBuilder()->setPlugin($plugin);
+
+        return $this;
+    }
+
+    public function setAction($action)
+    {
+        $this->action = $action;
+
+        return $this;
+    }
+
+    public function setArgs($args)
+    {
+        $this->args = $args;
+
+        return $this;
     }
 
     /**
@@ -119,22 +141,23 @@ abstract class ViewModule extends Cell
                 $template = Inflector::underscore($template);
             }
             if ($template === null) {
-                $template = $builder->template() ?: $this->template;
+                $template = $builder->getTemplate() ?: null;
             }
             if ($template === null) {
                 $template = $this->action;
             }
             $builder->setLayout(false)
-                ->template($template);
+                ->setTemplate($template);
 
             $className = get_class($this);
             $namePrefix = '\View\Module\\';
             $name = substr($className, strpos($className, $namePrefix) + strlen($namePrefix));
             $name = substr($name, 0, -6);
-            if (!$builder->templatePath()) {
+            if (!$builder->getTemplatePath()) {
                 //debug('Module' . DIRECTORY_SEPARATOR . str_replace('\\', DIRECTORY_SEPARATOR, $name));
-                $builder->templatePath('Module' . DIRECTORY_SEPARATOR . str_replace('\\', DIRECTORY_SEPARATOR, $name));
+                $builder->setTemplatePath('Module' . DIRECTORY_SEPARATOR . str_replace('\\', DIRECTORY_SEPARATOR, $name));
             }
+            debug($builder->getPlugin());
 
             $this->View = $this->createView();
             try {
@@ -159,25 +182,25 @@ abstract class ViewModule extends Cell
     {
         $builder = $this->viewBuilder();
 
-        if ($this->plugin) {
-            $builder->plugin($this->plugin);
-        }
+        //if ($this->plugin) {
+        //    $builder->setPlugin($this->plugin);
+        //}
 
         if ($this->_View) {
-            if (!empty($this->_View->helpers)) {
-                $builder->helpers($this->_View->helpers);
+            if (!empty($this->_View->helpers()->loaded())) {
+                $builder->setHelpers($this->_View->helpers()->loaded());
             }
 
-            if (!empty($this->_View->theme)) {
-                $builder->theme($this->_View->theme);
+            if ($this->_View->getTheme()) {
+                $builder->setTheme($this->_View->getTheme());
             }
 
             $class = get_class($this->_View);
-            $builder->className($class);
+            $builder->setClassName($class);
         } elseif ($this->_Controller) {
-            $builder->helpers($this->_Controller->viewBuilder()->helpers());
-            $builder->theme($this->_Controller->viewBuilder()->theme());
-            $builder->className($this->_Controller->viewBuilder()->className());
+            $builder->setHelpers($this->_Controller->viewBuilder()->getHelpers());
+            $builder->setTheme($this->_Controller->viewBuilder()->getTheme());
+            $builder->setClassName($this->_Controller->viewBuilder()->getClassName());
         }
 
         return $builder->build(
@@ -233,8 +256,8 @@ abstract class ViewModule extends Cell
      */
     public function loadSources()
     {
-        foreach ($this->schema()->fields() as $field) {
-            $options = $this->schema()->options($field);
+        foreach ($this->getSchema()->fields() as $field) {
+            $options = $this->getSchema()->options($field);
             if (!$options || !isset($options['options'])) {
                 continue;
             }

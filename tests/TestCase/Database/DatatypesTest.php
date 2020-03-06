@@ -18,9 +18,9 @@ class DatatypesTest extends TestCase
     public function setUp()
     {
         $this->table = TableRegistry::getTableLocator()->get('Banana.Datatypes');
-        $this->table->schema()->columnType('json', 'json');
-        $this->table->schema()->columnType('serialized', 'serialize');
-        //$this->table->schema()->columnType('base64', 'base64');
+        $this->table->getSchema()->setColumnType('json', 'json');
+        $this->table->getSchema()->setColumnType('serialized', 'serialize');
+        //$this->table->getSchema()->setColumnType('base64', 'base64');
     }
 
     public function testJsonDataType()
@@ -56,6 +56,6 @@ class DatatypesTest extends TestCase
     public function tearDown()
     {
         unset($this->table);
-        TableRegistry::clear();
+        TableRegistry::getTableLocator()->clear();
     }
 }

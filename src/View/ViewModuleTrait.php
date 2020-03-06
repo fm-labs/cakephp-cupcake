@@ -60,7 +60,7 @@ trait ViewModuleTrait
             }
 
             $module = $this->_createModule($className, $action, $plugin, $options);
-            $module->args = $args;
+            $module->setArgs($args);;
 
             /*
             try {
@@ -93,9 +93,10 @@ trait ViewModuleTrait
     protected function _createModule($className, $action, $plugin, $options)
     {
         if ($this instanceof View || $this instanceof Controller) {
+            /** @var ViewModule $instance */
             $instance = new $className($this, $this->request, $this->response, $this->getEventManager(), $options);
-            $instance->plugin = $plugin;
-            $instance->action = $action;
+            $instance->setAction($action);
+            $instance->setPlugin($plugin);
 
             return $instance;
         }

@@ -115,7 +115,7 @@ class AttributesBehavior extends Behavior
             return new ResultSetDecorator([]);
         }
 
-        return $this->findWithAttributes($query->where([$this->_table->alias() . '.id IN' => $tableIds]));
+        return $this->findWithAttributes($query->where([$this->_table->getAlias() . '.id IN' => $tableIds]));
     }
 
     /**
@@ -145,7 +145,7 @@ class AttributesBehavior extends Behavior
             return new ResultSetDecorator([]);
         }
 
-        return $this->findWithAttributes($query->where([$this->_table->alias() . '.id IN' => $tableIds]));
+        return $this->findWithAttributes($query->where([$this->_table->getAlias() . '.id IN' => $tableIds]));
     }
 
     /**

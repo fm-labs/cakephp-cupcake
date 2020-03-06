@@ -106,7 +106,7 @@ class ViewModuleContext implements ContextInterface
      */
     public function fieldNames()
     {
-        return $this->_module->schema()->fields();
+        return $this->_module->getSchema()->fields();
     }
 
     /**
@@ -114,7 +114,7 @@ class ViewModuleContext implements ContextInterface
      */
     public function type($field)
     {
-        return $this->_module->schema()->fieldType($field);
+        return $this->_module->getSchema()->fieldType($field);
     }
 
     /**
@@ -122,7 +122,7 @@ class ViewModuleContext implements ContextInterface
      */
     public function attributes($field)
     {
-        $attrs = (array)$this->_module->schema()->field($field);
+        $attrs = (array)$this->_module->getSchema()->field($field);
         //$whitelist = ['length' => null, 'precision' => null];
         //$attrs = array_intersect_key($attrs, $whitelist);
         return $attrs;
@@ -148,7 +148,7 @@ class ViewModuleContext implements ContextInterface
 
     public function options($field)
     {
-        $options = $this->_module->schema()->options($field);
+        $options = $this->_module->getSchema()->options($field);
 
         return $options;
     }

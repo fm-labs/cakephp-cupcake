@@ -56,19 +56,44 @@ class LocalizedEmail extends Email
     /**
      * Get/Set the current email locale
      *
+     * @deprecated Use setLocale() / getLocale() instead.
      * @param null|string $locale Locale for email localization
      * @return null|string|$this
      */
     public function locale($locale = null)
     {
+        deprecationWarning(
+            sprintf("The method `LocalizedEmail::%s` is deprecated. Use setLocale()/getLocale() instead", __FUNCTION__)
+        );
+
         if ($locale === null) {
-            return $this->_locale;
+            return $this->getLocale();
         }
 
+        return $this->setLocale($locale);
+    }
+
+    /**
+     * Set the current email locale
+     *
+     * @param string $locale Locale for email localization
+     * @return $this
+     */
+    public function setLocale($locale)
+    {
         $this->_locale = $locale;
         $this->_applyLocalizedConfig($this->_locale);
 
         return $this;
+    }
+    /**
+     * Get the current email locale
+     *
+     * @return string
+     */
+    public function getLocale()
+    {
+        return $this->_locale;
     }
 
     /**
@@ -126,7 +151,7 @@ class LocalizedEmail extends Email
         }
 
         if (is_array($config) && array_key_exists('locale', $config)) {
-            $this->locale($config['locale']);
+            $this->setLocale($config['locale']);
         }
     }
 

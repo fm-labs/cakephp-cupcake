@@ -40,7 +40,7 @@ class StatusableBehavior extends Behavior
         //}
 
         if (!method_exists($this->_table, 'implementedStati')) {
-            throw new \InvalidArgumentException(sprintf("Table %s has no method 'implementedStati'", $this->_table->alias()));
+            throw new \InvalidArgumentException(sprintf("Table %s has no method 'implementedStati'", $this->_table->getAlias()));
         }
 
         $this->_fieldConfig = call_user_func([$this->_table, 'implementedStati']);
