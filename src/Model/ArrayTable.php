@@ -17,7 +17,7 @@ use Cake\ORM\BehaviorRegistry;
  *
  * @todo Cleanup annotations
  */
-class ArrayTable implements RepositoryInterface
+abstract class ArrayTable implements RepositoryInterface
 {
     /**
      * @var string
@@ -160,6 +160,18 @@ class ArrayTable implements RepositoryInterface
             return $this->_displayField;
         }
 
+        $this->_displayField = $field;
+
+        return $this;
+    }
+
+    public function getDisplayField()
+    {
+        return $this->_displayField;
+    }
+
+    public function setDisplayField($field)
+    {
         $this->_displayField = $field;
 
         return $this;

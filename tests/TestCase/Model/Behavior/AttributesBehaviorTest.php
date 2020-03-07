@@ -11,8 +11,8 @@ use Cake\TestSuite\TestCase;
 class AttributesBehaviorTest extends TestCase
 {
     public $fixtures = [
-        'plugin.banana.attributes',
-        'plugin.banana.posts',
+        'plugin.Banana.Attributes',
+        'plugin.Banana.Posts',
     ];
 
     /**

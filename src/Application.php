@@ -128,17 +128,16 @@ class Application extends BaseApplication implements EventDispatcherInterface
         $this->addPlugin(Configure::read('Plugin'), ['bootstrap' => true, 'routes' => true]);
 
         /*
+         * Init Banana
+         */
+        //$this->initLegacyPlugins();
+        //$this->initRoutes();
+        Banana::init($this);
+
+        /*
          * Include app's bootstrap file
          */
         parent::bootstrap();
-
-        //$this->initLegacyPlugins();
-        //$this->initRoutes();
-
-        /*
-         * Init Banana plugins
-         */
-        Banana::init($this);
     }
 
     /**
@@ -333,7 +332,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
             (new ConsoleErrorHandler(Configure::read('Error')))->register();
 
             // Include the CLI bootstrap overrides.
-            //require $this->configDir . '/bootstrap_cli.php';
+            require $this->configDir . '/bootstrap_cli.php';
             //} elseif (class_exists('\Gourmet\Whoops\Error\WhoopsHandler')) {
             // Out-of-the-box support for "Whoops for CakePHP3" by "gourmet"
             // https://github.com/gourmet/whoops

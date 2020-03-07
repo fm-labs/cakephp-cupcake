@@ -90,7 +90,7 @@ class ViewModuleContext implements ContextInterface
      */
     public function isRequired($field)
     {
-        $validator = $this->_module->validator();
+        $validator = $this->_module->getValidator();
         if (!$validator->hasField($field)) {
             return false;
         }

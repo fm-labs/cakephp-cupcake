@@ -160,7 +160,8 @@ abstract class ViewModule extends Cell
 
             $this->View = $this->createView();
             try {
-                return $this->View->render($template);
+                $html = $this->View->render($template);
+                return $html;
             } catch (MissingTemplateException $e) {
                 throw new MissingCellViewException(['file' => $template, 'name' => $name]);
             }
@@ -319,7 +320,7 @@ abstract class ViewModule extends Cell
      */
     public function validate(array $data)
     {
-        $validator = $this->validator();
+        $validator = $this->getValidator();
         $this->_errors = $validator->errors($data);
 
         return count($this->_errors) === 0;

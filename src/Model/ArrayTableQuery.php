@@ -147,7 +147,7 @@ class ArrayTableQuery implements QueryInterface
      */
     public function find($finder, array $options = [])
     {
-        return $this->repository()->callFinder($finder, $this, $options);
+        return $this->getRepository()->callFinder($finder, $this, $options);
     }
 
     /**
@@ -158,7 +158,7 @@ class ArrayTableQuery implements QueryInterface
     public function count()
     {
         // TODO: Implement count() method.
-        return count($this->repository()->getItems());
+        return count($this->getRepository()->getItems());
     }
 
     /**

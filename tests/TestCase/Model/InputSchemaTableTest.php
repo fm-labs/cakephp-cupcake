@@ -17,7 +17,7 @@ class InputSchemaTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'plugin.banana.posts'
+        'plugin.Banana.Posts'
     ];
 
     /**
@@ -25,7 +25,7 @@ class InputSchemaTableTest extends TestCase
      */
     public function setUp()
     {
-        TableRegistry::setConfig('TestInputSchema', [
+        TableRegistry::getTableLocator()->setConfig('TestInputSchema', [
            'className' => 'Banana\Test\TestCase\Model\Table\TestInputSchemaTable'
         ]);
     }

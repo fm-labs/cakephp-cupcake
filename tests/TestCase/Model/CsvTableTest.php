@@ -16,7 +16,7 @@ class CsvTableTest extends ArrayTableTest
      */
     public function setUp()
     {
-        TableRegistry::setConfig('TestCsv', [
+        TableRegistry::getTableLocator()->setConfig('TestCsv', [
             'className' => 'Banana\Test\TestCase\Model\Table\TestCsvTable',
             'file' => dirname(dirname(dirname(__FILE__))) . DS . 'testdata/table.csv',
         ]);

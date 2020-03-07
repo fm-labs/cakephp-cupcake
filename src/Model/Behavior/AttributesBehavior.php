@@ -106,7 +106,7 @@ class AttributesBehavior extends Behavior
             $attrsQuery->where(['Attributes.name' => $k, 'Attributes.value' => $v]);
         }
         $attrs = $attrsQuery
-            ->hydrate(false)
+            ->enableHydration(false)
             ->all()
             ->toArray();
 
@@ -136,7 +136,7 @@ class AttributesBehavior extends Behavior
             $attrsQuery->where(['Attributes.name' => $k]);
         }
         $attrs = $attrsQuery
-            ->hydrate(false)
+            ->enableHydration(false)
             ->all()
             ->toArray();
 

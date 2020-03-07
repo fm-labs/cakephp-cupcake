@@ -36,7 +36,7 @@ class SluggableBehavior extends Behavior
         $config = $this->getConfig();
         $slug = $entity->get($config['slug']);
 
-        if ($slug && !$entity->dirty($config['slug'])) {
+        if ($slug && !$entity->isDirty($config['slug'])) {
             // no action for existing slug
             return;
         } elseif (!$slug && $config['field']) {

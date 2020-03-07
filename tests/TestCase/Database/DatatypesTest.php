@@ -8,7 +8,7 @@ use Cake\TestSuite\TestCase;
 
 class DatatypesTest extends TestCase
 {
-    public $fixtures = ['plugin.banana.datatypes'];
+    public $fixtures = ['plugin.Banana.Datatypes'];
 
     /**
      * @var Table
