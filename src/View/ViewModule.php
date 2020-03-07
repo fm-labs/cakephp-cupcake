@@ -157,7 +157,6 @@ abstract class ViewModule extends Cell
                 //debug('Module' . DIRECTORY_SEPARATOR . str_replace('\\', DIRECTORY_SEPARATOR, $name));
                 $builder->setTemplatePath('Module' . DIRECTORY_SEPARATOR . str_replace('\\', DIRECTORY_SEPARATOR, $name));
             }
-            debug($builder->getPlugin());
 
             $this->View = $this->createView();
             try {
