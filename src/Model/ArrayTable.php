@@ -3,11 +3,10 @@
 namespace Banana\Model;
 
 use Cake\Collection\Collection;
+use Cake\Database\Schema\TableSchema as Schema;
 use Cake\Datasource\EntityInterface;
 use Cake\Datasource\Exception\InvalidPrimaryKeyException;
-use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Datasource\RepositoryInterface;
-use Cake\Database\Schema\TableSchema as Schema;
 use Cake\ORM\AssociationCollection;
 use Cake\ORM\BehaviorRegistry;
 

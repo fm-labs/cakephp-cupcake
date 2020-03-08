@@ -2,8 +2,8 @@
 
 namespace Banana\Model;
 
-use Cake\Datasource\ResultSetInterface;
 use Cake\Collection\Collection;
+use Cake\Datasource\ResultSetInterface;
 
 /**
  * Class ArrayTableResultSet

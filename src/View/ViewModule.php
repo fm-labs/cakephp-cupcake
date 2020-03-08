@@ -7,14 +7,14 @@ use Cake\Cache\Cache;
 use Cake\Controller\Controller;
 use Cake\Core\App;
 use Cake\Event\EventManager;
-use Cake\Http\ServerRequest as Request;
 use Cake\Http\Response;
+use Cake\Http\ServerRequest as Request;
+use Cake\Utility\Inflector;
+use Cake\Validation\Validator;
 use Cake\View\Cell;
 use Cake\View\Exception\MissingTemplateException;
 use Cake\View\Exception\MissingCellViewException;
 use Cake\View\View;
-use Cake\Utility\Inflector;
-use Cake\Validation\Validator;
 use ReflectionException;
 use ReflectionMethod;
 

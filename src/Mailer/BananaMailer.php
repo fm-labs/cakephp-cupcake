@@ -4,9 +4,9 @@ namespace Banana\Mailer;
 
 use Cake\Event\Event;
 use Cake\Event\EventManager;
+use Cake\Mailer\Email;
 use Cake\Mailer\Exception\MissingActionException;
 use Cake\Mailer\Mailer;
-use Cake\Mailer\Email;
 
 /**
  * Class BananaMailer

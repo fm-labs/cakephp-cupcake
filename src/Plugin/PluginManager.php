@@ -18,9 +18,9 @@ use Cake\Utility\Inflector;
  */
 class PluginManager implements EventDispatcherInterface
 {
+    use EventDispatcherTrait;
     use StaticConfigTrait;
 
-    use EventDispatcherTrait;
 
     /**
      * @var PluginRegistry
