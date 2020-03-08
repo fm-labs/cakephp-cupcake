@@ -60,7 +60,8 @@ trait ViewModuleTrait
             }
 
             $module = $this->_createModule($className, $action, $plugin, $options);
-            $module->setArgs($args);;
+            $module->setArgs($args);
+            ;
 
             /*
             try {

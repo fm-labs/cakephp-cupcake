@@ -16,7 +16,7 @@ class InputSchemaBehavior extends Behavior
         'date' => 'Date',
         'datetime' => 'Datetime',
         'timestamp' => 'Text',
-        'boolean' => 'Checkbox'
+        'boolean' => 'Checkbox',
     ];
 
     /**
@@ -24,8 +24,8 @@ class InputSchemaBehavior extends Behavior
      */
     protected $_defaultConfig = [
         'implementedMethods' => [
-            'inputs' => 'getInputs'
-        ]
+            'inputs' => 'getInputs',
+        ],
     ];
 
     /**

@@ -85,7 +85,7 @@ class Status implements \JsonSerializable
         return [
             'class' => $this->_class,
             'label' => $this->_label,
-            'status' => $this->_status
+            'status' => $this->_status,
         ];
     }
 

@@ -44,7 +44,7 @@ class AttributesBehavior extends Behavior
         $this->_table->hasMany('Attributes', [
             'className' => 'Banana.Attributes',
             'foreignKey' => 'foreign_key',
-            'conditions' => ['Attributes.model' => $this->_table->getRegistryAlias()]
+            'conditions' => ['Attributes.model' => $this->_table->getRegistryAlias()],
         ]);
     }
 
@@ -67,8 +67,8 @@ class AttributesBehavior extends Behavior
         return $this->attributesTable()->findOrCreate([
             'model' => $this->_table->getRegistryAlias(),
             'foreign_key' => $entity->id,
-            'name' => $name
-        ], function($entity) use ($value) {
+            'name' => $name,
+        ], function ($entity) use ($value) {
             $entity->value = $value;
 
             return $entity;
@@ -152,9 +152,10 @@ class AttributesBehavior extends Behavior
      * @param ResultSetDecorator $results The table results
      * @return ResultSetDecorator
      */
-    public function _formatAttributesResult(ResultSetDecorator $results) {
+    public function _formatAttributesResult(ResultSetDecorator $results)
+    {
 
-        $results = $results->map(function(Entity $row) {
+        $results = $results->map(function (Entity $row) {
             if (isset($row->attributes)) {
                 $attrs = collection($row->attributes);
                 $row->attributes = $attrs->combine('name', 'value')->toArray();

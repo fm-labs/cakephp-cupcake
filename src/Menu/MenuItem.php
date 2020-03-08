@@ -139,7 +139,7 @@ class MenuItem implements \ArrayAccess
             'title' => $this->_title,
             'url' => $this->_url,
             'attr' => $this->_attr,
-            'children' => $this->_children->toArray()
+            'children' => $this->_children->toArray(),
         ];
     }
 

@@ -37,7 +37,7 @@ class PublishableBehavior extends Behavior
     {
         $statusField = $query->getRepository()->getAlias() . '.' . $this->getConfig('statusField');
         $options = array_merge([
-            'published' => true
+            'published' => true,
         ], $options);
 
         return $query->where([$statusField => $options['published']]);
@@ -54,7 +54,7 @@ class PublishableBehavior extends Behavior
 
         if (isset($options['published'])) {
             $this->findPublished($query, [
-                'published' => $options['published']
+                'published' => $options['published'],
             ]);
         }
     }

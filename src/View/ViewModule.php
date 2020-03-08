@@ -81,7 +81,6 @@ abstract class ViewModule extends Cell
         } elseif ($parent instanceof Controller) {
             $this->_Controller = $parent;
         }
-
     }
 
     public function setPlugin($plugin)
@@ -134,7 +133,8 @@ abstract class ViewModule extends Cell
 
             $builder = $this->viewBuilder();
 
-            if ($template !== null &&
+            if (
+                $template !== null &&
                 strpos($template, '/') === false &&
                 strpos($template, '.') === false
             ) {
@@ -161,6 +161,7 @@ abstract class ViewModule extends Cell
             $this->View = $this->createView();
             try {
                 $html = $this->View->render($template);
+
                 return $html;
             } catch (MissingTemplateException $e) {
                 throw new MissingCellViewException(['file' => $template, 'name' => $name]);

@@ -10,7 +10,7 @@ use RuntimeException;
  */
 class PluginRegistry extends ObjectRegistry
 {
-    static public $fallbackPluginClass = "\\Banana\\Plugin\\GenericPlugin";
+    public static $fallbackPluginClass = "\\Banana\\Plugin\\GenericPlugin";
 
     /**
      * Throws an exception when a plugin handler is missing.

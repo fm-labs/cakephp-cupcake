@@ -16,7 +16,6 @@ use Cake\Core\Configure;
 use Cake\Core\Exception\MissingPluginException;
 use Cake\Core\Plugin;
 
-
 /**
  * Additional bootstrapping and configuration for CLI environments should
  * be put here.

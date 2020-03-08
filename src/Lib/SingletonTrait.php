@@ -11,7 +11,7 @@ trait SingletonTrait
     /**
      * @var array
      */
-    static protected $_instances = [];
+    protected static $_instances = [];
 
     /**
      * @return object

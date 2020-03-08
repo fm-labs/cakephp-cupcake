@@ -17,7 +17,7 @@ class DatatypesFixture extends TestFixture
         'json' => ['type' => 'text', 'null' => true],
         'serialized' => ['type' => 'text', 'null' => true],
         'base64' => ['type' => 'text', 'null' => true],
-        '_constraints' => ['primary' => ['type' => 'primary', 'columns' => ['id']]]
+        '_constraints' => ['primary' => ['type' => 'primary', 'columns' => ['id']]],
     ];
 
     /**

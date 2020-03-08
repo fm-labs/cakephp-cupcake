@@ -15,7 +15,7 @@ class LocalEventManager extends EventManager
     /**
      * @var EventManager
      */
-    static protected $_generalLocalManager = null;
+    protected static $_generalLocalManager = null;
 
     /**
      * Override instance call

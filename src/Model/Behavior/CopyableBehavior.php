@@ -18,7 +18,7 @@ class CopyableBehavior extends Behavior
     protected $_defaultConfig = [
         'primaryKey' => 'id',
         'includeFields' => [],
-        'excludeFields' => []
+        'excludeFields' => [],
     ];
 
     /**

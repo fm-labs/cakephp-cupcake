@@ -18,17 +18,17 @@ class ClassRegistry
     /**
      * @var array
      */
-    static protected $_classes = [];
+    protected static $_classes = [];
 
     /**
      * @var array
      */
-    static protected $_factories = [];
+    protected static $_factories = [];
 
     /**
      * @var array
      */
-    static protected $_instances = [];
+    protected static $_instances = [];
 
     /**
      * @param $type

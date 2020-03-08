@@ -9,6 +9,6 @@ if (!Cache::getConfig('banana')) {
         'className' => 'File',
         'duration' => '+1 hours',
         'path' => CACHE,
-        'prefix' => 'banana_core_'
+        'prefix' => 'banana_core_',
     ]);
 }

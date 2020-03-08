@@ -58,6 +58,7 @@ class ArrayTableEntity extends \ArrayObject implements EntityInterface
     {
         $this->unsetProperty($property);
     }
+
     /**
      * Sets one or multiple properties to the specified value
      *

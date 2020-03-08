@@ -35,11 +35,11 @@ class PluginMgrShell extends Shell
             'parser' => [
                 'arguments' => [
                     'name' => [
-                        'required' => true
-                    ]
-                ]
+                        'required' => true,
+                    ],
+                ],
             ],
-            'help' => 'Install a banana plugin'
+            'help' => 'Install a banana plugin',
         ]);
 
         return $parser;

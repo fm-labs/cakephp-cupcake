@@ -23,12 +23,12 @@ class Banana
     /**
      * @var string Default mailer class
      */
-    static public $mailerClass = 'Cake\Mailer\Mailer';
+    public static $mailerClass = 'Cake\Mailer\Mailer';
 
     /**
      * List of Banana instances. Singleton holder.
      */
-    static protected $_instances = [];
+    protected static $_instances = [];
 
     /**
      * Banana-app wide common mailer instance

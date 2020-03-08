@@ -11,7 +11,7 @@ class ArrayTableTest extends TestCase
     public function setUp()
     {
         TableRegistry::getTableLocator()->setConfig('TestArray', [
-           'className' => 'Banana\Test\TestCase\Model\Table\TestArrayTable'
+           'className' => 'Banana\Test\TestCase\Model\Table\TestArrayTable',
         ]);
     }
 
@@ -36,18 +36,18 @@ class ArrayTableTest extends TestCase
             0 => [
                 'title' => 'Test 1',
                 'value' => 'Hello',
-                'foo' => 'bar'
+                'foo' => 'bar',
             ],
             1 => [
                 'title' => 'Test 2',
                 'value' => 'World',
-                'foo' => 'baz'
+                'foo' => 'baz',
             ],
             2 => [
                 'title' => 'Test 3',
                 'value' => 'Bla',
-                'foo' => 'oof'
-            ]
+                'foo' => 'oof',
+            ],
         ];
         $this->assertEquals($expected, $Table->find()->all()->toArray());
     }
@@ -60,7 +60,7 @@ class ArrayTableTest extends TestCase
             0 => [
                 'title' => 'Test 1',
                 'value' => 'Hello',
-                'foo' => 'bar'
+                'foo' => 'bar',
             ],
         ];
         $this->assertEquals($expected, $Table->find()->where(['foo' => 'bar'])->all()->toArray());
@@ -74,7 +74,7 @@ class ArrayTableTest extends TestCase
             0 => [
                 'title' => 'Test 1',
                 'value' => 'Hello',
-                'foo' => 'bar'
+                'foo' => 'bar',
             ],
         ];
 
@@ -94,7 +94,7 @@ class ArrayTableTest extends TestCase
         $expected = [
             0 => 'Test 1',
             1 => 'Test 2',
-            2 => 'Test 3'
+            2 => 'Test 3',
         ];
         $this->assertEquals($expected, $Table->find('list')->all()->toArray());
     }
@@ -106,7 +106,7 @@ class ArrayTableTest extends TestCase
         $expected = [
             0 => 'bar',
             1 => 'baz',
-            2 => 'oof'
+            2 => 'oof',
         ];
         $this->assertEquals($expected, $Table->find('list', ['valueField' => 'foo'])->all()->toArray());
     }
@@ -116,7 +116,7 @@ class ArrayTableTest extends TestCase
         $Table = $this->_table();
 
         $expected = [
-            0 => 'Test 1'
+            0 => 'Test 1',
         ];
         $this->assertEquals($expected, $Table->find('list')->where(['foo' => 'bar'])->all()->toArray());
     }
@@ -138,7 +138,7 @@ class ArrayTableTest extends TestCase
         $expected = [
             'title' => 'Test 1',
             'value' => 'Hello',
-            'foo' => 'bar'
+            'foo' => 'bar',
         ];
         $this->assertEquals($expected, $Table->get(0)->toArray());
     }

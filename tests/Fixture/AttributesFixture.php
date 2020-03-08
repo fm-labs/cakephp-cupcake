@@ -22,7 +22,7 @@ class AttributesFixture extends TestFixture
         'foreign_key' => ['type' => 'integer', 'null' => false, 'length' => 10, 'unsigned' => true],
         'name' => ['type' => 'string', 'null' => false, 'length' => 255],
         'value' => ['type' => 'text', 'null' => true],
-        '_constraints' => ['primary' => ['type' => 'primary', 'columns' => ['id']]]
+        '_constraints' => ['primary' => ['type' => 'primary', 'columns' => ['id']]],
     ];
 
     /**
@@ -36,28 +36,28 @@ class AttributesFixture extends TestFixture
             'model' => 'Banana.Posts',
             'foreign_key' => 1,
             'name' => 'attr_string',
-            'value' => 'SomeString1'
+            'value' => 'SomeString1',
         ],
         [
             'id' => 2,
             'model' => 'Banana.Posts',
             'foreign_key' => 1,
             'name' => 'attr_int',
-            'value' => 1
+            'value' => 1,
         ],
         [
             'id' => 3,
             'model' => 'Banana.Posts',
             'foreign_key' => 2,
             'name' => 'attr_string',
-            'value' => 'SomeString2'
+            'value' => 'SomeString2',
         ],
         [
             'id' => 4,
             'model' => 'Banana.Posts',
             'foreign_key' => 2,
             'name' => 'attr_text',
-            'value' => 'Hello World'
+            'value' => 'Hello World',
         ],
     ];
 }

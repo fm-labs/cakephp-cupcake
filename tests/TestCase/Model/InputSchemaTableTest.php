@@ -17,7 +17,7 @@ class InputSchemaTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'plugin.Banana.Posts'
+        'plugin.Banana.Posts',
     ];
 
     /**
@@ -26,7 +26,7 @@ class InputSchemaTableTest extends TestCase
     public function setUp()
     {
         TableRegistry::getTableLocator()->setConfig('TestInputSchema', [
-           'className' => 'Banana\Test\TestCase\Model\Table\TestInputSchemaTable'
+           'className' => 'Banana\Test\TestCase\Model\Table\TestInputSchemaTable',
         ]);
     }
 
@@ -68,7 +68,7 @@ class InputSchemaTableTest extends TestCase
                 'required' => null,
                 'searchable' => false,
                 'sortable' => false,
-            ]
+            ],
         ];
 
         $this->assertEquals($expected, $result);

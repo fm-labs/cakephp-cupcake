@@ -288,7 +288,7 @@ abstract class ArrayTable implements RepositoryInterface
     public function findList(ArrayTableQuery $query, array $options = [])
     {
         $options = array_merge([
-            'valueField' => $this->getDisplayField()
+            'valueField' => $this->getDisplayField(),
         ], $options);
 
         return $query->formatResults(function (Collection $results) use ($options) {

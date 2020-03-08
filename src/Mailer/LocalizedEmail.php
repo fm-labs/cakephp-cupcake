@@ -86,6 +86,7 @@ class LocalizedEmail extends Email
 
         return $this;
     }
+
     /**
      * Get the current email locale
      *

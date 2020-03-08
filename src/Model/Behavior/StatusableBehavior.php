@@ -21,7 +21,7 @@ class StatusableBehavior extends Behavior
      * @var array
      */
     protected $_defaultConfig = [
-        'fields' => []
+        'fields' => [],
     ];
 
     /**
@@ -79,6 +79,7 @@ class StatusableBehavior extends Behavior
      * @param array $options
      * @param $primary
      */
+
     /**
      * 'beforeFind' callback
      *
@@ -139,8 +140,8 @@ class StatusableBehavior extends Behavior
             // and unset injected raw status field
             $status = $entity->get($fieldName);
             if ($status instanceof Status) {
-                $entity->set($fieldName.'__original', null);
-                $entity->dirty($fieldName.'__original', false);
+                $entity->set($fieldName . '__original', null);
+                $entity->dirty($fieldName . '__original', false);
                 $entity->set($fieldName, $status->getStatus());
             }
         }

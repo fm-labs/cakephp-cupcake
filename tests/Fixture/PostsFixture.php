@@ -25,7 +25,7 @@ class PostsFixture extends TestFixture
         'is_published' => ['type' => 'boolean', 'default' => false],
         'publish_start' => ['type' => 'datetime', 'default' => null],
         'publish_end' => ['type' => 'datetime', 'default' => null],
-        '_constraints' => ['primary' => ['type' => 'primary', 'columns' => ['id']]]
+        '_constraints' => ['primary' => ['type' => 'primary', 'columns' => ['id']]],
     ];
 
     /**
@@ -53,6 +53,6 @@ class PostsFixture extends TestFixture
             'is_published' => false,
             'publish_start' => null,
             'publish_end' => null,
-        ]
+        ],
     ];
 }

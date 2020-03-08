@@ -17,18 +17,18 @@ class TestArrayTable extends ArrayTable
         0 => [
             'title' => 'Test 1',
             'value' => 'Hello',
-            'foo' => 'bar'
+            'foo' => 'bar',
         ],
         1 => [
             'title' => 'Test 2',
             'value' => 'World',
-            'foo' => 'baz'
+            'foo' => 'baz',
         ],
         2 => [
             'title' => 'Test 3',
             'value' => 'Bla',
-            'foo' => 'oof'
-        ]
+            'foo' => 'oof',
+        ],
     ];
 
     /**

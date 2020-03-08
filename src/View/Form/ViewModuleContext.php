@@ -74,7 +74,7 @@ class ViewModuleContext implements ContextInterface
     {
         $options += [
             'default' => null,
-            'schemaDefault' => true
+            'schemaDefault' => true,
         ];
 
         $val = $this->_request->data($field);

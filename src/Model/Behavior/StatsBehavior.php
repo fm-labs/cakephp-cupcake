@@ -21,7 +21,7 @@ class StatsBehavior extends Behavior
         'implementedMethods' => [
             'getStats' => 'getStats',
         ],
-        'implementedFinders' => []
+        'implementedFinders' => [],
     ];
 
     public function getStats()

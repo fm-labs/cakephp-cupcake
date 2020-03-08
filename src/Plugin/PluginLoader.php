@@ -22,7 +22,7 @@ class PluginLoader extends Plugin
     /**
      * @var PluginRegistry
      */
-    static protected $_registry;
+    protected static $_registry;
 
     /**
      * Load and normalize plugin configurations
@@ -89,11 +89,11 @@ class PluginLoader extends Plugin
      */
     public static function activate($plugin = null)
     {
-        if (!Configure::check('Banana.plugins.'.$plugin)) {
+        if (!Configure::check('Banana.plugins.' . $plugin)) {
             throw new MissingPluginConfigException(['plugin' => $plugin]);
         }
         // update enabled state to TRUE
-        Configure::write('Banana.plugins.'.$plugin.'.enabled', true);
+        Configure::write('Banana.plugins.' . $plugin . '.enabled', true);
         Cache::delete('plugins', 'banana');
 
         //@todo Dispatch activation event

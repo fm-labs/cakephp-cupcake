@@ -18,7 +18,7 @@ class SluggableBehaviorTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'plugin.Banana.Posts'
+        'plugin.Banana.Posts',
     ];
 
     public function setUp()
