@@ -1,7 +1,6 @@
 <?php
 namespace Banana\Test\TestCase\Model\Behavior;
 
-use Banana\Model\Behavior\AttributesBehavior;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
@@ -30,7 +29,15 @@ class AttributesBehaviorTest extends TestCase
         parent::setUp();
 
         $this->table = TableRegistry::getTableLocator()->get('Banana.Posts');
-        $this->table->behaviors()->load('Banana.Attributes');
+        $this->table->behaviors()->load('Banana.Attributes', [
+            'attributesPropertyName' => 'attributes_data',
+            'attributes' => [
+                'test_string' => ['default' => null],
+                'test_required' => ['required' => true],
+                'test_attribute' => [],
+                'my_attribute' => []
+            ]
+        ]);
     }
 
     /**
@@ -52,7 +59,44 @@ class AttributesBehaviorTest extends TestCase
      */
     public function testInitialize()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertTrue($this->table->hasAssociation('Attributes'));
+    }
+
+    public function testGetAttributesTable()
+    {
+        $this->markTestIncomplete();
+        //$this->assertInstanceOf(\Banana\Model\Table\AttributesTable::class, $this->table->getAttributesTable());
+    }
+
+    public function testGetAttributesSchema()
+    {
+        $schema = $this->table->getAttributesSchema();
+
+        $expected = [
+            'test_string' => ['default' => null],
+            'test_required' => ['required' => true],
+            'test_attribute' => [],
+            'my_attribute' => []
+        ];
+        $this->assertArraySubset($expected, $schema);
+    }
+
+
+    public function testValidation()
+    {
+        // create
+        $post = $this->table->newEntity([
+            'author_id' => null,
+            'title' => 'Post New',
+            'slug' => 'post_new',
+            'body_text' => '<h1>Post New</h1>',
+            'is_published' => true,
+            'publish_start' => null,
+            'publish_end' => null,
+        ]);
+
+        //$post = $this->table->patchEntity($post, ['my_attribute' => 'foo']);
+        $this->assertTrue(($post->getError('test_required')['_required']) ? true : false);
     }
 
     /**
@@ -66,9 +110,7 @@ class AttributesBehaviorTest extends TestCase
             ->find('withAttributes')
             ->first();
 
-        $this->assertArraySubset(['attr_string' => 'SomeString1', 'attr_int' => 1], $post->attributes);
-
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertArraySubset(['attr_string' => 'SomeString1', 'attr_int' => 1], $post->toArray());
     }
 
     public function testFindByAttribute()
@@ -82,7 +124,7 @@ class AttributesBehaviorTest extends TestCase
         $this->assertEquals(0, $posts->count());
 
         $this->expectException('\InvalidArgumentException');
-        $posts = $this->table->find()
+        $this->table->find()
             ->find('byAttribute');
     }
 
@@ -101,57 +143,120 @@ class AttributesBehaviorTest extends TestCase
         $this->assertEquals(0, $posts->count());
 
         $this->expectException('\InvalidArgumentException');
-        $posts = $this->table->find()
+        $this->table->find()
             ->find('havingAttribute');
     }
 
-    /**
-     * Test beforeFind method
-     *
-     * @return void
-     */
-    public function testBeforeFind()
+    public function testCrudWithAttributesData()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->markTestIncomplete();
+
+        $attributes = [
+            'test_string' => 'bar',
+            'test_required' => 1
+        ];
+
+        // create
+        $post = $this->table->newEntity([
+            'author_id' => null,
+            'title' => 'Post New',
+            'slug' => 'post_new',
+            'body_text' => '<h1>Post New</h1>',
+            'is_published' => true,
+            'publish_start' => null,
+            'publish_end' => null,
+            'attributes_data' => $attributes
+        ]);
+
+        $post = $this->table->save($post);
+        $this->assertNotFalse($post);
+
+        // read
+        $post = $this->table->find()
+            ->find('withAttributes')
+            ->where(['Posts.id' => $post->id])
+            ->first();
+
+        $this->assertArraySubset($attributes, $post->get('attributes_data'));
+
+        // update
+        $attributes2 = [
+            'test_string' => 'baz',
+            'test_required' => 2,
+            'test_attribute' => 'test'
+        ];
+        $post->set('attributes_data', $attributes2);
+        $post = $this->table->save($post);
+
+        // read again
+        $post = $this->table->find()
+            ->find('withAttributes')
+            ->where(['Posts.id' => $post->id])
+            ->first();
+
+        $this->assertArraySubset($attributes2, $post->get('attributes_data'));
+
+        // delete
+        $this->table->delete($post);
+
+        $orphanedAttributes = TableRegistry::getTableLocator()->get('Banana.Attributes')
+            ->find()
+            ->where([
+                'model' => $this->table->getRegistryAlias(),
+                'foreign_key' => $post->id
+            ])
+            ->count();
+        $this->assertEquals(0, $orphanedAttributes);
     }
 
-    /**
-     * Test buildValidator method
-     *
-     * @return void
-     */
-    public function testBuildValidator()
+    public function testCrudWithAttributeDirectAccessor()
     {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
+        // create
+        $post = $this->table->newEntity([
+            'author_id' => null,
+            'title' => 'Post New',
+            'slug' => 'post_new',
+            'body_text' => '<h1>Post New</h1>',
+            'is_published' => true,
+            'publish_start' => null,
+            'publish_end' => null,
+            'test_required' => 0,
+            'my_attribute' => 'foo'
+        ]);
 
-    /**
-     * Test buildRules method
-     *
-     * @return void
-     */
-    public function testBuildRules()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
+        $post = $this->table->save($post);
+        $this->assertNotFalse($post);
 
-    /**
-     * Test beforeSave method
-     *
-     * @return void
-     */
-    public function testBeforeSave()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
+        // read
+        $post = $this->table->find()
+            ->find('withAttributes')
+            ->where(['Posts.id' => $post->id])
+            ->first();
 
-    /**
-     * Test afterSave method
-     *
-     * @return void
-     */
-    public function testAfterSave()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->assertEquals('foo', $post->get('my_attribute'));
+
+        // update
+        $post->set('my_attribute', 'bar');
+        $post = $this->table->save($post);
+
+        // read again
+        $post = $this->table->find()
+            ->find('withAttributes')
+            ->where(['Posts.id' => $post->id])
+            ->first();
+
+        $this->assertEquals('bar', $post->get('my_attribute'));
+
+        // delete
+        $this->table->delete($post);
+
+        $orphanedAttributes = TableRegistry::getTableLocator()->get('Banana.Attributes')
+            ->find()
+            ->where([
+                'model' => $this->table->getRegistryAlias(),
+                'foreign_key' => $post->id
+            ])
+            ->count();
+        $this->assertEquals(0, $orphanedAttributes);
     }
 }

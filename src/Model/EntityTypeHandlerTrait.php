@@ -30,27 +30,12 @@ trait EntityTypeHandlerTrait
             //if (!($this instanceof EntityInterface)) {
             //    throw new \Exception(sprintf("EntityTypeHandler can only be applied to an instance of EntityInterface"));
             //}
-
             $type = $this->_getHandlerType();
             if (!$type) {
                 throw new \Exception(sprintf('Type handler can not be attached without type for ' . get_class($this) . ' with id ' . $this->id));
             }
 
-            $ns = $this->_getHandlerNamespace();
-            if (!$ns) {
-                throw new \InvalidArgumentException('Type handler namespace not defined');
-            }
-
-            //$handler = ClassRegistry::get($ns, $type);
-            $handlerClass = ClassRegistry::getClass($ns, $type);
-            if (!$handlerClass) {
-                throw new \Exception("No type handler class for $ns:$type");
-            }
-            if (!class_exists($handlerClass)) {
-                throw new \Exception("Type handler class not found $ns:$type");
-            }
-
-            $handler = new $handlerClass($this);
+            $handler = $this->_createHandler($type);
 
             if (!($handler instanceof EntityTypeInterface)) {
                 throw new \Exception(sprintf("Type handler MUST be an instance of EntityTypeInterface"));
@@ -61,6 +46,26 @@ trait EntityTypeHandlerTrait
         }
 
         return $this->_typeHandler;
+    }
+
+    protected function _createHandler($type)
+    {
+        $ns = $this->_getHandlerNamespace();
+        if (!$ns) {
+            throw new \InvalidArgumentException('Type handler namespace not defined');
+        }
+        //$handler = ClassRegistry::get($ns, $type);
+        $handlerClass = ClassRegistry::getClass($ns, $type);
+        if (!$handlerClass) {
+            throw new \Exception("No type handler class for $ns:$type:$handlerClass");
+        }
+        if (!class_exists($handlerClass)) {
+            throw new \Exception("Type handler class not found $ns:$type");
+        }
+
+        $handler = new $handlerClass($this);
+
+        return $handler;
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php
 namespace Banana;
 
+use Banana\Plugin\BasePlugin;
 use Banana\Plugin\PluginInterface;
 use Banana\Plugin\PluginRegistry;
 use Cake\Cache\Cache;
@@ -195,11 +196,15 @@ class Application extends BaseApplication implements EventDispatcherInterface
         $info['classPath'] = Plugin::classPath($pluginName);
         //$info['registered'] = in_array($pluginName, Plugin::loaded());
         //$info['registered'] = true;
-        $info['handler_loaded'] = $this->getPlugins()->has($pluginName);
-        $info['handler_class'] = $this->getPlugins()->has($pluginName) ? get_class($this->getPlugins()->get($pluginName)) : null;
-        $info['handler_bootstrap'] = $this->getPlugins()->has($pluginName) ? $this->getPlugins()->get($pluginName)->isEnabled('bootstrap') : null;
-        $info['handler_routes'] = $this->getPlugins()->has($pluginName) ? $this->getPlugins()->get($pluginName)->isEnabled('routes') : null;
+
+        $plugin = ($this->getPlugins()->has($pluginName)) ? $this->getPlugins()->get($pluginName) : null;
+
+        $info['handler_loaded'] = ($plugin) ? true : false;
+        $info['handler_class'] = $plugin ? get_class($plugin) : null;
+        $info['handler_bootstrap'] = $plugin ? $plugin->isEnabled('bootstrap') : null;
+        $info['handler_routes'] = $plugin ? $plugin->isEnabled('routes') : null;
         //$info['handler_enabled'] = true;
+        $info['configuration_url'] = $plugin && $plugin instanceof BasePlugin ? $plugin->getConfigurationUrl() : null;
 
         return $info;
     }

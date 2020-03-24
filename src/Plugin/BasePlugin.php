@@ -10,8 +10,15 @@ use Cake\Http\MiddlewareQueue;
 use Cake\Routing\RouteBuilder;
 */
 
+use Cake\Core\Plugin;
+
 abstract class BasePlugin /*implements PluginInterface*/ extends \Cake\Core\BasePlugin
 {
+    public function getConfigurationUrl()
+    {
+        return null;
+    }
+
     /*
     use InstanceConfigTrait;
 
