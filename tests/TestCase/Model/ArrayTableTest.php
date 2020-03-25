@@ -8,7 +8,7 @@ use Cake\TestSuite\TestCase;
 
 class ArrayTableTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         TableRegistry::getTableLocator()->setConfig('TestArray', [
            'className' => 'Banana\Test\TestCase\Model\Table\TestArrayTable',

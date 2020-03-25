@@ -17,7 +17,7 @@ class ErrorController extends \Cake\Controller\ErrorController
      *
      * @return void
      */
-    public function initialize()
+    public function initialize(): void
     {
         $this->loadComponent('RequestHandler');
     }
@@ -28,7 +28,7 @@ class ErrorController extends \Cake\Controller\ErrorController
      * @param \Cake\Event\Event $event Event.
      * @return void
      */
-    public function beforeRender(Event $event)
+    public function beforeRender(\Cake\Event\EventInterface $event)
     {
         //$this->viewBuilder()->theme(Configure::read('Site.theme'));
         $this->viewBuilder()->setPlugin('Banana');

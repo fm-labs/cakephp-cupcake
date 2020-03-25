@@ -33,7 +33,7 @@ class InputSchemaBehavior extends Behavior
      */
     protected $_inputs;
 
-    public function initialize(array $config = [])
+    public function initialize(array $config = []): void
     {
         $this->_inputs = new TableInputSchema();
 

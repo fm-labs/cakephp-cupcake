@@ -24,7 +24,7 @@ class AttributesBehaviorTest extends TestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -45,7 +45,7 @@ class AttributesBehaviorTest extends TestCase
      *
      * @return void
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->table);
 
@@ -78,7 +78,14 @@ class AttributesBehaviorTest extends TestCase
             'test_attribute' => [],
             'my_attribute' => []
         ];
-        $this->assertArraySubset($expected, $schema);
+        $this->assertArrayHasKey('test_string', $schema);
+        $this->assertArrayHasKey('test_required', $schema);
+        $this->assertArrayHasKey('test_attribute', $schema);
+        $this->assertArrayHasKey('my_attribute', $schema);
+        $this->assertSame(['default' => null], $schema['test_string']);
+        $this->assertSame(['required' => true], $schema['test_required']);
+        $this->assertSame([], $schema['test_attribute']);
+        $this->assertSame([], $schema['my_attribute']);
     }
 
 
@@ -109,8 +116,10 @@ class AttributesBehaviorTest extends TestCase
         $post = $this->table->find()
             ->find('withAttributes')
             ->first();
-
-        $this->assertArraySubset(['attr_string' => 'SomeString1', 'attr_int' => 1], $post->toArray());
+        $this->assertArrayHasKey('attr_string', $post->toArray());
+        $this->assertArrayHasKey('attr_int', $post->toArray());
+        $this->assertSame('SomeString1', $post->toArray()['attr_string']);
+        $this->assertSame(1, $post->toArray()['attr_int']);
     }
 
     public function testFindByAttribute()
@@ -176,8 +185,10 @@ class AttributesBehaviorTest extends TestCase
             ->find('withAttributes')
             ->where(['Posts.id' => $post->id])
             ->first();
-
-        $this->assertArraySubset($attributes, $post->get('attributes_data'));
+        $this->assertArrayHasKey('test_string', $post->get('attributes_data'));
+        $this->assertArrayHasKey('test_required', $post->get('attributes_data'));
+        $this->assertSame('bar', $post->get('attributes_data')['test_string']);
+        $this->assertSame(1, $post->get('attributes_data')['test_required']);
 
         // update
         $attributes2 = [
@@ -193,8 +204,12 @@ class AttributesBehaviorTest extends TestCase
             ->find('withAttributes')
             ->where(['Posts.id' => $post->id])
             ->first();
-
-        $this->assertArraySubset($attributes2, $post->get('attributes_data'));
+        $this->assertArrayHasKey('test_string', $post->get('attributes_data'));
+        $this->assertArrayHasKey('test_required', $post->get('attributes_data'));
+        $this->assertArrayHasKey('test_attribute', $post->get('attributes_data'));
+        $this->assertSame('baz', $post->get('attributes_data')['test_string']);
+        $this->assertSame(2, $post->get('attributes_data')['test_required']);
+        $this->assertSame('test', $post->get('attributes_data')['test_attribute']);
 
         // delete
         $this->table->delete($post);

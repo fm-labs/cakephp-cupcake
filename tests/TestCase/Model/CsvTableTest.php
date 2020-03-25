@@ -11,10 +11,7 @@ use Cake\ORM\TableRegistry;
  */
 class CsvTableTest extends ArrayTableTest
 {
-    /**
-     *
-     */
-    public function setUp()
+    public function setUp(): void
     {
         TableRegistry::getTableLocator()->setConfig('TestCsv', [
             'className' => 'Banana\Test\TestCase\Model\Table\TestCsvTable',

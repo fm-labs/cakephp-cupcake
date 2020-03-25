@@ -23,7 +23,7 @@ class InputSchemaTableTest extends TestCase
     /**
      * {@inheritDoc}
      */
-    public function setUp()
+    public function setUp(): void
     {
         TableRegistry::getTableLocator()->setConfig('TestInputSchema', [
            'className' => 'Banana\Test\TestCase\Model\Table\TestInputSchemaTable',

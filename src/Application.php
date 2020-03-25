@@ -3,11 +3,11 @@ namespace Banana;
 
 use Banana\Plugin\BasePlugin;
 use Cake\Cache\Cache;
-use Cake\Console\ConsoleErrorHandler;
+use Cake\Error\ConsoleErrorHandler;
 use Cake\Core\Configure;
 use Cake\Core\Configure\Engine\PhpConfig;
 use Cake\Core\Plugin;
-use Cake\Database\Type;
+use Cake\Database\TypeFactory;
 use Cake\Datasource\ConnectionManager;
 use Cake\Error\ErrorHandler;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
@@ -58,7 +58,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
      *
      * @return void
      */
-    public function bootstrap()
+    public function bootstrap(): void
     {
         if (self::$_bootstrapped == true) {
             return;
@@ -220,7 +220,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
      * @param \Cake\Http\MiddlewareQueue $middlewareQueue The middleware queue to setup.
      * @return \Cake\Http\MiddlewareQueue The updated middleware queue.
      */
-    public function middleware($middlewareQueue)
+    public function middleware($middlewareQueue): \Cake\Http\MiddlewareQueue
     {
         $middlewareQueue
             // Catch any exceptions in the lower layers,
@@ -320,17 +320,17 @@ class Application extends BaseApplication implements EventDispatcherInterface
          * Register database types
          */
         //Type::map('json', 'Banana\Database\Type\JsonType'); // obsolete since CakePHP 3.3
-        Type::map('serialize', 'Banana\Database\Type\SerializeType');
+        \Cake\Database\TypeFactory::map('serialize', 'Banana\Database\Type\SerializeType');
 
         /*
          * Enable default locale format parsing.
          * This is needed for matching the auto-localized string output of Time() class when parsing dates.
          */
-        Type::build('datetime')->useLocaleParser();
+        \Cake\Database\TypeFactory::build('datetime')->useLocaleParser();
 
         $isCli = php_sapi_name() === 'cli';
         if ($isCli) {
-            (new ConsoleErrorHandler(Configure::read('Error')))->register();
+            (new \Cake\Error\ConsoleErrorHandler(Configure::read('Error')))->register();
 
             // Include the CLI bootstrap overrides.
             require $this->configDir . '/bootstrap_cli.php';

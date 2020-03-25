@@ -15,7 +15,7 @@ class DatatypesTest extends TestCase
      */
     public $table;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->table = TableRegistry::getTableLocator()->get('Banana.Datatypes');
         $this->table->getSchema()->setColumnType('json', 'json');
@@ -53,7 +53,7 @@ class DatatypesTest extends TestCase
         $this->assertEquals($data, $entity->serialized);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->table);
         TableRegistry::getTableLocator()->clear();

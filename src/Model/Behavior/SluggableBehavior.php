@@ -64,7 +64,7 @@ class SluggableBehavior extends Behavior
      * @param $operation
      * @return void
      */
-    public function beforeRules(Event $event, Entity $entity, ArrayObject $options, $operation)
+    public function beforeRules(\Cake\Event\EventInterface $event, Entity $entity, ArrayObject $options, $operation)
     {
         $this->slug($entity);
     }
@@ -76,7 +76,7 @@ class SluggableBehavior extends Behavior
      * @param Entity $entity The entity
      * @return void
      */
-    public function beforeSave(Event $event, Entity $entity)
+    public function beforeSave(\Cake\Event\EventInterface $event, Entity $entity)
     {
         $this->slug($entity);
     }

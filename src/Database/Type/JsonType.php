@@ -2,7 +2,7 @@
 namespace Banana\Database\Type;
 
 use Cake\Database\Driver;
-use Cake\Database\Type;
+use Cake\Database\TypeFactory;
 use PDO;
 
 /**
@@ -16,7 +16,7 @@ use PDO;
  * @package Banana\Database\Type
  * @deprecated
  */
-class JsonType extends Type
+class JsonType extends \Cake\Database\TypeFactory
 {
 
     /**

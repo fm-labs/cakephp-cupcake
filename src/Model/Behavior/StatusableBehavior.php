@@ -33,7 +33,7 @@ class StatusableBehavior extends Behavior
      * @param array $config Behavior config
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         //foreach($config['fields'] as $field => $stati) {
         //    $this->_configureField($field, $stati);
@@ -79,7 +79,6 @@ class StatusableBehavior extends Behavior
      * @param array $options
      * @param $primary
      */
-
     /**
      * 'beforeFind' callback
      *
@@ -91,7 +90,7 @@ class StatusableBehavior extends Behavior
      * @param array $options
      * @param $primary
      */
-    public function beforeFind(Event $event, Query $query, $options, $primary)
+    public function beforeFind(\Cake\Event\EventInterface $event, Query $query, $options, $primary)
     {
         if (!isset($options['status']) || $options['status'] === false) {
             return;
@@ -129,7 +128,7 @@ class StatusableBehavior extends Behavior
      * @param EntityInterface $entity
      * @param ArrayObject $options
      */
-    public function beforeSave(Event $event, EntityInterface $entity, ArrayObject $options)
+    public function beforeSave(\Cake\Event\EventInterface $event, EntityInterface $entity, ArrayObject $options)
     {
         foreach (array_keys($this->_fieldConfig) as $fieldName) {
             if ($entity->get($fieldName) === null) {

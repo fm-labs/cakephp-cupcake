@@ -1,6 +1,6 @@
 <?php
 
-namespace Banana\tests\TestCase\Lib;
+namespace Banana\Test\TestCase\Lib;
 
 use Banana\Lib\Status;
 use PHPUnit\Framework\TestCase;

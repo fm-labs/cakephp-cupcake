@@ -1,6 +1,6 @@
 <?php
 
-namespace Banana\tests\TestCase\Model\Behavior;
+namespace Banana\Test\TestCase\Model\Behavior;
 
 use Cake\ORM\Behavior;
 use Cake\ORM\Table;
@@ -21,13 +21,13 @@ class SluggableBehaviorTest extends TestCase
         'plugin.Banana.Posts',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->Model = TableRegistry::getTableLocator()->get('Posts');
         $this->Model->addBehavior('Banana.Sluggable', []);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         TableRegistry::getTableLocator()->remove('Model');
         unset($this->Model);

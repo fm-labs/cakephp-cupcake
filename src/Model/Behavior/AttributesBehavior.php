@@ -58,7 +58,7 @@ class AttributesBehavior extends Behavior
      * @param array $config Behavior config
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         $targetAlias = /*$this->_table->getAlias() .*/ 'Attributes';
         $targetTable = TableRegistry::getTableLocator()->get($targetAlias, [
@@ -236,7 +236,7 @@ class AttributesBehavior extends Behavior
      * @param array $options
      * @param $primary
      */
-    public function beforeFind(Event $event, Query $query, $options, $primary)
+    public function beforeFind(\Cake\Event\EventInterface $event, Query $query, $options, $primary)
     {
         /*
         $mapper = function ($row, $key, MapReduce $mapReduce) {
@@ -255,7 +255,7 @@ class AttributesBehavior extends Behavior
         }
     }
 
-    public function buildValidator(Event $event, Validator $validator, $name)
+    public function buildValidator(\Cake\Event\EventInterface $event, Validator $validator, $name)
     {
         foreach ($this->attributesSchema() as $field => $config) {
             $required = $config['required'] ?? false;
@@ -280,7 +280,7 @@ class AttributesBehavior extends Behavior
     }
     */
 
-    public function afterSave(Event $event, EntityInterface $entity, ArrayObject $options)
+    public function afterSave(\Cake\Event\EventInterface $event, EntityInterface $entity, ArrayObject $options)
     {
         //debug("afterSave");
         //debug($entity->attributes);

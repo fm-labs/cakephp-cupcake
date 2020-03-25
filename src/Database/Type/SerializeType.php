@@ -2,7 +2,8 @@
 namespace Banana\Database\Type;
 
 use Cake\Database\Driver;
-use Cake\Database\Type;
+use Cake\Database\DriverInterface;
+use Cake\Database\TypeFactory;
 use Cake\Database\TypeInterface;
 use InvalidArgumentException;
 use PDO;
@@ -12,7 +13,7 @@ use PDO;
  *
  * Use to convert serialized data between PHP and the database types.
  */
-class SerializeType extends Type implements TypeInterface
+class SerializeType extends \Cake\Database\TypeFactory implements TypeInterface
 {
 
     /**
@@ -22,7 +23,7 @@ class SerializeType extends Type implements TypeInterface
      * @param \Cake\Database\Driver $driver The driver instance to convert with.
      * @return string|null
      */
-    public function toDatabase($value, Driver $driver)
+    public function toDatabase($value, DriverInterface $driver)
     {
         if (is_resource($value)) {
             throw new InvalidArgumentException('Cannot serialize a resource value');
@@ -38,7 +39,7 @@ class SerializeType extends Type implements TypeInterface
      * @param \Cake\Database\Driver $driver The driver instance to convert with.
      * @return string|null|array
      */
-    public function toPHP($value, Driver $driver)
+    public function toPHP($value, DriverInterface $driver)
     {
         return unserialize($value);
     }
@@ -50,7 +51,7 @@ class SerializeType extends Type implements TypeInterface
      * @param \Cake\Database\Driver $driver The driver.
      * @return int
      */
-    public function toStatement($value, Driver $driver)
+    public function toStatement($value, DriverInterface $driver)
     {
         return PDO::PARAM_STR;
     }
@@ -65,4 +66,45 @@ class SerializeType extends Type implements TypeInterface
     {
         return $value;
     }
+
+
+    /**
+     * Returns the base type name that this class is inheriting.
+     *
+     * This is useful when extending base type for adding extra functionality,
+     * but still want the rest of the framework to use the same assumptions it would
+     * do about the base type it inherits from.
+     *
+     * @return string|null The base type name that this class is inheriting.
+     */
+    public function getBaseType(): ?string
+    {
+
+    }
+
+    /**
+     * Returns type identifier name for this object.
+     *
+     * @return string|null The type identifier name for this object.
+     */
+    public function getName(): ?string
+    {
+
+    }
+
+    /**
+     * Generate a new primary key value for a given type.
+     *
+     * This method can be used by types to create new primary key values
+     * when entities are inserted.
+     *
+     * @return mixed A new primary key value.
+     * @see \Cake\Database\Type\UuidType
+     */
+    public function newId()
+    {
+
+    }
+
+
 }

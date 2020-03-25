@@ -49,7 +49,7 @@ class PublishableBehavior extends Behavior
      * @param ArrayObject $options
      * @param bool $primary
      */
-    public function beforeFind(Event $event, Query $query, ArrayObject $options, $primary)
+    public function beforeFind(\Cake\Event\EventInterface $event, Query $query, ArrayObject $options, $primary)
     {
 
         if (isset($options['published'])) {

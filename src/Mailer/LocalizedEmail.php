@@ -119,7 +119,7 @@ class LocalizedEmail extends Email
     public function send($content = null)
     {
         $subject = $this->getOriginalSubject();
-        $this->set('_subject', $subject);
+        $this->setViewVars('_subject', $subject);
 
         return parent::send($content);
     }
