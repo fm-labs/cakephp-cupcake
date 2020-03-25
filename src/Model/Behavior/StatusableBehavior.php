@@ -1,11 +1,12 @@
 <?php
+declare(strict_types=1);
+
 namespace Banana\Model\Behavior;
 
 use ArrayObject;
 use Banana\Lib\Status;
 use Cake\Collection\Iterator\MapReduce;
 use Cake\Datasource\EntityInterface;
-use Cake\Event\Event;
 use Cake\ORM\Behavior;
 use Cake\ORM\Query;
 
@@ -14,7 +15,6 @@ use Cake\ORM\Query;
  */
 class StatusableBehavior extends Behavior
 {
-
     /**
      * Default configuration.
      *
@@ -59,9 +59,9 @@ class StatusableBehavior extends Behavior
     }
 
     /**
-     * @param Query $query
+     * @param \Cake\ORM\Query $query
      * @param array $options
-     * @return Query
+     * @return \Cake\ORM\Query
      */
     public function findStatus(Query $query, array $options)
     {
@@ -74,19 +74,20 @@ class StatusableBehavior extends Behavior
      * Applies a MapReduce to the query, which resolves attachment info
      * if an attachment field is present in the query results.
      *
-     * @param Event $event
-     * @param Query $query
+     * @param \Cake\Event\Event $event
+     * @param \Cake\ORM\Query $query
      * @param array $options
      * @param $primary
      */
+
     /**
      * 'beforeFind' callback
      *
      * Applies a MapReduce to the query, which resolves attachment info
      * if an attachment field is present in the query results.
      *
-     * @param Event $event
-     * @param Query $query
+     * @param \Cake\Event\Event $event
+     * @param \Cake\ORM\Query $query
      * @param array $options
      * @param $primary
      */
@@ -124,9 +125,9 @@ class StatusableBehavior extends Behavior
     }
 
     /**
-     * @param Event $event
-     * @param EntityInterface $entity
-     * @param ArrayObject $options
+     * @param \Cake\Event\Event $event
+     * @param \Cake\Datasource\EntityInterface $entity
+     * @param \ArrayObject $options
      */
     public function beforeSave(\Cake\Event\EventInterface $event, EntityInterface $entity, ArrayObject $options)
     {

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Banana\Menu;
 
@@ -9,7 +10,7 @@ namespace Banana\Menu;
  * @property string $title Title
  * @property mixed $url Url
  * @property array $attr Attributes
- * @property Menu $children Children
+ * @property \Banana\Menu\Menu $children Children
  *
  */
 class MenuItem implements \ArrayAccess
@@ -30,7 +31,7 @@ class MenuItem implements \ArrayAccess
     protected $_attr;
 
     /**
-     * @var Menu
+     * @var \Banana\Menu\Menu
      */
     protected $_children;
 
@@ -38,7 +39,7 @@ class MenuItem implements \ArrayAccess
      * @param string|array $title
      * @param null $url
      * @param array $attr
-     * @param Menu|array $children
+     * @param \Banana\Menu\Menu|array $children
      */
     public function __construct($title, $url = null, array $attr = [], $children = [])
     {
@@ -90,7 +91,7 @@ class MenuItem implements \ArrayAccess
     }
 
     /**
-     * @param Menu|array $children Menu item children
+     * @param \Banana\Menu\Menu|array $children Menu item children
      * @param bool $append If True, append children instead of replacing existing items (default: false)
      * @return $this
      */
@@ -112,7 +113,7 @@ class MenuItem implements \ArrayAccess
     /**
      * Alias for setChildren (auto-append)
      *
-     * @param Menu|array $children Menu item children
+     * @param \Banana\Menu\Menu|array $children Menu item children
      * @return $this
      */
     public function addChildren($children)
@@ -263,14 +264,14 @@ class MenuItem implements \ArrayAccess
         $attr = $children = [];
 
         if (isset($item[0])) {
-            list($title, $url, $attr, $children) = $item;
+            [$title, $url, $attr, $children] = $item;
         } else {
             //$item['foo'] = 'bar';
-            $title = (isset($item['title'])) ? $item['title'] : null;
-            $url = (isset($item['url'])) ? $item['url'] : null;
-            $children = (isset($item['children'])) ? $item['children'] : [];
+            $title = $item['title'] ?? null;
+            $url = $item['url'] ?? null;
+            $children = $item['children'] ?? [];
 
-            $attr = (isset($item['attr'])) ? $item['attr'] : [];
+            $attr = $item['attr'] ?? [];
             $attr += array_diff_key($item, ['title' => null, 'url' => null, 'children' => null, 'attr' => null]);
         }
 

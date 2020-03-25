@@ -1,8 +1,7 @@
 <?php
+declare(strict_types=1);
 
 namespace Banana\Controller;
-
-use Cake\ORM\Table;
 
 /**
  * Class PrimaryModelAwareTrait
@@ -12,13 +11,13 @@ use Cake\ORM\Table;
 trait PrimaryModelAwareTrait
 {
     /**
-     * @return null|Table
+     * @return null|\Cake\ORM\Table
      */
     public function model()
     {
         $modelClass = $this->modelClass;
 
-        list(, $alias) = pluginSplit($modelClass, true);
+        [, $alias] = pluginSplit($modelClass, true);
 
         if (isset($this->{$alias})) {
             return $this->{$alias};

@@ -1,9 +1,7 @@
 <?php
+declare(strict_types=1);
 
 namespace Banana;
-
-use Banana\Plugin\PluginRegistry;
-use Cake\Core\Configure;
 
 /**
  * Class Banana
@@ -18,7 +16,7 @@ class Banana
     /**
      * @deprecated
      */
-    const VERSION = "0.4.0";
+    public const VERSION = "0.4.0";
 
     /**
      * @var string Default mailer class
@@ -42,7 +40,7 @@ class Banana
 
     /**
      * Singleton getter
-     * @return Banana
+     * @return \Banana\Banana
      * @throws \Exception
      */
     public static function init(Application $app)
@@ -56,7 +54,7 @@ class Banana
 
     /**
      * Singleton getter
-     * @return Banana
+     * @return \Banana\Banana
      * @throws \Exception
      */
     public static function getInstance()
@@ -96,7 +94,7 @@ class Banana
 
     /**
      * Singleton instance constructor
-     * @param Application $app
+     * @param \Banana\Application $app
      */
     public function __construct(Application $app)
     {
@@ -112,7 +110,7 @@ class Banana
     }
 
     /**
-     * @return Application
+     * @return \Banana\Application
      */
     public function app()
     {

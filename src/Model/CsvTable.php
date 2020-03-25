@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Banana\Model;
 
 use Cake\ORM\BehaviorRegistry;
@@ -10,7 +12,6 @@ use Cake\ORM\BehaviorRegistry;
  */
 class CsvTable extends ArrayTable
 {
-
     /**
      * @var string CSV file path
      */

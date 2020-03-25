@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Banana\Model;
 
@@ -21,21 +22,21 @@ class ArrayTableQuery implements QueryInterface
      *
      * @var int
      */
-    const APPEND = 0;
+    public const APPEND = 0;
 
     /**
      * Indicates that the operation should prepend to the list
      *
      * @var int
      */
-    const PREPEND = 1;
+    public const PREPEND = 1;
 
     /**
      * Indicates that the operation should overwrite the list
      *
      * @var bool
      */
-    const OVERWRITE = true;
+    public const OVERWRITE = true;
 
     /**
      * @var array|callable
@@ -43,12 +44,12 @@ class ArrayTableQuery implements QueryInterface
     protected $_conditions;
 
     /**
-     * @var ArrayTable
+     * @var \Banana\Model\ArrayTable
      */
     //protected $_repository = null;
 
     /**
-     * @param ArrayTable $table
+     * @param \Banana\Model\ArrayTable $table
      */
     public function __construct(ArrayTable $table)
     {
@@ -287,7 +288,7 @@ class ArrayTableQuery implements QueryInterface
      * @param \Cake\Datasource\RepositoryInterface|null $repository The default repository object to use
      * @return \Banana\Model\ArrayTable|$this
      */
-    public function repository(RepositoryInterface $repository = null)
+    public function repository(?RepositoryInterface $repository = null)
     {
         if ($repository === null) {
             return $this->_repository;

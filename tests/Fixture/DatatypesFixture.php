@@ -8,7 +8,6 @@ use Cake\TestSuite\Fixture\TestFixture;
  */
 class DatatypesFixture extends TestFixture
 {
-
     /**
      * @var array
      */

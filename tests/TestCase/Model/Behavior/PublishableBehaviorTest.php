@@ -1,9 +1,8 @@
 <?php
+declare(strict_types=1);
 
 namespace Banana\Test\TestCase\Model\Behavior;
 
-use Cake\ORM\Behavior;
-use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 

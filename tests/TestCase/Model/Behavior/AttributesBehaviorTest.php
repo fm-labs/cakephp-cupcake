@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Banana\Test\TestCase\Model\Behavior;
 
 use Cake\ORM\TableRegistry;
@@ -35,8 +37,8 @@ class AttributesBehaviorTest extends TestCase
                 'test_string' => ['default' => null],
                 'test_required' => ['required' => true],
                 'test_attribute' => [],
-                'my_attribute' => []
-            ]
+                'my_attribute' => [],
+            ],
         ]);
     }
 
@@ -76,7 +78,7 @@ class AttributesBehaviorTest extends TestCase
             'test_string' => ['default' => null],
             'test_required' => ['required' => true],
             'test_attribute' => [],
-            'my_attribute' => []
+            'my_attribute' => [],
         ];
         $this->assertArrayHasKey('test_string', $schema);
         $this->assertArrayHasKey('test_required', $schema);
@@ -87,7 +89,6 @@ class AttributesBehaviorTest extends TestCase
         $this->assertSame([], $schema['test_attribute']);
         $this->assertSame([], $schema['my_attribute']);
     }
-
 
     public function testValidation()
     {
@@ -103,7 +104,7 @@ class AttributesBehaviorTest extends TestCase
         ]);
 
         //$post = $this->table->patchEntity($post, ['my_attribute' => 'foo']);
-        $this->assertTrue(($post->getError('test_required')['_required']) ? true : false);
+        $this->assertTrue($post->getError('test_required')['_required'] ? true : false);
     }
 
     /**
@@ -162,7 +163,7 @@ class AttributesBehaviorTest extends TestCase
 
         $attributes = [
             'test_string' => 'bar',
-            'test_required' => 1
+            'test_required' => 1,
         ];
 
         // create
@@ -174,7 +175,7 @@ class AttributesBehaviorTest extends TestCase
             'is_published' => true,
             'publish_start' => null,
             'publish_end' => null,
-            'attributes_data' => $attributes
+            'attributes_data' => $attributes,
         ]);
 
         $post = $this->table->save($post);
@@ -194,7 +195,7 @@ class AttributesBehaviorTest extends TestCase
         $attributes2 = [
             'test_string' => 'baz',
             'test_required' => 2,
-            'test_attribute' => 'test'
+            'test_attribute' => 'test',
         ];
         $post->set('attributes_data', $attributes2);
         $post = $this->table->save($post);
@@ -218,7 +219,7 @@ class AttributesBehaviorTest extends TestCase
             ->find()
             ->where([
                 'model' => $this->table->getRegistryAlias(),
-                'foreign_key' => $post->id
+                'foreign_key' => $post->id,
             ])
             ->count();
         $this->assertEquals(0, $orphanedAttributes);
@@ -236,7 +237,7 @@ class AttributesBehaviorTest extends TestCase
             'publish_start' => null,
             'publish_end' => null,
             'test_required' => 0,
-            'my_attribute' => 'foo'
+            'my_attribute' => 'foo',
         ]);
 
         $post = $this->table->save($post);
@@ -269,7 +270,7 @@ class AttributesBehaviorTest extends TestCase
             ->find()
             ->where([
                 'model' => $this->table->getRegistryAlias(),
-                'foreign_key' => $post->id
+                'foreign_key' => $post->id,
             ])
             ->count();
         $this->assertEquals(0, $orphanedAttributes);

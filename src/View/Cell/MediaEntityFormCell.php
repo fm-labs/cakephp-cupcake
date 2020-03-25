@@ -1,8 +1,8 @@
 <?php
+declare(strict_types=1);
 
 namespace Banana\View\Cell;
 
-use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\View\Cell;
 

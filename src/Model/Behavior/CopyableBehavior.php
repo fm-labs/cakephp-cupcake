@@ -1,7 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace Banana\Model\Behavior;
 
-use Cake\Event\Event;
 use Cake\ORM\Behavior;
 use Cake\ORM\Entity;
 
@@ -22,8 +23,8 @@ class CopyableBehavior extends Behavior
     ];
 
     /**
-     * @param Entity $entity Entity to copy
-     * @return Entity
+     * @param \Cake\ORM\Entity $entity Entity to copy
+     * @return \Cake\ORM\Entity
      */
     public function copyEntity(Entity $entity)
     {
@@ -36,7 +37,7 @@ class CopyableBehavior extends Behavior
                 //$new->dirty($field, false);
             }
         } elseif (!empty($config['excludeFields'])) {
-            $new = clone($entity);
+            $new = clone$entity;
             foreach ($config['excludeFields'] as $field) {
                 $new->set($field, null);
                 //$new->dirty($field, false);

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Banana\Model;
 
@@ -11,7 +12,6 @@ use Cake\Datasource\EntityInterface;
  */
 class ArrayTableEntity extends \ArrayObject implements EntityInterface
 {
-
     /**
      * Magic getter to access properties that have been set in this entity
      *
@@ -107,7 +107,7 @@ class ArrayTableEntity extends \ArrayObject implements EntityInterface
      */
     public function has($property)
     {
-        return (isset($this[$property]));
+        return isset($this[$property]);
     }
 
     /**

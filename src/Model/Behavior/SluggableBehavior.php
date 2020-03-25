@@ -1,8 +1,9 @@
 <?php
+declare(strict_types=1);
+
 namespace Banana\Model\Behavior;
 
 use ArrayObject;
-use Cake\Event\Event;
 use Cake\ORM\Behavior;
 use Cake\ORM\Entity;
 use Cake\Utility\Text;
@@ -28,7 +29,7 @@ class SluggableBehavior extends Behavior
     /**
      * Create an URL-friendly slug string
      *
-     * @param Entity $entity Entity to create a slug for
+     * @param \Cake\ORM\Entity $entity Entity to create a slug for
      * @return void
      */
     public function slug(Entity $entity)
@@ -58,8 +59,8 @@ class SluggableBehavior extends Behavior
     /**
      * Automatically slug when saving.
      *
-     * @param Event $event The event
-     * @param Entity $entity The entity
+     * @param \Cake\Event\Event $event The event
+     * @param \Cake\ORM\Entity $entity The entity
      * @param \ArrayObject $options
      * @param $operation
      * @return void
@@ -72,8 +73,8 @@ class SluggableBehavior extends Behavior
     /**
      * Automatically slug when saving.
      *
-     * @param Event $event The event
-     * @param Entity $entity The entity
+     * @param \Cake\Event\Event $event The event
+     * @param \Cake\ORM\Entity $entity The entity
      * @return void
      */
     public function beforeSave(\Cake\Event\EventInterface $event, Entity $entity)

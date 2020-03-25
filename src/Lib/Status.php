@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Banana\Lib;
 
 /**
@@ -32,10 +34,10 @@ class Status implements \JsonSerializable
     {
         $this->_status = $status;
 
-        $label = ($label) ?: $status;
+        $label = $label ?: $status;
         $this->_label = $label;
 
-        $class = ($class) ?: 'default';
+        $class = $class ?: 'default';
         $this->_class = $class;
     }
 

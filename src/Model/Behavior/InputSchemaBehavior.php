@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Banana\Model\Behavior;
 
@@ -8,7 +9,6 @@ use Cake\Utility\Inflector;
 
 class InputSchemaBehavior extends Behavior
 {
-
     public static $typeMap = [
         'integer' => 'Number',
         'string' => 'Text',
@@ -29,7 +29,7 @@ class InputSchemaBehavior extends Behavior
     ];
 
     /**
-     * @var TableInputSchema
+     * @var \Banana\Model\TableInputSchema
      */
     protected $_inputs;
 
@@ -55,7 +55,7 @@ class InputSchemaBehavior extends Behavior
     }
 
     /**
-     * @return TableInputSchema
+     * @return \Banana\Model\TableInputSchema
      */
     public function getInputs()
     {

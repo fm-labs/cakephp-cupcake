@@ -1,8 +1,9 @@
 <?php
+declare(strict_types=1);
+
 namespace Banana\Database\Type;
 
 use Cake\Database\Driver;
-use Cake\Database\TypeFactory;
 use PDO;
 
 /**
@@ -18,10 +19,9 @@ use PDO;
  */
 class JsonType extends \Cake\Database\TypeFactory
 {
-
     /**
      * @param mixed $value
-     * @param Driver $driver
+     * @param \Cake\Database\Driver $driver
      * @return mixed|null
      */
     public function toPHP($value, Driver $driver)
@@ -48,7 +48,7 @@ class JsonType extends \Cake\Database\TypeFactory
 
     /**
      * @param $value
-     * @param Driver $driver
+     * @param \Cake\Database\Driver $driver
      * @return string
      */
     public function toDatabase($value, Driver $driver)
@@ -58,7 +58,7 @@ class JsonType extends \Cake\Database\TypeFactory
 
     /**
      * @param $value
-     * @param Driver $driver
+     * @param \Cake\Database\Driver $driver
      * @return int
      */
     public function toStatement($value, Driver $driver)

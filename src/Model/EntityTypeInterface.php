@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Banana\Model;
 
@@ -14,7 +15,7 @@ use Cake\Datasource\EntityInterface;
 interface EntityTypeInterface
 {
     /**
-     * @param EntityInterface $entity
+     * @param \Cake\Datasource\EntityInterface $entity
      * @return mixed
      */
     public function __construct(EntityInterface $entity);

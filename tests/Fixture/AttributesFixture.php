@@ -8,7 +8,6 @@ use Cake\TestSuite\Fixture\TestFixture;
  */
 class AttributesFixture extends TestFixture
 {
-
     public $table = 'attributes';
 
     /**

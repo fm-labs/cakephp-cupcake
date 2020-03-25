@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Banana\Model;
 
@@ -16,12 +17,12 @@ trait EntityTypeHandlerTrait
     //protected $_typeNamespace = null;
 
     /**
-     * @var EntityTypeInterface Type handler instance
+     * @var \Banana\Model\EntityTypeInterface Type handler instance
      */
     protected $_typeHandler;
 
     /**
-     * @return EntityTypeInterface
+     * @return \Banana\Model\EntityTypeInterface
      * @throws \Exception
      */
     protected function handler()
@@ -32,7 +33,7 @@ trait EntityTypeHandlerTrait
             //}
             $type = $this->_getHandlerType();
             if (!$type) {
-                throw new \Exception(sprintf('Type handler can not be attached without type for ' . get_class($this) . ' with id ' . $this->id));
+                throw new \Exception(sprintf('Type handler can not be attached without type for ' . static::class . ' with id ' . $this->id));
             }
 
             $handler = $this->_createHandler($type);
@@ -78,7 +79,7 @@ trait EntityTypeHandlerTrait
      */
     protected function _getHandlerType()
     {
-        return ($this->get('type')) ?: 'default';
+        return $this->get('type') ?: 'default';
     }
 
     /**
@@ -106,7 +107,7 @@ trait EntityTypeHandlerTrait
      */
     protected function _getHandlerNamespace()
     {
-        list(, $class) = namespaceSplit(get_class($this));
+        [, $class] = namespaceSplit(static::class);
         $ns = Inflector::camelize(Inflector::singularize($class)) . 'Type';
 
         return $ns;

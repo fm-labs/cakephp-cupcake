@@ -1,13 +1,13 @@
 <?php
+declare(strict_types=1);
+
 namespace Banana;
 
 use Banana\Plugin\BasePlugin;
 use Cake\Cache\Cache;
-use Cake\Error\ConsoleErrorHandler;
 use Cake\Core\Configure;
 use Cake\Core\Configure\Engine\PhpConfig;
 use Cake\Core\Plugin;
-use Cake\Database\TypeFactory;
 use Cake\Datasource\ConnectionManager;
 use Cake\Error\ErrorHandler;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
@@ -19,8 +19,6 @@ use Cake\Mailer\Email;
 use Cake\Mailer\TransportFactory;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
-use Cake\Routing\Router;
-use Cake\Utility\Inflector;
 use Cake\Utility\Security;
 
 /**
@@ -36,7 +34,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
     protected static $_bootstrapped = false;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $_debug = false;
 
@@ -192,9 +190,9 @@ class Application extends BaseApplication implements EventDispatcherInterface
         //$info['registered'] = in_array($pluginName, Plugin::loaded());
         //$info['registered'] = true;
 
-        $plugin = ($this->getPlugins()->has($pluginName)) ? $this->getPlugins()->get($pluginName) : null;
+        $plugin = $this->getPlugins()->has($pluginName) ? $this->getPlugins()->get($pluginName) : null;
 
-        $info['handler_loaded'] = ($plugin) ? true : false;
+        $info['handler_loaded'] = $plugin ? true : false;
         $info['handler_class'] = $plugin ? get_class($plugin) : null;
         $info['handler_bootstrap'] = $plugin ? $plugin->isEnabled('bootstrap') : null;
         $info['handler_routes'] = $plugin ? $plugin->isEnabled('routes') : null;

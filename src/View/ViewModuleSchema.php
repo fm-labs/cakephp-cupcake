@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Banana\View;
 
@@ -13,7 +14,6 @@ use Cake\ORM\TableRegistry;
  */
 class ViewModuleSchema extends Schema
 {
-
     /**
      * The fields in this schema.
      *

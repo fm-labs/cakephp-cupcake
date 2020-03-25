@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Banana\Menu;
 
@@ -10,7 +11,7 @@ namespace Banana\Menu;
 class Menu implements \Iterator, \Countable
 {
     /**
-     * @var MenuItem[]
+     * @var \Banana\Menu\MenuItem[]
      */
     protected $_items = [];
 
@@ -72,7 +73,7 @@ class Menu implements \Iterator, \Countable
     }
 
     /**
-     * @return MenuItem[]
+     * @return \Banana\Menu\MenuItem[]
      */
     public function getItems()
     {
@@ -80,11 +81,11 @@ class Menu implements \Iterator, \Countable
     }
 
     /**
-     * @param string|array|MenuItem $title A menu item array or object or title string
+     * @param string|array|\Banana\Menu\MenuItem $title A menu item array or object or title string
      * @param null $url Item url
      * @param array $attr Item attributes
-     * @param array|Menu $children Item subitems
-     * @return MenuItem
+     * @param array|\Banana\Menu\Menu $children Item subitems
+     * @return \Banana\Menu\MenuItem
      */
     public function &addItem($title, $url = null, $attr = [], $children = [])
     {
@@ -115,7 +116,7 @@ class Menu implements \Iterator, \Countable
     }
 
     /**
-     * @param MenuItem $item The instance of the item to remove
+     * @param \Banana\Menu\MenuItem $item The instance of the item to remove
      *
      * @return $this
      */
@@ -184,7 +185,7 @@ class Menu implements \Iterator, \Countable
     {
         $pos = $this->_itpos;
 
-        return (isset($this->_it[$pos])) ? $this->_it[$pos] : null;
+        return $this->_it[$pos] ?? null;
     }
 
     /**
@@ -198,7 +199,7 @@ class Menu implements \Iterator, \Countable
     {
         $pos = $this->_itpos;
 
-        return (isset($this->_it[$pos])) ? true : false;
+        return isset($this->_it[$pos]) ? true : false;
     }
 
     /**

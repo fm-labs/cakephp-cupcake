@@ -1,11 +1,9 @@
 <?php
+declare(strict_types=1);
+
 namespace Banana\Model\Behavior;
 
-use ArrayObject;
-use Cake\Event\Event;
 use Cake\ORM\Behavior;
-use Cake\ORM\Entity;
-use Cake\ORM\Query;
 use Cake\ORM\Table;
 
 /**
@@ -56,9 +54,9 @@ class StatsBehavior extends Behavior
     //}
 
     /**
-     * @param Event $event
-     * @param Query $query
-     * @param ArrayObject $options
+     * @param \Cake\Event\Event $event
+     * @param \Cake\ORM\Query $query
+     * @param \ArrayObject $options
      * @param bool $primary
      */
     //public function beforeFind(Event $event, Query $query, ArrayObject $options, $primary)
@@ -66,8 +64,8 @@ class StatsBehavior extends Behavior
     //}
 
     /**
-     * @param Event $event The event
-     * @param Entity $entity The entity
+     * @param \Cake\Event\Event $event The event
+     * @param \Cake\ORM\Entity $entity The entity
      * @param \ArrayObject $options
      * @param $operation
      * @return void
@@ -77,8 +75,8 @@ class StatsBehavior extends Behavior
     //}
 
     /**
-     * @param Event $event The event
-     * @param Entity $entity The entity
+     * @param \Cake\Event\Event $event The event
+     * @param \Cake\ORM\Entity $entity The entity
      * @return void
      */
     //public function beforeSave(Event $event, Entity $entity)

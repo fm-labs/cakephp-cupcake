@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Banana\Mailer;
 
@@ -50,7 +51,7 @@ class BananaMailer extends Mailer
     }
 
     /**
-     * @param Email $email
+     * @param \Cake\Mailer\Email $email
      * @return array
      * @deprecated
      */
@@ -62,7 +63,7 @@ class BananaMailer extends Mailer
     /**
      * Send email
      *
-     * @param Email $email
+     * @param \Cake\Mailer\Email $email
      * @param bool $content
      * @return array
      * @throws \Exception

@@ -1,12 +1,14 @@
 <?php
+declare(strict_types=1);
+
 namespace Banana\View;
 
 use Cake\Controller\Controller;
 use Cake\Core\App;
 use Cake\Core\Exception\MissingPluginException;
 use Cake\Core\Plugin;
-use Cake\View\View;
 use Cake\View\Exception;
+use Cake\View\View;
 
 /**
  * Provides module() method for usage in Controller and View classes.
@@ -14,7 +16,6 @@ use Cake\View\Exception;
  */
 trait ViewModuleTrait
 {
-
     /**
      * Renders the given module.
      *
@@ -41,12 +42,12 @@ trait ViewModuleTrait
             $parts = explode('::', $module);
 
             if (count($parts) === 2) {
-                list($pluginAndModule, $action) = [$parts[0], $parts[1]];
+                [$pluginAndModule, $action] = [$parts[0], $parts[1]];
             } else {
-                list($pluginAndModule, $action) = [$parts[0], 'display'];
+                [$pluginAndModule, $action] = [$parts[0], 'display'];
             }
 
-            list($plugin) = pluginSplit($pluginAndModule);
+            [$plugin] = pluginSplit($pluginAndModule);
 
             if (!Plugin::isLoaded($plugin)) {
                 throw new MissingPluginException(['plugin' => $plugin]);
@@ -61,7 +62,6 @@ trait ViewModuleTrait
 
             $module = $this->_createModule($className, $action, $plugin, $options);
             $module->setArgs($args);
-            ;
 
             /*
             try {
@@ -94,7 +94,7 @@ trait ViewModuleTrait
     protected function _createModule($className, $action, $plugin, $options)
     {
         if ($this instanceof View || $this instanceof Controller) {
-            /** @var ViewModule $instance */
+            /** @var \Banana\View\ViewModule $instance */
             $instance = new $className($this, $this->request, $this->response, $this->getEventManager(), $options);
             $instance->setAction($action);
             $instance->setPlugin($plugin);

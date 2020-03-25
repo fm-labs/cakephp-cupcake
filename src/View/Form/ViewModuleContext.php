@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Banana\View\Form;
 
@@ -16,7 +17,6 @@ use Cake\View\Form\ContextInterface;
  */
 class ViewModuleContext implements ContextInterface
 {
-
     /**
      * The request object.
      *
@@ -162,7 +162,6 @@ class ViewModuleContext implements ContextInterface
      */
     public function primaryKey()
     {
-
     }
 
     function __call($name, $arguments)

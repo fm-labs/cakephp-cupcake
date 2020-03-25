@@ -1,8 +1,8 @@
 <?php
+declare(strict_types=1);
 
 namespace Banana\Middleware;
 
-use Banana\Banana;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 

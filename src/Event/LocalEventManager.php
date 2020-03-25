@@ -1,8 +1,8 @@
 <?php
+declare(strict_types=1);
 
 namespace Banana\Event;
 
-use Cake\Event\Event;
 use Cake\Event\EventManager;
 
 /**
@@ -13,7 +13,7 @@ use Cake\Event\EventManager;
 class LocalEventManager extends EventManager
 {
     /**
-     * @var EventManager
+     * @var \Cake\Event\EventManager
      */
     protected static $_generalLocalManager = null;
 

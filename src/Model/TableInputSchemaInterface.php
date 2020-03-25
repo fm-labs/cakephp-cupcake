@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Banana\Model;
 
@@ -12,8 +13,8 @@ interface TableInputSchemaInterface
     /**
      * Getter / Setter for input schema
      *
-     * @param TableInputSchema|null $inputs
+     * @param \Banana\Model\TableInputSchema|null $inputs
      * @return mixed
      */
-    public function inputs(TableInputSchema $inputs = null);
+    public function inputs(?TableInputSchema $inputs = null);
 }

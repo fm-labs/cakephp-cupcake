@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Banana\Model;
 
@@ -10,7 +11,7 @@ namespace Banana\Model;
 interface EntityTypeHandlerInterface
 {
     /**
-     * @return EntityTypeInterface
+     * @return \Banana\Model\EntityTypeInterface
      */
     public function handler();
 }

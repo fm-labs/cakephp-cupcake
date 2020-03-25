@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Banana\Model;
 
@@ -10,10 +11,10 @@ namespace Banana\Model;
 trait TableInputSchemaTrait
 {
     /**
-     * @param TableInputSchema $inputs
-     * @return TableInputSchema
+     * @param \Banana\Model\TableInputSchema $inputs
+     * @return \Banana\Model\TableInputSchema
      */
-    public function inputs(TableInputSchema $inputs = null)
+    public function inputs(?TableInputSchema $inputs = null)
     {
         if ($inputs === null) {
             if (!isset($this->inputs)) {
@@ -27,8 +28,8 @@ trait TableInputSchemaTrait
     }
 
     /**
-     * @param TableInputSchema $inputs
-     * @return TableInputSchema
+     * @param \Banana\Model\TableInputSchema $inputs
+     * @return \Banana\Model\TableInputSchema
      */
     protected function _buildInputs(TableInputSchema $inputs)
     {

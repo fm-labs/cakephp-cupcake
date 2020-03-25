@@ -1,8 +1,8 @@
 <?php
+declare(strict_types=1);
 
 namespace Banana\Test\TestCase\Model;
 
-use Banana\Model\ArrayTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 

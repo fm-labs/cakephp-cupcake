@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Banana\Error;
 
@@ -13,7 +14,7 @@ use Cake\Error\ExceptionRenderer as CakeExceptionRenderer;
 class ExceptionRenderer extends CakeExceptionRenderer
 {
     /**
-     * @return ErrorController
+     * @return \Banana\Controller\ErrorController
      */
     protected function _getController()
     {

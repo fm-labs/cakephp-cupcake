@@ -1,8 +1,8 @@
 <?php
+declare(strict_types=1);
 
 namespace Banana\Mailer;
 
-use Cake\Core\Configure;
 use Cake\I18n\I18n;
 use Cake\Mailer\Email;
 use Cake\Utility\Hash;

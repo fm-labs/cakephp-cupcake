@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Banana\View;
 
@@ -12,8 +13,8 @@ use Cake\Http\ServerRequest as Request;
 use Cake\Utility\Inflector;
 use Cake\Validation\Validator;
 use Cake\View\Cell;
-use Cake\View\Exception\MissingTemplateException;
 use Cake\View\Exception\MissingCellViewException;
+use Cake\View\Exception\MissingTemplateException;
 use Cake\View\View;
 use ReflectionException;
 use ReflectionMethod;
@@ -24,7 +25,7 @@ use ReflectionMethod;
  * Cells on steroids
  *
  * @package Content\View
- * @property View $View
+ * @property \Cake\View\View $View
  */
 abstract class ViewModule extends Cell
 {
@@ -50,21 +51,21 @@ abstract class ViewModule extends Cell
     protected $_validator;
 
     /**
-     * @var View
+     * @var \Cake\View\View
      */
     protected $_View;
 
     /**
-     * @var Controller
+     * @var \Cake\Controller\Controller
      */
     protected $_Controller;
 
     /**
      * Constructor.
-     * @param View|Controller|null $parent Parent View or Controller instance
-     * @param Request $request
-     * @param Response $response
-     * @param EventManager $eventManager
+     * @param \Cake\View\View|\Cake\Controller\Controller|null $parent Parent View or Controller instance
+     * @param \Cake\Http\ServerRequest $request
+     * @param \Cake\Http\Response $response
+     * @param \Cake\Event\EventManager $eventManager
      * @param array $cellOptions Cell options to apply.
      */
     public function __construct(
@@ -126,7 +127,7 @@ abstract class ViewModule extends Cell
             } catch (ReflectionException $e) {
                 throw new BadMethodCallException(sprintf(
                     'Class %s does not have a "%s" method.',
-                    get_class($this),
+                    static::class,
                     $this->action
                 ));
             }
@@ -149,7 +150,7 @@ abstract class ViewModule extends Cell
             $builder->setLayout(false)
                 ->setTemplate($template);
 
-            $className = get_class($this);
+            $className = static::class;
             $namePrefix = '\View\Module\\';
             $name = substr($className, strpos($className, $namePrefix) + strlen($namePrefix));
             $name = substr($name, 0, -6);
@@ -177,7 +178,7 @@ abstract class ViewModule extends Cell
 
     /**
      * @param null $viewClass
-     * @return View
+     * @return \Cake\View\View
      */
     public function createView($viewClass = null)
     {
@@ -222,7 +223,7 @@ abstract class ViewModule extends Cell
      * @param \Banana\View\ViewModuleSchema|null $schema The schema to set, or null.
      * @return \Banana\View\ViewModuleSchema the schema instance.
      */
-    public function schema(ViewModuleSchema $schema = null)
+    public function schema(?ViewModuleSchema $schema = null)
     {
         if ($schema === null && empty($this->_schema)) {
             $schema = $this->_buildSchema(new ViewModuleSchema());
@@ -264,7 +265,7 @@ abstract class ViewModule extends Cell
             }
 
             $optionsField = $field;
-            $optionsField = (substr($optionsField, -3) == '_id') ? substr($optionsField, 0, -3) : $optionsField;
+            $optionsField = substr($optionsField, -3) == '_id' ? substr($optionsField, 0, -3) : $optionsField;
 
             $optionsField = Inflector::pluralize($optionsField);
             if ($this->_View) {
@@ -286,7 +287,7 @@ abstract class ViewModule extends Cell
      * @param \Cake\Validation\Validator|null $validator The validator to set, or null.
      * @return \Cake\Validation\Validator the validator instance.
      */
-    public function validator(Validator $validator = null)
+    public function validator(?Validator $validator = null)
     {
         if ($validator === null && empty($this->_validator)) {
             $validator = $this->_buildValidator(new Validator());

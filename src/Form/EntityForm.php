@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Banana\Form;
 
@@ -21,12 +22,12 @@ class EntityForm extends Form
     protected $_controls = [];
 
     /**
-     * @var EntityInterface
+     * @var \Cake\Datasource\EntityInterface
      */
     protected $_entity;
 
     /**
-     * @param EntityInterface $entity
+     * @param \Cake\Datasource\EntityInterface $entity
      */
     public function __construct(EntityInterface $entity)
     {
@@ -34,7 +35,7 @@ class EntityForm extends Form
     }
 
     /**
-     * @return EntityInterface
+     * @return \Cake\Datasource\EntityInterface
      */
     public function entity()
     {
@@ -69,8 +70,8 @@ class EntityForm extends Form
     }
 
     /**
-     * @param TableInputSchema $inputs
-     * @return TableInputSchema
+     * @param \Banana\Model\TableInputSchema $inputs
+     * @return \Banana\Model\TableInputSchema
      */
     protected function _buildControls(TableInputSchema $inputs)
     {

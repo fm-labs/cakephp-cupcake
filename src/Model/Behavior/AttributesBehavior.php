@@ -1,18 +1,15 @@
 <?php
+declare(strict_types=1);
 
 namespace Banana\Model\Behavior;
 
 use ArrayObject;
 use Cake\Collection\Collection;
-use Cake\Collection\Iterator\MapReduce;
 use Cake\Datasource\EntityInterface;
 use Cake\Datasource\ResultSetDecorator;
-use Cake\Event\Event;
 use Cake\ORM\Behavior;
 use Cake\ORM\Entity;
 use Cake\ORM\Query;
-use Cake\ORM\RulesChecker;
-use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validator;
@@ -45,7 +42,7 @@ class AttributesBehavior extends Behavior
             'saveAttribute' => 'saveAttribute',
             'isAttribute' => 'isAttribute',
             'getAttributesTable' => 'attributesTable',
-            'getAttributesSchema' => 'attributesSchema'
+            'getAttributesSchema' => 'attributesSchema',
         ],
     ];
 
@@ -72,7 +69,7 @@ class AttributesBehavior extends Behavior
             'conditions' => ['Attributes.model' => $this->_table->getRegistryAlias()],
             'dependent' => true,
             'propertyName' => 'attributes',
-            'targetTable' => $targetTable
+            'targetTable' => $targetTable,
         ]);
     }
 
@@ -104,10 +101,10 @@ class AttributesBehavior extends Behavior
     }
 
     /**
-     * @param EntityInterface $entity The entity object
+     * @param \Cake\Datasource\EntityInterface $entity The entity object
      * @param string $name Attribute name
      * @param mixed $value Attribute value
-     * @return EntityInterface An Attribute entity
+     * @return \Cake\Datasource\EntityInterface An Attribute entity
      */
     public function createAttribute(EntityInterface $entity, $name, $value = null)
     {
@@ -128,9 +125,9 @@ class AttributesBehavior extends Behavior
     }
 
     /**
-     * @param Query $query
+     * @param \Cake\ORM\Query $query
      * @param array $options
-     * @return Query
+     * @return \Cake\ORM\Query
      */
     public function findWithAttributes(Query $query, array $options = [])
     {
@@ -143,9 +140,9 @@ class AttributesBehavior extends Behavior
     /**
      * Find rows by given attributes (key-value-pairs)
      *
-     * @param Query $query
+     * @param \Cake\ORM\Query $query
      * @param array $options Attributes key-value-pairs
-     * @return Query
+     * @return \Cake\ORM\Query
      */
     public function findByAttribute(Query $query, array $options = [])
     {
@@ -173,9 +170,9 @@ class AttributesBehavior extends Behavior
     /**
      * Find rows by given attributes (key-value-pairs)
      *
-     * @param Query $query
+     * @param \Cake\ORM\Query $query
      * @param array $options Attributes key-value-pairs
-     * @return Query
+     * @return \Cake\ORM\Query
      */
     public function findHavingAttribute(Query $query, array $options = [])
     {
@@ -201,8 +198,8 @@ class AttributesBehavior extends Behavior
     }
 
     /**
-     * @param ResultSetDecorator $results The table results
-     * @return ResultSetDecorator
+     * @param \Cake\Datasource\ResultSetDecorator $results The table results
+     * @return \Cake\Datasource\ResultSetDecorator
      */
     public function _formatAttributesResult(Collection $results)
     {
@@ -231,8 +228,8 @@ class AttributesBehavior extends Behavior
      * Applies a MapReduce to the query, which resolves entity attributes
      * after the find operation.
      *
-     * @param Event $event
-     * @param Query $query
+     * @param \Cake\Event\Event $event
+     * @param \Cake\ORM\Query $query
      * @param array $options
      * @param $primary
      */
@@ -287,20 +284,21 @@ class AttributesBehavior extends Behavior
         //debug($entity->attributes_data);
         if ($entity->isDirty($this->_config['attributesPropertyName'])) {
             //debug("attributes are dirty");
-            foreach($entity->get($this->_config['attributesPropertyName']) as $key => $val) {
+            foreach ($entity->get($this->_config['attributesPropertyName']) as $key => $val) {
                 if ($this->isAttribute($key)) {
                     $attr = $this->createAttribute($entity, $key);
                     $attr->value = $val;
                     if (!$this->saveAttribute($attr)) {
                         debug("failed to save attr $key");
                         $attr->setError('attributes_data', 'Error saving attr ' . $key);
+
                         return false;
                     }
                 }
             }
         }
 
-        /** @var Entity $entity */
+        /** @var \Cake\ORM\Entity $entity */
         foreach ($entity->getDirty() as $key) {
             if ($this->isAttribute($key)) {
                 $attr = $this->createAttribute($entity, $key);
@@ -308,6 +306,7 @@ class AttributesBehavior extends Behavior
                 if (!$this->saveAttribute($attr)) {
                     debug("failed to save attr $key");
                     $attr->setError('attributes', 'Error saving attr ' . $key);
+
                     return false;
                 }
             }

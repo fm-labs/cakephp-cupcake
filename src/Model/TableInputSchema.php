@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Banana\Model;
 
@@ -42,7 +43,7 @@ class TableInputSchema
      */
     public function field($fieldName)
     {
-        return (isset($this->_fields[$fieldName])) ? $this->_fields[$fieldName] : null;
+        return $this->_fields[$fieldName] ?? null;
     }
 
     /**

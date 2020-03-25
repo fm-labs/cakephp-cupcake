@@ -1,8 +1,7 @@
 <?php
-namespace Banana\Controller;
+declare(strict_types=1);
 
-use Cake\Core\Configure;
-use Cake\Event\Event;
+namespace Banana\Controller;
 
 /**
  * Class ErrorController
@@ -11,7 +10,6 @@ use Cake\Event\Event;
  */
 class ErrorController extends \Cake\Controller\ErrorController
 {
-
     /**
      * Initialization hook method.
      *

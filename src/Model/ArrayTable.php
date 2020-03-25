@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Banana\Model;
 
@@ -29,7 +30,7 @@ abstract class ArrayTable implements RepositoryInterface
     protected $_schema;
 
     /**
-     * @var BehaviorRegistry
+     * @var \Cake\ORM\BehaviorRegistry
      */
     protected $_behaviors;
 
@@ -179,7 +180,7 @@ abstract class ArrayTable implements RepositoryInterface
     /**
      * Create new ArrayTableQuery object
      *
-     * @return ArrayTableQuery
+     * @return \Banana\Model\ArrayTableQuery
      */
     public function query()
     {
@@ -196,7 +197,7 @@ abstract class ArrayTable implements RepositoryInterface
     /**
      * Return array table data as collection
      *
-     * @return Collection
+     * @return \Cake\Collection\Collection
      */
     public function getCollection()
     {
@@ -211,7 +212,7 @@ abstract class ArrayTable implements RepositoryInterface
      */
     public function alias($alias = null)
     {
-        $class = get_class($this);
+        $class = static::class;
 
         return substr($class, 0, -strlen('Table'));
     }
@@ -255,9 +256,9 @@ abstract class ArrayTable implements RepositoryInterface
 
     /**
      * @param $type
-     * @param ArrayTableQuery $query
+     * @param \Banana\Model\ArrayTableQuery $query
      * @param array $options
-     * @return ArrayTableQuery|mixed
+     * @return \Banana\Model\ArrayTableQuery|mixed
      */
     public function callFinder($type, ArrayTableQuery $query, array $options = [])
     {
@@ -270,9 +271,9 @@ abstract class ArrayTable implements RepositoryInterface
     }
 
     /**
-     * @param ArrayTableQuery $query
+     * @param \Banana\Model\ArrayTableQuery $query
      * @param array $options
-     * @return ArrayTableQuery
+     * @return \Banana\Model\ArrayTableQuery
      */
     public function findAll(ArrayTableQuery $query, array $options)
     {
@@ -280,7 +281,7 @@ abstract class ArrayTable implements RepositoryInterface
     }
 
     /**
-     * @param ArrayTableQuery $query
+     * @param \Banana\Model\ArrayTableQuery $query
      * @param array $options
      * @return $this|array
      */
@@ -527,7 +528,7 @@ abstract class ArrayTable implements RepositoryInterface
     }
 
     /**
-     * @return BehaviorRegistry
+     * @return \Cake\ORM\BehaviorRegistry
      */
     public function behaviors()
     {

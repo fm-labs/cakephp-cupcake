@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Banana\Lib;
 
@@ -172,7 +173,7 @@ class ClassRegistry
             throw new \RuntimeException(sprintf("ClassRegistry: Class not registered: %s:%s", $type, $key));
         }
 
-        $factory = (isset(static::$_factories[$type])) ? static::$_factories[$type] : function ($class) {
+        $factory = static::$_factories[$type] ?? function ($class) {
             return static::defaultFactory($class);
         };
 

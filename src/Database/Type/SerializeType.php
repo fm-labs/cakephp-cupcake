@@ -1,9 +1,9 @@
 <?php
+declare(strict_types=1);
+
 namespace Banana\Database\Type;
 
-use Cake\Database\Driver;
 use Cake\Database\DriverInterface;
-use Cake\Database\TypeFactory;
 use Cake\Database\TypeInterface;
 use InvalidArgumentException;
 use PDO;
@@ -15,7 +15,6 @@ use PDO;
  */
 class SerializeType extends \Cake\Database\TypeFactory implements TypeInterface
 {
-
     /**
      * Convert a value data into a serialized string
      *
@@ -67,7 +66,6 @@ class SerializeType extends \Cake\Database\TypeFactory implements TypeInterface
         return $value;
     }
 
-
     /**
      * Returns the base type name that this class is inheriting.
      *
@@ -79,7 +77,6 @@ class SerializeType extends \Cake\Database\TypeFactory implements TypeInterface
      */
     public function getBaseType(): ?string
     {
-
     }
 
     /**
@@ -89,7 +86,6 @@ class SerializeType extends \Cake\Database\TypeFactory implements TypeInterface
      */
     public function getName(): ?string
     {
-
     }
 
     /**
@@ -103,8 +99,5 @@ class SerializeType extends \Cake\Database\TypeFactory implements TypeInterface
      */
     public function newId()
     {
-
     }
-
-
 }
