@@ -48,7 +48,7 @@ class ViewModuleContext implements ContextInterface
     /**
      * {@inheritDoc}
      */
-    public function getPrimaryKey()
+    public function getPrimaryKey(): array
     {
         return [];
     }
@@ -56,7 +56,7 @@ class ViewModuleContext implements ContextInterface
     /**
      * {@inheritDoc}
      */
-    public function isPrimaryKey($field)
+    public function isPrimaryKey($field): bool
     {
         return false;
     }
@@ -64,7 +64,7 @@ class ViewModuleContext implements ContextInterface
     /**
      * {@inheritDoc}
      */
-    public function isCreate()
+    public function isCreate(): bool
     {
         return true;
     }
@@ -90,7 +90,7 @@ class ViewModuleContext implements ContextInterface
     /**
      * {@inheritDoc}
      */
-    public function isRequired($field)
+    public function isRequired($field): bool
     {
         $validator = $this->_module->getValidator();
         if (!$validator->hasField($field)) {
@@ -106,7 +106,7 @@ class ViewModuleContext implements ContextInterface
     /**
      * {@inheritDoc}
      */
-    public function fieldNames()
+    public function fieldNames(): array
     {
         return $this->_module->getSchema()->fields();
     }
@@ -114,7 +114,7 @@ class ViewModuleContext implements ContextInterface
     /**
      * {@inheritDoc}
      */
-    public function type($field)
+    public function type($field): ?string
     {
         return $this->_module->getSchema()->fieldType($field);
     }
@@ -122,7 +122,7 @@ class ViewModuleContext implements ContextInterface
     /**
      * {@inheritDoc}
      */
-    public function attributes($field)
+    public function attributes($field): array
     {
         $attrs = (array)$this->_module->getSchema()->field($field);
         //$whitelist = ['length' => null, 'precision' => null];
@@ -133,7 +133,7 @@ class ViewModuleContext implements ContextInterface
     /**
      * {@inheritDoc}
      */
-    public function hasError($field)
+    public function hasError($field): bool
     {
         $errors = $this->error($field);
 
@@ -143,7 +143,7 @@ class ViewModuleContext implements ContextInterface
     /**
      * {@inheritDoc}
      */
-    public function error($field)
+    public function error($field): array
     {
         return array_values((array)Hash::get($this->_module->getErrors(), $field, []));
     }

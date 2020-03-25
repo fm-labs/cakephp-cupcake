@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Banana\Error;
 
 use Banana\Controller\ErrorController;
+use Cake\Controller\Controller;
 use Cake\Error\ExceptionRenderer as CakeExceptionRenderer;
 
 /**
@@ -16,7 +17,7 @@ class ExceptionRenderer extends CakeExceptionRenderer
     /**
      * @return \Banana\Controller\ErrorController
      */
-    protected function _getController()
+    protected function _getController(): Controller
     {
         return new ErrorController();
     }

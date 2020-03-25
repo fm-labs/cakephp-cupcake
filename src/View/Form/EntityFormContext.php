@@ -8,7 +8,7 @@ use Cake\View\Form\EntityContext;
 
 class EntityFormContext extends EntityContext
 {
-    protected function _prepare()
+    protected function _prepare(): void
     {
         $entity = $this->_context['entity'];
         if ($entity instanceof EntityForm) {

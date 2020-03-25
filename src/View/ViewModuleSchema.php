@@ -141,7 +141,7 @@ class ViewModuleSchema extends Schema
      *
      * @return array The list of field names.
      */
-    public function fields()
+    public function fields(): array
     {
         return array_keys($this->_fields);
     }
@@ -152,7 +152,7 @@ class ViewModuleSchema extends Schema
      * @param string $name The field name.
      * @return null|array The attributes for a field, or null.
      */
-    public function field($name)
+    public function field($name): ?array
     {
         if (!isset($this->_fields[$name])) {
             return null;
@@ -168,7 +168,7 @@ class ViewModuleSchema extends Schema
      * @return string|null Either the field type or null if the
      *   field does not exist.
      */
-    public function fieldType($name)
+    public function fieldType($name): ?string
     {
         $field = $this->field($name);
         if (!$field) {
@@ -183,7 +183,7 @@ class ViewModuleSchema extends Schema
      *
      * @return array
      */
-    public function __debugInfo()
+    public function __debugInfo(): array
     {
         return [
             '_fields' => $this->_fields,

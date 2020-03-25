@@ -20,7 +20,7 @@ class TestInputSchemaTable extends Table implements TableInputSchemaInterface
     /**
      * @param array $config
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         $this->setTable('posts');
         $this->setPrimaryKey('id');

@@ -105,7 +105,7 @@ class ArrayTableEntity extends \ArrayObject implements EntityInterface
      * @param string $property The property to check.
      * @return bool
      */
-    public function has($property)
+    public function has($property): bool
     {
         return isset($this[$property]);
     }
@@ -179,7 +179,7 @@ class ArrayTableEntity extends \ArrayObject implements EntityInterface
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return (array)$this;
     }
@@ -192,7 +192,7 @@ class ArrayTableEntity extends \ArrayObject implements EntityInterface
      * @param bool $onlyDirty Return the requested property only if it is dirty
      * @return array
      */
-    public function extract(array $properties, $onlyDirty = false)
+    public function extract(array $fields, bool $onlyDirty = false): array
     {
         return $this->toArray();
     }
@@ -223,7 +223,7 @@ class ArrayTableEntity extends \ArrayObject implements EntityInterface
      *
      * @return void
      */
-    public function clean()
+    public function clean(): void
     {
     }
 
@@ -240,7 +240,7 @@ class ArrayTableEntity extends \ArrayObject implements EntityInterface
      * @return bool If it is known whether the entity was already persisted
      * null otherwise
      */
-    public function isNew($new = null)
+    public function isNew($new = null): bool
     {
         return false;
     }
@@ -295,5 +295,189 @@ class ArrayTableEntity extends \ArrayObject implements EntityInterface
     function jsonSerialize()
     {
         return json_encode($this->toArray());
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setHidden(array $fields, bool $merge = false)
+    {
+        // TODO: Implement setHidden() method.
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getHidden(): array
+    {
+        // TODO: Implement getHidden() method.
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setVirtual(array $fields, bool $merge = false)
+    {
+        // TODO: Implement setVirtual() method.
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getVirtual(): array
+    {
+        // TODO: Implement getVirtual() method.
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setDirty(string $field, bool $isDirty = true)
+    {
+        // TODO: Implement setDirty() method.
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isDirty(?string $field = null): bool
+    {
+        // TODO: Implement isDirty() method.
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getDirty(): array
+    {
+        // TODO: Implement getDirty() method.
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function hasErrors(bool $includeNested = true): bool
+    {
+        // TODO: Implement hasErrors() method.
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getErrors(): array
+    {
+        // TODO: Implement getErrors() method.
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getError(string $field): array
+    {
+        // TODO: Implement getError() method.
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setErrors(array $errors, bool $overwrite = false)
+    {
+        // TODO: Implement setErrors() method.
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setError(string $field, $errors, bool $overwrite = false)
+    {
+        // TODO: Implement setError() method.
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setAccess($field, bool $set)
+    {
+        // TODO: Implement setAccess() method.
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isAccessible(string $field): bool
+    {
+        // TODO: Implement isAccessible() method.
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setSource(string $alias)
+    {
+        // TODO: Implement setSource() method.
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSource(): string
+    {
+        // TODO: Implement getSource() method.
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function extractOriginal(array $fields): array
+    {
+        // TODO: Implement extractOriginal() method.
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function extractOriginalChanged(array $fields): array
+    {
+        // TODO: Implement extractOriginalChanged() method.
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getOriginal(string $field)
+    {
+        // TODO: Implement getOriginal() method.
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getOriginalValues(): array
+    {
+        // TODO: Implement getOriginalValues() method.
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function unset($field)
+    {
+        // TODO: Implement unset() method.
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getVisible(): array
+    {
+        // TODO: Implement getVisible() method.
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setNew(bool $new)
+    {
+        // TODO: Implement setNew() method.
     }
 }

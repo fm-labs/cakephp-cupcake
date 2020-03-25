@@ -45,7 +45,7 @@ abstract class ArrayTable implements RepositoryInterface
      *
      * @return string
      */
-    public static function defaultConnectionName()
+    public static function defaultConnectionName(): string
     {
         return 'default';
     }
@@ -228,7 +228,7 @@ abstract class ArrayTable implements RepositoryInterface
      * @param string $field The field to check for.
      * @return bool True if the field exists, false if it does not.
      */
-    public function hasField($field)
+    public function hasField($field): bool
     {
         //@TODO Schema for ArrayTables
         return true;
@@ -321,7 +321,7 @@ abstract class ArrayTable implements RepositoryInterface
      * @return \Cake\Datasource\EntityInterface
      * @see \Cake\Datasource\RepositoryInterface::find()
      */
-    public function get($primaryKey, $options = [])
+    public function get($primaryKey, array $options = []): EntityInterface
     {
         $result = $this->getCollection()->filter(function ($item, $key) use ($primaryKey) {
             if ($key == $primaryKey) {
@@ -353,7 +353,7 @@ abstract class ArrayTable implements RepositoryInterface
      * can take.
      * @return int Count Returns the affected rows.
      */
-    public function updateAll($fields, $conditions)
+    public function updateAll($fields, $conditions): int
     {
         //@TODO Implement updateAll() method
         return 0;
@@ -376,7 +376,7 @@ abstract class ArrayTable implements RepositoryInterface
      * @return int Count Returns the affected rows.
      * @see \Cake\Datasource\RepositoryInterface::delete()
      */
-    public function deleteAll($conditions)
+    public function deleteAll($conditions): int
     {
         //@TODO Implement deleteAll() method
         return 0;
@@ -389,7 +389,7 @@ abstract class ArrayTable implements RepositoryInterface
      * @param array|\ArrayAccess $conditions list of conditions to pass to the query
      * @return bool
      */
-    public function exists($conditions)
+    public function exists($conditions): bool
     {
         //@TODO Implement exists() method
         return true;
@@ -420,7 +420,7 @@ abstract class ArrayTable implements RepositoryInterface
      * @param array|\ArrayAccess $options The options for the delete.
      * @return bool success
      */
-    public function delete(EntityInterface $entity, $options = [])
+    public function delete(EntityInterface $entity, $options = []): bool
     {
         //@TODO Implement delete() method
         return false;
@@ -444,7 +444,7 @@ abstract class ArrayTable implements RepositoryInterface
      * @param array $options A list of options for the object hydration.
      * @return \Cake\Datasource\EntityInterface
      */
-    public function newEntity($data = null, array $options = [])
+    public function newEntity(array $data, array $options = []): EntityInterface
     {
         if ($data === null) {
             $data = [];
@@ -469,7 +469,7 @@ abstract class ArrayTable implements RepositoryInterface
      * @param array $options A list of options for the objects hydration.
      * @return array An array of hydrated records.
      */
-    public function newEntities(array $data, array $options = [])
+    public function newEntities(array $data, array $options = []): array
     {
         $entities = [];
         foreach ($data as $row) {
@@ -477,6 +477,14 @@ abstract class ArrayTable implements RepositoryInterface
         }
 
         return $entities;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function newEmptyEntity(): EntityInterface
+    {
+        // TODO: Implement newEmptyEntity() method.
     }
 
     /**
@@ -496,7 +504,7 @@ abstract class ArrayTable implements RepositoryInterface
      * @param array $options A list of options for the object hydration.
      * @return \Cake\Datasource\EntityInterface
      */
-    public function patchEntity(EntityInterface $entity, array $data, array $options = [])
+    public function patchEntity(EntityInterface $entity, array $data, array $options = []): EntityInterface
     {
         $entity->set($data);
 
@@ -521,7 +529,7 @@ abstract class ArrayTable implements RepositoryInterface
      * @param array $options A list of options for the objects hydration.
      * @return array
      */
-    public function patchEntities($entities, array $data, array $options = [])
+    public function patchEntities(iterable $entities, array $data, array $options = []): array
     {
         // TODO: Implement patchEntities() method.
         return $entities;
@@ -563,7 +571,7 @@ abstract class ArrayTable implements RepositoryInterface
         return $this;
     }
 
-    public function getAlias()
+    public function getAlias(): string
     {
         return $this->alias();
     }
@@ -578,7 +586,7 @@ abstract class ArrayTable implements RepositoryInterface
         return $this;
     }
 
-    public function getRegistryAlias()
+    public function getRegistryAlias(): string
     {
         return $this->getAlias();
     }

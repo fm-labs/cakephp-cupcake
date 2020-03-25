@@ -12,6 +12,7 @@ use Cake\Datasource\RepositoryInterface;
  * Class ArrayTableQuery
  *
  * @package Banana\Model
+ * @method $this andWhere($conditions, array $types = [])
  */
 class ArrayTableQuery implements QueryInterface
 {
@@ -68,7 +69,7 @@ class ArrayTableQuery implements QueryInterface
      * @param string|null $alias the alias used to prefix the field
      * @return array
      */
-    public function aliasField($field, $alias = null)
+    public function aliasField(string $field, ?string $alias = null): array
     {
         return $field;
     }
@@ -81,7 +82,7 @@ class ArrayTableQuery implements QueryInterface
      * @param string|null $defaultAlias The default alias
      * @return array
      */
-    public function aliasFields($fields, $defaultAlias = null)
+    public function aliasFields(array $fields, ?string $defaultAlias = null): array
     {
         return $fields;
     }
@@ -156,7 +157,7 @@ class ArrayTableQuery implements QueryInterface
      *
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         // TODO: Implement count() method.
         return count($this->getRepository()->getItems());
@@ -275,7 +276,7 @@ class ArrayTableQuery implements QueryInterface
      *  the current limit clause will be used.
      * @return $this
      */
-    public function page($num, $limit = null)
+    public function page(int $num, ?int $limit = null)
     {
         // TODO: Implement page() method.
         return $this;
@@ -446,5 +447,18 @@ class ArrayTableQuery implements QueryInterface
         }
 
         return $results;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function select($fields, bool $overwrite = false)
+    {
+        // TODO: Implement select() method.
+    }
+
+    public function __call($name, $arguments)
+    {
+        // TODO: Implement @method $this andWhere($conditions, array $types = [])
     }
 }

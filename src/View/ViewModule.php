@@ -113,7 +113,7 @@ abstract class ViewModule extends Cell
      * @return string The rendered cell.
      * @throws \Cake\View\Exception\MissingCellViewException When a MissingTemplateException is raised during rendering.
      */
-    public function render($template = null)
+    public function render(?string $template = null): string
     {
         $cache = [];
         if ($this->_cache) {
