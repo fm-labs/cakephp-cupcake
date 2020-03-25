@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Banana\Model;
 
-use Cake\Datasource\EntityInterface;
 use Cake\ORM\BehaviorRegistry;
 
 /**

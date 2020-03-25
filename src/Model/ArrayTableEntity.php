@@ -188,7 +188,7 @@ class ArrayTableEntity extends \ArrayObject implements EntityInterface
      * Returns an array with the requested properties
      * stored in this entity, indexed by property name
      *
-     * @param array $properties list of properties to be returned
+     * @param array $fields list of properties to be returned
      * @param bool $onlyDirty Return the requested property only if it is dirty
      * @return array
      */
