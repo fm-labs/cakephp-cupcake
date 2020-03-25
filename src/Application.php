@@ -2,8 +2,6 @@
 namespace Banana;
 
 use Banana\Plugin\BasePlugin;
-use Banana\Plugin\PluginInterface;
-use Banana\Plugin\PluginRegistry;
 use Cake\Cache\Cache;
 use Cake\Console\ConsoleErrorHandler;
 use Cake\Core\Configure;
@@ -16,7 +14,6 @@ use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Event\EventDispatcherInterface;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\BaseApplication;
-use Cake\Http\MiddlewareQueue;
 use Cake\Log\Log;
 use Cake\Mailer\Email;
 use Cake\Mailer\TransportFactory;
@@ -131,8 +128,6 @@ class Application extends BaseApplication implements EventDispatcherInterface
         /*
          * Init Banana
          */
-        //$this->initLegacyPlugins();
-        //$this->initRoutes();
         Banana::init($this);
 
         /*
@@ -212,7 +207,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
     /**
      * Get plugin registry instance
      * @deprecated Use getPlugins() instead. getPlugins() returns PluginCollection
-     * @return PluginRegistry
+     * @return \Cake\Core\PluginCollection
      */
     public function plugins()
     {
@@ -391,79 +386,5 @@ class Application extends BaseApplication implements EventDispatcherInterface
             Configure::write('Cache._cake_model_.duration', '+1 years');
             Configure::write('Cache._cake_core_.duration', '+1 years');
         }
-    }
-
-    /**
-     * Load the plugin handler for all loaded plugins.
-     * Uses reflection on the Cake's Plugin class to read the plugin config.
-     * Automatically passes plugin config
-     *
-     * @return void
-     */
-    protected function initLegacyPlugins()
-    {
-        $r = new \ReflectionClass('\\Cake\\Core\\Plugin');
-        $sProps = $r->getStaticProperties();
-        $loadedPlugins = (isset($sProps['_plugins'])) ? $sProps['_plugins'] : [];
-        //debug($loadedPlugins);
-
-        //foreach (Plugin::loaded() as $name) {
-        foreach ($loadedPlugins as $name => $config) {
-            //$pluginConfig = Configure::read($name);
-            //$config['config'] = (array)$pluginConfig;
-            //debug($config);
-            try {
-                //$this->plugins()->load($name, $config);
-                $this->addPlugin($name, $config);
-            } catch (\Exception $ex) {
-                Log::error('Application: ' . $ex->getMessage());
-            }
-        }
-    }
-
-    /**
-     * Initialize plugin routes
-     *
-     * @return void
-     */
-    protected function initRoutes()
-    {
-        Router::routes(); // Make sure app 'routes.php' is loaded
-
-        foreach ($this->plugins()->loaded() as $name) {
-            $instance = $this->plugins()->get($name);
-            if ($instance instanceof PluginInterface) {
-                Router::plugin(
-                    $name,
-                    [
-                        'plugin' => $name,
-                        //'path' => '/' . Inflector::underscore($name),
-                        //'_namePrefix' => Inflector::underscore($name) . ':'
-                    ],
-                    [$instance, 'routes']
-                );
-            }
-        }
-    }
-
-    /**
-     * Initialize plugin middlewares
-     *
-     * @param MiddlewareQueue $middleware The middleware stack
-     * @return MiddlewareQueue
-     */
-    protected function initMiddleware($middleware)
-    {
-        foreach ($this->plugins()->loaded() as $name) {
-            $instance = $this->plugins()->get($name);
-            if ($instance instanceof PluginInterface) {
-                $_middleware = $instance->middleware($middleware);
-                if ($_middleware) {
-                    $middleware = $_middleware;
-                }
-            }
-        }
-
-        return $middleware;
     }
 }

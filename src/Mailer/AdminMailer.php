@@ -24,6 +24,6 @@ class AdminMailer extends Mailer
 
         //@todo automatically setup admin email configuration, if not configured
         $profile = (Configure::read('Banana.Email.adminProfile')) ?: 'admin';
-        $this->_email->profile($profile);
+        $this->_email->setProfile($profile);
     }
 }

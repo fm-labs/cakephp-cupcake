@@ -77,7 +77,7 @@ class ViewModuleContext implements ContextInterface
             'schemaDefault' => true,
         ];
 
-        $val = $this->_request->data($field);
+        $val = $this->_request->getData($field);
         if ($val !== null) {
             return $val;
         }

@@ -73,7 +73,7 @@ class Banana
      */
     public static function plugin($pluginName)
     {
-        return self::getInstance()->app()->plugins()->get($pluginName);
+        return self::getInstance()->app()->getPlugins()->get($pluginName);
     }
 
     /**
@@ -104,11 +104,11 @@ class Banana
     }
 
     /**
-     * @return PluginRegistry
+     * @return \Cake\Core\PluginCollection
      */
     public function plugins()
     {
-        return $this->_app->plugins();
+        return $this->_app->getPlugins();
     }
 
     /**

@@ -72,7 +72,7 @@ class InputSchemaBehavior extends Behavior
 
         // belongsTo association
         if (substr($colName, -3) === "_id") {
-            $belongsTo = $this->_table->associations()->type('belongsTo');
+            $belongsTo = $this->_table->associations()->getByType('belongsTo');
             foreach ($belongsTo as $assoc) {
                 if ($assoc->foreignKey() == $colName) {
                     $input['type'] = 'ChosenSelect'; // 'Select';

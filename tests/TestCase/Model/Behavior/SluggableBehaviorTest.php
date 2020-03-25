@@ -29,7 +29,7 @@ class SluggableBehaviorTest extends TestCase
 
     public function tearDown()
     {
-        TableRegistry::remove('Model');
+        TableRegistry::getTableLocator()->remove('Model');
         unset($this->Model);
         parent::tearDown();
     }

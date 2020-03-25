@@ -141,7 +141,7 @@ class StatusableBehavior extends Behavior
             $status = $entity->get($fieldName);
             if ($status instanceof Status) {
                 $entity->set($fieldName . '__original', null);
-                $entity->dirty($fieldName . '__original', false);
+                $entity->setDirty($fieldName . '__original', false);
                 $entity->set($fieldName, $status->getStatus());
             }
         }
