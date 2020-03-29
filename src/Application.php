@@ -223,7 +223,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
         $middlewareQueue
             // Catch any exceptions in the lower layers,
             // and make an error page/response
-            ->add(new ErrorHandlerMiddleware(null, Configure::read('Error')))
+            ->add(new ErrorHandlerMiddleware(Configure::read('Error')))
 
             // Handle plugin/theme assets like CakePHP normally does.
             ->add(new AssetMiddleware([
