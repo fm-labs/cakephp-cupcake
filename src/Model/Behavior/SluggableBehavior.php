@@ -59,7 +59,7 @@ class SluggableBehavior extends Behavior
     /**
      * Automatically slug when saving.
      *
-     * @param \Cake\Event\Event $event The event
+     * @param \Cake\Event\EventInterface $event The event
      * @param \Cake\ORM\Entity $entity The entity
      * @param \ArrayObject $options
      * @param $operation
@@ -73,7 +73,7 @@ class SluggableBehavior extends Behavior
     /**
      * Automatically slug when saving.
      *
-     * @param \Cake\Event\Event $event The event
+     * @param \Cake\Event\EventInterface $event The event
      * @param \Cake\ORM\Entity $entity The entity
      * @return void
      */

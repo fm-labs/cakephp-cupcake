@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Banana\Model\Behavior;
 
+use Cake\Datasource\EntityInterface;
 use Cake\ORM\Behavior;
-use Cake\ORM\Entity;
 
 /**
  * Class CopyableBehavior
@@ -23,23 +23,17 @@ class CopyableBehavior extends Behavior
     ];
 
     /**
-     * @param \Cake\ORM\Entity $entity Entity to copy
-     * @return \Cake\ORM\Entity
+     * @param \Cake\Datasource\EntityInterface $entity Entity to copy
+     * @return \Cake\Datasource\EntityInterface
      */
-    public function copyEntity(Entity $entity)
+    public function copyEntity(EntityInterface $entity)
     {
         $config = $this->getConfig();
 
+        $new = $this->_table->newEmptyEntity();
         if (!empty($config['includeFields'])) {
-            $new = $this->_table->newEmptyEntity();
             foreach ($config['includeFields'] as $field) {
                 $new->set($field, $entity->get($field));
-                //$new->dirty($field, false);
-            }
-        } elseif (!empty($config['excludeFields'])) {
-            $new = clone$entity;
-            foreach ($config['excludeFields'] as $field) {
-                $new->set($field, null);
                 //$new->dirty($field, false);
             }
         }

@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace Banana\Model\Behavior;
 
 use ArrayObject;
-use Cake\Collection\Collection;
+use Cake\Collection\CollectionInterface;
 use Cake\Datasource\EntityInterface;
-use Cake\Datasource\ResultSetDecorator;
+use Cake\Event\EventInterface;
 use Cake\ORM\Behavior;
 use Cake\ORM\Entity;
 use Cake\ORM\Query;
@@ -74,13 +74,16 @@ class AttributesBehavior extends Behavior
     }
 
     /**
-     * @return \Cake\ORM\Table
+     * @return \Cake\ORM\Association
      */
     public function attributesTable()
     {
         return $this->_table->getAssociation('Attributes');
     }
 
+    /**
+     * @return array
+     */
     public function attributesSchema()
     {
         if (!isset($this->_schema)) {
@@ -119,20 +122,24 @@ class AttributesBehavior extends Behavior
         });
     }
 
+    /**
+     * @param \Cake\Datasource\EntityInterface $attr Attribute Entity object
+     * @return bool|\Cake\Datasource\EntityInterface
+     */
     public function saveAttribute(EntityInterface $attr)
     {
         return $this->attributesTable()->save($attr);
     }
 
     /**
-     * @param \Cake\ORM\Query $query
-     * @param array $options
+     * @param \Cake\ORM\Query $query Query object
+     * @param array $options Options
      * @return \Cake\ORM\Query
      */
     public function findWithAttributes(Query $query, array $options = [])
     {
         $query->contain(['Attributes']);
-        $query->formatResults([$this, '_formatAttributesResult']);
+        $query->formatResults([$this, 'formatAttributesResult']);
 
         return $query;
     }
@@ -140,7 +147,7 @@ class AttributesBehavior extends Behavior
     /**
      * Find rows by given attributes (key-value-pairs)
      *
-     * @param \Cake\ORM\Query $query
+     * @param \Cake\ORM\Query $query Query object
      * @param array $options Attributes key-value-pairs
      * @return \Cake\ORM\Query
      */
@@ -152,7 +159,12 @@ class AttributesBehavior extends Behavior
 
         $attrsQuery = $this->attributesTable()->find();
         foreach ($options as $k => $v) {
-            $attrsQuery->where(['Attributes.name' => $k, 'Attributes.value' => $v]);
+            $cond = ['Attributes.name' => $k, 'Attributes.value' => $v];
+            if ($v === null) {
+                unset($cond['Attributes.value']);
+                $cond['Attributes.value IS'] = $v;
+            }
+            $attrsQuery->where($cond);
         }
         $attrs = $attrsQuery
             ->enableHydration(false)
@@ -161,7 +173,7 @@ class AttributesBehavior extends Behavior
 
         $tableIds = Hash::extract($attrs, '{n}.foreign_key');
         if (empty($tableIds)) {
-            return new ResultSetDecorator([]);
+            return $query;
         }
 
         return $this->findWithAttributes($query->where([$this->_table->getAlias() . '.id IN' => $tableIds]));
@@ -170,7 +182,7 @@ class AttributesBehavior extends Behavior
     /**
      * Find rows by given attributes (key-value-pairs)
      *
-     * @param \Cake\ORM\Query $query
+     * @param \Cake\ORM\Query $query The Query object
      * @param array $options Attributes key-value-pairs
      * @return \Cake\ORM\Query
      */
@@ -191,21 +203,21 @@ class AttributesBehavior extends Behavior
 
         $tableIds = Hash::extract($attrs, '{n}.foreign_key');
         if (empty($tableIds)) {
-            return new ResultSetDecorator([]);
+            return $query;
         }
 
         return $this->findWithAttributes($query->where([$this->_table->getAlias() . '.id IN' => $tableIds]));
     }
 
     /**
-     * @param \Cake\Datasource\ResultSetDecorator $results The table results
-     * @return \Cake\Datasource\ResultSetDecorator
+     * @param \Cake\Collection\CollectionInterface $results The table results
+     * @return \Cake\Collection\CollectionInterface|\Cake\Datasource\ResultSetInterface
      */
-    public function _formatAttributesResult(Collection $results)
+    public function formatAttributesResult(\Cake\Collection\CollectionInterface $results)
     {
         $results = $results->map(function (Entity $row) {
-            if (isset($row->attributes)) {
-                $col = collection($row->attributes);
+            if ($row->get('attributes')) {
+                $col = collection($row->get('attributes'));
                 $attrs = $col->combine('name', 'value')->toArray();
 
                 foreach ($attrs as $key => $value) {
@@ -228,12 +240,13 @@ class AttributesBehavior extends Behavior
      * Applies a MapReduce to the query, which resolves entity attributes
      * after the find operation.
      *
-     * @param \Cake\Event\Event $event
-     * @param \Cake\ORM\Query $query
-     * @param array $options
-     * @param $primary
+     * @param \Cake\Event\EventInterface $event Event object
+     * @param \Cake\ORM\Query $query Query object
+     * @param array $options Options
+     * @param bool $primary Primary flag
+     * @return void
      */
-    public function beforeFind(\Cake\Event\EventInterface $event, Query $query, $options, $primary)
+    public function beforeFind(EventInterface $event, Query $query, $options, $primary): void
     {
         /*
         $mapper = function ($row, $key, MapReduce $mapReduce) {
@@ -252,7 +265,13 @@ class AttributesBehavior extends Behavior
         }
     }
 
-    public function buildValidator(\Cake\Event\EventInterface $event, Validator $validator, $name)
+    /**
+     * @param \Cake\Event\EventInterface $event Event object
+     * @param \Cake\Validation\Validator $validator Validator object
+     * @param string $name Validator name
+     * @return void
+     */
+    public function buildValidator(EventInterface $event, Validator $validator, string $name): void
     {
         foreach ($this->attributesSchema() as $field => $config) {
             $required = $config['required'] ?? false;
@@ -267,17 +286,13 @@ class AttributesBehavior extends Behavior
         }
     }
 
-    /*
-    public function buildRules(Event $event, RulesChecker $rules)
-    {
-    }
-
-    public function beforeSave(Event $event, EntityInterface $entity, ArrayObject $options)
-    {
-    }
-    */
-
-    public function afterSave(\Cake\Event\EventInterface $event, EntityInterface $entity, ArrayObject $options)
+    /**
+     * @param \Cake\Event\EventInterface $event Event object
+     * @param \Cake\Datasource\EntityInterface|\Cake\ORM\Entity $entity Entity object
+     * @param \ArrayObject $options Options
+     * @return bool
+     */
+    public function afterSave(EventInterface $event, EntityInterface $entity, ArrayObject $options): bool
     {
         //debug("afterSave");
         //debug($entity->attributes);
@@ -298,7 +313,6 @@ class AttributesBehavior extends Behavior
             }
         }
 
-        /** @var \Cake\ORM\Entity $entity */
         foreach ($entity->getDirty() as $key) {
             if ($this->isAttribute($key)) {
                 $attr = $this->createAttribute($entity, $key);
@@ -315,7 +329,11 @@ class AttributesBehavior extends Behavior
         return true;
     }
 
-    public function isAttribute($name)
+    /**
+     * @param string $name Attribute name
+     * @return bool
+     */
+    public function isAttribute(string $name): bool
     {
         if ($name == $this->_config['attributesPropertyName']) {
             return false;

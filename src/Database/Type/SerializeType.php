@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace Banana\Database\Type;
 
 use Cake\Database\DriverInterface;
+use Cake\Database\TypeFactory;
 use Cake\Database\TypeInterface;
+use Cake\Utility\Text;
 use InvalidArgumentException;
 use PDO;
 
@@ -13,13 +15,13 @@ use PDO;
  *
  * Use to convert serialized data between PHP and the database types.
  */
-class SerializeType extends \Cake\Database\TypeFactory implements TypeInterface
+class SerializeType extends TypeFactory implements TypeInterface
 {
     /**
      * Convert a value data into a serialized string
      *
      * @param mixed $value The value to convert.
-     * @param \Cake\Database\Driver $driver The driver instance to convert with.
+     * @param \Cake\Database\DriverInterface $driver The driver instance to convert with.
      * @return string|null
      */
     public function toDatabase($value, DriverInterface $driver)
@@ -35,7 +37,7 @@ class SerializeType extends \Cake\Database\TypeFactory implements TypeInterface
      * Convert string values to PHP arrays.
      *
      * @param mixed $value The value to convert.
-     * @param \Cake\Database\Driver $driver The driver instance to convert with.
+     * @param \Cake\Database\DriverInterface $driver The driver instance to convert with.
      * @return string|null|array
      */
     public function toPHP($value, DriverInterface $driver)
@@ -47,7 +49,7 @@ class SerializeType extends \Cake\Database\TypeFactory implements TypeInterface
      * Get the correct PDO binding type for string data.
      *
      * @param mixed $value The value being bound.
-     * @param \Cake\Database\Driver $driver The driver.
+     * @param \Cake\Database\DriverInterface $driver The driver.
      * @return int
      */
     public function toStatement($value, DriverInterface $driver)
@@ -77,6 +79,7 @@ class SerializeType extends \Cake\Database\TypeFactory implements TypeInterface
      */
     public function getBaseType(): ?string
     {
+        return null;
     }
 
     /**
@@ -86,6 +89,7 @@ class SerializeType extends \Cake\Database\TypeFactory implements TypeInterface
      */
     public function getName(): ?string
     {
+        return null;
     }
 
     /**
@@ -99,5 +103,6 @@ class SerializeType extends \Cake\Database\TypeFactory implements TypeInterface
      */
     public function newId()
     {
+        return Text::uuid();
     }
 }

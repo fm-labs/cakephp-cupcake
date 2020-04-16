@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Banana\Model\Behavior;
 
 use ArrayObject;
+use Cake\Event\EventInterface;
 use Cake\ORM\Behavior;
 use Cake\ORM\Query;
 
@@ -21,17 +22,9 @@ class PublishableBehavior extends Behavior
     ];
 
     /**
-     * @param array $config Behavior config
-     * @return void
-     */
-    //public function initialize(array $config)
-    //{
-    //}
-
-    /**
      * @param \Cake\ORM\Query $query
      * @param array $options
-     * @return $this
+     * @return \Cake\ORM\Query
      */
     public function findPublished(Query $query, array $options)
     {
@@ -44,38 +37,17 @@ class PublishableBehavior extends Behavior
     }
 
     /**
-     * @param \Cake\Event\Event $event
+     * @param EventInterface $event
      * @param \Cake\ORM\Query $query
      * @param \ArrayObject $options
      * @param bool $primary
      */
-    public function beforeFind(\Cake\Event\EventInterface $event, Query $query, ArrayObject $options, $primary)
+    public function beforeFind(EventInterface $event, Query $query, ArrayObject $options, $primary)
     {
-
         if (isset($options['published'])) {
             $this->findPublished($query, [
                 'published' => $options['published'],
             ]);
         }
     }
-
-    /**
-     * @param \Cake\Event\Event $event The event
-     * @param \Cake\ORM\Entity $entity The entity
-     * @param \ArrayObject $options
-     * @param $operation
-     * @return void
-     */
-    //public function beforeRules(Event $event, Entity $entity, ArrayObject $options, $operation)
-    //{
-    //}
-
-    /**
-     * @param \Cake\Event\Event $event The event
-     * @param \Cake\ORM\Entity $entity The entity
-     * @return void
-     */
-    //public function beforeSave(Event $event, Entity $entity)
-    //{
-    //}
 }

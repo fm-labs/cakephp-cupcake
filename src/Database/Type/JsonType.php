@@ -3,7 +3,10 @@ declare(strict_types=1);
 
 namespace Banana\Database\Type;
 
-use Cake\Database\Driver;
+use Cake\Database\DriverInterface;
+use Cake\Database\TypeFactory;
+use Cake\Database\TypeInterface;
+use Cake\Utility\Text;
 use PDO;
 
 /**
@@ -17,14 +20,14 @@ use PDO;
  * @package Banana\Database\Type
  * @deprecated
  */
-class JsonType extends \Cake\Database\TypeFactory
+class JsonType extends TypeFactory implements TypeInterface
 {
     /**
      * @param mixed $value
-     * @param \Cake\Database\Driver $driver
+     * @param \Cake\Database\DriverInterface $driver
      * @return mixed|null
      */
-    public function toPHP($value, Driver $driver)
+    public function toPHP($value, DriverInterface $driver)
     {
         if ($value === null) {
             return null;
@@ -48,25 +51,63 @@ class JsonType extends \Cake\Database\TypeFactory
 
     /**
      * @param $value
-     * @param \Cake\Database\Driver $driver
+     * @param \Cake\Database\DriverInterface $driver
      * @return string
      */
-    public function toDatabase($value, Driver $driver)
+    public function toDatabase($value, DriverInterface $driver)
     {
         return json_encode($value);
     }
 
     /**
      * @param $value
-     * @param \Cake\Database\Driver $driver
+     * @param \Cake\Database\DriverInterface $driver
      * @return int
      */
-    public function toStatement($value, Driver $driver)
+    public function toStatement($value, DriverInterface $driver)
     {
         if ($value === null) {
             return PDO::PARAM_NULL;
         }
 
         return PDO::PARAM_STR;
+    }
+
+    /**
+     * Returns the base type name that this class is inheriting.
+     *
+     * This is useful when extending base type for adding extra functionality,
+     * but still want the rest of the framework to use the same assumptions it would
+     * do about the base type it inherits from.
+     *
+     * @return string|null The base type name that this class is inheriting.
+     */
+    public function getBaseType(): ?string
+    {
+        return null;
+    }
+
+    /**
+     * Returns type identifier name for this object.
+     *
+     * @return string|null The type identifier name for this object.
+     */
+    public function getName(): ?string
+    {
+        return null;
+    }
+
+    /**
+     * Generate a new primary key value for a given type.
+     *
+     * This method can be used by types to create new primary key values
+     * when entities are inserted.
+     *
+     * @return mixed A new primary key value.
+     * @see \Cake\Database\Type\UuidType
+     */
+    public function newId()
+    {
+        return Text::uuid();
     }
 }
