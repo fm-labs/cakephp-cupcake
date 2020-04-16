@@ -28,7 +28,7 @@ class BananaMailer extends Mailer
      * @throws \BadMethodCallException
      * @deprecated Use MailmanTransport instead
      */
-    public function send($action, $args = [], $headers = [])
+    public function send(?string $action = null, array $args = [], array $headers = []): array
     {
         if (!method_exists($this, $action)) {
             throw new MissingActionException([

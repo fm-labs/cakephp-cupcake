@@ -193,7 +193,7 @@ class AttributesBehavior extends Behavior
         }
 
         $attrsQuery = $this->attributesTable()->find();
-        foreach ($options as $k) {
+        foreach (array_keys($options) as $k) {
             $attrsQuery->where(['Attributes.name' => $k]);
         }
         $attrs = $attrsQuery

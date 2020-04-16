@@ -12,8 +12,6 @@ use Cake\View\Form\ContextInterface;
  *
  * This context provider simply fulfils the interface requirements
  * that FormHelper has and allows access to the request data.
- * @method null getRequiredMessage($field)
- * @method null getMaxLength($field)
  */
 class ViewModuleContext implements ContextInterface
 {
@@ -162,11 +160,16 @@ class ViewModuleContext implements ContextInterface
      */
     public function primaryKey()
     {
+        return [];
     }
 
-    function __call($name, $arguments)
+    public function getRequiredMessage(string $field): ?string
     {
-        // TODO: Implement @method null getRequiredMessage($field)
-        // TODO: Implement @method null getMaxLength($field)
+        // TODO: Implement getRequiredMessage() method.
+    }
+
+    public function getMaxLength(string $field): ?int
+    {
+        // TODO: Implement getMaxLength() method.
     }
 }

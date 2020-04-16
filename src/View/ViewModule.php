@@ -147,7 +147,7 @@ abstract class ViewModule extends Cell
             if ($template === null) {
                 $template = $this->action;
             }
-            $builder->setLayout(false)
+            $builder->setLayout(null)
                 ->setTemplate($template);
 
             $className = static::class;
@@ -180,7 +180,7 @@ abstract class ViewModule extends Cell
      * @param null $viewClass
      * @return \Cake\View\View
      */
-    public function createView($viewClass = null)
+    public function createView(?string $viewClass = null): View
     {
         $builder = $this->viewBuilder();
 

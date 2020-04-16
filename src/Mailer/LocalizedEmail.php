@@ -116,7 +116,7 @@ class LocalizedEmail extends Email
      * @param null|string $content Email content
      * @return array
      */
-    public function send($content = null)
+    public function send($content = null): array
     {
         $subject = $this->getOriginalSubject();
         $this->setViewVars('_subject', $subject);
