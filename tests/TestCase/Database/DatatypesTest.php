@@ -26,7 +26,7 @@ class DatatypesTest extends TestCase
     public function testJsonDataType()
     {
         $data = ['Hello' => 'World'];
-        $entity = $this->table->newEntity();
+        $entity = $this->table->newEmptyEntity();
 
         // write
         $entity->json = $data;
@@ -41,7 +41,7 @@ class DatatypesTest extends TestCase
     public function testSerializedDataType()
     {
         $data = ['Hello' => 'World'];
-        $entity = $this->table->newEntity();
+        $entity = $this->table->newEmptyEntity();
 
         // write
         $entity->serialized = $data;

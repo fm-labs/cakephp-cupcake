@@ -41,7 +41,7 @@ class ArrayTableEntityTest extends TestCase
 
     public function testNewEntity()
     {
-        $entity = $this->Table->newEntity();
+        $entity = $this->Table->newEmptyEntity();
 
         $this->assertInstanceOf('\ArrayObject', $entity);
         $this->assertInstanceOf('\ArrayAccess', $entity);

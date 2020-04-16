@@ -27,7 +27,7 @@ class PluginSetup
 
         $entityType = $EntityTypes->find()->where(['name' => $typeName])->first();
         if (!$entityType) {
-            $entityType = $EntityTypes->newEntity();
+            $entityType = $EntityTypes->newEmptyEntity();
         }
 
         $entityType = $EntityTypes->patchEntity($entityType, $config);
@@ -48,7 +48,7 @@ class PluginSetup
 
         $attributeGroup = $AttributeGroups->find()->where(['name' => $code])->first();
         if (!$attributeGroup) {
-            $attributeGroup = $AttributeGroups->newEntity();
+            $attributeGroup = $AttributeGroups->newEmptyEntity();
         }
 
         $attributeGroup = $AttributeGroups->patchEntity($attributeGroup, $config);
@@ -69,7 +69,7 @@ class PluginSetup
 
         $attribute = $Attributes->find()->where(['name' => $code])->first();
         if (!$attribute) {
-            $attribute = $Attributes->newEntity();
+            $attribute = $Attributes->newEmptyEntity();
         }
 
         $attribute = $Attributes->patchEntity($attribute, $config);
