@@ -69,9 +69,9 @@ Cache::setConfig([
 
 
 //Plugin::getCollection()->add(new \Banana\Plugin());
-*/
-
 if (!getenv('db_dsn')) {
     putenv('db_dsn=sqlite:///:memory:');
 }
 ConnectionManager::setConfig('test', ['url' => getenv('db_dsn')]);
+*/
+
