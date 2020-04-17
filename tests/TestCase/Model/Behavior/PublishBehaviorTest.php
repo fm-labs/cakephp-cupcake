@@ -6,10 +6,10 @@ namespace Banana\Test\TestCase\Model\Behavior;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
-class PublishableBehaviorTest extends TestCase
+class PublishBehaviorTest extends TestCase
 {
     /**
-     * @var Table
+     * @var \Cake\ORM\Table
      */
     public $Model;
 
@@ -20,12 +20,18 @@ class PublishableBehaviorTest extends TestCase
         'plugin.Banana.Posts',
     ];
 
+    /**
+     * @return void
+     */
     public function setUp(): void
     {
         $this->Model = TableRegistry::getTableLocator()->get('Posts');
-        $this->Model->addBehavior('Banana.Publishable', []);
+        $this->Model->addBehavior('Banana.Publish', []);
     }
 
+    /**
+     * @return void
+     */
     public function tearDown(): void
     {
         TableRegistry::getTableLocator()->remove('Model');
@@ -33,6 +39,9 @@ class PublishableBehaviorTest extends TestCase
         parent::tearDown();
     }
 
+    /**
+     * @return void
+     */
     public function testFindPublished()
     {
         $entity = $this->Model->newEntity(['title' => 'Publish me', 'is_published' => true]);

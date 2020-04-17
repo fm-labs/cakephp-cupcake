@@ -14,7 +14,7 @@ use Cake\Utility\Text;
  * @package Banana\Model\Behavior
  * @see http://book.cakephp.org/3.0/en/orm/behaviors.html
  */
-class SluggableBehavior extends Behavior
+class SlugBehavior extends Behavior
 {
     /**
      * @var array

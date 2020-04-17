@@ -6,10 +6,10 @@ namespace Banana\Test\TestCase\Model\Behavior;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
-class SluggableBehaviorTest extends TestCase
+class SlugBehaviorTest extends TestCase
 {
     /**
-     * @var Table
+     * @var \Cake\ORM\Table
      */
     public $Model;
 
@@ -20,12 +20,18 @@ class SluggableBehaviorTest extends TestCase
         'plugin.Banana.Posts',
     ];
 
+    /**
+     * @return void
+     */
     public function setUp(): void
     {
         $this->Model = TableRegistry::getTableLocator()->get('Posts');
-        $this->Model->addBehavior('Banana.Sluggable', []);
+        $this->Model->addBehavior('Banana.Slug', []);
     }
 
+    /**
+     * @return void
+     */
     public function tearDown(): void
     {
         TableRegistry::getTableLocator()->remove('Model');
@@ -33,11 +39,14 @@ class SluggableBehaviorTest extends TestCase
         parent::tearDown();
     }
 
+    /**
+     * @return void
+     */
     public function testSlugOnSave()
     {
         $entity = $this->Model->newEntity(['title' => 'Slug me']);
         $entity = $this->Model->save($entity);
 
-        $this->assertEquals('slug-me', $entity->slug);
+        $this->assertEquals('slug-me', $entity->get('slug'));
     }
 }

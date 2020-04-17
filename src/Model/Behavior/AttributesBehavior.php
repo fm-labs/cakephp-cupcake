@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Banana\Model\Behavior;
 
 use ArrayObject;
-use Cake\Collection\CollectionInterface;
 use Cake\Database\Expression\QueryExpression;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\EventInterface;
@@ -187,6 +186,7 @@ class AttributesBehavior extends Behavior
      * @param \Cake\ORM\Query $query The Query object
      * @param array $options List of attribute names
      * @return \Cake\ORM\Query
+     * @TODO Support for multiple attributes
      */
     public function findHavingAttribute(Query $query, array $options = [])
     {

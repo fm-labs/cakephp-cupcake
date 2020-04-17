@@ -9,10 +9,10 @@ use Cake\ORM\Behavior;
 use Cake\ORM\Query;
 
 /**
- * Class PublishableBehavior
+ * Class PublishBehavior
  * @package Banana\Model\Behavior
  */
-class PublishableBehavior extends Behavior
+class PublishBehavior extends Behavior
 {
     /**
      * @var array
