@@ -46,9 +46,8 @@ class SerializeTypeTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        TypeFactory::clear();
-        TypeFactory::map('json', 'Banana\Database\Type\SerializeType');
-        $this->type = TypeFactory::build('json');
+        TypeFactory::map('serialize', 'Banana\Database\Type\SerializeType');
+        $this->type = TypeFactory::build('serialize');
         $this->driver = $this->getMockBuilder('Cake\Database\Driver')->getMock();
     }
 

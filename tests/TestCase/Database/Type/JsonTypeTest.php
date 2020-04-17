@@ -48,7 +48,6 @@ class JsonTypeTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        TypeFactory::clear();
         TypeFactory::map('json', 'Banana\Database\Type\JsonType');
         $this->type = TypeFactory::build('json');
         $this->driver = $this->getMockBuilder('Cake\Database\Driver')->getMock();
