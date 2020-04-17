@@ -4,9 +4,8 @@ declare(strict_types=1);
 namespace Banana\Database\Type;
 
 use Cake\Database\DriverInterface;
-use Cake\Database\TypeFactory;
-use Cake\Database\TypeInterface;
-use Cake\Utility\Text;
+use Cake\Database\Type\BaseType;
+use Cake\Database\Type\BatchCastingInterface;
 use InvalidArgumentException;
 use PDO;
 
@@ -15,7 +14,7 @@ use PDO;
  *
  * Use to convert serialized data between PHP and the database types.
  */
-class SerializeType extends TypeFactory implements TypeInterface
+class SerializeType extends BaseType implements BatchCastingInterface
 {
     /**
      * Convert a value data into a serialized string
@@ -30,6 +29,10 @@ class SerializeType extends TypeFactory implements TypeInterface
             throw new InvalidArgumentException('Cannot serialize a resource value');
         }
 
+        if ($value === null) {
+            return $value;
+        }
+
         return serialize($value);
     }
 
@@ -42,7 +45,11 @@ class SerializeType extends TypeFactory implements TypeInterface
      */
     public function toPHP($value, DriverInterface $driver)
     {
-        return unserialize($value);
+        if (is_string($value)) {
+            return unserialize($value);
+        }
+
+        return $value;
     }
 
     /**
@@ -54,6 +61,10 @@ class SerializeType extends TypeFactory implements TypeInterface
      */
     public function toStatement($value, DriverInterface $driver)
     {
+        if ($value === null) {
+            return PDO::PARAM_NULL;
+        }
+
         return PDO::PARAM_STR;
     }
 
@@ -69,40 +80,24 @@ class SerializeType extends TypeFactory implements TypeInterface
     }
 
     /**
-     * Returns the base type name that this class is inheriting.
+     * Returns an array of the values converted to the PHP representation of
+     * this type.
      *
-     * This is useful when extending base type for adding extra functionality,
-     * but still want the rest of the framework to use the same assumptions it would
-     * do about the base type it inherits from.
-     *
-     * @return string|null The base type name that this class is inheriting.
+     * @param array $values The original array of values containing the fields to be casted
+     * @param string[] $fields The field keys to cast
+     * @param \Cake\Database\DriverInterface $driver Object from which database preferences and configuration will be extracted.
+     * @return array
      */
-    public function getBaseType(): ?string
+    public function manyToPHP(array $values, array $fields, DriverInterface $driver): array
     {
-        return null;
-    }
+        foreach ($fields as $field) {
+            if (!isset($values[$field])) {
+                continue;
+            }
 
-    /**
-     * Returns type identifier name for this object.
-     *
-     * @return string|null The type identifier name for this object.
-     */
-    public function getName(): ?string
-    {
-        return null;
-    }
+            $values[$field] = $this->toPHP($values[$field], $driver);
+        }
 
-    /**
-     * Generate a new primary key value for a given type.
-     *
-     * This method can be used by types to create new primary key values
-     * when entities are inserted.
-     *
-     * @return mixed A new primary key value.
-     * @see \Cake\Database\Type\UuidType
-     */
-    public function newId()
-    {
-        return Text::uuid();
+        return $values;
     }
 }

@@ -4,28 +4,22 @@ declare(strict_types=1);
 namespace Banana\Database\Type;
 
 use Cake\Database\DriverInterface;
-use Cake\Database\TypeFactory;
-use Cake\Database\TypeInterface;
-use Cake\Utility\Text;
+use Cake\Database\Type\BaseType;
+use Cake\Database\Type\BatchCastingInterface;
 use PDO;
 
 /**
- * Class JsonType - DEPRECATED
+ * Class JsonType
  *
- * JSON database type for the cake's ORM
- *
- * ! DEPRECATION NOTICE !
- * As of CakePHP v3.3.0 the JsonType is part of the official package.
+ * JSON database type for the cake's ORM.
  *
  * @package Banana\Database\Type
- * @deprecated
+ * @deprecated As of CakePHP v3.3.0 the JsonType is part of the official package.
  */
-class JsonType extends TypeFactory implements TypeInterface
+class JsonType extends BaseType implements BatchCastingInterface
 {
     /**
-     * @param mixed $value
-     * @param \Cake\Database\DriverInterface $driver
-     * @return mixed|null
+     * {@inheritDoc}
      */
     public function toPHP($value, DriverInterface $driver)
     {
@@ -37,77 +31,65 @@ class JsonType extends TypeFactory implements TypeInterface
     }
 
     /**
-     * @param $value
-     * @return mixed
+     * {@inheritDoc}
      */
     public function marshal($value)
     {
-        if (is_array($value) || $value === null) {
-            return $value;
+        if (is_string($value) && preg_match('/^\{([\w\W\n]*)\}$/m', $value)) {
+            return json_decode($value, true);
         }
 
-        return json_decode($value, true);
+        return $value;
     }
 
     /**
-     * @param $value
-     * @param \Cake\Database\DriverInterface $driver
-     * @return string
+     * {@inheritDoc}
      */
     public function toDatabase($value, DriverInterface $driver)
     {
-        return json_encode($value);
+        if ($value === null) {
+            return null;
+        }
+
+        $val = json_encode($value);
+        if (json_last_error() > 0) {
+            throw new \InvalidArgumentException(json_last_error_msg());
+        }
+
+        return $val;
     }
 
     /**
-     * @param $value
-     * @param \Cake\Database\DriverInterface $driver
-     * @return int
+     * {@inheritDoc}
      */
     public function toStatement($value, DriverInterface $driver)
     {
         if ($value === null) {
-            return PDO::PARAM_NULL;
+            return null;
         }
 
         return PDO::PARAM_STR;
     }
 
     /**
-     * Returns the base type name that this class is inheriting.
+     * Returns an array of the values converted to the PHP representation of
+     * this type.
      *
-     * This is useful when extending base type for adding extra functionality,
-     * but still want the rest of the framework to use the same assumptions it would
-     * do about the base type it inherits from.
-     *
-     * @return string|null The base type name that this class is inheriting.
+     * @param array $values The original array of values containing the fields to be casted
+     * @param string[] $fields The field keys to cast
+     * @param \Cake\Database\DriverInterface $driver Object from which database preferences and configuration will be extracted.
+     * @return array
      */
-    public function getBaseType(): ?string
+    public function manyToPHP(array $values, array $fields, DriverInterface $driver): array
     {
-        return null;
-    }
+        foreach ($fields as $field) {
+            if (!isset($values[$field])) {
+                continue;
+            }
 
-    /**
-     * Returns type identifier name for this object.
-     *
-     * @return string|null The type identifier name for this object.
-     */
-    public function getName(): ?string
-    {
-        return null;
-    }
+            $values[$field] = $this->toPHP($values[$field], $driver);
+        }
 
-    /**
-     * Generate a new primary key value for a given type.
-     *
-     * This method can be used by types to create new primary key values
-     * when entities are inserted.
-     *
-     * @return mixed A new primary key value.
-     * @see \Cake\Database\Type\UuidType
-     */
-    public function newId()
-    {
-        return Text::uuid();
+        return $values;
     }
 }
