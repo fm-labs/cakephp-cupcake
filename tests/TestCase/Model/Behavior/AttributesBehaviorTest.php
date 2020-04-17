@@ -25,6 +25,7 @@ class AttributesBehaviorTest extends TestCase
      * setUp method
      *
      * @return void
+     * @throws \Exception
      */
     public function setUp(): void
     {
@@ -59,27 +60,27 @@ class AttributesBehaviorTest extends TestCase
      *
      * @return void
      */
-    public function testInitialize()
+    public function testInitialize(): void
     {
         $this->assertTrue($this->table->hasAssociation('Attributes'));
     }
 
-    public function testGetAttributesTable()
+    /**
+     * @return void
+     */
+    public function testGetAttributesTable(): void
     {
         $this->markTestIncomplete();
         //$this->assertInstanceOf(\Banana\Model\Table\AttributesTable::class, $this->table->getAttributesTable());
     }
 
-    public function testGetAttributesSchema()
+    /**
+     * @return void
+     */
+    public function testGetAttributesSchema(): void
     {
         $schema = $this->table->getAttributesSchema();
 
-        $expected = [
-            'test_string' => ['default' => null],
-            'test_required' => ['required' => true],
-            'test_attribute' => [],
-            'my_attribute' => [],
-        ];
         $this->assertArrayHasKey('test_string', $schema);
         $this->assertArrayHasKey('test_required', $schema);
         $this->assertArrayHasKey('test_attribute', $schema);
@@ -90,7 +91,10 @@ class AttributesBehaviorTest extends TestCase
         $this->assertSame([], $schema['my_attribute']);
     }
 
-    public function testValidation()
+    /**
+     * @return void
+     */
+    public function testValidation(): void
     {
         // create
         $post = $this->table->newEntity([
@@ -112,24 +116,27 @@ class AttributesBehaviorTest extends TestCase
      *
      * @return void
      */
-    public function testFindWithAttributes()
+    public function testFindWithAttributes(): void
     {
         $post = $this->table->find()
             ->find('withAttributes')
             ->first();
         $this->assertArrayHasKey('attr_string', $post->toArray());
         $this->assertArrayHasKey('attr_int', $post->toArray());
-        $this->assertSame('SomeString1', $post->toArray()['attr_string']);
-        $this->assertSame(1, $post->toArray()['attr_int']);
+        $this->assertEquals('SomeString1', $post->toArray()['attr_string']);
+        $this->assertEquals(1, $post->toArray()['attr_int']);
     }
 
-    public function testFindByAttribute()
+    /**
+     * @return void
+     */
+    public function testFindByAttribute(): void
     {
-        $posts = $this->table->find()
+        $posts = $this->table
             ->find('byAttribute', ['attr_string' => 'SomeString1']);
         $this->assertEquals(1, $posts->count());
 
-        $posts = $this->table->find()
+        $posts = $this->table
             ->find('byAttribute', ['non_existent' => null]);
         $this->assertEquals(0, $posts->count());
 
@@ -138,26 +145,31 @@ class AttributesBehaviorTest extends TestCase
             ->find('byAttribute');
     }
 
-    public function testFindHavingAttribute()
+    /**
+     * @return void
+     */
+    public function testFindHavingAttribute(): void
     {
-        $posts = $this->table->find()
-            ->find('havingAttribute', ['attr_string']);
+        $posts = $this->table->find('havingAttribute', ['attr_string']);
         $this->assertEquals(2, $posts->count());
 
-        $posts = $this->table->find()
-            ->find('havingAttribute', ['attr_text']);
+        $posts = $this->table->find('havingAttribute', ['attr_text']);
         $this->assertEquals(1, $posts->count());
 
-        $posts = $this->table->find()
-            ->find('havingAttribute', ['non_existent' => null]);
+        //$posts = $this->table->find('havingAttribute', ['attr_string', 'attr_text']);
+        //$this->assertEquals(1, $posts->count());
+
+        $posts = $this->table->find('havingAttribute', ['non_existent']);
         $this->assertEquals(0, $posts->count());
 
         $this->expectException('\InvalidArgumentException');
-        $this->table->find()
-            ->find('havingAttribute');
+        $this->table->find('havingAttribute');
     }
 
-    public function testCrudWithAttributesData()
+    /**
+     * @return void
+     */
+    public function testCrudWithAttributesData(): void
     {
         $this->markTestIncomplete();
 
@@ -225,7 +237,10 @@ class AttributesBehaviorTest extends TestCase
         $this->assertEquals(0, $orphanedAttributes);
     }
 
-    public function testCrudWithAttributeDirectAccessor()
+    /**
+     * @return void
+     */
+    public function testCrudWithAttributeDirectAccessor(): void
     {
         // create
         $post = $this->table->newEntity([

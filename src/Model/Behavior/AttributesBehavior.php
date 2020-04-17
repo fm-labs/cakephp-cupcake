@@ -5,6 +5,7 @@ namespace Banana\Model\Behavior;
 
 use ArrayObject;
 use Cake\Collection\CollectionInterface;
+use Cake\Database\Expression\QueryExpression;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\EventInterface;
 use Cake\ORM\Behavior;
@@ -173,17 +174,18 @@ class AttributesBehavior extends Behavior
 
         $tableIds = Hash::extract($attrs, '{n}.foreign_key');
         if (empty($tableIds)) {
-            return $query;
+            $tableIds = [0];
         }
+        $query->where([$this->_table->getAlias() . '.id IN' => $tableIds]);
 
-        return $this->findWithAttributes($query->where([$this->_table->getAlias() . '.id IN' => $tableIds]));
+        return $this->findWithAttributes($query);
     }
 
     /**
      * Find rows by given attributes (key-value-pairs)
      *
      * @param \Cake\ORM\Query $query The Query object
-     * @param array $options Attributes key-value-pairs
+     * @param array $options List of attribute names
      * @return \Cake\ORM\Query
      */
     public function findHavingAttribute(Query $query, array $options = [])
@@ -192,10 +194,12 @@ class AttributesBehavior extends Behavior
             throw new \InvalidArgumentException("Attribute key-value pair(s) missing");
         }
 
-        $attrsQuery = $this->attributesTable()->find();
-        foreach (array_keys($options) as $k) {
-            $attrsQuery->where(['Attributes.name' => $k]);
-        }
+        $attrsQuery = $this->attributesTable()
+            ->find()
+            ->where(function (QueryExpression $exp, Query $query) use ($options) {
+                return $exp->in('name', $options);
+            });
+
         $attrs = $attrsQuery
             ->enableHydration(false)
             ->all()
@@ -203,10 +207,11 @@ class AttributesBehavior extends Behavior
 
         $tableIds = Hash::extract($attrs, '{n}.foreign_key');
         if (empty($tableIds)) {
-            return $query;
+            $tableIds = [0];
         }
+        $query->where([$this->_table->getAlias() . '.id IN' => $tableIds]);
 
-        return $this->findWithAttributes($query->where([$this->_table->getAlias() . '.id IN' => $tableIds]));
+        return $this->findWithAttributes($query);
     }
 
     /**
