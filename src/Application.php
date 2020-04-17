@@ -317,7 +317,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
         /*
          * Register database types
          */
-        //Type::map('json', 'Banana\Database\Type\JsonType'); // obsolete since CakePHP 3.3
+        //\Cake\Database\TypeFactory::map('json', 'Banana\Database\Type\JsonType'); // obsolete since CakePHP 3.3
         \Cake\Database\TypeFactory::map('serialize', 'Banana\Database\Type\SerializeType');
 
         /*
