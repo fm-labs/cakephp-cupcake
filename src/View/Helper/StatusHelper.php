@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace Banana\View\Helper;
+namespace Cupcake\View\Helper;
 
-use Banana\Lib\Status;
+use Cupcake\Lib\Status;
 use Cake\View\Helper;
 
 /**
  * Class StatusHelper
  *
- * @package Banana\View\Helper
+ * @package Cupcake\View\Helper
  */
 class StatusHelper extends Helper
 {

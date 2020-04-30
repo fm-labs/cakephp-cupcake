@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Banana\Model;
+namespace Cupcake\Model;
 
 use Cake\Datasource\EntityInterface;
 
@@ -10,7 +10,7 @@ use Cake\Datasource\EntityInterface;
  *
  * The EntityTypeHandlerInterface expects an EntityTypeInterface instance when loading an EntityTypeHandler
  *
- * @package Banana\Model
+ * @package Cupcake\Model
  */
 interface EntityTypeInterface
 {

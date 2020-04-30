@@ -1,6 +1,6 @@
 {
-    "name": "fm-labs/cakephp-banana",
-    "description": "Banana plugin for CakePHP",
+    "name": "fm-labs/cakephp-cupcake",
+    "description": "Cupcake extension for CakePHP",
     "type": "cakephp-plugin",
     "require": {
         "php": ">=7.2",
@@ -11,12 +11,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Banana\\": "src"
+            "Cupcake\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Banana\\Test\\": "tests",
+            "Cupcake\\Test\\": "tests",
             "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
         }
     },

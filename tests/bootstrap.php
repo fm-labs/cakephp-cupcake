@@ -68,7 +68,7 @@ Cache::setConfig([
 ]);
 
 
-//Plugin::getCollection()->add(new \Banana\Plugin());
+//Plugin::getCollection()->add(new \Cupcake\Plugin());
 if (!getenv('db_dsn')) {
     putenv('db_dsn=sqlite:///:memory:');
 }

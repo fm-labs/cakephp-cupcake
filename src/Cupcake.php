@@ -1,17 +1,17 @@
 <?php
 declare(strict_types=1);
 
-namespace Banana;
+namespace Cupcake;
 
 /**
- * Class Banana
+ * Class Cupcake
  *
- * @package Banana
+ * @package Cupcake
  * @todo Refactor as (service) container
  * @todo Caching service
  * @todo Log service
  */
-class Banana
+class Cupcake
 {
     /**
      * @deprecated
@@ -24,12 +24,12 @@ class Banana
     public static $mailerClass = 'Cake\Mailer\Mailer';
 
     /**
-     * List of Banana instances. Singleton holder.
+     * List of Cupcake instances. Singleton holder.
      */
     protected static $_instances = [];
 
     /**
-     * Banana-app wide common mailer instance
+     * Cupcake-app wide common mailer instance
      *
      * @return \Cake\Mailer\Mailer
      */
@@ -40,13 +40,13 @@ class Banana
 
     /**
      * Singleton getter
-     * @return \Banana\Banana
+     * @return \Cupcake\Cupcake
      * @throws \Exception
      */
     public static function init(Application $app)
     {
         if (isset(self::$_instances[0])) {
-            throw new \Exception('Banana::init: Already initialized');
+            throw new \Exception('Cupcake::init: Already initialized');
         }
 
         return self::$_instances[0] = new self($app);
@@ -54,13 +54,13 @@ class Banana
 
     /**
      * Singleton getter
-     * @return \Banana\Banana
+     * @return \Cupcake\Cupcake
      * @throws \Exception
      */
     public static function getInstance()
     {
         if (!isset(self::$_instances[0])) {
-            throw new \Exception('Banana::getInstance: Not initialized');
+            throw new \Exception('Cupcake::getInstance: Not initialized');
         }
 
         return self::$_instances[0];
@@ -83,7 +83,7 @@ class Banana
     }
 
     /**
-     * Get Banana Cake version
+     * Get Cupcake Cake version
      *
      * @return string
      */
@@ -94,7 +94,7 @@ class Banana
 
     /**
      * Singleton instance constructor
-     * @param \Banana\Application $app
+     * @param \Cupcake\Application $app
      */
     public function __construct(Application $app)
     {
@@ -110,7 +110,7 @@ class Banana
     }
 
     /**
-     * @return \Banana\Application
+     * @return \Cupcake\Application
      */
     public function app()
     {

@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Banana\Test\TestCase\Exception;
+namespace Cupcake\Test\TestCase\Exception;
 
-use Banana\Exception\NotSupportedException;
+use Cupcake\Exception\NotSupportedException;
 use Cake\TestSuite\TestCase;
 
 class NotSupportedExceptionTest extends TestCase

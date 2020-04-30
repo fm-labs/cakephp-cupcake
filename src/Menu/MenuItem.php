@@ -1,16 +1,16 @@
 <?php
 declare(strict_types=1);
 
-namespace Banana\Menu;
+namespace Cupcake\Menu;
 
 /**
  * Class MenuItem
- * @package Banana\Menu
+ * @package Cupcake\Menu
  *
  * @property string $title Title
  * @property mixed $url Url
  * @property array $attr Attributes
- * @property \Banana\Menu\Menu $children Children
+ * @property \Cupcake\Menu\Menu $children Children
  *
  */
 class MenuItem implements \ArrayAccess
@@ -31,7 +31,7 @@ class MenuItem implements \ArrayAccess
     protected $_attr;
 
     /**
-     * @var \Banana\Menu\Menu
+     * @var \Cupcake\Menu\Menu
      */
     protected $_children;
 
@@ -39,7 +39,7 @@ class MenuItem implements \ArrayAccess
      * @param string|array $title
      * @param null $url
      * @param array $attr
-     * @param \Banana\Menu\Menu|array $children
+     * @param \Cupcake\Menu\Menu|array $children
      */
     public function __construct($title, $url = null, array $attr = [], $children = [])
     {
@@ -91,7 +91,7 @@ class MenuItem implements \ArrayAccess
     }
 
     /**
-     * @param \Banana\Menu\Menu|array $children Menu item children
+     * @param \Cupcake\Menu\Menu|array $children Menu item children
      * @param bool $append If True, append children instead of replacing existing items (default: false)
      * @return $this
      */
@@ -113,7 +113,7 @@ class MenuItem implements \ArrayAccess
     /**
      * Alias for setChildren (auto-append)
      *
-     * @param \Banana\Menu\Menu|array $children Menu item children
+     * @param \Cupcake\Menu\Menu|array $children Menu item children
      * @return $this
      */
     public function addChildren($children)

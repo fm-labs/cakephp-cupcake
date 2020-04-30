@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Banana\Lib;
+namespace Cupcake\Lib;
 
 /**
  * Class SingletonTrait
  *
- * @package Banana\Lib
+ * @package Cupcake\Lib
  */
 trait SingletonTrait
 {

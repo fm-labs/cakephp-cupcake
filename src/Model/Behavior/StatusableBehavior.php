@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Banana\Model\Behavior;
+namespace Cupcake\Model\Behavior;
 
 use ArrayObject;
-use Banana\Lib\Status;
+use Cupcake\Lib\Status;
 use Cake\Collection\Iterator\MapReduce;
 use Cake\Datasource\EntityInterface;
 use Cake\ORM\Behavior;

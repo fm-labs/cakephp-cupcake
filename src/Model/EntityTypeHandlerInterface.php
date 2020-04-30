@@ -1,17 +1,17 @@
 <?php
 declare(strict_types=1);
 
-namespace Banana\Model;
+namespace Cupcake\Model;
 
 /**
  * Interface EntityTypeHandlerInterface
  *
- * @package Banana\Model
+ * @package Cupcake\Model
  */
 interface EntityTypeHandlerInterface
 {
     /**
-     * @return \Banana\Model\EntityTypeInterface
+     * @return \Cupcake\Model\EntityTypeInterface
      */
     public function handler();
 }

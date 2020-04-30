@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Banana\Lib;
+namespace Cupcake\Lib;
 
-use Banana\Exception\ClassNotFoundException;
+use Cupcake\Exception\ClassNotFoundException;
 use Cake\Core\App;
 use Cake\Log\Log;
 
@@ -12,7 +12,7 @@ use Cake\Log\Log;
  *
  * Register class-alias for class locations in namespaces
  *
- * @package Banana\Lib
+ * @package Cupcake\Lib
  */
 class ClassRegistry
 {

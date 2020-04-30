@@ -1,17 +1,17 @@
 <?php
 declare(strict_types=1);
 
-namespace Banana\Menu;
+namespace Cupcake\Menu;
 
 /**
  * Class Menu
  *
- * @package Banana\Menu
+ * @package Cupcake\Menu
  */
 class Menu implements \Iterator, \Countable
 {
     /**
-     * @var \Banana\Menu\MenuItem[]
+     * @var \Cupcake\Menu\MenuItem[]
      */
     protected $_items = [];
 
@@ -73,7 +73,7 @@ class Menu implements \Iterator, \Countable
     }
 
     /**
-     * @return \Banana\Menu\MenuItem[]
+     * @return \Cupcake\Menu\MenuItem[]
      */
     public function getItems()
     {
@@ -81,11 +81,11 @@ class Menu implements \Iterator, \Countable
     }
 
     /**
-     * @param string|array|\Banana\Menu\MenuItem $title A menu item array or object or title string
+     * @param string|array|\Cupcake\Menu\MenuItem $title A menu item array or object or title string
      * @param null $url Item url
      * @param array $attr Item attributes
-     * @param array|\Banana\Menu\Menu $children Item subitems
-     * @return \Banana\Menu\MenuItem
+     * @param array|\Cupcake\Menu\Menu $children Item subitems
+     * @return \Cupcake\Menu\MenuItem
      */
     public function &addItem($title, $url = null, $attr = [], $children = [])
     {
@@ -116,7 +116,7 @@ class Menu implements \Iterator, \Countable
     }
 
     /**
-     * @param \Banana\Menu\MenuItem $item The instance of the item to remove
+     * @param \Cupcake\Menu\MenuItem $item The instance of the item to remove
      *
      * @return $this
      */

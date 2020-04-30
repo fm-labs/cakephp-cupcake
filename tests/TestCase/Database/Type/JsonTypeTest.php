@@ -14,9 +14,9 @@ declare(strict_types=1);
  * @since         3.3.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
-namespace Banana\Test\TestCase\Database\Type;
+namespace Cupcake\Test\TestCase\Database\Type;
 
-use Banana\Database\Type\JsonType;
+use Cupcake\Database\Type\JsonType;
 use Cake\Database\TypeFactory;
 use Cake\TestSuite\TestCase;
 use PDepend\Util\Type;
@@ -31,7 +31,7 @@ use PDO;
 class JsonTypeTest extends TestCase
 {
     /**
-     * @var \Banana\Database\Type\JsonType
+     * @var \Cupcake\Database\Type\JsonType
      */
     protected $type;
 
@@ -48,7 +48,7 @@ class JsonTypeTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        TypeFactory::map('json', 'Banana\Database\Type\JsonType');
+        TypeFactory::map('json', 'Cupcake\Database\Type\JsonType');
         $this->type = TypeFactory::build('json');
         $this->driver = $this->getMockBuilder('Cake\Database\Driver')->getMock();
     }

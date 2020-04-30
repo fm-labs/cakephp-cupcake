@@ -1,24 +1,27 @@
 <?php
 declare(strict_types=1);
 
-namespace Banana;
+namespace Cupcake;
 
-use Banana\Plugin\BasePlugin;
 use Cake\Cache\Cache;
 use Cake\Core\Configure;
 use Cake\Core\Configure\Engine\PhpConfig;
 use Cake\Core\Plugin;
+use Cake\Core\PluginCollection;
 use Cake\Datasource\ConnectionManager;
 use Cake\Error\ErrorHandler;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Event\EventDispatcherInterface;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\BaseApplication;
+use Cake\Http\ServerRequest;
 use Cake\Log\Log;
 use Cake\Mailer\Email;
+use Cake\Mailer\Mailer;
 use Cake\Mailer\TransportFactory;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
+use Cake\Routing\Router;
 use Cake\Utility\Security;
 
 /**
@@ -31,12 +34,10 @@ class Application extends BaseApplication implements EventDispatcherInterface
 {
     use EventDispatcherTrait;
 
-    protected static $_bootstrapped = false;
-
     /**
-     * @var bool
+     * @var \Cake\Core\Configure\ConfigEngineInterface
      */
-    protected $_debug = false;
+    private $_configEngine;
 
     /**
      * @param string $configDir Path to config directory
@@ -46,7 +47,6 @@ class Application extends BaseApplication implements EventDispatcherInterface
         parent::__construct($configDir);
 
         $this->_configEngine = new PhpConfig($this->configDir . DS);
-        //$this->_plugins = new PluginRegistry();
     }
 
     /**
@@ -55,14 +55,10 @@ class Application extends BaseApplication implements EventDispatcherInterface
      * Override this method to add additional bootstrap logic for your application.
      *
      * @return void
+     * @throws \Exception
      */
     public function bootstrap(): void
     {
-        if (self::$_bootstrapped == true) {
-            return;
-        }
-        self::$_bootstrapped = true;
-
         /*
          * NOW: ENTERING RUNLEVEL 1 (BOOTSTRAPPING)
          * - setup paths
@@ -74,9 +70,9 @@ class Application extends BaseApplication implements EventDispatcherInterface
          * - include user's bootstrap file
          * - configure: request detectors, database types, debugmode
          * - consume configurations: ConnectionManager, Cache, Email, Log, Security
-         * - load banana plugin
-         * - setup banana (init plugin- and settings- manager)
-         * - bootstrap banana
+         * - load cupcake plugin
+         * - setup cupcake (init plugin- and settings- manager)
+         * - bootstrap cupcake
          *
          */
 
@@ -96,15 +92,14 @@ class Application extends BaseApplication implements EventDispatcherInterface
         /*
          * Setup default config engine and load core configs
          */
-        //try {
         Configure::config('default', $this->_configEngine);
         Configure::load('app', 'default', false);
-        Configure::load('plugins');
-        //} catch (\Cake\Core\Exception\Exception $ex) {
-        //    die ($ex->getMessage());
-        //} catch (\Exception $ex) {
-        //    die ($ex->getMessage());
-        //}
+        if (file_exists(CONFIG . 'app_local.php')) {
+            Configure::load('app_local', 'default');
+        }
+        if (file_exists(CONFIG . 'plugins.php')) {
+            Configure::load('plugins', 'default');
+        }
 
         /*
          * Common bootstrapping tasks
@@ -116,17 +111,22 @@ class Application extends BaseApplication implements EventDispatcherInterface
          */
         $this->_localConfigs();
         $this->_applyConfig();
-        $this->_debugMode(Configure::read('debug'));
+
         /*
-         * Load Banana plugin and other plugins defined in core config
+         * Load Cupcake plugin and other plugins defined in core config
          */
-        $this->addPlugin('Banana');
+        $this->addPlugin('Cupcake');
         $this->addPlugin(Configure::read('Plugin'), ['bootstrap' => true, 'routes' => true]);
 
         /*
-         * Init Banana
+         * Debug mode
          */
-        Banana::init($this);
+        $this->_debugMode(Configure::read('debug'));
+
+        /*
+         * Init Cupcake
+         */
+        Cupcake::init($this);
 
         /*
          * Include app's bootstrap file
@@ -155,22 +155,6 @@ class Application extends BaseApplication implements EventDispatcherInterface
             return $this;
         }
 
-        /*
-        if (!Plugin::isLoaded($name)) {
-            Plugin::load($name, ['bootstrap' => false, 'routes' => true, 'ignoreMissing' => true]);
-        }
-
-        if (!$this->plugins()->has($name)) {
-            $Plugin = $this->plugins()->load($name, $config);
-
-            if ($Plugin instanceof PluginInterface) {
-                $Plugin->bootstrap($this);
-            }
-        }
-
-        return $this;
-        */
-
         return parent::addPlugin($name, $config);
     }
 
@@ -197,7 +181,8 @@ class Application extends BaseApplication implements EventDispatcherInterface
         $info['handler_bootstrap'] = $plugin ? $plugin->isEnabled('bootstrap') : null;
         $info['handler_routes'] = $plugin ? $plugin->isEnabled('routes') : null;
         //$info['handler_enabled'] = true;
-        $info['configuration_url'] = $plugin && $plugin instanceof BasePlugin ? $plugin->getConfigurationUrl() : null;
+        //$info['configuration_url'] = $plugin && $plugin instanceof BasePlugin ? $plugin->getConfigurationUrl() : null;
+        $info['configuration_url'] = null;
 
         return $info;
     }
@@ -207,7 +192,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
      * @deprecated Use getPlugins() instead. getPlugins() returns PluginCollection
      * @return \Cake\Core\PluginCollection
      */
-    public function plugins()
+    public function plugins(): PluginCollection
     {
         return $this->getPlugins();
     }
@@ -242,9 +227,11 @@ class Application extends BaseApplication implements EventDispatcherInterface
     }
 
     /**
-     * Auto-load local configurations
+     * Auto-load local configurations.
+     *
+     * @return void
      */
-    protected function _localConfigs()
+    protected function _localConfigs(): void
     {
         // load config files from standard config directories
         foreach (['plugin', 'local', 'local/plugin'] as $dir) {
@@ -266,66 +253,31 @@ class Application extends BaseApplication implements EventDispatcherInterface
 
     /**
      * Common bootstrap stuff
+     *
+     * @return void
      */
-    protected function _bootstrap()
+    protected function _bootstrap(): void
     {
-        // Set the full base URL.
-        // This URL is used as the base of all absolute links.
-        if (!Configure::read('App.fullBaseUrl')) {
-            $s = null;
-            if (env('HTTPS')) {
-                $s = 's';
-            }
-
-            $httpHost = env('HTTP_HOST');
-            if (isset($httpHost)) {
-                Configure::write('App.fullBaseUrl', 'http' . $s . '://' . $httpHost);
-            }
-            unset($httpHost, $s);
-        }
-
-        /*
+        /**
          * Set server timezone to UTC. You can change it to another timezone of your
          * choice but using UTC makes time calculations / conversions easier.
          */
-        date_default_timezone_set('UTC'); // @TODO Make default timezone configurable
+        date_default_timezone_set(Configure::read('App.defaultTimezone', 'UTC'));
 
-        /*
+        /**
          * Configure the mbstring extension to use the correct encoding.
          */
-        mb_internal_encoding(Configure::read('App.encoding'));
+        mb_internal_encoding(Configure::read('App.encoding', 'UTF-8'));
 
-        /*
+        /**
          * Set the default locale. This controls how dates, number and currency is
          * formatted and sets the default language to use for translations.
          */
         ini_set('intl.default_locale', Configure::read('App.defaultLocale', 'en'));
 
-        /*
-         * Setup detectors for mobile and tablet.
-         * @todo Remove mobile request detectors from banana. Move to site's bootstrap
-        Request::addDetector('mobile', function ($request) {
-            $detector = new \Detection\MobileDetect();
-            return $detector->isMobile();
-        });
-        Request::addDetector('tablet', function ($request) {
-            $detector = new \Detection\MobileDetect();
-            return $detector->isTablet();
-        });
-        */
-
-        /*
-         * Register database types
+        /**
+         * CLI
          */
-        //\Cake\Database\TypeFactory::map('json', 'Banana\Database\Type\JsonType'); // obsolete since CakePHP 3.3
-        \Cake\Database\TypeFactory::map('serialize', 'Banana\Database\Type\SerializeType');
-
-        /*
-         * Enable default locale format parsing.
-         * This is needed for matching the auto-localized string output of Time() class when parsing dates.
-         */
-        \Cake\Database\TypeFactory::build('datetime')->useLocaleParser();
-
         $isCli = php_sapi_name() === 'cli';
         if ($isCli) {
             (new \Cake\Error\ConsoleErrorHandler(Configure::read('Error')))->register();
@@ -339,20 +291,68 @@ class Application extends BaseApplication implements EventDispatcherInterface
         } else {
             (new ErrorHandler(Configure::read('Error')))->register();
         }
+
+        /**
+         * Set the full base URL.
+         * This URL is used as the base of all absolute links.
+         */
+        $fullBaseUrl = Configure::read('App.fullBaseUrl');
+        if (!$fullBaseUrl) {
+            $s = null;
+            if (env('HTTPS')) {
+                $s = 's';
+            }
+
+            $httpHost = env('HTTP_HOST');
+            if (isset($httpHost)) {
+                $fullBaseUrl = 'http' . $s . '://' . $httpHost;
+            }
+            unset($httpHost, $s);
+        }
+        if ($fullBaseUrl) {
+            Router::fullBaseUrl($fullBaseUrl);
+        }
     }
 
-    protected function _applyConfig()
+    /**
+     * Apply system configurations.
+     *
+     * @return void
+     */
+    protected function _applyConfig(): void
     {
-        /*
-         * Consume configurations
-         */
-        //debug(Configure::read());
-        ConnectionManager::setConfig(Configure::consume('Datasources'));
         Cache::setConfig(Configure::consume('Cache'));
+        ConnectionManager::setConfig(Configure::consume('Datasources'));
+        TransportFactory::setConfig(Configure::consume('EmailTransport'));
+        Mailer::setConfig(Configure::consume('Email'));
         Log::setConfig(Configure::consume('Log'));
         Security::setSalt(Configure::consume('Security.salt'));
-        TransportFactory::setConfig(Configure::consume('EmailTransport'));
-        Email::setConfig(Configure::consume('Email'));
+
+        /**
+         * Setup detectors for mobile and tablet.
+         */
+        ServerRequest::addDetector('mobile', function ($request) {
+            $detector = new \Detection\MobileDetect();
+
+            return $detector->isMobile();
+        });
+        ServerRequest::addDetector('tablet', function ($request) {
+            $detector = new \Detection\MobileDetect();
+
+            return $detector->isTablet();
+        });
+
+        /**
+         * Register database types
+         */
+        //\Cake\Database\TypeFactory::map('json', 'Cupcake\Database\Type\JsonType'); // obsolete since CakePHP 3.3
+        \Cake\Database\TypeFactory::map('serialize', 'Cupcake\Database\Type\SerializeType');
+
+        /**
+         * Enable default locale format parsing.
+         * This is needed for matching the auto-localized string output of Time() class when parsing dates.
+         */
+        //\Cake\Database\TypeFactory::build('datetime')->useLocaleParser();
     }
 
     /**
@@ -361,15 +361,15 @@ class Application extends BaseApplication implements EventDispatcherInterface
      * @param bool $enabled Debug mode flag
      * @return void
      */
-    protected function _debugmode($enabled)
+    protected function _debugmode($enabled): void
     {
         if ($enabled) {
             if (Configure::read('DebugKit.enabled')) {
                 // disable Mail panel by default, as it doesn't play nice with Mailman plugin
                 // @TODO Play nice with DebugKit's Mail preview
-                if (!Configure::check('DebugKit.panels')) {
-                    Configure::write('DebugKit.panels', ['DebugKit.Mail' => false]);
-                }
+                //if (!Configure::check('DebugKit.panels')) {
+                //    Configure::write('DebugKit.panels', ['DebugKit.Mail' => false]);
+                //}
 
                 try {
                     $this->addPlugin('DebugKit');

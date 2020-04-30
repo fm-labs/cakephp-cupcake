@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Banana\Test\TestCase\Model\Behavior;
+namespace Cupcake\Test\TestCase\Model\Behavior;
 
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
@@ -17,7 +17,7 @@ class SlugBehaviorTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'plugin.Banana.Posts',
+        'plugin.Cupcake.Posts',
     ];
 
     /**
@@ -26,7 +26,7 @@ class SlugBehaviorTest extends TestCase
     public function setUp(): void
     {
         $this->Model = TableRegistry::getTableLocator()->get('Posts');
-        $this->Model->addBehavior('Banana.Slug', []);
+        $this->Model->addBehavior('Cupcake.Slug', []);
     }
 
     /**

@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace Banana\Model;
+namespace Cupcake\Model;
 
-use Banana\Lib\ClassRegistry;
+use Cupcake\Lib\ClassRegistry;
 use Cake\Utility\Inflector;
 
 /**
  * Class EntityTypeHandlerTrait
  *
- * @package Banana\Model
+ * @package Cupcake\Model
  */
 trait EntityTypeHandlerTrait
 {
@@ -17,12 +17,12 @@ trait EntityTypeHandlerTrait
     //protected $_typeNamespace = null;
 
     /**
-     * @var \Banana\Model\EntityTypeInterface Type handler instance
+     * @var \Cupcake\Model\EntityTypeInterface Type handler instance
      */
     protected $_typeHandler;
 
     /**
-     * @return \Banana\Model\EntityTypeInterface
+     * @return \Cupcake\Model\EntityTypeInterface
      * @throws \Exception
      */
     protected function handler()

@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Banana\Test\TestCase\Exception;
+namespace Cupcake\Test\TestCase\Exception;
 
-use Banana\Exception\ClassNotFoundException;
+use Cupcake\Exception\ClassNotFoundException;
 use Cake\TestSuite\TestCase;
 
 class ClassNotFoundExceptionTest extends TestCase

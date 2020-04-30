@@ -14,7 +14,7 @@ declare(strict_types=1);
  * @since         3.3.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
-namespace Banana\Test\TestCase\Database\Type;
+namespace Cupcake\Test\TestCase\Database\Type;
 
 use Cake\Database\TypeFactory;
 use Cake\TestSuite\TestCase;
@@ -29,7 +29,7 @@ use PDO;
 class SerializeTypeTest extends TestCase
 {
     /**
-     * @var \Banana\Database\Type\SerializeType
+     * @var \Cupcake\Database\Type\SerializeType
      */
     protected $type;
 
@@ -46,7 +46,7 @@ class SerializeTypeTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        TypeFactory::map('serialize', 'Banana\Database\Type\SerializeType');
+        TypeFactory::map('serialize', 'Cupcake\Database\Type\SerializeType');
         $this->type = TypeFactory::build('serialize');
         $this->driver = $this->getMockBuilder('Cake\Database\Driver')->getMock();
     }

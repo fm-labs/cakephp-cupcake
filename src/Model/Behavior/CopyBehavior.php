@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Banana\Model\Behavior;
+namespace Cupcake\Model\Behavior;
 
 use Cake\Datasource\EntityInterface;
 use Cake\ORM\Behavior;
@@ -9,7 +9,7 @@ use Cake\ORM\Behavior;
 /**
  * Class CopyBehavior
  *
- * @package Banana\Model\Behavior
+ * @package Cupcake\Model\Behavior
  */
 class CopyBehavior extends Behavior
 {

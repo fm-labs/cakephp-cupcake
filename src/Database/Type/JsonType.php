@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Banana\Database\Type;
+namespace Cupcake\Database\Type;
 
 use Cake\Database\DriverInterface;
 use Cake\Database\Type\BaseType;
@@ -13,7 +13,7 @@ use PDO;
  *
  * JSON database type for the cake's ORM.
  *
- * @package Banana\Database\Type
+ * @package Cupcake\Database\Type
  * @deprecated As of CakePHP v3.3.0 the JsonType is part of the official package.
  */
 class JsonType extends BaseType implements BatchCastingInterface

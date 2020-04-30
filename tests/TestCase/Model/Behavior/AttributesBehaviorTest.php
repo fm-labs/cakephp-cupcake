@@ -1,19 +1,19 @@
 <?php
 declare(strict_types=1);
 
-namespace Banana\Test\TestCase\Model\Behavior;
+namespace Cupcake\Test\TestCase\Model\Behavior;
 
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
- * Banana\Model\Behavior\AttributesBehavior Test Case
+ * Cupcake\Model\Behavior\AttributesBehavior Test Case
  */
 class AttributesBehaviorTest extends TestCase
 {
     public $fixtures = [
-        'plugin.Banana.Attributes',
-        'plugin.Banana.Posts',
+        'plugin.Cupcake.Attributes',
+        'plugin.Cupcake.Posts',
     ];
 
     /**
@@ -31,8 +31,8 @@ class AttributesBehaviorTest extends TestCase
     {
         parent::setUp();
 
-        $this->table = TableRegistry::getTableLocator()->get('Banana.Posts');
-        $this->table->behaviors()->load('Banana.Attributes', [
+        $this->table = TableRegistry::getTableLocator()->get('Cupcake.Posts');
+        $this->table->behaviors()->load('Cupcake.Attributes', [
             'attributesPropertyName' => 'attributes_data',
             'attributes' => [
                 'test_string' => ['default' => null],
@@ -71,7 +71,7 @@ class AttributesBehaviorTest extends TestCase
     public function testGetAttributesTable(): void
     {
         $this->markTestIncomplete();
-        //$this->assertInstanceOf(\Banana\Model\Table\AttributesTable::class, $this->table->getAttributesTable());
+        //$this->assertInstanceOf(\Cupcake\Model\Table\AttributesTable::class, $this->table->getAttributesTable());
     }
 
     /**
@@ -227,7 +227,7 @@ class AttributesBehaviorTest extends TestCase
         // delete
         $this->table->delete($post);
 
-        $orphanedAttributes = TableRegistry::getTableLocator()->get('Banana.Attributes')
+        $orphanedAttributes = TableRegistry::getTableLocator()->get('Cupcake.Attributes')
             ->find()
             ->where([
                 'model' => $this->table->getRegistryAlias(),
@@ -281,7 +281,7 @@ class AttributesBehaviorTest extends TestCase
         // delete
         $this->table->delete($post);
 
-        $orphanedAttributes = TableRegistry::getTableLocator()->get('Banana.Attributes')
+        $orphanedAttributes = TableRegistry::getTableLocator()->get('Cupcake.Attributes')
             ->find()
             ->where([
                 'model' => $this->table->getRegistryAlias(),

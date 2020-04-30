@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Banana\Test\TestCase\Model\Behavior;
+namespace Cupcake\Test\TestCase\Model\Behavior;
 
 use Cake\Datasource\ConnectionManager;
 use Cake\ORM\TableRegistry;
@@ -23,7 +23,7 @@ class CopyBehaviorTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'plugin.Banana.Posts',
+        'plugin.Cupcake.Posts',
     ];
 
     public $copyConfig = [
@@ -42,7 +42,7 @@ class CopyBehaviorTest extends TestCase
             'table' => 'posts',
             'connection' => $this->connection,
         ]);
-        $this->posts->addBehavior('Banana.Copy', $this->copyConfig);
+        $this->posts->addBehavior('Cupcake.Copy', $this->copyConfig);
     }
 
     /**

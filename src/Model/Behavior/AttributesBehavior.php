@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Banana\Model\Behavior;
+namespace Cupcake\Model\Behavior;
 
 use ArrayObject;
 use Cake\Database\Expression\QueryExpression;

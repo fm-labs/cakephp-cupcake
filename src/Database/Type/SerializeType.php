@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Banana\Database\Type;
+namespace Cupcake\Database\Type;
 
 use Cake\Database\DriverInterface;
 use Cake\Database\Type\BaseType;

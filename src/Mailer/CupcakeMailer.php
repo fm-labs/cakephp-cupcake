@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Banana\Mailer;
+namespace Cupcake\Mailer;
 
 use Cake\Event\Event;
 use Cake\Event\EventManager;
@@ -10,12 +10,12 @@ use Cake\Mailer\Exception\MissingActionException;
 use Cake\Mailer\Mailer;
 
 /**
- * Class BananaMailer
+ * Class CupcakeMailer
  *
- * @package Banana\Mailer
+ * @package Cupcake\Mailer
  * @deprecated Use CakePHP's built-in mailer instead
  */
-class BananaMailer extends Mailer
+class CupcakeMailer extends Mailer
 {
     /**
      * Sends email.

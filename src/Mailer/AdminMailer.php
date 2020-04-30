@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Banana\Mailer;
+namespace Cupcake\Mailer;
 
 use Cake\Core\Configure;
 use Cake\Mailer\Email;
@@ -10,7 +10,7 @@ use Cake\Mailer\Mailer;
 /**
  * Class AdminMailer
  *
- * @package Banana\Mailer
+ * @package Cupcake\Mailer
  */
 class AdminMailer extends Mailer
 {
@@ -22,7 +22,7 @@ class AdminMailer extends Mailer
         parent::__construct($email);
 
         //@todo automatically setup admin email configuration, if not configured
-        $profile = Configure::read('Banana.Email.adminProfile') ?: 'admin';
+        $profile = Configure::read('Cupcake.Email.adminProfile') ?: 'admin';
         $this->getMessage()
             ->setProfile($profile);
     }

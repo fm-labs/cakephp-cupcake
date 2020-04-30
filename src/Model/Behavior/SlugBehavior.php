@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Banana\Model\Behavior;
+namespace Cupcake\Model\Behavior;
 
 use ArrayObject;
 use Cake\ORM\Behavior;
@@ -11,7 +11,7 @@ use Cake\Utility\Text;
 /**
  * Class SluggableBehavior
  *
- * @package Banana\Model\Behavior
+ * @package Cupcake\Model\Behavior
  * @see http://book.cakephp.org/3.0/en/orm/behaviors.html
  */
 class SlugBehavior extends Behavior

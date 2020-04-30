@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Banana\Plugin;
+namespace Cupcake\Plugin;
 
 abstract class BasePlugin extends \Cake\Core\BasePlugin
 {

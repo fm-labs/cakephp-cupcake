@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Banana\Exception;
+namespace Cupcake\Exception;
 
 use Cake\Core\Exception\Exception as CakeCoreException;
 
 /**
  * Class ClassNotFoundException
- * @package Banana\Exception
+ * @package Cupcake\Exception
  */
 class ClassNotFoundException extends CakeCoreException
 {

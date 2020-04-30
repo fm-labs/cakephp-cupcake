@@ -1,5 +1,5 @@
 <?php
-namespace Banana\Test\Fixture;
+namespace Cupcake\Test\Fixture;
 
 use Cake\TestSuite\Fixture\TestFixture;
 
@@ -32,28 +32,28 @@ class AttributesFixture extends TestFixture
     public $records = [
         [
             'id' => 1,
-            'model' => 'Banana.Posts',
+            'model' => 'Cupcake.Posts',
             'foreign_key' => 1,
             'name' => 'attr_string',
             'value' => 'SomeString1',
         ],
         [
             'id' => 2,
-            'model' => 'Banana.Posts',
+            'model' => 'Cupcake.Posts',
             'foreign_key' => 1,
             'name' => 'attr_int',
             'value' => 1,
         ],
         [
             'id' => 3,
-            'model' => 'Banana.Posts',
+            'model' => 'Cupcake.Posts',
             'foreign_key' => 2,
             'name' => 'attr_string',
             'value' => 'SomeString2',
         ],
         [
             'id' => 4,
-            'model' => 'Banana.Posts',
+            'model' => 'Cupcake.Posts',
             'foreign_key' => 2,
             'name' => 'attr_text',
             'value' => 'Hello World',
