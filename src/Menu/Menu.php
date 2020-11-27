@@ -3,214 +3,54 @@ declare(strict_types=1);
 
 namespace Cupcake\Menu;
 
-/**
- * Class Menu
- *
- * @package Cupcake\Menu
- */
-class Menu implements \Iterator, \Countable
+use Cake\Core\App;
+use Cake\Core\StaticConfigTrait;
+
+class Menu
 {
-    /**
-     * @var \Cupcake\Menu\MenuItem[]
-     */
-    protected $_items = [];
+    use StaticConfigTrait;
 
     /**
-     * @var array
+     * @param string $key Menu name.
+     * @return \Cupcake\Menu\MenuItemCollection
      */
-    protected $_attr;
-
-    /**
-     * @var array Items keys cache. Used by iterator
-     */
-    private $_it;
-
-    /**
-     * @var int Current position in iterator array
-     */
-    private $_itpos;
-
-    /**
-     * @param array $items Initial item list
-     * @param array $attr Menu attributes
-     */
-    public function __construct($items = [], $attr = [])
+    public static function get(?string $key): MenuItemCollection
     {
-        foreach ($items as $item) {
-            $this->addItem($item);
-        }
-        $this->_attr = $attr;
-    }
-
-    /**
-     * @param string $key Attribute name
-     * @return mixed
-     */
-    public function __get($key)
-    {
-        return $this->getAttribute($key);
-    }
-
-    /**
-     * @param string $key Attribute name
-     * @return mixed
-     */
-    public function getAttribute($key)
-    {
-        if (isset($this->_attr[$key])) {
-            return $this->_attr[$key];
+        if ($key === null) {
+            return new MenuItemCollection();
         }
 
-        return null;
-    }
-
-    /**
-     * @return array
-     */
-    public function getAttributes()
-    {
-        return $this->_attr;
-    }
-
-    /**
-     * @return \Cupcake\Menu\MenuItem[]
-     */
-    public function getItems()
-    {
-        return $this->_items;
-    }
-
-    /**
-     * @param string|array|\Cupcake\Menu\MenuItem $title A menu item array or object or title string
-     * @param null $url Item url
-     * @param array $attr Item attributes
-     * @param array|\Cupcake\Menu\Menu $children Item subitems
-     * @return \Cupcake\Menu\MenuItem
-     */
-    public function &addItem($title, $url = null, $attr = [], $children = [])
-    {
-        if ($title instanceof MenuItem) {
-            $item = $title;
-        } elseif (is_array($title)) {
-            $item = MenuItem::fromArray($title);
-        } else {
-            $item = new MenuItem($title, $url, $attr, $children);
-        }
-        $hash = spl_object_hash($item);
-        $this->_items[$hash] = $item;
-
-        return $this->_items[$hash];
-    }
-
-    /**
-     * @param array $items List of menu items
-     * @return $this
-     */
-    public function addItems(array $items)
-    {
-        foreach ($items as $item) {
-            $this->addItem($item);
+        $config = static::getConfig($key);
+        if (!$config) {
+            throw new \RuntimeException("Menu '${key}' not found");
         }
 
-        return $this;
+        return static::resolve($config);
     }
 
     /**
-     * @param \Cupcake\Menu\MenuItem $item The instance of the item to remove
-     *
-     * @return $this
+     * @param array $config The menu config.
+     * @return \Cupcake\Menu\MenuItemCollection
      */
-    public function removeItem(MenuItem $item)
+    protected static function resolve(array $config): MenuItemCollection
     {
-        $hash = spl_object_hash($item);
-        if (isset($this->_items[$hash])) {
-            unset($this->_items[$hash]);
+        $class = $config['className'] ?? null;
+        if ($class instanceof \Closure) {
+            $class = $class();
+        }
+        if (is_array($class)) {
+            return new MenuItemCollection($class);
+        } elseif (is_string($class)) {
+            $className = App::className($class, 'Menu', 'Menu');
+            $class = new $className();
         }
 
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function count()
-    {
-        return count($this->_items);
-    }
-
-    /**
-     * @return array
-     */
-    public function toArray()
-    {
-        $list = [];
-        foreach ($this->_items as $item) {
-            $list[] = $item->toArray();
+        if ($class instanceof MenuItemCollection) {
+            return $class;
+        } elseif ($class instanceof MenuProviderInterface) {
+            return $class->getCollection();
         }
 
-        return $list;
-    }
-
-    /**
-     * (PHP 5 &gt;= 5.0.0)<br/>
-     * Return the current element
-     * @link http://php.net/manual/en/iterator.current.php
-     * @return mixed Can return any type.
-     */
-    public function current()
-    {
-        $pos = $this->_itpos;
-
-        return $this->_items[$this->_it[$pos]];
-    }
-
-    /**
-     * (PHP 5 &gt;= 5.0.0)<br/>
-     * Move forward to next element
-     * @link http://php.net/manual/en/iterator.next.php
-     * @return void Any returned value is ignored.
-     */
-    public function next()
-    {
-        $this->_itpos++;
-    }
-
-    /**
-     * (PHP 5 &gt;= 5.0.0)<br/>
-     * Return the key of the current element
-     * @link http://php.net/manual/en/iterator.key.php
-     * @return mixed scalar on success, or null on failure.
-     */
-    public function key()
-    {
-        $pos = $this->_itpos;
-
-        return $this->_it[$pos] ?? null;
-    }
-
-    /**
-     * (PHP 5 &gt;= 5.0.0)<br/>
-     * Checks if current position is valid
-     * @link http://php.net/manual/en/iterator.valid.php
-     * @return bool The return value will be casted to boolean and then evaluated.
-     * Returns true on success or false on failure.
-     */
-    public function valid()
-    {
-        $pos = $this->_itpos;
-
-        return isset($this->_it[$pos]) ? true : false;
-    }
-
-    /**
-     * (PHP 5 &gt;= 5.0.0)<br/>
-     * Rewind the Iterator to the first element
-     * @link http://php.net/manual/en/iterator.rewind.php
-     * @return void Any returned value is ignored.
-     */
-    public function rewind()
-    {
-        $this->_it = array_keys($this->_items);
-        $this->_itpos = 0;
+        throw new \RuntimeException("Invalid menu provider");
     }
 }

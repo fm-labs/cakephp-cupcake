@@ -27,7 +27,7 @@ class AttributesBehavior extends Behavior
     protected $_defaultConfig = [
         //'attributesTableClass' => 'Attributes',
         'attributesTableName' => 'attributes',
-        'attributesPropertyName' => 'attrs',
+        'attributesPropertyName' => '_attrs',
         'attributes' => [
         //    'foo' => ['type' => 'string', 'required' => true, 'default' => null]
         ],
@@ -87,15 +87,25 @@ class AttributesBehavior extends Behavior
     public function attributesSchema()
     {
         if (!isset($this->_schema)) {
+            // configured attributes for model
             $attributes = (array)$this->getConfig('attributes');
+
+            // model buildAttributes callback
             if (method_exists($this->_table, 'buildAttributes')) {
                 $attributes = call_user_func([$this->_table, 'buildAttributes'], $attributes);
             }
             //$attributes = $this->_table->attributesSchema ?? [];
             //$attributes = $this->_table instanceof AttributesAwareTrait ? $this->_table->getAttributes() : [];
 
-            //$event = $this->_table->dispatchEvent('Model.buildAttributes', compact('attributes'));
-            //$attributes = $event->getData('attributes');
+            // model event 'buildAttributes'
+            $event = $this->_table->dispatchEvent('Model.buildAttributes', compact('attributes'));
+            $attributes = $event->getData('attributes');
+
+            // normalize attributes
+            $attributes = array_map(function($attr) {
+                $attr += ['default' => null, 'required' => null, 'input' => []];
+                return $attr;
+            }, $attributes);
 
             $this->_schema = $attributes;
         }
@@ -104,6 +114,8 @@ class AttributesBehavior extends Behavior
     }
 
     /**
+     * Find or create an attribute for an entity.
+     *
      * @param \Cake\Datasource\EntityInterface $entity The entity object
      * @param string $name Attribute name
      * @param mixed $value Attribute value
@@ -115,10 +127,10 @@ class AttributesBehavior extends Behavior
             'model' => $this->_table->getRegistryAlias(),
             'foreign_key' => $entity->id,
             'name' => $name,
-        ], function ($entity) use ($value) {
-            $entity->value = $value;
+        ], function ($attr) use ($value) {
+            $attr->value = $value;
 
-            return $entity;
+            return $attr;
         });
     }
 
@@ -148,7 +160,7 @@ class AttributesBehavior extends Behavior
      * Find rows by given attributes (key-value-pairs)
      *
      * @param \Cake\ORM\Query $query Query object
-     * @param array $options Attributes key-value-pairs
+     * @param array $options List of attributes (key-value-pairs)
      * @return \Cake\ORM\Query
      */
     public function findByAttribute(Query $query, array $options = [])
@@ -335,6 +347,8 @@ class AttributesBehavior extends Behavior
     }
 
     /**
+     * Check if a model's field is a registered attribute.
+     *
      * @param string $name Attribute name
      * @return bool
      */

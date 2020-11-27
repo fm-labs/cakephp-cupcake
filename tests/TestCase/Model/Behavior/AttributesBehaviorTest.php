@@ -42,7 +42,6 @@ class AttributesBehaviorTest extends TestCase
             ],
         ]);
     }
-
     /**
      * tearDown method
      *
@@ -89,6 +88,13 @@ class AttributesBehaviorTest extends TestCase
         $this->assertSame(['required' => true], $schema['test_required']);
         $this->assertSame([], $schema['test_attribute']);
         $this->assertSame([], $schema['my_attribute']);
+    }
+
+    public function testCreateAttribute()
+    {
+        $entity = $this->table->get(1);
+        $attr = $this->table->createAttribute($entity, "test_string", "Hello");
+        $this->assertNotFalse($this->table->saveAttribute($attr));
     }
 
     /**

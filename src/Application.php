@@ -6,6 +6,7 @@ namespace Cupcake;
 use Cake\Cache\Cache;
 use Cake\Core\Configure;
 use Cake\Core\Configure\Engine\PhpConfig;
+use Cake\Core\Exception\MissingPluginException;
 use Cake\Core\Plugin;
 use Cake\Core\PluginCollection;
 use Cake\Datasource\ConnectionManager;
@@ -16,12 +17,12 @@ use Cake\Event\EventDispatcherTrait;
 use Cake\Http\BaseApplication;
 use Cake\Http\ServerRequest;
 use Cake\Log\Log;
-use Cake\Mailer\Email;
 use Cake\Mailer\Mailer;
 use Cake\Mailer\TransportFactory;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
 use Cake\Routing\Router;
+use Cake\Utility\Inflector;
 use Cake\Utility\Security;
 
 /**
@@ -64,14 +65,15 @@ class Application extends BaseApplication implements EventDispatcherInterface
          * - setup paths
          * - bootstrap cake core
          * - setup default config engine
-         * - load configurations
+         * - load app config
+         * - load plugins config
+         * - load local configurations
          * - setup full base url in configuration
          * - configure: timezone, encoding, locale, error handler
          * - include user's bootstrap file
          * - configure: request detectors, database types, debugmode
          * - consume configurations: ConnectionManager, Cache, Email, Log, Security
          * - load cupcake plugin
-         * - setup cupcake (init plugin- and settings- manager)
          * - bootstrap cupcake
          *
          */
@@ -79,7 +81,10 @@ class Application extends BaseApplication implements EventDispatcherInterface
         /*
          * Load path definitions
          */
-        require_once $this->configDir . "/paths.php";
+        if (file_exists($this->configDir . '/paths.php')) {
+            require_once $this->configDir . '/paths.php';
+        }
+        $this->_paths();
 
         /*
          * Bootstrap cake core
@@ -91,6 +96,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
 
         /*
          * Setup default config engine and load core configs
+         * @TODO Cache config. But the internal cache engines are not initialized yet!
          */
         Configure::config('default', $this->_configEngine);
         Configure::load('app', 'default', false);
@@ -102,21 +108,9 @@ class Application extends BaseApplication implements EventDispatcherInterface
         }
 
         /*
-         * Common bootstrapping tasks
+         * Load configuration files
          */
-        $this->_bootstrap();
-
-        /*
-         * Load and apply app configs
-         */
-        $this->_localConfigs();
-        $this->_applyConfig();
-
-        /*
-         * Load Cupcake plugin and other plugins defined in core config
-         */
-        $this->addPlugin('Cupcake');
-        $this->addPlugin(Configure::read('Plugin'), ['bootstrap' => true, 'routes' => true]);
+        $this->_loadConfigs();
 
         /*
          * Debug mode
@@ -124,9 +118,15 @@ class Application extends BaseApplication implements EventDispatcherInterface
         $this->_debugMode(Configure::read('debug'));
 
         /*
-         * Init Cupcake
+         * Common bootstrapping tasks
          */
-        Cupcake::init($this);
+        $this->_bootstrap();
+
+        /*
+         * Load Cupcake plugin and other plugins defined in core config
+         */
+        $this->addPlugin('Cupcake', ['bootstrap' => true, 'routes' => false]);
+        $this->addPlugin((array)Configure::read('Plugin'), ['bootstrap' => true, 'routes' => true]);
 
         /*
          * Include app's bootstrap file
@@ -135,9 +135,57 @@ class Application extends BaseApplication implements EventDispatcherInterface
     }
 
     /**
+     * Bootstrap plugins
+     *
+     * @override
+     * @return void
+     */
+    public function pluginBootstrap(): void
+    {
+        //parent::pluginBootstrap();
+        foreach ($this->plugins->with('bootstrap') as $plugin) {
+            //\Cupcake\Cupcake::doAction('plugin_bootstrap', compact('plugin'));
+
+            $this->loadPluginConfig($plugin->getName());
+            $plugin->bootstrap($this);
+
+            //\Cupcake\Cupcake::doAction('plugin_ready', compact('plugin'));
+        }
+
+        //\Cupcake\Cupcake::doAction('app_ready', compact('plugin'));
+    }
+
+    /**
+     * Autoload plugin configs from standard directories
+     *
+     * @param string $plugin Plugin name
+     * @return bool
+     */
+    public function loadPluginConfig(string $plugin): bool
+    {
+        $found = false;
+        $file = Inflector::underscore($plugin);
+
+        foreach (['plugin', 'local/plugin'] as $dir) {
+            $filePath = $this->configDir . DS . $dir . DS . $file . '.php';
+            if (file_exists($filePath)) {
+                Configure::load($dir . '/' . $file);
+                $found = true;
+            }
+        }
+
+        if (Configure::isConfigured('settings')) {
+            Configure::load($plugin, 'settings');
+        }
+
+        return $found;
+    }
+
+    /**
      * Dynamically load plugin
      *
-     * @param string $name Plugin anem
+     * @override
+     * @param string|array $name Plugin anem
      * @param array $config Plugin config
      * @return $this
      */
@@ -160,6 +208,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
 
     /**
      * Get plugin info
+     *
      * @param string $pluginName Plugin name
      * @return array
      */
@@ -189,6 +238,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
 
     /**
      * Get plugin registry instance
+     *
      * @deprecated Use getPlugins() instead. getPlugins() returns PluginCollection
      * @return \Cake\Core\PluginCollection
      */
@@ -227,11 +277,39 @@ class Application extends BaseApplication implements EventDispatcherInterface
     }
 
     /**
+     * Setup path constants
+     */
+    protected function _paths(): void
+    {
+        defined('DS') or define('DS', DIRECTORY_SEPARATOR);
+        defined('ROOT') or define('ROOT', dirname($this->configDir));
+        defined('APP_DIR') or define('APP_DIR', 'src');
+        defined('APP') or define('APP', ROOT . DS . APP_DIR . DS);
+        defined('CONFIG') or define('CONFIG', ROOT . DS . 'config' . DS);
+        defined('WWW_ROOT') or define('WWW_ROOT', ROOT . DS . 'webroot' . DS);
+        defined('TESTS') or define('TESTS', ROOT . DS . 'tests' . DS);
+        defined('TMP') or define('TMP', ROOT . DS . 'tmp' . DS);
+        defined('LOGS') or define('LOGS', ROOT . DS . 'logs' . DS);
+        defined('CACHE') or define('CACHE', TMP . 'cache' . DS);
+        defined('RESOURCES') or define('RESOURCES', ROOT . DS . 'resources' . DS);
+        defined('CAKE_CORE_INCLUDE_PATH') or define('CAKE_CORE_INCLUDE_PATH', ROOT . DS . 'vendor' . DS . 'cakephp' . DS . 'cakephp');
+        defined('CORE_PATH') or define('CORE_PATH', CAKE_CORE_INCLUDE_PATH . DS);
+        defined('CAKE') or define('CAKE', CORE_PATH . 'src' . DS);
+
+        // non cake standard paths:
+        defined('CC_CORE_PATH') or define('CC_CORE_PATH', dirname(__DIR__) . DS);
+        defined('DATA') or define('DATA', ROOT . DS . 'data' . DS);
+
+        // legacy:
+        defined('DATA_DIR') or define('DATA_DIR', DATA);
+    }
+
+    /**
      * Auto-load local configurations.
      *
      * @return void
      */
-    protected function _localConfigs(): void
+    protected function _loadConfigs(): void
     {
         // load config files from standard config directories
         foreach (['plugin', 'local', 'local/plugin'] as $dir) {
@@ -252,12 +330,39 @@ class Application extends BaseApplication implements EventDispatcherInterface
     }
 
     /**
-     * Common bootstrap stuff
+     * Bootrapping for CLI application.
+     *
+     * That is when running commands.
+     *
+     * @return void
+     */
+    protected function _bootstrapCli(): void
+    {
+        // Include the CLI bootstrap overrides.
+        if (file_exists($this->configDir . '/bootstrap_cli.php')) {
+            require $this->configDir . '/bootstrap_cli.php';
+        }
+
+        // Attempt to load standard cli plugins
+        foreach (['Bake', 'Migrations'] as $pluginName) {
+            try {
+                //$this->addOptionalPlugin($pluginName);
+                $this->addPlugin($pluginName);
+            } catch (MissingPluginException $e) {
+                debug($e->getMessage());
+            }
+        }
+    }
+
+    /**
+     * Apply system configurations.
      *
      * @return void
      */
     protected function _bootstrap(): void
     {
+        $isCli = php_sapi_name() === 'cli';
+
         /**
          * Set server timezone to UTC. You can change it to another timezone of your
          * choice but using UTC makes time calculations / conversions easier.
@@ -276,20 +381,23 @@ class Application extends BaseApplication implements EventDispatcherInterface
         ini_set('intl.default_locale', Configure::read('App.defaultLocale', 'en'));
 
         /**
-         * CLI
+         * Error handler
          */
-        $isCli = php_sapi_name() === 'cli';
         if ($isCli) {
             (new \Cake\Error\ConsoleErrorHandler(Configure::read('Error')))->register();
-
-            // Include the CLI bootstrap overrides.
-            require $this->configDir . '/bootstrap_cli.php';
             //} elseif (class_exists('\Gourmet\Whoops\Error\WhoopsHandler')) {
             // Out-of-the-box support for "Whoops for CakePHP3" by "gourmet"
             // https://github.com/gourmet/whoops
             //    (new \Gourmet\Whoops\Error\WhoopsHandler(Configure::read('Error')))->register();
         } else {
             (new ErrorHandler(Configure::read('Error')))->register();
+        }
+
+        /**
+         * Cli
+         */
+        if ($isCli) {
+            $this->_bootstrapCli();
         }
 
         /**
@@ -312,15 +420,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
         if ($fullBaseUrl) {
             Router::fullBaseUrl($fullBaseUrl);
         }
-    }
 
-    /**
-     * Apply system configurations.
-     *
-     * @return void
-     */
-    protected function _applyConfig(): void
-    {
         Cache::setConfig(Configure::consume('Cache'));
         ConnectionManager::setConfig(Configure::consume('Datasources'));
         TransportFactory::setConfig(Configure::consume('EmailTransport'));
@@ -364,13 +464,11 @@ class Application extends BaseApplication implements EventDispatcherInterface
     protected function _debugmode($enabled): void
     {
         if ($enabled) {
-            if (Configure::read('DebugKit.enabled')) {
-                // disable Mail panel by default, as it doesn't play nice with Mailman plugin
-                // @TODO Play nice with DebugKit's Mail preview
-                //if (!Configure::check('DebugKit.panels')) {
-                //    Configure::write('DebugKit.panels', ['DebugKit.Mail' => false]);
-                //}
+            Configure::write('Cache._cake_model_.duration', '+5 minutes');
+            Configure::write('Cache._cake_core_.duration', '+5 minutes');
+            Configure::write('Cache._cake_routes_.duration', '+60 seconds');
 
+            if (Configure::read('DebugKit.enabled')) {
                 try {
                     $this->addPlugin('DebugKit');
                 } catch (\Exception $ex) {
@@ -381,8 +479,8 @@ class Application extends BaseApplication implements EventDispatcherInterface
             // When debug = false the metadata cache should last
             // for a very very long time, as we don't want
             // to refresh the cache while users are doing requests.
-            Configure::write('Cache._cake_model_.duration', '+1 years');
-            Configure::write('Cache._cake_core_.duration', '+1 years');
+            //Configure::write('Cache._cake_model_.duration', '+1 years');
+            //Configure::write('Cache._cake_core_.duration', '+1 years');
         }
     }
 }

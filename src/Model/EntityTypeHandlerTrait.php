@@ -3,23 +3,24 @@ declare(strict_types=1);
 
 namespace Cupcake\Model;
 
-use Cupcake\Lib\ClassRegistry;
-use Cake\Utility\Inflector;
-
 /**
  * Class EntityTypeHandlerTrait
  *
  * @package Cupcake\Model
+ * @property string $_typeField Entity field that contains type info
+ * @property string $_typeNamespace Entity type namespace
+ * @property string $_typeInterface Entiy type interface className
  */
 trait EntityTypeHandlerTrait
 {
-    //protected $_typeField = 'type';
-    //protected $_typeNamespace = null;
+    //protected static $_typeField = 'type';
+    //protected static $_typeNamespace = null;
+    //protected static $_typeInterface = null;
 
     /**
      * @var \Cupcake\Model\EntityTypeInterface Type handler instance
      */
-    protected $_typeHandler;
+    private $_typeHandler;
 
     /**
      * @return \Cupcake\Model\EntityTypeInterface
@@ -28,88 +29,42 @@ trait EntityTypeHandlerTrait
     protected function handler()
     {
         if ($this->_typeHandler === null) {
-            //if (!($this instanceof EntityInterface)) {
-            //    throw new \Exception(sprintf("EntityTypeHandler can only be applied to an instance of EntityInterface"));
-            //}
-            $type = $this->_getHandlerType();
-            if (!$type) {
-                throw new \Exception(sprintf('Type handler can not be attached without type for ' . static::class . ' with id ' . $this->id));
-            }
-
-            $handler = $this->_createHandler($type);
-
-            if (!($handler instanceof EntityTypeInterface)) {
-                throw new \Exception(sprintf("Type handler MUST be an instance of EntityTypeInterface"));
-            }
-
-            $this->_typeHandler = $handler;
-            //$this->_typeHandler->setEntity($this);
+            $this->_typeHandler = $this->_createHandler();
         }
 
         return $this->_typeHandler;
     }
 
-    protected function _createHandler($type)
+    /**
+     * @return \Cupcake\Model\EntityTypeInterface
+     * @throws \Exception
+     */
+    protected function _createHandler(): EntityTypeInterface
     {
-        $ns = $this->_getHandlerNamespace();
-        if (!$ns) {
-            throw new \InvalidArgumentException('Type handler namespace not defined');
-        }
-        //$handler = ClassRegistry::get($ns, $type);
-        $handlerClass = ClassRegistry::getClass($ns, $type);
-        if (!$handlerClass) {
-            throw new \Exception("No type handler class for $ns:$type:$handlerClass");
-        }
-        if (!class_exists($handlerClass)) {
-            throw new \Exception("Type handler class not found $ns:$type");
+        $ns = static::$_typeNamespace ?? static::class;
+        $field = static::$_typeField ?? 'type';
+        $iface = static::$_typeInterface ?? EntityTypeInterface::class;
+        $type = $this->get($field) ?? 'default';
+        if (!$type) {
+            throw new \Exception(sprintf(
+                "Can not resolve handler for unknown type in class '%s'",
+                static::class
+            ));
         }
 
-        $handler = new $handlerClass($this);
+        $handler = EntityTypeRegistry::createInstance($ns, $type, function ($className) {
+            return new $className($this);
+        });
+
+        if ($iface && !($handler instanceof $iface)) {
+            throw new \Exception(sprintf(
+                "Can not create handler for type '%s':'%s' : Must implement interface '%s'",
+                $ns,
+                $type,
+                $iface
+            ));
+        }
 
         return $handler;
-    }
-
-    /**
-     * Get entity type handler alias
-     * Override method in entity classes to customize handler type getter.
-     *
-     * By default the value of the entity field 'type' will be evaluated
-     *
-     * @return mixed
-     */
-    protected function _getHandlerType()
-    {
-        return $this->get('type') ?: 'default';
-    }
-
-    /**
-     * Set Accessor for property 'type'
-     *
-     * @param $val
-     * @return mixed
-     */
-    protected function _setType($val)
-    {
-        // reset type handler
-        $this->_typeHandler = null;
-
-        return $val;
-    }
-
-    /**
-     * Get entity type namespace
-     * Override method in entity classes to customize handler namespace getter.
-     *
-     * Defaults to Entity class name with 'Type' suffix
-     * e.g. for Model Blog.Posts -> 'PostType'
-     *
-     * @return string ClassRegistry namespace
-     */
-    protected function _getHandlerNamespace()
-    {
-        [, $class] = namespaceSplit(static::class);
-        $ns = Inflector::camelize(Inflector::singularize($class)) . 'Type';
-
-        return $ns;
     }
 }

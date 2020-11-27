@@ -4,14 +4,13 @@ declare(strict_types=1);
 namespace Cupcake\Menu;
 
 /**
- * Class MenuItem
- * @package Cupcake\Menu
+ * Class MenuItem.
  *
+ * @package Cupcake\Menu
  * @property string $title Title
  * @property mixed $url Url
  * @property array $attr Attributes
- * @property \Cupcake\Menu\Menu $children Children
- *
+ * @property \Cupcake\Menu\MenuItemCollection $children Children
  */
 class MenuItem implements \ArrayAccess
 {
@@ -31,25 +30,33 @@ class MenuItem implements \ArrayAccess
     protected $_attr;
 
     /**
-     * @var \Cupcake\Menu\Menu
+     * @var \Cupcake\Menu\MenuItemCollection
      */
     protected $_children;
 
     /**
-     * @param string|array $title
-     * @param null $url
-     * @param array $attr
-     * @param \Cupcake\Menu\Menu|array $children
+     * Constructor.
+     * Examples:
+     *   TITLE, URL, ATTR, CHILDREN
+     *   ['title' => TITLE, 'url' => URL, 'children' => CHILDREN, 'foo' =>'bar']
+     *   ['title' => TITLE, 'url' => URL, 'children' => CHILDREN, 'attr' => ['foo' => 'bar']]
+     *
+     * @param string|array $title Item title
+     * @param string|array|null $url Item url
+     * @param array $attr Item attributes
+     * @param array|\Cupcake\Menu\MenuItemCollection $children List or collection of child items
      */
     public function __construct($title, $url = null, array $attr = [], $children = [])
     {
         if (is_array($title)) {
-            if (isset($title['data-icon'])) {
-                $title['attr'] = ['data-icon' => $title['data-icon']];
-                unset($title['data-icon']);
-            }
+            $defaults = ['title' => null, 'url' => null, 'children' => null, 'attr' => null];
+            $tmp = $title;
 
-            extract($title, EXTR_IF_EXISTS);
+            $title = $tmp['title'] ?? null;
+            $url = $tmp['url'] ?? null;
+            $children = $tmp['children'] ?? [];
+            $attr = $item['attr'] ?? [];
+            $attr += array_diff_key($tmp, $defaults);
         }
 
         $this->_title = $title;
@@ -83,7 +90,7 @@ class MenuItem implements \ArrayAccess
     }
 
     /**
-     * @return array
+     * @return \Cupcake\Menu\MenuItemCollection
      */
     public function getChildren()
     {
@@ -91,20 +98,21 @@ class MenuItem implements \ArrayAccess
     }
 
     /**
-     * @param \Cupcake\Menu\Menu|array $children Menu item children
-     * @param bool $append If True, append children instead of replacing existing items (default: false)
+     * @param \Cupcake\Menu\MenuItemCollection|array $children Menu item children
      * @return $this
      */
-    public function setChildren($children, $append = false)
+    public function setChildren($children)
     {
-        if ($append == false) {
-            $this->_children = new Menu();
-        }
+        $this->_children = new MenuItemCollection();
 
-        if ($children instanceof Menu) {
+        if ($children instanceof MenuItemCollection) {
             $this->_children = $children;
         } elseif (is_array($children)) {
             $this->_children->addItems($children);
+        } else {
+            throw new \InvalidArgumentException(
+                "Invalid MenuItem children parameter. MUST be instance of \Cupcake\Menu\MenuItemCollection or array."
+            );
         }
 
         return $this;
@@ -113,15 +121,24 @@ class MenuItem implements \ArrayAccess
     /**
      * Alias for setChildren (auto-append)
      *
-     * @param \Cupcake\Menu\Menu|array $children Menu item children
+     * @param \Cupcake\Menu\MenuItemCollection|array $children Menu item children
      * @return $this
      */
     public function addChildren($children)
     {
-        return $this->setChildren($children, true);
+        if (!$this->_children) {
+            $this->_children = new MenuItemCollection();
+        }
+        $this->_children->addItems($children);
+
+        return $this;
     }
 
     /**
+     * @param string|array $title Child item title
+     * @param string|array|null $url Child item url
+     * @param array $attr Child item attributes
+     * @param array $children Child item children
      * @return $this
      */
     public function addChild($title, $url = null, $attr = [], $children = [])
@@ -134,7 +151,7 @@ class MenuItem implements \ArrayAccess
     /**
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'title' => $this->_title,
@@ -156,6 +173,7 @@ class MenuItem implements \ArrayAccess
     /**
      * (PHP 5 &gt;= 5.0.0)<br/>
      * Whether a offset exists
+     *
      * @link http://php.net/manual/en/arrayaccess.offsetexists.php
      * @param mixed $offset <p>
      * An offset to check for.
@@ -167,12 +185,13 @@ class MenuItem implements \ArrayAccess
      */
     public function offsetExists($offset)
     {
-        return in_array($offset, ['title', 'url', 'attributes', 'attr', 'children', '_children']);
+        return in_array($offset, ['title', 'url', 'attributes', 'attr', 'children']);
     }
 
     /**
      * (PHP 5 &gt;= 5.0.0)<br/>
      * Offset to retrieve
+     *
      * @link http://php.net/manual/en/arrayaccess.offsetget.php
      * @param mixed $offset <p>
      * The offset to retrieve.
@@ -186,11 +205,10 @@ class MenuItem implements \ArrayAccess
                 return $this->getTitle();
             case 'url':
                 return $this->getUrl();
-            case 'attributes':
             case 'attr':
+            case 'attributes':
                 return $this->getAttributes();
             case 'children':
-            case '_children': // legacy
                 return $this->getChildren();
             default:
                 return null;
@@ -200,6 +218,7 @@ class MenuItem implements \ArrayAccess
     /**
      * (PHP 5 &gt;= 5.0.0)<br/>
      * Offset to set
+     *
      * @link http://php.net/manual/en/arrayaccess.offsetset.php
      * @param mixed $offset <p>
      * The offset to assign the value to.
@@ -212,26 +231,13 @@ class MenuItem implements \ArrayAccess
      */
     public function offsetSet($offset, $value)
     {
-        //@TODO Remove offsetSet method and restore read-only mode
-        //throw new \RuntimeException('Can not unset value for this object');
-        switch ($offset) {
-            case 'title':
-            case 'url':
-            case 'attr':
-                $key = "_" . $offset;
-                $this->{$key} = $value;
-                break;
-            case 'children':
-                $this->setChildren($value);
-                break;
-            default:
-                break;
-        }
+        throw new \RuntimeException('Can not set value for this object');
     }
 
     /**
      * (PHP 5 &gt;= 5.0.0)<br/>
      * Offset to unset
+     *
      * @link http://php.net/manual/en/arrayaccess.offsetunset.php
      * @param mixed $offset <p>
      * The offset to unset.
@@ -242,39 +248,5 @@ class MenuItem implements \ArrayAccess
     public function offsetUnset($offset)
     {
         throw new \RuntimeException('Can not unset value for this object');
-    }
-
-    /**
-     * Create menu item from array
-     *
-     * Accepts:
-     *
-     * [TITLE, URL, ATTR, CHILDREN]
-     *
-     * ['title' => TITLE, 'url' => URL, 'children' => CHILDREN, 'foo' =>'bar']
-     *
-     * ['title' => TITLE, 'url' => URL, 'children' => CHILDREN, 'attr' => ['foo' => 'bar']]
-     *
-     * @param array $item Menu item array
-     * @return self
-     */
-    public static function fromArray(array $item)
-    {
-        $title = $url = null;
-        $attr = $children = [];
-
-        if (isset($item[0])) {
-            [$title, $url, $attr, $children] = $item;
-        } else {
-            //$item['foo'] = 'bar';
-            $title = $item['title'] ?? null;
-            $url = $item['url'] ?? null;
-            $children = $item['children'] ?? [];
-
-            $attr = $item['attr'] ?? [];
-            $attr += array_diff_key($item, ['title' => null, 'url' => null, 'children' => null, 'attr' => null]);
-        }
-
-        return new self($title, $url, $attr, $children);
     }
 }
