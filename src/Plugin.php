@@ -15,7 +15,7 @@ class Plugin extends BasePlugin
      */
     public function bootstrap(PluginApplicationInterface $app): void
     {
-        defined('DATA_DIR') or define('DATA_DIR', ROOT . DS . 'data' . DS);
+        defined('DATA_DIR') || define('DATA_DIR', ROOT . DS . 'data' . DS);
 
         /**
          * Cache config
@@ -42,5 +42,12 @@ class Plugin extends BasePlugin
          * Init Cupcake
          */
         Cupcake::init($app);
+
+        /*
+         * Add cupcake templates path as fallback template search path
+         */
+        $templatePaths = Configure::read('App.paths.templates', []);
+        $templatePaths[] = \Cake\Core\Plugin::templatePath('Cupcake');
+        Configure::write('App.paths.templates', $templatePaths);
     }
 }

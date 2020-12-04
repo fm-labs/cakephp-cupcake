@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace Cupcake\Ui;
 
-use Cake\Core\StaticConfigTrait;
-use Cake\Event\EventDispatcherTrait;
 use Cake\Event\EventListenerInterface;
 use Cake\View\View;
 
@@ -28,7 +26,7 @@ class Ui implements EventListenerInterface
     /**
      * Ui constructor.
      *
-     * @param \Cake\View\View $view
+     * @param \Cake\View\View $view View instance
      */
     public function __construct(View $view)
     {
@@ -36,9 +34,10 @@ class Ui implements EventListenerInterface
     }
 
     /**
-     * @param string $block
-     * @param string|\Cupcake\Ui\UiElementInterface $uiElement
+     * @param string $block View block name
+     * @param string|\Cupcake\Ui\UiElementInterface $uiElement View element
      * @return $this
+     * @throws \Exception
      */
     public function add(string $block, $uiElement)
     {
@@ -47,7 +46,7 @@ class Ui implements EventListenerInterface
         }
 
         if (!($uiElement instanceof UiElementInterface)) {
-            throw new \Exception(sprintf("The UiElement for '%s' block does not implement UiElementInterface",$block));
+            throw new \Exception(sprintf("The UiElement for '%s' block does not implement UiElementInterface", $block));
         }
         $this->elements[$block][] = $uiElement;
 
@@ -57,7 +56,7 @@ class Ui implements EventListenerInterface
     /**
      * Render a sub-elements.
      *
-     * @param string $block
+     * @param string $block View block name
      * @return string
      */
     public function fetch(string $block): string
@@ -67,7 +66,7 @@ class Ui implements EventListenerInterface
         }
         array_push($this->stack, $block);
 
-        $out = "";
+        $out = '';
         if (isset($this->elements[$block])) {
             /** @var \Cupcake\Ui\UiElementInterface $element */
             foreach ($this->elements[$block] as $element) {
@@ -80,11 +79,17 @@ class Ui implements EventListenerInterface
         return $out;
     }
 
+    /**
+     * @return array
+     */
     public function implementedEvents(): array
     {
         return [];
     }
 
+    /**
+     * @return array
+     */
     public function __debugInfo()
     {
         return [

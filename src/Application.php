@@ -116,6 +116,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
          * Debug mode
          */
         $this->_debugMode(Configure::read('debug'));
+        //var_dump(Configure::read('Plugin'));
 
         /*
          * Common bootstrapping tasks
@@ -145,8 +146,11 @@ class Application extends BaseApplication implements EventDispatcherInterface
         //parent::pluginBootstrap();
         foreach ($this->plugins->with('bootstrap') as $plugin) {
             //\Cupcake\Cupcake::doAction('plugin_bootstrap', compact('plugin'));
-
-            $this->loadPluginConfig($plugin->getName());
+            try {
+                $this->loadPluginConfig($plugin->getName());
+            } catch (\Exception $ex) {
+                debug($ex->getMessage());
+            }
             $plugin->bootstrap($this);
 
             //\Cupcake\Cupcake::doAction('plugin_ready', compact('plugin'));
@@ -200,6 +204,12 @@ class Application extends BaseApplication implements EventDispatcherInterface
                 $this->addPlugin($_name, $_config);
             }
 
+            return $this;
+        }
+
+        $bootstrap = $config['bootstrap'] ?? true;
+        if (!$bootstrap) {
+            //debug("Skipping disabled plugin: $name");
             return $this;
         }
 
@@ -281,27 +291,27 @@ class Application extends BaseApplication implements EventDispatcherInterface
      */
     protected function _paths(): void
     {
-        defined('DS') or define('DS', DIRECTORY_SEPARATOR);
-        defined('ROOT') or define('ROOT', dirname($this->configDir));
-        defined('APP_DIR') or define('APP_DIR', 'src');
-        defined('APP') or define('APP', ROOT . DS . APP_DIR . DS);
-        defined('CONFIG') or define('CONFIG', ROOT . DS . 'config' . DS);
-        defined('WWW_ROOT') or define('WWW_ROOT', ROOT . DS . 'webroot' . DS);
-        defined('TESTS') or define('TESTS', ROOT . DS . 'tests' . DS);
-        defined('TMP') or define('TMP', ROOT . DS . 'tmp' . DS);
-        defined('LOGS') or define('LOGS', ROOT . DS . 'logs' . DS);
-        defined('CACHE') or define('CACHE', TMP . 'cache' . DS);
-        defined('RESOURCES') or define('RESOURCES', ROOT . DS . 'resources' . DS);
-        defined('CAKE_CORE_INCLUDE_PATH') or define('CAKE_CORE_INCLUDE_PATH', ROOT . DS . 'vendor' . DS . 'cakephp' . DS . 'cakephp');
-        defined('CORE_PATH') or define('CORE_PATH', CAKE_CORE_INCLUDE_PATH . DS);
-        defined('CAKE') or define('CAKE', CORE_PATH . 'src' . DS);
+        defined('DS') || define('DS', DIRECTORY_SEPARATOR);
+        defined('ROOT') || define('ROOT', dirname($this->configDir));
+        defined('APP_DIR') || define('APP_DIR', 'src');
+        defined('APP') || define('APP', ROOT . DS . APP_DIR . DS);
+        defined('CONFIG') || define('CONFIG', ROOT . DS . 'config' . DS);
+        defined('WWW_ROOT') || define('WWW_ROOT', ROOT . DS . 'webroot' . DS);
+        defined('TESTS') || define('TESTS', ROOT . DS . 'tests' . DS);
+        defined('TMP') || define('TMP', ROOT . DS . 'tmp' . DS);
+        defined('LOGS') || define('LOGS', ROOT . DS . 'logs' . DS);
+        defined('CACHE') || define('CACHE', TMP . 'cache' . DS);
+        defined('RESOURCES') || define('RESOURCES', ROOT . DS . 'resources' . DS);
+        defined('CAKE_CORE_INCLUDE_PATH') || define('CAKE_CORE_INCLUDE_PATH', ROOT . DS . 'vendor' . DS . 'cakephp' . DS . 'cakephp');
+        defined('CORE_PATH') || define('CORE_PATH', CAKE_CORE_INCLUDE_PATH . DS);
+        defined('CAKE') || define('CAKE', CORE_PATH . 'src' . DS);
 
         // non cake standard paths:
-        defined('CC_CORE_PATH') or define('CC_CORE_PATH', dirname(__DIR__) . DS);
-        defined('DATA') or define('DATA', ROOT . DS . 'data' . DS);
+        defined('CC_CORE_PATH') || define('CC_CORE_PATH', dirname(__DIR__) . DS);
+        defined('DATA') || define('DATA', ROOT . DS . 'data' . DS);
 
         // legacy:
-        defined('DATA_DIR') or define('DATA_DIR', DATA);
+        defined('DATA_DIR') || define('DATA_DIR', DATA);
     }
 
     /**
@@ -338,6 +348,11 @@ class Application extends BaseApplication implements EventDispatcherInterface
      */
     protected function _bootstrapCli(): void
     {
+        // Set logs to different files so they don't have permission conflicts.
+        // @todo Apply filename prefix to all configured logs in cli mode
+        Configure::write('Log.debug.file', 'cli-debug');
+        Configure::write('Log.error.file', 'cli-error');
+
         // Include the CLI bootstrap overrides.
         if (file_exists($this->configDir . '/bootstrap_cli.php')) {
             require $this->configDir . '/bootstrap_cli.php';
@@ -431,12 +446,12 @@ class Application extends BaseApplication implements EventDispatcherInterface
         /**
          * Setup detectors for mobile and tablet.
          */
-        ServerRequest::addDetector('mobile', function ($request) {
+        ServerRequest::addDetector('mobile', function () {
             $detector = new \Detection\MobileDetect();
 
             return $detector->isMobile();
         });
-        ServerRequest::addDetector('tablet', function ($request) {
+        ServerRequest::addDetector('tablet', function () {
             $detector = new \Detection\MobileDetect();
 
             return $detector->isTablet();
@@ -475,7 +490,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
                     //debug("DebugKit: " . $ex->getMessage());
                 }
             }
-        } else {
+        //} else {
             // When debug = false the metadata cache should last
             // for a very very long time, as we don't want
             // to refresh the cache while users are doing requests.

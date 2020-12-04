@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Cupcake;
 
-use Cake\Core\Configure;
 use Cake\Core\PluginApplicationInterface;
 use Cake\Event\Event;
 use Cake\Event\EventManager;
@@ -12,16 +11,13 @@ use Cake\Event\EventManager;
  * Class Cupcake
  *
  * @package Cupcake
- * @todo Refactor as (service) container
- * @todo Caching service
- * @todo Log service
  */
 class Cupcake
 {
     /**
      * @deprecated
      */
-    public const VERSION = "0.4.0";
+    public const VERSION = '0.4.0';
 
     /**
      * @var string Default mailer class
@@ -50,10 +46,12 @@ class Cupcake
 
     /**
      * Singleton getter
-     * @return \Cupcake\Cupcake
+     *
+     * @param \Cake\Core\PluginApplicationInterface $app The application instance
+     * @return void
      * @throws \Exception
      */
-    public static function init(PluginApplicationInterface $app)
+    public static function init(PluginApplicationInterface $app): void
     {
         if (isset(self::$_instances[0])) {
             throw new \Exception('Cupcake::init: Already initialized');
@@ -63,7 +61,8 @@ class Cupcake
 
     /**
      * Singleton getter
-     * @return \Cupcake\Cupcake
+     *
+     * @return self
      * @throws \Exception
      */
     public static function getInstance(): self
@@ -77,6 +76,8 @@ class Cupcake
 
     /**
      * Static access to the plugin handler
+     *
+     * @return \Cake\Core\PluginInterface
      */
     public static function plugin(string $pluginName): \Cake\Core\PluginInterface
     {
@@ -85,6 +86,8 @@ class Cupcake
 
     /**
      * Static access to the plugin info
+     *
+     * @return array
      */
     public static function pluginInfo(string $pluginName): array
     {
@@ -104,6 +107,7 @@ class Cupcake
 
     /**
      * Singleton instance constructor
+     *
      * @param \Cupcake\Application $app
      */
     public function __construct(PluginApplicationInterface $app)
@@ -130,38 +134,40 @@ class Cupcake
     /**
      * Add a filter.
      *
-     * @param string $name
-     * @param callable $callback
+     * @param string $name Filter name
+     * @param callable $callback Filter callback
+     * @return void
      */
     public static function addFilter(string $name, callable $callback): void
     {
-        self::$_filters['filter:'.$name][] = $callback;
+        self::$_filters['filter:' . $name][] = $callback;
     }
 
     /**
      * Add an action filter.
      *
-     * @param string $name
-     * @param callable $callback
+     * @param string $name Filter name
+     * @param callable $callback Filter callback
+     * @return void
      */
     public static function addAction(string $name, callable $callback): void
     {
-        self::$_filters['action:'.$name][] = $callback;
+        self::$_filters['action:' . $name][] = $callback;
     }
 
     /**
      * Apply a filter.
      *
-     * @param string $name
-     * @param array $data
-     * @param array $options
-     * @return array|mixed|null
+     * @param string $name Filter name
+     * @param array $data Filter data
+     * @param array $options Filter options
+     * @return array|mixed|null Filter result
      */
     public static function doFilter(string $name, array $data, array $options = [])
     {
         // apply local filters
-        if (isset(self::$_filters['filter:'.$name])) {
-            foreach(self::$_filters['filter:'.$name] as $filter) {
+        if (isset(self::$_filters['filter:' . $name])) {
+            foreach (self::$_filters['filter:' . $name] as $filter) {
                 $data = call_user_func($filter, $data, $options);
             }
         }
@@ -176,14 +182,15 @@ class Cupcake
     /**
      * Apply an action filter.
      *
-     * @param string $name
-     * @param array $data
+     * @param string $name Filter name
+     * @param array $data Filter callback
+     * @return void
      */
     public static function doAction(string $name, array $data = []): void
     {
         // apply local action filters
-        if (isset(self::$_filters['action:'.$name])) {
-            foreach(self::$_filters['action:'.$name] as $filter) {
+        if (isset(self::$_filters['action:' . $name])) {
+            foreach (self::$_filters['action:' . $name] as $filter) {
                 call_user_func($filter, $data);
             }
         }
