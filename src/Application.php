@@ -124,10 +124,21 @@ class Application extends BaseApplication implements EventDispatcherInterface
         $this->_bootstrap();
 
         /*
-         * Load Cupcake plugin and other plugins defined in core config
+         * Load core plugins and user plugins
          */
         $this->addPlugin('Cupcake', ['bootstrap' => true, 'routes' => false]);
         $this->addPlugin((array)Configure::read('Plugin'), ['bootstrap' => true, 'routes' => true]);
+
+        /**
+         * CakePHP DebugKit support
+         */
+        if (Configure::read('DebugKit.enabled')) {
+            try {
+                $this->addPlugin('DebugKit');
+            } catch (\Exception $ex) {
+                //debug("DebugKit: " . $ex->getMessage());
+            }
+        }
 
         /*
          * Include app's bootstrap file
@@ -189,7 +200,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
      * Dynamically load plugin
      *
      * @override
-     * @param string|array $name Plugin anem
+     * @param \Cake\Core\PluginInterface|string|array $name Plugin name
      * @param array $config Plugin config
      * @return $this
      */
@@ -214,6 +225,22 @@ class Application extends BaseApplication implements EventDispatcherInterface
         }
 
         return parent::addPlugin($name, $config);
+    }
+
+    /**
+     * @override
+     * @param \Cake\Core\PluginInterface|string|array $name Plugin name
+     * @param array $config Plugin config
+     * @return $this
+     */
+    public function addOptionalPlugin($name, array $config = [])
+    {
+        try {
+            $this->addPlugin($name, $config);
+        } catch (\Exception $ex) {
+        }
+
+        return $this;
     }
 
     /**
@@ -482,14 +509,6 @@ class Application extends BaseApplication implements EventDispatcherInterface
             Configure::write('Cache._cake_model_.duration', '+5 minutes');
             Configure::write('Cache._cake_core_.duration', '+5 minutes');
             Configure::write('Cache._cake_routes_.duration', '+60 seconds');
-
-            if (Configure::read('DebugKit.enabled')) {
-                try {
-                    $this->addPlugin('DebugKit');
-                } catch (\Exception $ex) {
-                    //debug("DebugKit: " . $ex->getMessage());
-                }
-            }
         //} else {
             // When debug = false the metadata cache should last
             // for a very very long time, as we don't want
