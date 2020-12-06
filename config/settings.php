@@ -18,21 +18,18 @@ return [
                 'App.Debug' => [
                     'label' => __('Debug'),
                 ],
+                'App.Error' => [
+                    'label' => __('Error'),
+                ],
+                'App.Theme' => [
+                    'label' => __('Theme'),
+                ],
             ],
 
             'schema' => [
                 'App.defaultTimezone' => [
                     'group' => 'App.General',
                     'type' => 'string',
-                    /*
-                    'input' => [
-                        'options' => function () {
-                            return [
-                                'UTC' => 'UTC',
-                            ];
-                        },
-                    ],
-                    */
                     'help' => 'Server timezone',
                     'default' => 'UTC',
                     'required' => true,
@@ -40,15 +37,6 @@ return [
                 'App.encoding' => [
                     'group' => 'App.General',
                     'type' => 'string',
-                    /*
-                    'input' => [
-                        'options' => function () {
-                            $encodings = ['UTF-8'];
-
-                            return array_combine($encodings, $encodings);
-                        },
-                    ],
-                    */
                     'help' => 'Application encoding',
                     'default' => 'UTF-8',
                     'required' => true,
@@ -66,6 +54,20 @@ return [
                     'default' => 'en',
                     'required' => true,
                 ],
+                'Site.theme' => [
+                    'group' => 'App.Theme',
+                    'type' => 'string',
+                    'input' => [
+                        'options' => function () {
+                            $themes = \Cupcake\Cupcake::getThemes();
+
+                            return array_combine($themes, $themes);
+                        },
+                    ],
+                    'help' => 'Application encoding',
+                    'default' => 'UTF-8',
+                    'required' => true,
+                ],
                 'Cache.disable' => [
                     'group' => 'App.Cache',
                     'type' => 'boolean',
@@ -73,6 +75,21 @@ return [
                     'help' => __('Disable cache system-wide'),
                     'default' => false,
                 ],
+                /*
+                'Error.errorLevel' => [
+                    'group' => 'App.Error',
+                    'type' => 'int',
+                    'input' => [
+                        'options' => function () {
+                            return [
+                                E_ALL => __('Show all errors'),
+                                (E_ALL & ~E_USER_DEPRECATED) => __('Disable deprecation warnings'),
+                            ];
+                        },
+                    ],
+                    'default' => false,
+                ],
+                */
                 'debug' => [
                     'group' => 'App.Debug',
                     'type' => 'boolean',
