@@ -3,9 +3,14 @@ declare(strict_types=1);
 
 namespace Cupcake;
 
+use Cake\Cache\Cache;
+use Cake\Cache\Engine\FileEngine;
 use Cake\Core\PluginApplicationInterface;
 use Cake\Event\Event;
 use Cake\Event\EventManager;
+use Cake\Log\Engine\FileLog;
+use Cake\Log\Log;
+use DebugKit\Cache\Engine\DebugEngine;
 
 /**
  * Class Cupcake
@@ -197,5 +202,66 @@ class Cupcake
 
         // dispatch action filter event
         EventManager::instance()->dispatch(new Event('Action.' . $name, null, $data));
+    }
+
+    /**
+     * @return array
+     */
+    public static function getThemes(): array
+    {
+        return array_filter(\Cake\Core\Plugin::loaded(), function ($pluginName) {
+            return preg_match('/^Theme/', $pluginName) ? true : false;
+        });
+    }
+
+    /**
+     * @return array
+     */
+    public static function getSysDirs(): array
+    {
+        $dirs = [];
+
+        // config dirs
+        $dirs[] = CONFIG;
+        $dirs[] = CONFIG . 'local';
+        $dirs[] = CONFIG . 'local' . DS . 'plugin';
+
+        // cache dirs
+        foreach (Cache::configured() as $name) {
+            $engine = Cache::pool($name);
+            if ($engine instanceof FileEngine) {
+                $path = $engine->getConfig('path');
+                $dirs[] = $path;
+            } elseif ($engine instanceof DebugEngine) {
+                if (!$engine->engine()) {
+                    $engine->init();
+                }
+                $path = $engine->engine()->getConfig('path');
+                $dirs[] = $path;
+            }
+        }
+
+        // log dirs
+        $dirs[] = LOGS;
+        foreach (Log::configured() as $name) {
+            $engine = Log::engine($name);
+            if ($engine instanceof FileLog) {
+                $dirs[] = $engine->getConfig('path');
+            }
+        }
+
+        // tmp dirs
+        $dirs[] = TMP;
+
+        // cupcake specific
+        $dirs[] = DATA_DIR;
+
+        // shop dirs
+        // payment dirs
+        // other custom dirs
+
+        $dirs = array_unique($dirs);
+
+        return $dirs;
     }
 }
