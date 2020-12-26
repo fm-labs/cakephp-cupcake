@@ -102,8 +102,9 @@ class AttributesBehavior extends Behavior
             $attributes = $event->getData('attributes');
 
             // normalize attributes
-            $attributes = array_map(function($attr) {
+            $attributes = array_map(function ($attr) {
                 $attr += ['default' => null, 'required' => null, 'input' => []];
+
                 return $attr;
             }, $attributes);
 
@@ -166,7 +167,7 @@ class AttributesBehavior extends Behavior
     public function findByAttribute(Query $query, array $options = [])
     {
         if (empty($options)) {
-            throw new \InvalidArgumentException("Attribute key-value pair(s) missing");
+            throw new \InvalidArgumentException('Attribute key-value pair(s) missing');
         }
 
         $attrsQuery = $this->attributesTable()->find();
@@ -203,7 +204,7 @@ class AttributesBehavior extends Behavior
     public function findHavingAttribute(Query $query, array $options = [])
     {
         if (empty($options)) {
-            throw new \InvalidArgumentException("Attribute key-value pair(s) missing");
+            throw new \InvalidArgumentException('Attribute key-value pair(s) missing');
         }
 
         $attrsQuery = $this->attributesTable()

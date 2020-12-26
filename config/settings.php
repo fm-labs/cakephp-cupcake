@@ -58,6 +58,7 @@ return [
                     'group' => 'App.Theme',
                     'type' => 'string',
                     'input' => [
+                        'empty' => true,
                         'options' => function () {
                             $themes = \Cupcake\Cupcake::getThemes();
 
@@ -66,7 +67,7 @@ return [
                     ],
                     'help' => 'Application encoding',
                     'default' => 'UTF-8',
-                    'required' => true,
+                    'required' => false,
                 ],
                 'Cache.disable' => [
                     'group' => 'App.Cache',

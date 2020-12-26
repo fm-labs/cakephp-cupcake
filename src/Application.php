@@ -126,8 +126,8 @@ class Application extends BaseApplication implements EventDispatcherInterface
         /*
          * Load core plugins and user plugins
          */
-        $this->addPlugin('Cupcake', ['bootstrap' => true, 'routes' => false]);
-        $this->addPlugin((array)Configure::read('Plugin'), ['bootstrap' => true, 'routes' => true]);
+        $this->addPlugin('Cupcake');
+        $this->addPlugin((array)Configure::read('Plugin')/*, ['bootstrap' => true, 'routes' => true]*/);
 
         /**
          * CakePHP DebugKit support

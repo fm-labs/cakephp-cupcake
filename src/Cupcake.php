@@ -142,6 +142,7 @@ class Cupcake
      * @param string $name Filter name
      * @param callable $callback Filter callback
      * @return void
+     * @todo Use Hook class instead
      */
     public static function addFilter(string $name, callable $callback): void
     {
@@ -154,6 +155,7 @@ class Cupcake
      * @param string $name Filter name
      * @param callable $callback Filter callback
      * @return void
+     * @todo Use Hook class instead
      */
     public static function addAction(string $name, callable $callback): void
     {
@@ -167,6 +169,7 @@ class Cupcake
      * @param array $data Filter data
      * @param array $options Filter options
      * @return array|mixed|null Filter result
+     * @todo Use Hook class instead
      */
     public static function doFilter(string $name, array $data, array $options = [])
     {
@@ -190,6 +193,7 @@ class Cupcake
      * @param string $name Filter name
      * @param array $data Filter callback
      * @return void
+     * @todo Use Hook class instead
      */
     public static function doAction(string $name, array $data = []): void
     {
