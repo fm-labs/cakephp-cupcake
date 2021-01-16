@@ -13,6 +13,7 @@ use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validator;
+use Cupcake\Model\AttributesSchema;
 
 /**
  * Class AttributesBehavior
@@ -25,11 +26,14 @@ class AttributesBehavior extends Behavior
      * @var array
      */
     protected $_defaultConfig = [
-        //'attributesTableClass' => 'Attributes',
-        'attributesTableName' => 'attributes',
-        'attributesPropertyName' => '_attrs',
-        'attributes' => [
-        //    'foo' => ['type' => 'string', 'required' => true, 'default' => null]
+        'connectionName' => null,
+        'tableClassName' => null,
+        'tableName' => 'attributes',
+        'propertyName' => 'attr',
+        'relationName' => null,
+        'relationPropertyName' => '__attributes',
+        'schema' => [
+            // 'foo' => ['type' => 'string', 'required' => true, 'default' => null]
         ],
 
         'implementedFinders' => [
@@ -38,16 +42,18 @@ class AttributesBehavior extends Behavior
             'havingAttribute' => 'findHavingAttribute',
         ],
         'implementedMethods' => [
+            'configureAttribute' => 'configureAttribute',
             'createAttribute' => 'createAttribute',
             'saveAttribute' => 'saveAttribute',
-            'isAttribute' => 'isAttribute',
+            'isAttributeKey' => 'isAttributeKey',
             'getAttributesTable' => 'attributesTable',
+            'getAttributesTableAlias' => 'attributesTableAlias',
             'getAttributesSchema' => 'attributesSchema',
         ],
     ];
 
     /**
-     * @var array Attributes schema description
+     * @var \Cupcake\Model\AttributesSchema Attributes schema description
      */
     protected $_schema;
 
@@ -57,20 +63,46 @@ class AttributesBehavior extends Behavior
      */
     public function initialize(array $config): void
     {
-        $targetAlias = /*$this->_table->getAlias() .*/ 'Attributes';
-        $targetTable = TableRegistry::getTableLocator()->get($targetAlias, [
-            //'table' => $this->_config['attributesTableName']
-        ]);
-        $targetTable->setTable($this->_config['attributesTableName']);
+        $attrTableAlias = $this->attributesTableAlias();
+        /*
+        if (!$this->_config['tableClassName']) {
+            $attrTableConfig = [
+                'table' => $this->_config['tableName'],
+            ];
 
-        $this->_table->hasMany($targetAlias, [
-            //'className' => $this->_config['attributesTableClass'],
+            $attrTableClass = new class ($attrTableConfig) extends Table {
+                public function __construct(array $config = [])
+                {
+                    parent::__construct($config);
+                }
+            };
+
+            $this->_config['tableClassName'] = $attrTableClass;
+        }
+        */
+        $attrTableConfig = [
+            'className' => $this->_config['tableClassName'],
+            'table' => $this->_config['tableName'],
+            'connectionName' => $this->_config['connectionName']
+                ?? $this->_table->getConnection()->configName(),
+        ];
+        $attrTableInstance = TableRegistry::getTableLocator()->get($attrTableAlias, $attrTableConfig);
+
+        $this->_table->hasMany($attrTableAlias, [
+            //'className' => $this->_config['tableClassName'],
             'foreignKey' => 'foreign_key',
-            'conditions' => ['Attributes.model' => $this->_table->getRegistryAlias()],
+            'conditions' => [
+                $attrTableAlias . '.model' => $this->_table->getRegistryAlias(),
+            ],
             'dependent' => true,
-            'propertyName' => 'attributes',
-            'targetTable' => $targetTable,
+            'propertyName' => $this->_config['relationPropertyName'],
+            'targetTable' => $attrTableInstance,
         ]);
+    }
+
+    public function attributesTableAlias(): string
+    {
+        return $this->_config['relationName'] ?? $this->_table->getAlias() . 'Attributes';
     }
 
     /**
@@ -78,7 +110,7 @@ class AttributesBehavior extends Behavior
      */
     public function attributesTable()
     {
-        return $this->_table->getAssociation('Attributes');
+        return $this->_table->getAssociation($this->attributesTableAlias());
     }
 
     /**
@@ -88,46 +120,46 @@ class AttributesBehavior extends Behavior
     {
         if (!isset($this->_schema)) {
             // configured attributes for model
-            $attributes = (array)$this->getConfig('attributes');
+            $attributes = (array)$this->getConfig('schema');
+            $schema = new AttributesSchema($attributes);
 
             // model buildAttributes callback
             if (method_exists($this->_table, 'buildAttributes')) {
-                $attributes = call_user_func([$this->_table, 'buildAttributes'], $attributes);
+                $schema = call_user_func([$this->_table, 'buildAttributes'], $schema);
             }
-            //$attributes = $this->_table->attributesSchema ?? [];
-            //$attributes = $this->_table instanceof AttributesAwareTrait ? $this->_table->getAttributes() : [];
 
             // model event 'buildAttributes'
-            $event = $this->_table->dispatchEvent('Model.buildAttributes', compact('attributes'));
-            $attributes = $event->getData('attributes');
+            $event = $this->_table->dispatchEvent('Model.buildAttributes', ['schema' => $schema]);
+            $schema = $event->getData('schema') ?? $schema;
 
-            // normalize attributes
-            $attributes = array_map(function ($attr) {
-                $attr += ['default' => null, 'required' => null, 'input' => []];
-
-                return $attr;
-            }, $attributes);
-
-            $this->_schema = $attributes;
+            $this->_schema = $schema;
         }
 
         return $this->_schema;
+    }
+
+    public function configureAttribute(string $attrName, array $options = [])
+    {
+        $this->attributesSchema()
+            ->addAttribute($attrName, $options);
+
+        return $this;
     }
 
     /**
      * Find or create an attribute for an entity.
      *
      * @param \Cake\Datasource\EntityInterface $entity The entity object
-     * @param string $name Attribute name
+     * @param string $key Attribute key
      * @param mixed $value Attribute value
      * @return \Cake\Datasource\EntityInterface An Attribute entity
      */
-    public function createAttribute(EntityInterface $entity, $name, $value = null)
+    public function createAttribute(EntityInterface $entity, $key, $value = null)
     {
         return $this->attributesTable()->findOrCreate([
             'model' => $this->_table->getRegistryAlias(),
             'foreign_key' => $entity->id,
-            'name' => $name,
+            'key' => $key,
         ], function ($attr) use ($value) {
             $attr->value = $value;
 
@@ -151,7 +183,7 @@ class AttributesBehavior extends Behavior
      */
     public function findWithAttributes(Query $query, array $options = [])
     {
-        $query->contain(['Attributes']);
+        $query->contain([$this->attributesTableAlias()]);
         $query->formatResults([$this, 'formatAttributesResult']);
 
         return $query;
@@ -172,10 +204,13 @@ class AttributesBehavior extends Behavior
 
         $attrsQuery = $this->attributesTable()->find();
         foreach ($options as $k => $v) {
-            $cond = ['Attributes.name' => $k, 'Attributes.value' => $v];
+            $cond = [
+                $this->attributesTableAlias() . '.key' => $k,
+                $this->attributesTableAlias() . '.value' => $v,
+            ];
             if ($v === null) {
-                unset($cond['Attributes.value']);
-                $cond['Attributes.value IS'] = $v;
+                unset($cond[$this->attributesTableAlias() . '.value']);
+                $cond[$this->attributesTableAlias() . '.value IS'] = $v;
             }
             $attrsQuery->where($cond);
         }
@@ -197,7 +232,7 @@ class AttributesBehavior extends Behavior
      * Find rows by given attributes (key-value-pairs)
      *
      * @param \Cake\ORM\Query $query The Query object
-     * @param array $options List of attribute names
+     * @param array $options List of attribute keys
      * @return \Cake\ORM\Query
      * @TODO Support for multiple attributes
      */
@@ -210,7 +245,7 @@ class AttributesBehavior extends Behavior
         $attrsQuery = $this->attributesTable()
             ->find()
             ->where(function (QueryExpression $exp, Query $query) use ($options) {
-                return $exp->in('name', $options);
+                return $exp->in('key', $options);
             });
 
         $attrs = $attrsQuery
@@ -234,15 +269,15 @@ class AttributesBehavior extends Behavior
     public function formatAttributesResult(\Cake\Collection\CollectionInterface $results)
     {
         $results = $results->map(function (Entity $row) {
-            if ($row->get('attributes')) {
-                $col = collection($row->get('attributes'));
-                $attrs = $col->combine('name', 'value')->toArray();
+            if ($row->get($this->_config['relationPropertyName'])) {
+                $col = collection($row->get($this->_config['relationPropertyName']));
+                $attrs = $col->combine('key', 'value')->toArray();
 
                 foreach ($attrs as $key => $value) {
                     $row->{$key} = $row->{$key} ?: $value;
                 }
 
-                $row->{$this->_config['attributesPropertyName']} = $attrs;
+                $row->{$this->_config['propertyName']} = $attrs;
                 $row->clean();
             }
 
@@ -271,8 +306,8 @@ class AttributesBehavior extends Behavior
             $mapReduce->emitIntermediate($row, $key);
         };
 
-        $reducer = function ($bucket, $name, MapReduce $mapReduce) {
-            $mapReduce->emit($bucket[0], $name);
+        $reducer = function ($bucket, $key, MapReduce $mapReduce) {
+            $mapReduce->emit($bucket[0], $key);
         };
 
         $query->mapReduce($mapper, $reducer);
@@ -286,22 +321,70 @@ class AttributesBehavior extends Behavior
     /**
      * @param \Cake\Event\EventInterface $event Event object
      * @param \Cake\Validation\Validator $validator Validator object
-     * @param string $name Validator name
+     * @param string $key Validator key
      * @return void
      */
-    public function buildValidator(EventInterface $event, Validator $validator, string $name): void
+    public function buildValidator(EventInterface $event, Validator $validator, string $key): void
     {
-        foreach ($this->attributesSchema() as $field => $config) {
+        foreach ($this->attributesSchema()->getKeys() as $field) {
+            $config = $this->attributesSchema()->getAttribute($field);
+
             $required = $config['required'] ?? false;
             $validator->requirePresence($field, $required);
             $validator->allowEmptyString($field);
 
             $fieldValidator = $config['validator'] ?? null;
             if (is_callable($fieldValidator)) {
-                //$fieldValidator($validator, $name);
-                call_user_func($fieldValidator, $validator, $name);
+                //$fieldValidator($validator, $key);
+                call_user_func($fieldValidator, $validator, $key);
             }
         }
+    }
+
+    public function beforeMarshal(EventInterface $event, ArrayObject $data, ArrayObject $options)
+    {
+        if (isset($data[$this->_config['propertyName']])) {
+            foreach ($data[$this->_config['propertyName']] as $key => $val) {
+                if ($this->isAttributeKey($key)) {
+                    $data[$key] = $this->_marshal($key, $val);
+                }
+            }
+            unset($data[$this->_config['propertyName']]);
+        }
+    }
+
+    protected function _marshal(string $key, $val)
+    {
+        $attr = $this->attributesSchema()->getAttribute($key);
+        switch ($attr['type'] ?? null) {
+            case 'int':
+                $val = intval($val);
+                break;
+            case 'float':
+                $val = floatval($val);
+                break;
+            case 'string':
+            default:
+                $val = (string)$val;
+                break;
+        }
+
+        return $val;
+    }
+
+    public function beforeSave(EventInterface $event, EntityInterface $entity, ArrayObject $options): bool
+    {
+//        debug("beforeSave");
+//        if ($entity->isDirty($this->_config['propertyName'])) {
+//            debug("before save: attributes are dirty");
+//            foreach ($entity->get($this->_config['propertyName']) as $key => $val) {
+//                if ($this->isAttributeKey($key) && !$entity->has($key)) {
+//                    $entity->set($key, $val);
+//                }
+//            }
+//        }
+
+        return true;
     }
 
     /**
@@ -315,24 +398,24 @@ class AttributesBehavior extends Behavior
         //debug("afterSave");
         //debug($entity->attributes);
         //debug($entity->attributes_data);
-        if ($entity->isDirty($this->_config['attributesPropertyName'])) {
-            //debug("attributes are dirty");
-            foreach ($entity->get($this->_config['attributesPropertyName']) as $key => $val) {
-                if ($this->isAttribute($key)) {
-                    $attr = $this->createAttribute($entity, $key);
-                    $attr->value = $val;
-                    if (!$this->saveAttribute($attr)) {
-                        debug("failed to save attr $key");
-                        $attr->setError('attributes_data', 'Error saving attr ' . $key);
-
-                        return false;
-                    }
-                }
-            }
-        }
+//        if ($entity->isDirty($this->_config['propertyName'])) {
+//            //debug("attributes are dirty");
+//            foreach ($entity->get($this->_config['propertyName']) as $key => $val) {
+//                if ($this->isAttributeKey($key)) {
+//                    $attr = $this->createAttribute($entity, $key);
+//                    $attr->value = $val;
+//                    if (!$this->saveAttribute($attr)) {
+//                        debug("failed to save attr $key");
+//                        $attr->setError('attributes_data', 'Error saving attr ' . $key);
+//
+//                        return false;
+//                    }
+//                }
+//            }
+//        }
 
         foreach ($entity->getDirty() as $key) {
-            if ($this->isAttribute($key)) {
+            if ($this->isAttributeKey($key)) {
                 $attr = $this->createAttribute($entity, $key);
                 $attr->value = $entity->get($key);
                 if (!$this->saveAttribute($attr)) {
@@ -350,23 +433,19 @@ class AttributesBehavior extends Behavior
     /**
      * Check if a model's field is a registered attribute.
      *
-     * @param string $name Attribute name
+     * @param string $key Attribute key
      * @return bool
      */
-    public function isAttribute(string $name): bool
+    public function isAttributeKey(string $key): bool
     {
-        if ($name == $this->_config['attributesPropertyName']) {
+        if ($key == $this->_config['propertyName']) {
             return false;
         }
 
-        if ($this->_table->getSchema()->getColumn($name)) {
+        if ($this->_table->getSchema()->getColumn($key)) {
             return false;
         }
 
-        if (!isset($this->attributesSchema()[$name])) {
-            return false;
-        }
-
-        return true;
+        return $this->attributesSchema()->hasAttribute($key);
     }
 }

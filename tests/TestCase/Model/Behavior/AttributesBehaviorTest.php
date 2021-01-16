@@ -3,8 +3,11 @@ declare(strict_types=1);
 
 namespace Cupcake\Test\TestCase\Model\Behavior;
 
+use Cake\ORM\Association\HasMany;
+use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use Cupcake\Model\AttributesSchema;
 
 /**
  * Cupcake\Model\Behavior\AttributesBehavior Test Case
@@ -18,6 +21,7 @@ class AttributesBehaviorTest extends TestCase
 
     /**
      * @var \Cake\ORM\Table
+     * @method \Cake\ORM\Table createAttribute()
      */
     public $table;
 
@@ -33,15 +37,16 @@ class AttributesBehaviorTest extends TestCase
 
         $this->table = TableRegistry::getTableLocator()->get('Cupcake.Posts');
         $this->table->behaviors()->load('Cupcake.Attributes', [
-            'attributesPropertyName' => 'attributes_data',
-            'attributes' => [
+            'propertyName' => 'attributes_data',
+            'schema' => [
                 'test_string' => ['default' => null],
-                'test_required' => ['required' => true],
+                'test_required' => ['required' => true, 'type' => 'int'],
                 'test_attribute' => [],
                 'my_attribute' => [],
             ],
         ]);
     }
+
     /**
      * tearDown method
      *
@@ -61,7 +66,7 @@ class AttributesBehaviorTest extends TestCase
      */
     public function testInitialize(): void
     {
-        $this->assertTrue($this->table->hasAssociation('Attributes'));
+        $this->assertTrue($this->table->hasAssociation('PostsAttributes'));
     }
 
     /**
@@ -69,8 +74,7 @@ class AttributesBehaviorTest extends TestCase
      */
     public function testGetAttributesTable(): void
     {
-        $this->markTestIncomplete();
-        //$this->assertInstanceOf(\Cupcake\Model\Table\AttributesTable::class, $this->table->getAttributesTable());
+        $this->assertInstanceOf(HasMany::class, $this->table->getAttributesTable());
     }
 
     /**
@@ -79,21 +83,22 @@ class AttributesBehaviorTest extends TestCase
     public function testGetAttributesSchema(): void
     {
         $schema = $this->table->getAttributesSchema();
+        $this->assertInstanceOf(AttributesSchema::class, $schema);
 
         $this->assertArrayHasKey('test_string', $schema);
         $this->assertArrayHasKey('test_required', $schema);
         $this->assertArrayHasKey('test_attribute', $schema);
         $this->assertArrayHasKey('my_attribute', $schema);
-        $this->assertSame(['default' => null], $schema['test_string']);
-        $this->assertSame(['required' => true], $schema['test_required']);
-        $this->assertSame([], $schema['test_attribute']);
-        $this->assertSame([], $schema['my_attribute']);
+        $this->assertEquals(['type' => 'string', 'default' => null, 'required' => null, 'input' => []], $schema['test_string']);
+        $this->assertEquals(['type' => 'int', 'default' => null, 'required' => true, 'input' => []], $schema['test_required']);
+        $this->assertEquals(['type' => 'string', 'default' => null, 'required' => null, 'input' => []], $schema['test_attribute']);
+        $this->assertEquals(['type' => 'string', 'default' => null, 'required' => null, 'input' => []], $schema['my_attribute']);
     }
 
     public function testCreateAttribute()
     {
         $entity = $this->table->get(1);
-        $attr = $this->table->createAttribute($entity, "test_string", "Hello");
+        $attr = $this->table->createAttribute($entity, 'test_string', 'Hello');
         $this->assertNotFalse($this->table->saveAttribute($attr));
     }
 
@@ -177,8 +182,6 @@ class AttributesBehaviorTest extends TestCase
      */
     public function testCrudWithAttributesData(): void
     {
-        $this->markTestIncomplete();
-
         $attributes = [
             'test_string' => 'bar',
             'test_required' => 1,
@@ -206,8 +209,8 @@ class AttributesBehaviorTest extends TestCase
             ->first();
         $this->assertArrayHasKey('test_string', $post->get('attributes_data'));
         $this->assertArrayHasKey('test_required', $post->get('attributes_data'));
-        $this->assertSame('bar', $post->get('attributes_data')['test_string']);
-        $this->assertSame(1, $post->get('attributes_data')['test_required']);
+        $this->assertEquals('bar', $post->get('attributes_data')['test_string']);
+        $this->assertEquals(1, $post->get('attributes_data')['test_required']);
 
         // update
         $attributes2 = [
@@ -215,7 +218,8 @@ class AttributesBehaviorTest extends TestCase
             'test_required' => 2,
             'test_attribute' => 'test',
         ];
-        $post->set('attributes_data', $attributes2);
+        //$post->set('attributes_data', $attributes2);
+        $post = $this->table->patchEntity($post, ['attributes_data' => $attributes2]);
         $post = $this->table->save($post);
 
         // read again
@@ -226,9 +230,9 @@ class AttributesBehaviorTest extends TestCase
         $this->assertArrayHasKey('test_string', $post->get('attributes_data'));
         $this->assertArrayHasKey('test_required', $post->get('attributes_data'));
         $this->assertArrayHasKey('test_attribute', $post->get('attributes_data'));
-        $this->assertSame('baz', $post->get('attributes_data')['test_string']);
-        $this->assertSame(2, $post->get('attributes_data')['test_required']);
-        $this->assertSame('test', $post->get('attributes_data')['test_attribute']);
+        $this->assertEquals('baz', $post->get('attributes_data')['test_string']);
+        $this->assertEquals(2, $post->get('attributes_data')['test_required']);
+        $this->assertEquals('test', $post->get('attributes_data')['test_attribute']);
 
         // delete
         $this->table->delete($post);
