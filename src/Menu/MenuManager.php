@@ -6,12 +6,12 @@ namespace Cupcake\Menu;
 use Cake\Core\App;
 use Cake\Core\StaticConfigTrait;
 
-class Menu
+class MenuManager
 {
     use StaticConfigTrait;
 
     /**
-     * @param string $key Menu name.
+     * @param string|null $key Menu name.
      * @return \Cupcake\Menu\MenuItemCollection
      */
     public static function get(?string $key): MenuItemCollection
@@ -25,32 +25,38 @@ class Menu
             throw new \RuntimeException("Menu '${key}' not found");
         }
 
-        return static::resolve($config);
+        return static::resolve($key, $config);
     }
 
     /**
      * @param array $config The menu config.
      * @return \Cupcake\Menu\MenuItemCollection
      */
-    protected static function resolve(array $config): MenuItemCollection
+    protected static function resolve(string $key, array $config): MenuItemCollection
     {
         $class = $config['className'] ?? null;
+        if (!$class) {
+            throw new \RuntimeException('No menu provider class defined for menu ' . $key);
+        }
+        unset($config['className']);
+
         if ($class instanceof \Closure) {
-            $class = $class();
+            $class = $class($config);
         }
         if (is_array($class)) {
             return new MenuItemCollection($class);
-        } elseif (is_string($class)) {
+        }
+        if (is_string($class)) {
             $className = App::className($class, 'Menu', 'Menu');
-            $class = new $className();
+            $class = new $className($config);
+        }
+        if ($class instanceof MenuProviderInterface) {
+            $class = $class->getMenu($key);
+        }
+        if (!($class instanceof MenuItemCollection)) {
+            throw new \RuntimeException('Invalid menu provider');
         }
 
-        if ($class instanceof MenuItemCollection) {
-            return $class;
-        } elseif ($class instanceof MenuProviderInterface) {
-            return $class->getCollection();
-        }
-
-        throw new \RuntimeException("Invalid menu provider");
+        return $class;
     }
 }

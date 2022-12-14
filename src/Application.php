@@ -79,6 +79,11 @@ class Application extends BaseApplication implements EventDispatcherInterface
          */
 
         /*
+         * Include app's bootstrap file
+         */
+        parent::bootstrap();
+
+        /*
          * Load path definitions
          */
         if (file_exists($this->configDir . '/paths.php')) {
@@ -136,14 +141,9 @@ class Application extends BaseApplication implements EventDispatcherInterface
             try {
                 $this->addPlugin('DebugKit');
             } catch (\Exception $ex) {
-                //debug("DebugKit: " . $ex->getMessage());
+                debug("DebugKit: " . $ex->getMessage());
             }
         }
-
-        /*
-         * Include app's bootstrap file
-         */
-        parent::bootstrap();
     }
 
     /**
@@ -160,7 +160,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
             try {
                 $this->loadPluginConfig($plugin->getName());
             } catch (\Exception $ex) {
-                debug($ex->getMessage());
+                //debug($ex->getMessage());
             }
             $plugin->bootstrap($this);
 

@@ -53,16 +53,6 @@ class MenuItemCollection implements Iterator, Countable
      */
     public function addItem($title, $url = null, $attr = [], $children = [])
     {
-        /*
-        if (is_array($title)) {
-            foreach ($title as $_item) {
-                $this->addItem($_item);
-            }
-
-            return $this;
-        }
-        */
-
         $item = $title instanceof MenuItem ? $title : new MenuItem($title, $url, $attr, $children);
         $hash = spl_object_hash($item);
         $this->_items[$hash] = $item;

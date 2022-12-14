@@ -34,6 +34,7 @@ class Plugin extends BasePlugin
          */
         if (\Cake\Core\Plugin::isLoaded('DebugKit')) {
             $panels = Configure::read('DebugKit.panels', []);
+            //print_r($panels);
             $panels['Cupcake.System'] = true;
             Configure::write('DebugKit.panels', $panels);
         }

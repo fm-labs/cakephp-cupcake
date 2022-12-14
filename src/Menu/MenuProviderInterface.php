@@ -8,5 +8,5 @@ interface MenuProviderInterface
     /**
      * @return \Cupcake\Menu\MenuItemCollection
      */
-    public function getCollection(): MenuItemCollection;
+    public function getMenu(string $key): MenuItemCollection;
 }

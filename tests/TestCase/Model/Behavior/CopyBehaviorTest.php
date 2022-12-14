@@ -61,10 +61,13 @@ class CopyBehaviorTest extends TestCase
      */
     public function testConfig(): void
     {
-        $this->markTestIncomplete("Uses deprecated assertation method");
-
+        $expected = [
+            'fields' => $this->copyConfig['fields'],
+            'validator' => 'default',
+        ];
         $config = $this->posts->getBehavior('Copy')->getConfig();
-        $this->assertArraySubset($this->copyConfig, $config);
+        $this->assertEquals($expected['fields'], $config['fields']);
+        $this->assertEquals($expected['validator'], $config['validator']);
     }
 
     /**

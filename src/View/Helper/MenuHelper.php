@@ -101,7 +101,7 @@ class MenuHelper extends Helper
     {
         $options['data-level'] = $this->_level;
 
-        $itemsHtml = "";
+        $itemsHtml = '';
         foreach ($menu as $item) {
             try {
                 $itemsHtml .= $this->_renderItem($item, $itemOptions);
@@ -142,7 +142,7 @@ class MenuHelper extends Helper
         }
 
         // children
-        $submenu = "";
+        $submenu = '';
         if ($hasChildren) {
             $this->_level++;
             $submenu = $this->_renderMenu($item['children']);

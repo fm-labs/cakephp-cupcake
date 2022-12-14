@@ -18,6 +18,8 @@ use Cake\Utility\Hash;
  *  'subject' => 'Hello!'
  *  '_localized' => ['de' => ['subject' => 'Hallo', 'layout' => 'default_de', ... ]]
  * ]
+ *
+ * @deprecated The Email class is deprecated. Use \Cake\Mailer\Message class instead
  */
 class LocalizedEmail extends Email
 {
@@ -63,7 +65,7 @@ class LocalizedEmail extends Email
     public function locale($locale = null)
     {
         deprecationWarning(
-            sprintf("The method `LocalizedEmail::%s` is deprecated. Use setLocale()/getLocale() instead", __FUNCTION__)
+            sprintf('The method `LocalizedEmail::%s` is deprecated. Use setLocale()/getLocale() instead', __FUNCTION__)
         );
 
         if ($locale === null) {
@@ -98,7 +100,7 @@ class LocalizedEmail extends Email
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function profile($config = null)
     {

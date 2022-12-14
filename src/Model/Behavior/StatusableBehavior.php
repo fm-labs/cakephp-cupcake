@@ -4,11 +4,11 @@ declare(strict_types=1);
 namespace Cupcake\Model\Behavior;
 
 use ArrayObject;
-use Cupcake\Lib\Status;
 use Cake\Collection\Iterator\MapReduce;
 use Cake\Datasource\EntityInterface;
 use Cake\ORM\Behavior;
 use Cake\ORM\Query;
+use Cupcake\Lib\Status;
 
 /**
  * Statusable behavior
@@ -22,6 +22,10 @@ class StatusableBehavior extends Behavior
      */
     protected $_defaultConfig = [
         'fields' => [],
+        'implementedMethods' => [
+            'getStatusCodes' => 'getStatusCodes',
+            'getStatusList' => 'getStatusList',
+        ]
     ];
 
     /**
@@ -145,5 +149,23 @@ class StatusableBehavior extends Behavior
                 $entity->set($fieldName, $status->getStatus());
             }
         }
+    }
+
+    public function getStatusCodes(string $field) {
+        $fieldStati = $this->_fieldConfig[$field] ?? null;
+        if ($fieldStati === null) {
+            return [];
+        }
+
+        return array_keys($fieldStati);
+    }
+
+    public function getStatusList(string $field) {
+        $fieldStati = $this->_fieldConfig[$field] ?? null;
+
+        return array_map(function($status, $idx) {
+            /** @var \Cupcake\Lib\Status $status */
+            return $status->getLabel();
+        }, $fieldStati);
     }
 }

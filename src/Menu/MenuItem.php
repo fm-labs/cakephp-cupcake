@@ -55,7 +55,7 @@ class MenuItem implements \ArrayAccess
             $title = $tmp['title'] ?? null;
             $url = $tmp['url'] ?? null;
             $children = $tmp['children'] ?? [];
-            $attr = $item['attr'] ?? [];
+            $attr = $tmp['attr'] ?? [];
             $attr += array_diff_key($tmp, $defaults);
         }
 

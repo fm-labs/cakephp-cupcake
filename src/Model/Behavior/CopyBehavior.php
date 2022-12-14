@@ -19,7 +19,7 @@ class CopyBehavior extends Behavior
     protected $_defaultConfig = [
         'fields' => [],
         'validator' => 'default',
-        'implementedMetods' => [
+        'implementedMethods' => [
             'copyEntity' => 'copyEntity',
             'copy' => 'copy',
         ],
