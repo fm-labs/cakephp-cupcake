@@ -9,7 +9,33 @@ abstract class UiElement implements UiElementInterface
 {
     use UiElementTrait;
 
+    /**
+     * Plugin name.
+     *
+     * @var null|string
+     */
     public $plugin = null;
+
+    /**
+     * View instance reference.
+     *
+     * @var \Cake\View\View
+     */
+    protected $_View;
+
+
+    protected $_Ui;
+
+    public function __construct(\Cupcake\Ui\Ui $ui)
+    {
+        $this->_Ui = $ui;
+        $this->_View = $this->_Ui->getView();
+        $this->initialize();
+    }
+
+    public function initialize(): void {
+        // override in subclasses
+    }
 
     /**
      * Get the data for the panel.
@@ -25,13 +51,12 @@ abstract class UiElement implements UiElementInterface
      * @inheritDoc
      * @return string
      */
-    public function render(\Cake\View\View $view): string
+    public function render(): string
     {
         $html = "";
-        if ($view->elementExists($this->elementName())) {
-            $html .= $view->element($this->elementName(), $this->data());
+        if ($this->_View->elementExists($this->elementName())) {
+            $html .= $this->_View->element($this->elementName(), $this->data());
         }
-
         return $html;
     }
 }

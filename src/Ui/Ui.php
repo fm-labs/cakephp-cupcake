@@ -34,6 +34,15 @@ class Ui implements EventListenerInterface
     }
 
     /**
+     * Get access to View object.
+     * @return void
+     */
+    public function getView(): \Cake\View\View
+    {
+        return $this->view;
+    }
+
+    /**
      * @param string $block View block name
      * @param string|\Cupcake\Ui\UiElementInterface $uiElement View element
      * @return $this
@@ -42,7 +51,7 @@ class Ui implements EventListenerInterface
     public function add(string $block, $uiElement)
     {
         if (is_string($uiElement) && class_exists($uiElement)) {
-            $uiElement = new $uiElement();
+            $uiElement = new $uiElement($this);
         }
 
         if (!($uiElement instanceof UiElementInterface)) {
