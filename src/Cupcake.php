@@ -20,11 +20,6 @@ use DebugKit\Cache\Engine\DebugEngine;
 class Cupcake
 {
     /**
-     * @deprecated
-     */
-    public const VERSION = '0.4.0';
-
-    /**
      * @var string Default mailer class
      */
     public static $mailerClass = 'Cake\Mailer\Mailer';
@@ -97,17 +92,6 @@ class Cupcake
     public static function pluginInfo(string $pluginName): array
     {
         return self::getInstance()->app()->getPluginInfo($pluginName);
-    }
-
-    /**
-     * Get Cupcake Cake version
-     *
-     * @return string
-     */
-    public static function version(): string
-    {
-        //deprecationWarning("Cupcake::version() is deprecated");
-        return self::VERSION;
     }
 
     /**
