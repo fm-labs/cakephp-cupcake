@@ -157,12 +157,12 @@ class Application extends BaseApplication implements EventDispatcherInterface
         //parent::pluginBootstrap();
         foreach ($this->plugins->with('bootstrap') as $plugin) {
             //\Cupcake\Cupcake::doAction('plugin_bootstrap', compact('plugin'));
+            $plugin->bootstrap($this);
             try {
                 $this->loadPluginConfig($plugin->getName());
             } catch (\Exception $ex) {
                 //debug($ex->getMessage());
             }
-            $plugin->bootstrap($this);
 
             //\Cupcake\Cupcake::doAction('plugin_ready', compact('plugin'));
         }
@@ -174,26 +174,23 @@ class Application extends BaseApplication implements EventDispatcherInterface
      * Autoload plugin configs from standard directories
      *
      * @param string $plugin Plugin name
-     * @return bool
+     * @throws \Exception
      */
-    public function loadPluginConfig(string $plugin): bool
+    public function loadPluginConfig(string $plugin): void
     {
-        $found = false;
         $file = Inflector::underscore($plugin);
-
         foreach (['plugin', 'local/plugin'] as $dir) {
             $filePath = $this->configDir . DS . $dir . DS . $file . '.php';
             if (file_exists($filePath)) {
-                Configure::load($dir . '/' . $file);
-                $found = true;
+                if (!Configure::load($dir . '/' . $file, 'default', true)) {
+                    throw new \RuntimeException("Failed to load config file " . $file);
+                }
             }
         }
 
         if (Configure::isConfigured('settings')) {
             Configure::load($plugin, 'settings');
         }
-
-        return $found;
     }
 
     /**
