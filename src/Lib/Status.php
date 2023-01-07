@@ -71,14 +71,14 @@ class Status implements \JsonSerializable
         return (string) $this->getStatus();
     }
 
-    /**
-     * @return string
-     * @deprecated Use a helper instead
-     */
-    public function toHtml()
-    {
-        return sprintf('<span class="label label-%s">%s</span>', $this->_class, $this->_label);
-    }
+//    /**
+//     * @return string
+//     * @deprecated Use a helper instead
+//     */
+//    public function toHtml()
+//    {
+//        return sprintf('<span class="label label-%s">%s</span>', $this->_class, $this->_label);
+//    }
 
     public function toArray()
     {

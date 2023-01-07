@@ -50,21 +50,5 @@ class Plugin extends BasePlugin
         $templatePaths = Configure::read('App.paths.templates', []);
         $templatePaths[] = \Cake\Core\Plugin::templatePath('Cupcake');
         Configure::write('App.paths.templates', $templatePaths);
-
-
-        \Sugar\View\Helper\FormatterHelper::register('status', function ($val, $extra, $params, $view) {
-            if ($val instanceof \Cupcake\Lib\Status) {
-                if (\Cake\Core\Plugin::isLoaded('Bootstrap')) {
-                    $view->loadHelper('Bootstrap.Badge');
-
-                    return $view->Badge->create($val->getLabel(), [
-                        'class' => $val->getClass()
-                    ]);
-                }
-                return $val->getLabel();
-            }
-
-            return sprintf('<span class="status">STATUS' . $val . '</span>', $val);
-        });
     }
 }
