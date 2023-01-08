@@ -125,7 +125,6 @@ class Application extends BaseApplication implements EventDispatcherInterface
          * Debug mode
          */
         $this->_debugMode(Configure::read('debug'));
-        //var_dump(Configure::read('Plugin'));
 
         /*
          * Common bootstrapping tasks
@@ -181,6 +180,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
      *
      * @param string $plugin Plugin name
      * @throws \Exception
+     * @deprecated Use LocalPhpConfig instead.
      */
     public function loadPluginConfig(string $plugin): void
     {
@@ -216,7 +216,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
      * @param array $config Plugin config
      * @return $this
      */
-    public function addPlugin($name, array $config = [])
+    public function addPlugin($name, array $config = []): Application
     {
         if (is_array($name)) {
             foreach ($name as $_name => $_config) {
@@ -245,7 +245,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
      * @param array $config Plugin config
      * @return $this
      */
-    public function addOptionalPlugin($name, array $config = [])
+    public function addOptionalPlugin($name, array $config = []): Application
     {
         try {
             $this->addPlugin($name, $config);
@@ -302,7 +302,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
      * @param \Cake\Http\MiddlewareQueue $middlewareQueue The middleware queue to setup.
      * @return \Cake\Http\MiddlewareQueue The updated middleware queue.
      */
-    public function middleware($middlewareQueue): \Cake\Http\MiddlewareQueue
+    public function middleware(\Cake\Http\MiddlewareQueue $middlewareQueue): \Cake\Http\MiddlewareQueue
     {
         $middlewareQueue
             // Catch any exceptions in the lower layers,
@@ -357,8 +357,9 @@ class Application extends BaseApplication implements EventDispatcherInterface
      * Auto-load local configurations.
      *
      * @return void
+     * @deprecated
      */
-    protected function _loadConfigs(): void
+    protected function _loadAllConfigs(): void
     {
         // load config files from standard config directories
         foreach (['plugin', 'local', 'local/plugin'] as $dir) {
@@ -515,7 +516,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
      * @param bool $enabled Debug mode flag
      * @return void
      */
-    protected function _debugmode($enabled): void
+    protected function _debugmode(bool $enabled): void
     {
         if ($enabled) {
             Configure::write('Cache._cake_model_.duration', '+5 minutes');
