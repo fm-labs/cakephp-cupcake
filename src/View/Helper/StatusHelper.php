@@ -25,8 +25,8 @@ class StatusHelper extends Helper
 
     public function initialize(array $config): void
     {
-        if (\Cake\Core\Plugin::isLoaded('Sugar')) {
-            \Sugar\View\Helper\FormatterHelper::register('status', function ($val, $extra, $params, $view) {
+        if (\Cake\Core\Plugin::isLoaded('Admin')) {
+            \Admin\View\Helper\FormatterHelper::register('status', function ($val, $extra, $params, $view) {
                 return $this->label($val);
             });
         }
