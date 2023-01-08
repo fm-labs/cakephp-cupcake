@@ -74,7 +74,7 @@ class StatusHelper extends Helper
      * @param array $map Status map
      * @return null|string
      */
-    public function boolean(bool $status, $options = [], $map = [])
+    public function boolean($status, $options = [], $map = [])
     {
         $options += ['label' => null, 'class' => null];
         $label = $class = null;
@@ -85,6 +85,10 @@ class StatusHelper extends Helper
                 0 => [__('No'), 'text-danger'],
                 1 => [__('Yes'), 'text-success'],
             ];
+        }
+
+        if (!is_bool($status)) {
+            $status = !!$status;
         }
 
         if (!$class) {
