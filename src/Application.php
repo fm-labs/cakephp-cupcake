@@ -24,6 +24,7 @@ use Cake\Routing\Middleware\RoutingMiddleware;
 use Cake\Routing\Router;
 use Cake\Utility\Inflector;
 use Cake\Utility\Security;
+use Cupcake\Configure\Engine\LocalPhpConfig;
 
 /**
  * Application setup class.
@@ -47,7 +48,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
     {
         parent::__construct($configDir);
 
-        $this->_configEngine = new PhpConfig($this->configDir . DS);
+        $this->_configEngine = new LocalPhpConfig($this->configDir);
     }
 
     /**
@@ -108,6 +109,9 @@ class Application extends BaseApplication implements EventDispatcherInterface
         if (file_exists(CONFIG . 'app_local.php')) {
             Configure::load('app_local', 'default');
         }
+        if (file_exists(CONFIG . 'local' . DS . 'app.php')) {
+            Configure::load('local/app', 'default');
+        }
         if (file_exists(CONFIG . 'plugins.php')) {
             Configure::load('plugins', 'default');
         }
@@ -115,7 +119,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
         /*
          * Load configuration files
          */
-        $this->_loadConfigs();
+        //$this->_loadConfigs();
 
         /*
          * Debug mode
@@ -157,11 +161,13 @@ class Application extends BaseApplication implements EventDispatcherInterface
         //parent::pluginBootstrap();
         foreach ($this->plugins->with('bootstrap') as $plugin) {
             //\Cupcake\Cupcake::doAction('plugin_bootstrap', compact('plugin'));
-            $plugin->bootstrap($this);
             try {
-                $this->loadPluginConfig($plugin->getName());
+                //debug("Loading config " . $plugin->getName() . '.' . Inflector::underscore($plugin->getName()));
+                //Configure::load($plugin->getName() . '.' . Inflector::underscore($plugin->getName()));
+                //$this->loadPluginConfig($plugin->getName());
+                $plugin->bootstrap($this);
             } catch (\Exception $ex) {
-                //debug($ex->getMessage());
+                debug($ex->getMessage());
             }
 
             //\Cupcake\Cupcake::doAction('plugin_ready', compact('plugin'));
@@ -179,6 +185,15 @@ class Application extends BaseApplication implements EventDispatcherInterface
     public function loadPluginConfig(string $plugin): void
     {
         $file = Inflector::underscore($plugin);
+
+        // first try to load the default plugin configuration from the plugin
+        $filePath = Plugin::configPath($plugin) . DS . $file . '.php';
+        if (file_exists($filePath)) {
+            if (!Configure::load($plugin . '.' . $file, 'default', true)) {
+                throw new \RuntimeException("Failed to load config file " . $file);
+            }
+        }
+
         foreach (['plugin', 'local/plugin'] as $dir) {
             $filePath = $this->configDir . DS . $dir . DS . $file . '.php';
             if (file_exists($filePath)) {
