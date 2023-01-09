@@ -5,7 +5,6 @@ namespace Cupcake;
 
 use Cake\Cache\Cache;
 use Cake\Core\Configure;
-use Cake\Core\Configure\Engine\PhpConfig;
 use Cake\Core\Exception\MissingPluginException;
 use Cake\Core\Plugin;
 use Cake\Core\PluginCollection;
@@ -21,6 +20,7 @@ use Cake\Mailer\Mailer;
 use Cake\Mailer\TransportFactory;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
+use Cake\Routing\RouteBuilder;
 use Cake\Routing\Router;
 use Cake\Utility\Inflector;
 use Cake\Utility\Security;
@@ -61,7 +61,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
      */
     public function bootstrap(): void
     {
-        /*
+        /**
          * NOW: ENTERING RUNLEVEL 1 (BOOTSTRAPPING)
          * - setup paths
          * - bootstrap cake core
@@ -79,20 +79,28 @@ class Application extends BaseApplication implements EventDispatcherInterface
          *
          */
 
-        /*
+        /**
          * Include app's bootstrap file
          */
-        parent::bootstrap();
+        if (file_exists($this->configDir . 'bootstrap.php')) {
+            //require_once $this->configDir . 'bootstrap.php';
+            parent::bootstrap();
+        }
 
-        /*
+        /**
+         * Check system requirements
+         */
+        $this->_checkRequirements();
+
+        /**
          * Load path definitions
          */
-        if (file_exists($this->configDir . '/paths.php')) {
-            require_once $this->configDir . '/paths.php';
+        if (file_exists($this->configDir . 'paths.php')) {
+            require_once $this->configDir . 'paths.php';
         }
         $this->_paths();
 
-        /*
+        /**
          * Bootstrap cake core
          */
         if (!defined('CORE_PATH')) {
@@ -100,9 +108,8 @@ class Application extends BaseApplication implements EventDispatcherInterface
         }
         require_once CORE_PATH . 'config' . DS . 'bootstrap.php';
 
-        /*
+        /**
          * Setup default config engine and load core configs
-         * @TODO Cache config. But the internal cache engines are not initialized yet!
          */
         Configure::config('default', $this->_configEngine);
         Configure::load('app', 'default', false);
@@ -112,28 +119,28 @@ class Application extends BaseApplication implements EventDispatcherInterface
         if (file_exists(CONFIG . 'local' . DS . 'app.php')) {
             Configure::load('local/app', 'default');
         }
-        if (file_exists(CONFIG . 'plugins.php')) {
-            Configure::load('plugins', 'default');
-        }
 
-        /*
+        /**
          * Load configuration files
          */
         //$this->_loadConfigs();
 
-        /*
+        /**
          * Debug mode
          */
         $this->_debugMode(Configure::read('debug'));
 
-        /*
+        /**
          * Common bootstrapping tasks
          */
         $this->_bootstrap();
 
-        /*
+        /**
          * Load core plugins and user plugins
          */
+        if (file_exists(CONFIG . 'plugins.php')) {
+            Configure::load('plugins', 'default');
+        }
         $this->addPlugin('Cupcake');
         $this->addPlugin((array)Configure::read('Plugin')/*, ['bootstrap' => true, 'routes' => true]*/);
 
@@ -144,9 +151,21 @@ class Application extends BaseApplication implements EventDispatcherInterface
             try {
                 $this->addPlugin('DebugKit');
             } catch (\Exception $ex) {
-                debug("DebugKit: " . $ex->getMessage());
+                debug('DebugKit: ' . $ex->getMessage());
             }
         }
+
+        /*
+         * Init Cupcake
+         */
+        Cupcake::init($this);
+
+        /*
+         * Add cupcake templates path as fallback template search path
+         */
+        $templatePaths = Configure::read('App.paths.templates', []);
+        $templatePaths[] = \Cake\Core\Plugin::templatePath('Cupcake');
+        Configure::write('App.paths.templates', $templatePaths);
     }
 
     /**
@@ -176,6 +195,22 @@ class Application extends BaseApplication implements EventDispatcherInterface
     }
 
     /**
+     * Only try to load routes from config file, if the file is present.
+     * The CakePHP Application enforces the presence of a routes.php file.
+     * The Cupcake Application ignores the absence gracefully.
+     *
+     * @param RouteBuilder $routes
+     * @return void
+     */
+    public function routes(RouteBuilder $routes): void
+    {
+        $routesFilePath = $this->configDir . 'routes.php';
+        if (is_file($routesFilePath)) {
+            parent::routes($routes);
+        }
+    }
+
+    /**
      * Autoload plugin configs from standard directories
      *
      * @param string $plugin Plugin name
@@ -184,13 +219,15 @@ class Application extends BaseApplication implements EventDispatcherInterface
      */
     public function loadPluginConfig(string $plugin): void
     {
+        deprecationWarning("Application::loadPluginConfig() is deprecated. Do not use.");
+
         $file = Inflector::underscore($plugin);
 
         // first try to load the default plugin configuration from the plugin
         $filePath = Plugin::configPath($plugin) . DS . $file . '.php';
         if (file_exists($filePath)) {
             if (!Configure::load($plugin . '.' . $file, 'default', true)) {
-                throw new \RuntimeException("Failed to load config file " . $file);
+                throw new \RuntimeException('Failed to load config file ' . $file);
             }
         }
 
@@ -198,7 +235,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
             $filePath = $this->configDir . DS . $dir . DS . $file . '.php';
             if (file_exists($filePath)) {
                 if (!Configure::load($dir . '/' . $file, 'default', true)) {
-                    throw new \RuntimeException("Failed to load config file " . $file);
+                    throw new \RuntimeException('Failed to load config file ' . $file);
                 }
             }
         }
@@ -249,7 +286,8 @@ class Application extends BaseApplication implements EventDispatcherInterface
     {
         try {
             $this->addPlugin($name, $config);
-        } catch (\Exception $ex) {
+        } catch (MissingPluginException $ex) {
+            // ignore missing plugin
         }
 
         return $this;
@@ -293,6 +331,8 @@ class Application extends BaseApplication implements EventDispatcherInterface
      */
     public function plugins(): PluginCollection
     {
+        deprecationWarning('Application::plugins() is deprecatred. Use getPlugins() instead.');
+
         return $this->getPlugins();
     }
 
@@ -519,15 +559,49 @@ class Application extends BaseApplication implements EventDispatcherInterface
     protected function _debugmode(bool $enabled): void
     {
         if ($enabled) {
+            error_reporting(E_ALL);
+            ini_set('display_errors', 'on');
+
             Configure::write('Cache._cake_model_.duration', '+5 minutes');
             Configure::write('Cache._cake_core_.duration', '+5 minutes');
             Configure::write('Cache._cake_routes_.duration', '+60 seconds');
-        //} else {
+        } else {
+            error_reporting(0);
+            ini_set('display_errors', 'off');
             // When debug = false the metadata cache should last
             // for a very very long time, as we don't want
             // to refresh the cache while users are doing requests.
             //Configure::write('Cache._cake_model_.duration', '+1 years');
             //Configure::write('Cache._cake_core_.duration', '+1 years');
+        }
+    }
+
+    /**
+     * Check system requirements.
+     *
+     * @return void
+     */
+    protected function _checkRequirements(): void
+    {
+        $reqFilePath = $this->configDir . 'requirements.php';
+        if (is_file($reqFilePath)) {
+            require_once $reqFilePath;
+        }
+
+        if (version_compare(PHP_VERSION, '7.2.0') < 0) {
+            trigger_error('Your PHP version must be equal or higher than 7.2.0 to use CakePHP.', E_USER_ERROR);
+        }
+
+        if (!extension_loaded('intl')) {
+            trigger_error('You must enable the intl extension to use CakePHP.', E_USER_ERROR);
+        }
+
+        if (version_compare(INTL_ICU_VERSION, '50.1', '<')) {
+            trigger_error('ICU >= 50.1 is needed to use CakePHP. Please update the `libicu` package of your system.' . PHP_EOL, E_USER_ERROR);
+        }
+
+        if (!extension_loaded('mbstring')) {
+            trigger_error('You must enable the mbstring extension to use CakePHP.', E_USER_ERROR);
         }
     }
 }

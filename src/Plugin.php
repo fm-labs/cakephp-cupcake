@@ -38,17 +38,5 @@ class Plugin extends BasePlugin
             $panels['Cupcake.System'] = true;
             Configure::write('DebugKit.panels', $panels);
         }
-
-        /*
-         * Init Cupcake
-         */
-        Cupcake::init($app);
-
-        /*
-         * Add cupcake templates path as fallback template search path
-         */
-        $templatePaths = Configure::read('App.paths.templates', []);
-        $templatePaths[] = \Cake\Core\Plugin::templatePath('Cupcake');
-        Configure::write('App.paths.templates', $templatePaths);
     }
 }
