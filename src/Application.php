@@ -299,28 +299,11 @@ class Application extends BaseApplication implements EventDispatcherInterface
      * @param string $pluginName Plugin name
      * @return array
      */
-    public function getPluginInfo($pluginName)
+    public function getPluginInfo(string $pluginName): array
     {
-        $info = [];
-        $info['name'] = $pluginName;
-        $info['loaded'] = Plugin::isLoaded($pluginName);
-        $info['path'] = Plugin::path($pluginName);
-        $info['config'] = Plugin::configPath($pluginName);
-        $info['classPath'] = Plugin::classPath($pluginName);
-        //$info['registered'] = in_array($pluginName, Plugin::loaded());
-        //$info['registered'] = true;
+        deprecationWarning("Application::getPluginInfo() is deprecated. Use PluginManager::getPluginInfo() instead.");
 
-        $plugin = $this->getPlugins()->has($pluginName) ? $this->getPlugins()->get($pluginName) : null;
-
-        $info['handler_loaded'] = $plugin ? true : false;
-        $info['handler_class'] = $plugin ? get_class($plugin) : null;
-        $info['handler_bootstrap'] = $plugin ? $plugin->isEnabled('bootstrap') : null;
-        $info['handler_routes'] = $plugin ? $plugin->isEnabled('routes') : null;
-        //$info['handler_enabled'] = true;
-        //$info['configuration_url'] = $plugin && $plugin instanceof BasePlugin ? $plugin->getConfigurationUrl() : null;
-        $info['configuration_url'] = null;
-
-        return $info;
+        return \Cupcake\PluginManager::getPluginInfo($pluginName);
     }
 
     /**
@@ -367,6 +350,8 @@ class Application extends BaseApplication implements EventDispatcherInterface
 
     /**
      * Setup path constants
+     *
+     * @return void
      */
     protected function _paths(): void
     {

@@ -165,7 +165,7 @@ class MenuItem implements \ArrayAccess
      * @param string $key Property name
      * @return mixed
      */
-    public function __get($key)
+    public function __get($key): mixed
     {
         return $this->offsetGet($key);
     }
@@ -183,7 +183,7 @@ class MenuItem implements \ArrayAccess
      * <p>
      * The return value will be casted to boolean if non-boolean was returned.
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return in_array($offset, ['title', 'url', 'attributes', 'attr', 'children']);
     }
@@ -198,7 +198,7 @@ class MenuItem implements \ArrayAccess
      * </p>
      * @return mixed Can return all value types.
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         switch ($offset) {
             case 'title':
@@ -229,7 +229,7 @@ class MenuItem implements \ArrayAccess
      * @throws \RuntimeException
      * @return void
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         throw new \RuntimeException('Can not set value for this object');
     }
@@ -245,7 +245,7 @@ class MenuItem implements \ArrayAccess
      * @throws \RuntimeException
      * @return void
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         throw new \RuntimeException('Can not unset value for this object');
     }

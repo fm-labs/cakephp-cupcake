@@ -85,19 +85,20 @@ class Cupcake
     }
 
     /**
-     * Static access to the plugin info
+     * Static access to the plugin info.
      *
+     * @param string $pluginName The plugin name
      * @return array
      */
     public static function pluginInfo(string $pluginName): array
     {
-        return self::getInstance()->app()->getPluginInfo($pluginName);
+        return PluginManager::getPluginInfo($pluginName);
     }
 
     /**
-     * Singleton instance constructor
+     * Singleton instance constructor.
      *
-     * @param \Cupcake\Application $app
+     * @param \Cupcake\Application $app The application instance
      */
     public function __construct(PluginApplicationInterface $app)
     {

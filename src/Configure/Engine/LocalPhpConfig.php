@@ -28,7 +28,7 @@ class LocalPhpConfig extends PhpConfig
         // read app- or local overrides
         [$plugin, $key] = pluginSplit($key);
         if ($plugin && $key === Inflector::underscore($plugin)) {
-            foreach (['plugin', 'local'] as $dir) {
+            foreach (['plugins', 'local'] as $dir) {
                 $filePath = $this->_path . $dir . DS . $key . '.php';
                 //debug("Load local config $filePath for key $key");
                 if (file_exists($filePath)) {
