@@ -56,6 +56,7 @@ class AttributesSchema implements \ArrayAccess
     /**
      * @inheritDoc
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return $this->hasAttribute($offset);
@@ -64,6 +65,7 @@ class AttributesSchema implements \ArrayAccess
     /**
      * @inheritDoc
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->getAttribute($offset);
@@ -72,6 +74,7 @@ class AttributesSchema implements \ArrayAccess
     /**
      * @inheritDoc
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         // TODO: Implement offsetSet() method.
@@ -80,6 +83,7 @@ class AttributesSchema implements \ArrayAccess
     /**
      * @inheritDoc
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         // TODO: Implement offsetUnset() method.
