@@ -35,6 +35,11 @@ class Cupcake
     protected static $_filters = [];
 
     /**
+     * @var PluginApplicationInterface|Application Application instance
+     */
+    private PluginApplicationInterface|Application $_app;
+
+    /**
      * Cupcake-app wide common mailer instance
      *
      * @return \Cake\Mailer\Mailer

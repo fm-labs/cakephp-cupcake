@@ -465,16 +465,22 @@ class Application extends BaseApplication implements EventDispatcherInterface
          * Error handler
          *
          * @todo ErrorHandler is deprecated in CakePHP ^4.4
+         * The ErrorHandler and ConsoleErrorHandler classes are now deprecated.
+         * They have been replaced by the new ExceptionTrap and ErrorTrap classes.
+         * The trap classes provide a more extensible and consistent error & exception handling framework.
+         * To upgrade to the new system you can replace the usage of ErrorHandler and ConsoleErrorHandler
          */
-        if ($isCli) {
-            (new \Cake\Error\ConsoleErrorHandler(Configure::read('Error')))->register();
-            //} elseif (class_exists('\Gourmet\Whoops\Error\WhoopsHandler')) {
-            // Out-of-the-box support for "Whoops for CakePHP3" by "gourmet"
-            // https://github.com/gourmet/whoops
-            //    (new \Gourmet\Whoops\Error\WhoopsHandler(Configure::read('Error')))->register();
-        } else {
-            (new ErrorHandler(Configure::read('Error')))->register();
-        }
+//        if ($isCli) {
+//            (new \Cake\Error\ConsoleErrorHandler(Configure::read('Error')))->register();
+//            //} elseif (class_exists('\Gourmet\Whoops\Error\WhoopsHandler')) {
+//            // Out-of-the-box support for "Whoops for CakePHP3" by "gourmet"
+//            // https://github.com/gourmet/whoops
+//            //    (new \Gourmet\Whoops\Error\WhoopsHandler(Configure::read('Error')))->register();
+//        } else {
+//            (new ErrorHandler(Configure::read('Error')))->register();
+//        }
+        (new \Cake\Error\ErrorTrap(Configure::read('Error')))->register();
+        (new \Cake\Error\ExceptionTrap(Configure::read('Error')))->register();
 
         /**
          * Cli
