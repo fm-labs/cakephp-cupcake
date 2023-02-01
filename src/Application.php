@@ -126,7 +126,8 @@ class Application extends BaseApplication implements EventDispatcherInterface
         //$this->_loadConfigs();
 
         /**
-         * Debug mode
+         * Debug mode.
+         * Must be run before boostrap, to be able to patch configuration values before they get consumed.
          */
         $this->_debugMode(Configure::read('debug'));
 
@@ -462,6 +463,8 @@ class Application extends BaseApplication implements EventDispatcherInterface
 
         /**
          * Error handler
+         *
+         * @todo ErrorHandler is deprecated in CakePHP ^4.4
          */
         if ($isCli) {
             (new \Cake\Error\ConsoleErrorHandler(Configure::read('Error')))->register();
@@ -547,9 +550,10 @@ class Application extends BaseApplication implements EventDispatcherInterface
             error_reporting(E_ALL);
             ini_set('display_errors', 'on');
 
-            Configure::write('Cache._cake_model_.duration', '+5 minutes');
-            Configure::write('Cache._cake_core_.duration', '+5 minutes');
-            Configure::write('Cache._cake_routes_.duration', '+60 seconds');
+            Configure::write('Cache._cake_model_.duration', '+2 minutes');
+            Configure::write('Cache._cake_core_.duration', '+2 minutes');
+            Configure::write('Cache._cake_routes_.duration', '+2 minutes');
+            Configure::write('Asset.timestamp', true);
         } else {
             error_reporting(0);
             ini_set('display_errors', 'off');
