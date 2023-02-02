@@ -183,8 +183,8 @@ class Application extends BaseApplication implements EventDispatcherInterface
             try {
                 //debug("Loading config " . $plugin->getName() . '.' . Inflector::underscore($plugin->getName()));
                 //Configure::load($plugin->getName() . '.' . Inflector::underscore($plugin->getName()));
-                //$this->loadPluginConfig($plugin->getName());
                 $plugin->bootstrap($this);
+                //$this->loadPluginConfig($plugin->getName());
             } catch (\Exception $ex) {
                 debug($ex->getMessage());
             }
@@ -379,31 +379,31 @@ class Application extends BaseApplication implements EventDispatcherInterface
         defined('DATA_DIR') || define('DATA_DIR', DATA);
     }
 
-    /**
-     * Auto-load local configurations.
-     *
-     * @return void
-     * @deprecated
-     */
-    protected function _loadAllConfigs(): void
-    {
-        // load config files from standard config directories
-        foreach (['plugin', 'local', 'local/plugin'] as $dir) {
-            if (!is_dir($this->configDir . DS . $dir)) {
-                continue;
-            }
-            $files = scandir($this->configDir . DS . $dir);
-            foreach ($files as $file) {
-                if ($file == '.' || $file == '..') {
-                    continue;
-                }
-
-                if (preg_match('/^(.*)\.php$/', $file, $matches)) {
-                    Configure::load($dir . '/' . $matches[1]);
-                }
-            }
-        }
-    }
+//    /**
+//     * Auto-load local configurations.
+//     *
+//     * @return void
+//     * @deprecated
+//     */
+//    protected function _loadAllConfigs(): void
+//    {
+//        // load config files from standard config directories
+//        foreach (['plugin', 'local', 'local/plugin'] as $dir) {
+//            if (!is_dir($this->configDir . DS . $dir)) {
+//                continue;
+//            }
+//            $files = scandir($this->configDir . DS . $dir);
+//            foreach ($files as $file) {
+//                if ($file == '.' || $file == '..') {
+//                    continue;
+//                }
+//
+//                if (preg_match('/^(.*)\.php$/', $file, $matches)) {
+//                    Configure::load($dir . '/' . $matches[1]);
+//                }
+//            }
+//        }
+//    }
 
     /**
      * Bootrapping for CLI application.
