@@ -135,7 +135,7 @@ class MenuItem implements \ArrayAccess
     }
 
     /**
-     * @param string|array $title Child item title
+     * @param string|array|MenuItem $title Child item title
      * @param string|array|null $url Child item url
      * @param array $attr Child item attributes
      * @param array $children Child item children

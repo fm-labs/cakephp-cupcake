@@ -6,7 +6,7 @@ A simple menu item has a title, a URI and optional attributes.
 
 ```php
 
-$menu = (new \Cupcake\Menu\MenuManager())
+$menu = (new \Cupcake\Menu\MenuItemCollection())
     ->add('My title', '#')
     ->add('My other title', '#', ['target' => '_blank']);
 
@@ -20,7 +20,7 @@ $array = [
 
 
 // or create Menu from array
-$menu = \Cupcake\Menu\MenuManager::fromArray($array);
+$menu = \Cupcake\Menu\MenuItemCollection::fromArray($array);
 ```
 
 ### Render a menu with the MenuHelper
