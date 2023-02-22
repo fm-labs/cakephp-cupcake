@@ -22,7 +22,7 @@ class MenuManager
 
         $config = static::getConfig($key);
         if (!$config) {
-            throw new \RuntimeException("Menu '${key}' not found");
+            throw new \RuntimeException("Menu '{$key}' not found");
         }
 
         return static::resolve($key, $config);
