@@ -7,7 +7,6 @@ use Cake\Core\Configure\Engine\PhpConfig;
 use Cake\Core\Exception\CakeException;
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
-use Cake\Utility\Text;
 
 class LocalPhpConfig extends PhpConfig
 {
@@ -27,17 +26,13 @@ class LocalPhpConfig extends PhpConfig
 
         // read app- or local overrides
         [$plugin, $key] = pluginSplit($key);
+        $scanDirs = ['settings', 'local'];
         if ($plugin && $key === Inflector::underscore($plugin)) {
-            foreach (['plugins', 'local'] as $dir) {
-                $filePath = $this->_path . $dir . DS . $key . '.php';
-                //debug("Load local config $filePath for key $key");
-                if (file_exists($filePath)) {
-                    $_config = $this->_readFile($filePath);
-                    $config = Hash::merge($config, $_config);
-                }
-            }
-        } elseif (!$plugin && substr($key, 0, 5) !== 'local') {
-            foreach (['local'] as $dir) {
+            array_unshift($scanDirs, 'plugins');
+        }
+
+        if (substr($key, 0, 5) !== 'local') {
+            foreach ($scanDirs as $dir) {
                 $filePath = $this->_path . $dir . DS . $key . '.php';
                 //debug("Load local config $filePath for key $key");
                 if (file_exists($filePath)) {
@@ -48,7 +43,6 @@ class LocalPhpConfig extends PhpConfig
         }
 
         $this->_read[$key] = true;
-
         return $config;
     }
 
