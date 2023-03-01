@@ -15,6 +15,9 @@ class Plugin extends BasePlugin
      */
     public function bootstrap(PluginApplicationInterface $app): void
     {
+        parent::bootstrap($app);
+        $app->addOptionalPlugin('Settings');
+
         defined('DATA_DIR') || define('DATA_DIR', ROOT . DS . 'data' . DS);
 
         /**
@@ -37,6 +40,14 @@ class Plugin extends BasePlugin
             //print_r($panels);
             $panels['Cupcake.System'] = true;
             Configure::write('DebugKit.panels', $panels);
+        }
+
+
+        /**
+         * Load default content config
+         */
+        if (\Cake\Core\Plugin::isLoaded('Settings')) {
+            Configure::load('Cupcake', 'settings');
         }
     }
 }

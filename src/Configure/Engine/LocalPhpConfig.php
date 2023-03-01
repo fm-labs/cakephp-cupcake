@@ -26,7 +26,7 @@ class LocalPhpConfig extends PhpConfig
 
         // read app- or local overrides
         [$plugin, $key] = pluginSplit($key);
-        $scanDirs = ['settings', 'local'];
+        $scanDirs = ['local'];
         if ($plugin && $key === Inflector::underscore($plugin)) {
             array_unshift($scanDirs, 'plugins');
         }
