@@ -91,13 +91,13 @@ return [
                     'default' => false,
                 ],
                 */
-                'debug' => [
-                    'group' => 'App.Debug',
-                    'type' => 'boolean',
-                    'label' => __d('cupcake', 'Enable Debug mode'),
-                    'help' => __d('cupcake', 'Enable the debug mode system-wide (Do not enable on production system!!'),
-                    'default' => false,
-                ],
+//                'debug' => [
+//                    'group' => 'App.Debug',
+//                    'type' => 'boolean',
+//                    'label' => __d('cupcake', 'Enable Debug mode'),
+//                    'help' => __d('cupcake', 'Enable the debug mode system-wide (Do not enable on production system!!'),
+//                    'default' => false,
+//                ],
                 'DebugKit.enable' => [
                     'group' => 'App.Debug',
                     'type' => 'boolean',
