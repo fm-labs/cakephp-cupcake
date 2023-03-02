@@ -149,11 +149,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
          * CakePHP DebugKit support
          */
         if (Configure::read('DebugKit.enabled')) {
-            try {
-                $this->addPlugin('DebugKit');
-            } catch (\Exception $ex) {
-                debug('DebugKit: ' . $ex->getMessage());
-            }
+            $this->addOptionalPlugin('DebugKit');
         }
 
         /*
@@ -181,10 +177,9 @@ class Application extends BaseApplication implements EventDispatcherInterface
         foreach ($this->plugins->with('bootstrap') as $plugin) {
             //\Cupcake\Cupcake::doAction('plugin_bootstrap', compact('plugin'));
             try {
-                //debug("Loading config " . $plugin->getName() . '.' . Inflector::underscore($plugin->getName()));
                 //Configure::load($plugin->getName() . '.' . Inflector::underscore($plugin->getName()));
-                $plugin->bootstrap($this);
                 //$this->loadPluginConfig($plugin->getName());
+                $plugin->bootstrap($this);
             } catch (\Exception $ex) {
                 debug($ex->getMessage());
             }
@@ -426,12 +421,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
 
         // Attempt to load standard cli plugins
         foreach (['Bake', 'Migrations'] as $pluginName) {
-            try {
-                //$this->addOptionalPlugin($pluginName);
-                $this->addPlugin($pluginName);
-            } catch (MissingPluginException $e) {
-                debug($e->getMessage());
-            }
+            $this->addOptionalPlugin($pluginName);
         }
     }
 

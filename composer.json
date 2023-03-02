@@ -8,6 +8,9 @@
     },
     "require-dev": {
     },
+    "suggest": {
+        "fm-labs/cakephp-settings": "Settings plugin for CakePHP"
+    },
     "autoload": {
         "psr-4": {
             "Cupcake\\": "src"
