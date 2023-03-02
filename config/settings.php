@@ -4,25 +4,25 @@ return [
         'App' => [
             'groups' => [
                 'App.General' => [
-                    'label' => __('Application'),
+                    'label' => __d('cupcake', 'Application'),
                 ],
                 'App.I18n' => [
-                    'label' => __('Localization / Language'),
+                    'label' => __d('cupcake', 'Localization / Language'),
                 ],
                 'App.Cache' => [
-                    'label' => __('Cache'),
+                    'label' => __d('cupcake', 'Cache'),
                 ],
                 'App.Log' => [
-                    'label' => __('Logging'),
+                    'label' => __d('cupcake', 'Logging'),
                 ],
                 'App.Debug' => [
-                    'label' => __('Debug'),
+                    'label' => __d('cupcake', 'Debug'),
                 ],
                 'App.Error' => [
-                    'label' => __('Error'),
+                    'label' => __d('cupcake', 'Error'),
                 ],
                 'App.Theme' => [
-                    'label' => __('Theme'),
+                    'label' => __d('cupcake', 'Theme'),
                 ],
             ],
 
@@ -44,13 +44,13 @@ return [
                 'App.fullBaseUrl' => [
                     'group' => 'App.General',
                     'type' => 'string',
-                    'help' => __('Full base url to your application. Leave empty to fallback to host name, which should be sufficient for most cases. E.g. https://my.domain.tld (no trailing slash). A wrong base url might break your application!'),
+                    'help' => __d('cupcake', 'Full base url to your application. Leave empty to fallback to host name, which should be sufficient for most cases. E.g. https://my.domain.tld (no trailing slash). A wrong base url might break your application!'),
                     'default' => null,
                 ],
                 'App.defaultLocale' => [
                     'group' => 'App.I18n',
                     'type' => 'string',
-                    'help' => __('Default language of your application. All translations will be based on the default language.'),
+                    'help' => __d('cupcake', 'Default language of your application. All translations will be based on the default language.'),
                     'default' => 'en',
                     'required' => true,
                 ],
@@ -72,8 +72,8 @@ return [
                 'Cache.disable' => [
                     'group' => 'App.Cache',
                     'type' => 'boolean',
-                    'label' => __('Disable cache'),
-                    'help' => __('Disable cache system-wide'),
+                    'label' => __d('cupcake', 'Disable cache'),
+                    'help' => __d('cupcake', 'Disable cache system-wide'),
                     'default' => false,
                 ],
                 /*
@@ -83,8 +83,8 @@ return [
                     'input' => [
                         'options' => function () {
                             return [
-                                E_ALL => __('Show all errors'),
-                                (E_ALL & ~E_USER_DEPRECATED) => __('Disable deprecation warnings'),
+                                E_ALL => __d('cupcake', 'Show all errors'),
+                                (E_ALL & ~E_USER_DEPRECATED) => __d('cupcake', 'Disable deprecation warnings'),
                             ];
                         },
                     ],
@@ -94,15 +94,15 @@ return [
                 'debug' => [
                     'group' => 'App.Debug',
                     'type' => 'boolean',
-                    'label' => __('Enable Debug mode'),
-                    'help' => __('Enable the debug mode system-wide (Do not enable on production system!!'),
+                    'label' => __d('cupcake', 'Enable Debug mode'),
+                    'help' => __d('cupcake', 'Enable the debug mode system-wide (Do not enable on production system!!'),
                     'default' => false,
                 ],
                 'DebugKit.enable' => [
                     'group' => 'App.Debug',
                     'type' => 'boolean',
-                    'label' => __('Enable DebugKit'),
-                    'help' => __('Enable the DebugKit plugin, if installed'),
+                    'label' => __d('cupcake', 'Enable DebugKit'),
+                    'help' => __d('cupcake', 'Enable the DebugKit plugin, if installed'),
                     'default' => false,
                 ],
             ],

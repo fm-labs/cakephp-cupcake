@@ -97,7 +97,7 @@ class HealthStatus
      */
     public static function unknown(string $msg = ''): self
     {
-        $msg = $msg ?? __('Unknown health status');
+        $msg = $msg ?? __d('cupcake', 'Unknown health status');
 
         return new self(self::UNKNOWN, $msg);
     }

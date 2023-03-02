@@ -82,8 +82,8 @@ class StatusHelper extends Helper
 
         if (empty($map)) {
             $map = [
-                0 => [__('No'), 'text-danger'],
-                1 => [__('Yes'), 'text-success'],
+                0 => [__d('cupcake', 'No'), 'text-danger'],
+                1 => [__d('cupcake', 'Yes'), 'text-success'],
             ];
         }
 
@@ -95,7 +95,7 @@ class StatusHelper extends Helper
             $class = 'default';
         }
         if (!$label) {
-            $label = ($status === true) ? __("Yaps") : __("Nope");
+            $label = ($status === true) ? __d('cupcake', "Yaps") : __d('cupcake', "Nope");
         }
 
         if (array_key_exists((int)$status, $map)) {
