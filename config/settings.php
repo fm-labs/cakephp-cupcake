@@ -54,19 +54,25 @@ return [
                     'default' => 'en',
                     'required' => true,
                 ],
-                'Site.theme' => [
+                'Theme.name' => [
                     'group' => 'App.Theme',
                     'type' => 'string',
-                    'input' => [
-                        'empty' => true,
-                        'options' => function () {
-                            $themes = \Cupcake\Cupcake::getThemes();
-
-                            return array_combine($themes, $themes);
-                        },
-                    ],
-                    'help' => 'Application encoding',
-                    'default' => 'UTF-8',
+//                    'input' => [
+//                        'empty' => true,
+//                        'options' => function () {
+//                            $themes = \Cupcake\Cupcake::getThemes();
+//                            return array_combine($themes, $themes);
+//                        },
+//                    ],
+                    'help' => 'Theme name',
+                    'default' => '',
+                    'required' => false,
+                ],
+                'Theme.layout' => [
+                    'group' => 'App.Theme',
+                    'type' => 'string',
+                    'help' => 'Theme default layout',
+                    'default' => '',
                     'required' => false,
                 ],
                 'Cache.disable' => [
