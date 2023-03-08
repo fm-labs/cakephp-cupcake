@@ -218,7 +218,7 @@ class Cupcake
         // config dirs
         $dirs[] = CONFIG;
         $dirs[] = CONFIG . 'local';
-        $dirs[] = CONFIG . 'local' . DS . 'plugin';
+        //$dirs[] = CONFIG . 'local' . DS . 'plugin';
 
         // cache dirs
         foreach (Cache::configured() as $name) {

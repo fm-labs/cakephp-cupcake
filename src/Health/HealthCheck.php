@@ -8,7 +8,7 @@ namespace Cupcake\Health;
  *
  * @package Cupcake\Health
  */
-class HealthCheck implements HealthInterface
+class HealthCheck implements HealthCheckInterface
 {
     protected $label;
     protected $callback;

@@ -8,7 +8,7 @@ namespace Cupcake\Health;
  *
  * @package Cupcake\Health
  */
-interface HealthInterface
+interface HealthCheckInterface
 {
     /**
      * @return \Cupcake\Health\HealthStatus

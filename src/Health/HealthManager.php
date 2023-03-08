@@ -41,11 +41,11 @@ class HealthManager
     {
         $this->_results = [];
         foreach ($this->_checks as $name => $check) {
-            if (!($check instanceof HealthInterface)) {
+            if (!($check instanceof HealthCheckInterface)) {
                 throw new \Exception('Invalid health check. Must implement HealthInterface.');
             }
 
-            /** @var \Cupcake\Health\HealthInterface $check */
+            /** @var \Cupcake\Health\HealthCheckInterface $check */
             $result = $check->getHealthStatus();
             $this->_results[$name] = $result;
         }
@@ -61,7 +61,7 @@ class HealthManager
 
     /**
      * @param string $name Check name
-     * @param \Cupcake\Health\HealthInterface|callable|array $check Check
+     * @param \Cupcake\Health\HealthCheckInterface|callable|array $check Check
      * @return $this
      */
     public function addCheck(string $name, $check)
