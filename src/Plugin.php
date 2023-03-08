@@ -11,6 +11,16 @@ use Cake\Core\PluginApplicationInterface;
 class Plugin extends BasePlugin
 {
     /**
+     * @var bool
+     */
+    public $routesEnabled = false;
+
+    /**
+     * @var bool
+     */
+    public $bootstrapEnabled = true;
+
+    /**
      * @inheritDoc
      */
     public function bootstrap(PluginApplicationInterface $app): void
