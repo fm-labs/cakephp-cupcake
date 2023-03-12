@@ -310,7 +310,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
      */
     public function plugins(): PluginCollection
     {
-        deprecationWarning('Application::plugins() is deprecatred. Use getPlugins() instead.');
+        deprecationWarning('Application::plugins() is deprecated. Use getPlugins() instead.');
 
         return $this->getPlugins();
     }
