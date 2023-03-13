@@ -18,8 +18,8 @@ class StatusHelper extends Helper
     protected $_defaultConfig = [
         'templates' => [
             'status_display' => '<span class="{{class}}">{{status}}</span>',
-            'status_boolean_true' => '<i class="fa fa-check {{class}}"{{attrs}}>',
-            'status_boolean_false' => '<i class="fa fa-times {{class}}"{{attrs}}>',
+            'status_boolean_true' => '<i class="fa fa-check {{class}}"{{attrs}} />',
+            'status_boolean_false' => '<i class="fa fa-times {{class}}"{{attrs}} />',
         ]
     ];
 

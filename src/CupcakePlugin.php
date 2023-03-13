@@ -7,6 +7,8 @@ use Cake\Cache\Cache;
 use Cake\Core\BasePlugin;
 use Cake\Core\Configure;
 use Cake\Core\PluginApplicationInterface;
+use Cake\Event\EventInterface;
+use Cake\Event\EventManager;
 
 class CupcakePlugin extends BasePlugin
 {
@@ -59,5 +61,15 @@ class CupcakePlugin extends BasePlugin
         if (\Cake\Core\Plugin::isLoaded('Settings')) {
             Configure::load('Cupcake', 'settings');
         }
+
+//        EventManager::instance()->on('Controller.beforeRender', function(EventInterface $event) {
+//            if ($event->getSubject() instanceof \DebugKit\Controller\MailPreviewController) {
+//                //debug("Controller.initialize: " . get_class($event->getSubject()));
+//                /** @var \DebugKit\Controller\MailPreviewController $controller */
+//                $controller = $event->getSubject();
+//                $controller->viewBuilder()->setLayout("Cupcake.mail_preview");
+//                $controller->viewBuilder()->enableAutoLayout(true);
+//            }
+//        });
     }
 }
