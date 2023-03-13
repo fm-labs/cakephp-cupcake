@@ -9,11 +9,11 @@ use Cake\Core\Exception\MissingPluginException;
 use Cake\Core\Plugin;
 use Cake\Core\PluginCollection;
 use Cake\Datasource\ConnectionManager;
-use Cake\Error\ErrorHandler;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Event\EventDispatcherInterface;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\BaseApplication;
+use Cake\Http\Middleware\BodyParserMiddleware;
 use Cake\Http\ServerRequest;
 use Cake\Log\Log;
 use Cake\Mailer\Mailer;
@@ -132,6 +132,20 @@ class Application extends BaseApplication implements EventDispatcherInterface
         $this->_debugMode(Configure::read('debug'));
 
         /**
+         * Cli
+         */
+        if (php_sapi_name() === 'cli') {
+            $this->_bootstrapCli();
+        } else {
+            //@todo Enable FactoryLocator in bootstrap
+            //@link https://github.com/cakephp/app/blob/4.x/src/Application.php
+//            FactoryLocator::add(
+//                'Table',
+//                (new TableLocator())->allowFallbackClass(false)
+//            );
+        }
+
+        /**
          * Common bootstrapping tasks
          */
         $this->_bootstrap();
@@ -140,7 +154,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
          * Load core plugins and user plugins
          */
         if (file_exists(CONFIG . 'plugins.php')) {
-            Configure::load('plugins', 'default');
+            Configure::load('plugins');
         }
         $this->addPlugin('Cupcake');
         $this->addPlugin((array)Configure::read('Plugin')/*, ['bootstrap' => true, 'routes' => true]*/);
@@ -339,7 +353,18 @@ class Application extends BaseApplication implements EventDispatcherInterface
             // creating the middleware instance specify the cache config name by
             // using it's second constructor argument:
             // `new RoutingMiddleware($this, '_cake_routes_')`
-            ->add(new RoutingMiddleware($this));
+            ->add(new RoutingMiddleware($this))
+
+            // Parse various types of encoded request bodies so that they are
+            // available as array through $request->getData()
+            // https://book.cakephp.org/4/en/controllers/middleware.html#body-parser-middleware
+            ->add(new BodyParserMiddleware());
+
+//            // Cross Site Request Forgery (CSRF) Protection Middleware
+//            // https://book.cakephp.org/4/en/security/csrf.html#cross-site-request-forgery-csrf-middleware
+//            ->add(new CsrfProtectionMiddleware([
+//                'httponly' => true,
+//            ]));
 
         return $middlewareQueue;
     }
@@ -409,8 +434,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
      */
     protected function _bootstrapCli(): void
     {
-        // Set logs to different files so they don't have permission conflicts.
-        // @todo Apply filename prefix to all configured logs in cli mode
+        // Set logs to different files, so they don't have permission conflicts.
         Configure::write('Log.debug.file', 'cli-debug');
         Configure::write('Log.error.file', 'cli-error');
 
@@ -420,7 +444,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
         }
 
         // Attempt to load standard cli plugins
-        foreach (['Bake', 'Migrations'] as $pluginName) {
+        foreach (['Bake', 'Migrations', 'Repl'] as $pluginName) {
             $this->addOptionalPlugin($pluginName);
         }
     }
@@ -432,8 +456,6 @@ class Application extends BaseApplication implements EventDispatcherInterface
      */
     protected function _bootstrap(): void
     {
-        $isCli = php_sapi_name() === 'cli';
-
         /**
          * Set server timezone to UTC. You can change it to another timezone of your
          * choice but using UTC makes time calculations / conversions easier.
@@ -472,21 +494,25 @@ class Application extends BaseApplication implements EventDispatcherInterface
         (new \Cake\Error\ErrorTrap(Configure::read('Error')))->register();
         (new \Cake\Error\ExceptionTrap(Configure::read('Error')))->register();
 
-        /**
-         * Cli
-         */
-        if ($isCli) {
-            $this->_bootstrapCli();
-        }
-
-        /**
+        /*
          * Set the full base URL.
          * This URL is used as the base of all absolute links.
          */
         $fullBaseUrl = Configure::read('App.fullBaseUrl');
         if (!$fullBaseUrl) {
+            //@todo Trusted proxy
+            /*
+             * When using proxies or load balancers, SSL/TLS connections might
+             * get terminated before reaching the server. If you trust the proxy,
+             * you can enable `$trustProxy` to rely on the `X-Forwarded-Proto`
+             * header to determine whether to generate URLs using `https`.
+             *
+             * See also https://book.cakephp.org/4/en/controllers/request-response.html#trusting-proxy-headers
+             */
+            $trustProxy = false;
+
             $s = null;
-            if (env('HTTPS')) {
+            if (env('HTTPS') || ($trustProxy && env('HTTP_X_FORWARDED_PROTO') === 'https')) {
                 $s = 's';
             }
 
@@ -499,6 +525,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
         if ($fullBaseUrl) {
             Router::fullBaseUrl($fullBaseUrl);
         }
+        unset($fullBaseUrl);
 
         Cache::setConfig(Configure::consume('Cache'));
         ConnectionManager::setConfig(Configure::consume('Datasources'));
@@ -512,18 +539,41 @@ class Application extends BaseApplication implements EventDispatcherInterface
          */
         ServerRequest::addDetector('mobile', function () {
             $detector = new \Detection\MobileDetect();
-
             return $detector->isMobile();
         });
         ServerRequest::addDetector('tablet', function () {
             $detector = new \Detection\MobileDetect();
-
             return $detector->isTablet();
         });
 
         /**
          * Register database types
+         *
+         * You can enable default locale format parsing by adding calls
+         * to `useLocaleParser()`. This enables the automatic conversion of
+         * locale specific date formats. For details see
+         * @link https://book.cakephp.org/4/en/core-libraries/internationalization-and-localization.html#parsing-localized-datetime-data
          */
+        // \Cake\Database\TypeFactory::build('time')
+        //    ->useLocaleParser();
+        // \Cake\Database\TypeFactory::build('date')
+        //    ->useLocaleParser();
+        // \Cake\Database\TypeFactory::build('datetime')
+        //    ->useLocaleParser();
+        // \Cake\Database\TypeFactory::build('timestamp')
+        //    ->useLocaleParser();
+        // \Cake\Database\TypeFactory::build('datetimefractional')
+        //    ->useLocaleParser();
+        // \Cake\Database\TypeFactory::build('timestampfractional')
+        //    ->useLocaleParser();
+        // \Cake\Database\TypeFactory::build('datetimetimezone')
+        //    ->useLocaleParser();
+        // \Cake\Database\TypeFactory::build('timestamptimezone')
+        //    ->useLocaleParser();
+
+        // There is no time-specific type in Cake
+        //\Cake\Database\TypeFactory::map('time', StringType::class);
+
         //\Cake\Database\TypeFactory::map('json', 'Cupcake\Database\Type\JsonType'); // obsolete since CakePHP 3.3
         \Cake\Database\TypeFactory::map('serialize', 'Cupcake\Database\Type\SerializeType');
 
@@ -548,13 +598,15 @@ class Application extends BaseApplication implements EventDispatcherInterface
 
             Configure::write('Cache._cake_model_.duration', '+2 minutes');
             Configure::write('Cache._cake_core_.duration', '+2 minutes');
-            Configure::write('Cache._cake_routes_.duration', '+2 minutes');
+            Configure::write('Cache._cake_routes_.duration', '+2 seconds');
+
             Configure::write('Asset.timestamp', true);
+            Configure::write('Asset.cacheTime', '+2 seconds');
         } else {
             error_reporting(0);
             ini_set('display_errors', 'off');
             // When debug = false the metadata cache should last
-            // for a very very long time, as we don't want
+            // for a very long time, as we don't want
             // to refresh the cache while users are doing requests.
             //Configure::write('Cache._cake_model_.duration', '+1 years');
             //Configure::write('Cache._cake_core_.duration', '+1 years');
@@ -573,8 +625,12 @@ class Application extends BaseApplication implements EventDispatcherInterface
             require_once $reqFilePath;
         }
 
-        if (version_compare(PHP_VERSION, '7.2.0') < 0) {
-            trigger_error('Your PHP version must be equal or higher than 7.2.0 to use CakePHP.', E_USER_ERROR);
+        if (version_compare(PHP_VERSION, '7.4.0') < 0) {
+            trigger_error('Your PHP version must be equal or higher than 7.4.0 to use CakePHP.', E_USER_ERROR);
+        }
+
+        if (!extension_loaded('mbstring')) {
+            trigger_error('You must enable the mbstring extension to use CakePHP.', E_USER_ERROR);
         }
 
         if (!extension_loaded('intl')) {
@@ -583,10 +639,6 @@ class Application extends BaseApplication implements EventDispatcherInterface
 
         if (version_compare(INTL_ICU_VERSION, '50.1', '<')) {
             trigger_error('ICU >= 50.1 is needed to use CakePHP. Please update the `libicu` package of your system.' . PHP_EOL, E_USER_ERROR);
-        }
-
-        if (!extension_loaded('mbstring')) {
-            trigger_error('You must enable the mbstring extension to use CakePHP.', E_USER_ERROR);
         }
     }
 }
