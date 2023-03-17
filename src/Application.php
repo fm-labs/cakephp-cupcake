@@ -39,7 +39,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
     /**
      * @var \Cake\Core\Configure\ConfigEngineInterface
      */
-    private $_configEngine;
+    private Configure\ConfigEngineInterface $_configEngine;
 
     /**
      * @param string $configDir Path to config directory
@@ -337,6 +337,9 @@ class Application extends BaseApplication implements EventDispatcherInterface
      */
     public function middleware(\Cake\Http\MiddlewareQueue $middlewareQueue): \Cake\Http\MiddlewareQueue
     {
+        $routingCacheConfig = (bool)Configure::read('debug') || (bool)Configure::read('Routing.disabled') === true
+            ? null : Configure::read('Routing.cacheConfigName', '_cake_routes_');
+
         $middlewareQueue
             // Catch any exceptions in the lower layers,
             // and make an error page/response
@@ -353,7 +356,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
             // creating the middleware instance specify the cache config name by
             // using it's second constructor argument:
             // `new RoutingMiddleware($this, '_cake_routes_')`
-            ->add(new RoutingMiddleware($this))
+            ->add(new RoutingMiddleware($this, $routingCacheConfig))
 
             // Parse various types of encoded request bodies so that they are
             // available as array through $request->getData()

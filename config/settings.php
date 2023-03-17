@@ -9,6 +9,9 @@ return [
                 'App.I18n' => [
                     'label' => __d('cupcake', 'Localization / Language'),
                 ],
+                'App.Routing' => [
+                    'label' => __d('cupcake', 'Routing'),
+                ],
                 'App.Cache' => [
                     'label' => __d('cupcake', 'Cache'),
                 ],
@@ -44,15 +47,36 @@ return [
                 'App.fullBaseUrl' => [
                     'group' => 'App.General',
                     'type' => 'string',
-                    'help' => __d('cupcake', 'Full base url to your application. Leave empty to fallback to host name, which should be sufficient for most cases. E.g. https://my.domain.tld (no trailing slash). A wrong base url might break your application!'),
+                    'help' => __d('cupcake', 'Full base url to your application.
+                        Leave empty to fallback to host name, which should be sufficient for most cases.
+                        E.g. https://my.domain.tld (no trailing slash). A wrong base url might break your application!'),
                     'default' => null,
                 ],
                 'App.defaultLocale' => [
                     'group' => 'App.I18n',
                     'type' => 'string',
-                    'help' => __d('cupcake', 'Default language of your application. All translations will be based on the default language.'),
+                    'help' => __d('cupcake', 'Default language of your application.
+                        All translations will be based on the default language.'),
                     'default' => 'en',
                     'required' => true,
+                ],
+                'Routing.disableCache' => [
+                    'group' => 'App.Routing',
+                    'type' => 'boolean',
+                    'help' => __d('cupcake', 'Disable Routing cache. Enabled by default.
+                        Automatically *disabled* in debug mode or if caching is disabled globally.'),
+                    'default' => '_cake_routes_',
+                    'required' => true,
+                ],
+                'Routing.cacheConfigName' => [
+                    'group' => 'App.Routing',
+                    'type' => 'string',
+                    'label' => __d('cupcake', 'Custom routing cache config'),
+                    'help' => __d('cupcake', "Name of custom routing cache configuration.
+                        Defaults to *_cake_routes_*.
+                        Ignored, if Routing cache has been disabled."),
+                    'default' => null,
+                    'required' => false,
                 ],
                 'Theme.name' => [
                     'group' => 'App.Theme',
