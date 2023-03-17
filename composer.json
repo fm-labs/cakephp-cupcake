@@ -9,6 +9,8 @@
     "require-dev": {
     },
     "suggest": {
+        "fm-labs/cakephp-devtools": "CakePHP developer toolset",
+        "fm-labs/cakephp-essentials": "CakePHP core essentials",
         "fm-labs/cakephp-settings": "Settings plugin for CakePHP"
     },
     "autoload": {
@@ -18,8 +20,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Cupcake\\Test\\": "tests",
-            "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
+            "Cake\\Test\\": "./vendor/cakephp/cakephp/tests",
+            "Cupcake\\Test\\": "tests"
         }
     },
     "minimum-stability": "dev",
