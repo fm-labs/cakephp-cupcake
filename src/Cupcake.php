@@ -59,7 +59,7 @@ class Cupcake
     public static function init(PluginApplicationInterface $app): void
     {
         if (isset(self::$_instances[0])) {
-            throw new \Exception('Cupcake::init: Already initialized');
+            //throw new \Exception('Cupcake::init: Already initialized');
         }
         self::$_instances[0] = new self($app);
     }
