@@ -5,49 +5,129 @@ namespace Cupcake;
 use Cake\Cache\Cache;
 use Cake\Core\Configure;
 use Cake\Datasource\ConnectionManager;
+use Cake\Datasource\FactoryLocator;
 use Cake\Http\ServerRequest;
 use Cake\Log\Log;
 use Cake\Mailer\Mailer;
 use Cake\Mailer\TransportFactory;
+use Cake\ORM\Locator\TableLocator;
 use Cake\Routing\Router;
 use Cake\Utility\Security;
 use Cupcake\Configure\Engine\LocalPhpConfig;
 
 class Bootstrapper
 {
+    /**
+     * @var array
+     */
     protected static array $instances = [];
 
+    /**
+     * @var bool Flag indicating if Bootstrapper has run
+     */
+    protected static bool $isBootstrapped = false;
+
+    /**
+     * @var string Path to application config dir
+     */
     protected string $configDir;
+
+
+    protected array $enabled = [
+        'requirements' => true,
+        'debug' => true,
+        'cli' => true,
+        'datasource' => true,
+        'cache' => true,
+        'error' => true,
+        'log' => true,
+        'security' => true,
+        'mailer' => true,
+        'mailer_transports' => true,
+    ];
 
     public static function getInstance()
     {
         if (!isset(self::$instances[0])) {
-            throw new \RuntimeException("Can not get Bootstrapper instance: Not initialized yet");
+            throw new \RuntimeException("Bootstrapper not initialized yet");
         }
         return self::$instances[0];
     }
 
-    public function __construct(string $configDir)
+    public static function init(string $configDir)
     {
         if (count(static::$instances) > 0) {
-            throw new \RuntimeException("Can construct new Bootstrapper: Already initialized");
+            throw new \RuntimeException("Bootstrapper already initialized");
         }
-        static::$instances[] = $this;
-
-        $this->configDir = rtrim($configDir, DS) . DS;
+        $instance = new self($configDir);
+        return static::$instances[] = $instance;
     }
 
-//    public function __invoke(): void
-//    {
-//        $this->run();
-//    }
+    public static function reset()
+    {
+        foreach(ConnectionManager::configured() as $name) {
+            ConnectionManager::drop($name);
+        }
+        foreach(TransportFactory::configured() as $name) {
+            TransportFactory::drop($name);
+        }
+        foreach(Mailer::configured() as $name) {
+            Mailer::drop($name);
+        }
+        foreach(Log::configured() as $name) {
+            Log::drop($name);
+        }
+        Cache::clearAll();
+        foreach(Cache::configured() as $name) {
+            Cache::drop($name);
+        }
+        Security::setSalt('');
+        Configure::clear();
+    }
+
+    protected function __construct(string $configDir)
+    {
+        $configDir = rtrim($configDir, DS) . DS;
+        $this->configDir = $configDir;
+    }
+
+    /**
+     * Skip named bootstrap step.
+     *
+     * @param string $name
+     * @param bool $mode
+     * @return $this
+     */
+    public function enable(string $name, bool $mode = true): static
+    {
+        $this->enabled[$name] = $mode;
+        return $this;
+    }
+
+    /**
+     * Check if named bootstrap step is skipped.
+     *
+     * @param string $name
+     * @return bool
+     */
+    public function isEnabled(string $name): bool
+    {
+        return $this->enabled[$name] ?? false;
+    }
 
     public function run(): void
     {
+        if (static::$isBootstrapped) {
+            debug("Already bootstrapped");
+            return;
+        }
+
         /**
          * Check system requirements
          */
-        $this->_checkRequirements();
+        if ($this->isEnabled('requirements')) {
+            $this->_checkRequirements();
+        }
 
         /**
          * Load path definitions
@@ -79,34 +159,32 @@ class Bootstrapper
         }
 
         /**
-         * Load configuration files
-         */
-        //$this->_loadConfigs();
-
-        /**
          * Debug mode.
          * Must be run before boostrap, to be able to patch configuration values before they get consumed.
          */
-        $this->_debugMode(Configure::read('debug'));
+        if ($this->isEnabled('debug')) {
+            $this->_debugMode(Configure::read('debug'));
+        }
 
         /**
          * Cli
          */
-        if (php_sapi_name() === 'cli') {
+        if (php_sapi_name() === 'cli' && $this->isEnabled('cli')) {
             $this->_bootstrapCli();
         } else {
-            //@todo Enable FactoryLocator in bootstrap
             //@link https://github.com/cakephp/app/blob/4.x/src/Application.php
-//            FactoryLocator::add(
-//                'Table',
-//                (new TableLocator())->allowFallbackClass(false)
-//            );
+            FactoryLocator::add(
+                'Table',
+                (new TableLocator())->allowFallbackClass(false)
+            );
         }
 
         /**
          * Common bootstrapping tasks
          */
         $this->_bootstrap();
+
+        static::$isBootstrapped = true;
     }
 
     /**
@@ -196,6 +274,7 @@ class Bootstrapper
          * The trap classes provide a more extensible and consistent error & exception handling framework.
          * To upgrade to the new system you can replace the usage of ErrorHandler and ConsoleErrorHandler
          */
+        if ($this->isEnabled('error')) {
 //        if ($isCli) {
 //            (new \Cake\Error\ConsoleErrorHandler(Configure::read('Error')))->register();
 //            //} elseif (class_exists('\Gourmet\Whoops\Error\WhoopsHandler')) {
@@ -205,8 +284,9 @@ class Bootstrapper
 //        } else {
 //            (new ErrorHandler(Configure::read('Error')))->register();
 //        }
-        (new \Cake\Error\ErrorTrap(Configure::read('Error')))->register();
-        (new \Cake\Error\ExceptionTrap(Configure::read('Error')))->register();
+            (new \Cake\Error\ErrorTrap(Configure::read('Error')))->register();
+            (new \Cake\Error\ExceptionTrap(Configure::read('Error')))->register();
+        }
 
         /*
          * Set the full base URL.
@@ -241,25 +321,41 @@ class Bootstrapper
         }
         unset($fullBaseUrl);
 
-        Cache::setConfig(Configure::consume('Cache'));
-        ConnectionManager::setConfig(Configure::consume('Datasources'));
-        TransportFactory::setConfig(Configure::consume('EmailTransport'));
-        Mailer::setConfig(Configure::consume('Email'));
-        Log::setConfig(Configure::consume('Log'));
-        Security::setSalt(Configure::consume('Security.salt'));
 
+        if ($this->isEnabled('cache')) {
+            Cache::setConfig(Configure::consume('Cache'));
+        }
+        if ($this->isEnabled('datasource')) {
+            ConnectionManager::setConfig(Configure::consume('Datasources'));
+        }
+        if ($this->isEnabled('mailer')) {
+            TransportFactory::setConfig(Configure::consume('EmailTransport'));
+        }
+        if ($this->isEnabled('mailer_transport')) {
+            Mailer::setConfig(Configure::consume('Email'));
+        }
+        if ($this->isEnabled('log')) {
+            Log::setConfig(Configure::consume('Log'));
+        }
+        if ($this->isEnabled('security')) {
+            Security::setSalt(Configure::consume('Security.salt'));
+        }
+        
         /**
          * Setup detectors for mobile and tablet.
          */
-        ServerRequest::addDetector('mobile', function () {
-            $detector = new \Detection\MobileDetect();
-            return $detector->isMobile();
-        });
-        ServerRequest::addDetector('tablet', function () {
-            $detector = new \Detection\MobileDetect();
-            return $detector->isTablet();
-        });
-
+        if ($this->isEnabled('detectors')) {
+            ServerRequest::addDetector('mobile', function () {
+                $detector = new \Detection\MobileDetect();
+                return $detector->isMobile();
+            });
+            ServerRequest::addDetector('tablet', function () {
+                $detector = new \Detection\MobileDetect();
+                return $detector->isTablet();
+            });
+        }
+        
+        
         /**
          * Register database types
          *

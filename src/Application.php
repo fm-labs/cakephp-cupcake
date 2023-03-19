@@ -55,20 +55,10 @@ class Application extends BaseApplication implements EventDispatcherInterface
     {
         /**
          * NOW: ENTERING RUNLEVEL 1 (BOOTSTRAPPING)
-         * - setup paths
-         * - bootstrap cake core
-         * - setup default config engine
-         * - load app config
-         * - load plugins config
-         * - load local configurations
-         * - setup full base url in configuration
-         * - configure: timezone, encoding, locale, error handler
          * - include user's bootstrap file
-         * - configure: request detectors, database types, debugmode
-         * - consume configurations: ConnectionManager, Cache, Email, Log, Security
-         * - load cupcake plugin
-         * - bootstrap cupcake
-         *
+         * - bootstrap cakephp
+         * - load plugins
+         * - initialize cupcake
          */
 
         /**
@@ -79,13 +69,26 @@ class Application extends BaseApplication implements EventDispatcherInterface
             parent::bootstrap();
         }
 
+        /**
+         * Run common cake application bootstrap tasks
+         * - setup paths
+         * - bootstrap cake core
+         * - setup default config engine
+         * - load app config
+         * - load plugins config
+         * - load local configurations
+         * - setup full base url in configuration
+         * - configure: timezone, encoding, locale, error handler
+         * - configure: request detectors, database types, debugmode
+         * - consume configurations: ConnectionManager, Cache, Email, Log, Security
+         */
         try {
-            Bootstrapper::getInstance();
+            $bootstrapper = \Cupcake\Bootstrapper::init($this->configDir);
+            $bootstrapper->run();
         } catch (\Exception $ex) {
             echo $ex->getMessage();
             throw $ex;
         }
-
 
         /**
          * Load core plugins and user plugins
