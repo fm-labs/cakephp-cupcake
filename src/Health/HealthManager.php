@@ -13,12 +13,12 @@ class HealthManager
     /**
      * @var array
      */
-    protected $_checks = [];
+    protected array $_checks = [];
 
     /**
      * @var array
      */
-    protected $_results = [];
+    protected array $_results = [];
 
     /**
      * HealthManager constructor.
@@ -41,13 +41,17 @@ class HealthManager
     {
         $this->_results = [];
         foreach ($this->_checks as $name => $check) {
-            if (!($check instanceof HealthCheckInterface)) {
-                throw new \Exception('Invalid health check. Must implement HealthInterface.');
+            if ($check instanceof HealthCheckInterface) {
+                $result = $check->getHealthStatus();
+                $this->_results[$name][] = $result;
+            } elseif ($check instanceof HealthCheckGeneratorInterface) {
+                foreach ($check->getHealthStatus() as $result) {
+                    $this->_results[$name][] = $result;
+                }
+            } else {
+                //throw new \Exception('Invalid health check. Must implement HealthCheckInterface or HealthCheckGeneratorInterface.');
+                $this->_results[$name][] = HealthStatus::crit('Invalid health check. Must implement HealthCheckInterface or HealthCheckGeneratorInterface.');
             }
-
-            /** @var \Cupcake\Health\HealthCheckInterface $check */
-            $result = $check->getHealthStatus();
-            $this->_results[$name] = $result;
         }
     }
 
@@ -64,17 +68,22 @@ class HealthManager
      * @param \Cupcake\Health\HealthCheckInterface|callable|array $check Check
      * @return $this
      */
-    public function addCheck(string $name, $check)
+    public function addCheck(string $name, $check): static
     {
         if (is_array($check)) {
-            $check = new HealthCheck($name, $check);
+            if (isset($check['generator'])) {
+                $check = new HealthCheckGenerator($check['generator']);
+            }
+            elseif (isset($check['callback'])) {
+                $check = new HealthCheck($check['callback']);
+            }
+            else {
+                throw new \RuntimeException("Invalid health check options");
+            }
         }
         if (is_callable($check)) {
-            $check = new HealthCheck($name, ['callback' => $check]);
+            $check = new HealthCheck($check);
         }
-        //if (!($check instanceof HealthInterface)) {
-        //    throw new \Exception('Invalid health check. Must implement HealthInterface.');
-        //}
 
         $this->_checks[$name] = $check;
 

@@ -10,20 +10,19 @@ namespace Cupcake\Health;
  */
 class HealthCheck implements HealthCheckInterface
 {
-    protected $label;
+    /**
+     * @var callable
+     */
     protected $callback;
 
     /**
      * HealthCheck constructor.
      *
-     * @param string $name Check name
-     * @param array $options Check options
+     * @param callable $callback
      */
-    public function __construct(string $name, array $options = [])
+    public function __construct(callable $callback)
     {
-        foreach (['label', 'callback'] as $key) {
-            $this->{$key} = $options[$key] ?? null;
-        }
+        $this->callback = $callback;
     }
 
     /**
