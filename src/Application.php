@@ -29,18 +29,11 @@ class Application extends BaseApplication implements EventDispatcherInterface
     use EventDispatcherTrait;
 
     /**
-     * @var \Cake\Core\Configure\ConfigEngineInterface
-     */
-    private Configure\ConfigEngineInterface $_configEngine;
-
-    /**
      * @param string $configDir Path to config directory
      */
     public function __construct($configDir)
     {
         parent::__construct($configDir);
-
-        $this->_configEngine = new LocalPhpConfig($this->configDir);
     }
 
     /**
@@ -104,6 +97,17 @@ class Application extends BaseApplication implements EventDispatcherInterface
          */
         if (Configure::read('DebugKit.enabled')) {
             $this->addOptionalPlugin('DebugKit');
+        }
+
+        /**
+         * CLI
+         * Register common cli plugins.
+         * These optional plugins are automatically available if fm-labs/cakephp-devtools package is installed.
+         */
+        if (PHP_SAPI == "cli") {
+            $this->addOptionalPlugin('Bake');
+            $this->addOptionalPlugin('Migrate');
+            $this->addOptionalPlugin('Reply');
         }
 
         /*

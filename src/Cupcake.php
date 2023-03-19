@@ -22,46 +22,55 @@ class Cupcake
     /**
      * @var string Default mailer class
      */
-    public static $mailerClass = 'Cake\Mailer\Mailer';
+    public static string $mailerClass = 'Cake\Mailer\Mailer';
 
     /**
      * @var array List of Cupcake instances. Singleton holder.
      */
-    protected static $_instances = [];
+    protected static array $_instances = [];
 
     /**
      * @var array Map of registered filters
      */
-    protected static $_filters = [];
+    protected static array $_filters = [];
 
     /**
      * @var PluginApplicationInterface|Application Application instance
      */
-    private PluginApplicationInterface|Application $_app;
+    private static PluginApplicationInterface|Application $_app;
 
     /**
      * Cupcake-app wide common mailer instance
      *
      * @return \Cake\Mailer\Mailer
      */
-    public static function getMailer()
+    public static function getMailer(): \Cake\Mailer\Mailer
     {
         return new self::$mailerClass();
     }
 
     /**
-     * Singleton getter
+     * Initialize with application instance
      *
      * @param \Cake\Core\PluginApplicationInterface $app The application instance
      * @return void
      * @throws \Exception
+     * @deprecated Use setApplication/getInstance instead
      */
     public static function init(PluginApplicationInterface $app): void
     {
-        if (isset(self::$_instances[0])) {
-            //throw new \Exception('Cupcake::init: Already initialized');
-        }
-        self::$_instances[0] = new self($app);
+        //if (isset(self::$_instances[0])) {
+        //    throw new \Exception('Cupcake::init: Already initialized');
+        //}
+        //self::$_instances[0] = new self($app);
+        deprecationWarning("Cupcake::init() is deprecated. Use getInstance() instead.");
+        self::setApplication($app);
+        self::getInstance();
+    }
+
+    public static function setApplication(PluginApplicationInterface $app)
+    {
+        static::$_app = $app;
     }
 
     /**
@@ -73,7 +82,10 @@ class Cupcake
     public static function getInstance(): self
     {
         if (!isset(self::$_instances[0])) {
-            throw new \Exception('Cupcake::getInstance: Not initialized');
+            if (!static::$_app) {
+                throw new \Exception('Cupcake: No application set.');
+            }
+            self::$_instances[0] = new self();
         }
 
         return self::$_instances[0];
@@ -105,9 +117,8 @@ class Cupcake
      *
      * @param \Cupcake\Application $app The application instance
      */
-    public function __construct(PluginApplicationInterface $app)
+    protected function __construct()
     {
-        $this->_app = $app;
     }
 
     /**
@@ -115,7 +126,7 @@ class Cupcake
      */
     public function plugins()
     {
-        return $this->_app->getPlugins();
+        return $this->app()->getPlugins();
     }
 
     /**
@@ -123,7 +134,7 @@ class Cupcake
      */
     public function app(): \Cupcake\Application
     {
-        return $this->_app;
+        return static::$_app;
     }
 
     /**

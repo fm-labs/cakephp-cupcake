@@ -172,11 +172,12 @@ class Bootstrapper
         if (php_sapi_name() === 'cli' && $this->isEnabled('cli')) {
             $this->_bootstrapCli();
         } else {
+            // @todo Enable FactoryLocator
             //@link https://github.com/cakephp/app/blob/4.x/src/Application.php
-            FactoryLocator::add(
-                'Table',
-                (new TableLocator())->allowFallbackClass(false)
-            );
+//            FactoryLocator::add(
+//                'Table',
+//                (new TableLocator())->allowFallbackClass(false)
+//            );
         }
 
         /**
