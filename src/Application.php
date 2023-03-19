@@ -214,10 +214,14 @@ class Application extends BaseApplication implements EventDispatcherInterface
                     $_config = $config;
                 }
 
-                // skip disabled plugins
-                if ($_config === false) {
-                    continue;
+                if (is_bool($_config)) {
+                    // skip disabled plugins
+                    if ($_config === false) {
+                        continue;
+                    }
+                    $_config = [];
                 }
+
                 $this->addPlugin($_name, $_config);
             }
 
