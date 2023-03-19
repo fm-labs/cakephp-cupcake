@@ -106,9 +106,12 @@ class Cupcake
      *
      * @param string $pluginName The plugin name
      * @return array
+     * @deprecated Use PluginManager::getPluginInfo() instead.
      */
     public static function pluginInfo(string $pluginName): array
     {
+        deprecationWarning("Cupcake::pluginInfo is deprecated. Use PluginManager::getPluginInfo() instead");
+
         return PluginManager::getPluginInfo($pluginName);
     }
 

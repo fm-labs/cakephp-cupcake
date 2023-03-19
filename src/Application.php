@@ -213,6 +213,11 @@ class Application extends BaseApplication implements EventDispatcherInterface
                     $_name = $_config;
                     $_config = $config;
                 }
+
+                // skip disabled plugins
+                if ($_config === false) {
+                    continue;
+                }
                 $this->addPlugin($_name, $_config);
             }
 
@@ -236,6 +241,12 @@ class Application extends BaseApplication implements EventDispatcherInterface
      */
     public function addOptionalPlugin($name, array $config = []): Application
     {
+        // check if explicitly disabled
+        if (Configure::read('Plugin.' . $name) === false) {
+            //debug("plugin $name is explicitly disabled");
+            return $this;
+        }
+
         try {
             $this->addPlugin($name, $config);
         } catch (MissingPluginException $ex) {

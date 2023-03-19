@@ -2,6 +2,9 @@
 
 namespace Cupcake;
 
+use Cake\Collection\Collection;
+use Cake\Core\App;
+use Cake\Core\Configure;
 use \Cake\Core\Plugin;
 
 /**
@@ -9,9 +12,50 @@ use \Cake\Core\Plugin;
  */
 class PluginManager
 {
+    private static mixed $composerInfo = null;
+    private static mixed $composerPackages = null;
+
     static public function getCollection(): \Cake\Core\PluginCollection
     {
         return Plugin::getCollection();
+    }
+
+    public static function findLocalPlugins(): array
+    {
+        // find available plugins from known plugin folders
+        $localPlugins = [];
+        foreach (App::path('plugins') as $path) {
+            if (!is_dir($path)) {
+                continue;
+            }
+
+            $files = scandir($path);
+            foreach ($files as $f) {
+                $pluginPath = rtrim($path, '/') . '/' . $f;
+                if ($f == '.' || $f == '..' || !is_dir($pluginPath)) {
+                    continue;
+                }
+                $localPlugins[$f] = [
+                    'name' => $f,
+                    'path' => $pluginPath,
+                    'local' => 1,
+                ];
+            }
+        }
+        return $localPlugins;
+    }
+
+    public static function findVendorPlugins(): array
+    {
+        $configured = Configure::read('plugins');
+        $vendorPlugins = [];
+        foreach ($configured as $pluginName => $pluginPath) {
+            $vendorPlugins[$pluginName] = [
+                'name' => $pluginName,
+                'path' => $pluginPath,
+            ];
+        }
+        return $vendorPlugins;
     }
 
     /**
@@ -34,29 +78,43 @@ class PluginManager
         $info = [];
         $info['name'] = $pluginName;
         $info['loaded'] = Plugin::isLoaded($pluginName);
-        $info['path'] = Plugin::path($pluginName);
-        $info['config'] = Plugin::configPath($pluginName);
-        $info['classPath'] = Plugin::classPath($pluginName);
-        //$info['registered'] = in_array($pluginName, Plugin::loaded());
-        //$info['registered'] = true;
 
-        $info['readme_file'] = self::getFilePath($pluginName, 'README.md');
-        $info['license_file'] = self::getFilePath($pluginName, 'LICENCE');
-        $info['contribute_file'] = self::getFilePath($pluginName, 'CONTRIB');
-        $info['phpunit_file'] = self::getFilePath($pluginName, 'phpunit.xml.dist');
-        $info['composer_file'] = self::getFilePath($pluginName, 'composer.json');
-        $info['package_file'] = self::getFilePath($pluginName, 'package.json');
+        // meta
+        $info['composer_name'] = self::getComposerPackageName($pluginName);
+        $info['version'] = self::getInstalledComposerPackageVersion($pluginName);
 
+        // instance
+        $instanceInfo = null;
         $plugins = self::getCollection();
-        $plugin = $plugins->has($pluginName) ? $plugins->get($pluginName) : null;
+        $plugin = $info['loaded'] ? $plugins->get($pluginName) : null;
+        if ($plugin) {
+            $instanceInfo = [];
+            $info['path'] = Plugin::path($pluginName);
+            $info['config'] = Plugin::configPath($pluginName);
+            $info['classPath'] = Plugin::classPath($pluginName);
 
-        //$info['handler_loaded'] = $plugin ? true : false;
-        $info['handler_class'] = $plugin ? get_class($plugin) : null;
-        $info['handler_bootstrap'] = $plugin ? $plugin->isEnabled('bootstrap') : null;
-        $info['handler_routes'] = $plugin ? $plugin->isEnabled('routes') : null;
-        //$info['handler_enabled'] = true;
-        //$info['configuration_url'] = $plugin && $plugin instanceof BasePlugin ? $plugin->getConfigurationUrl() : null;
-        //$info['configuration_url'] = null;
+            $instanceInfo['class'] = get_class($plugin);
+            $instanceInfo['bootstrap'] = $plugin->isEnabled('bootstrap');
+            $instanceInfo['routes'] = $plugin->isEnabled('routes');
+            //$instanceInfo['handler_loaded'] = $plugin ? true : false;
+            //$instanceInfo['handler_enabled'] = true;
+            //$instanceInfo['configuration_url'] = $plugin && $plugin instanceof BasePlugin ? $plugin->getConfigurationUrl() : null;
+            //$instanceInfo['configuration_url'] = null;
+        }
+        //$info['loaded'] = Plugin::isLoaded($pluginName);
+        $info['instance'] = $instanceInfo;
+
+        // files
+        $files = [];
+        $files['readme'] = self::getFilePath($pluginName, 'README.md');
+        $files['license'] = self::getFilePath($pluginName, 'LICENCE');
+        $files['contrib'] = self::getFilePath($pluginName, 'CONTRIB');
+        $files['phpunit'] = self::getFilePath($pluginName, 'phpunit.xml.dist');
+        $files['phpstan'] = self::getFilePath($pluginName, 'phpstan.neon');
+        $files['composer'] = self::getFilePath($pluginName, 'composer.json');
+        $files['package'] = self::getFilePath($pluginName, 'package.json');
+        $info['files'] = $files;
+
 
         return $info;
     }
@@ -104,5 +162,76 @@ class PluginManager
             return $content;
         }
         return null;
+    }
+
+    /**
+     * Read plugin version from composer.json
+     *
+     * @param string $pluginName
+     * @return string|null
+     */
+    static public function getComposerPackageName(string $pluginName): ?string
+    {
+        $data = self::getPluginComposerInfo($pluginName);
+        return $data['name'] ?? null;
+    }
+
+    static public function getInstalledComposerPackageVersion(string $pluginName): ?string
+    {
+        self::loadInstalledComposerPackages();
+        //debug(static::$composerPackages);
+        $packageName = self::getComposerPackageName($pluginName);
+        $package = (new Collection(static::$composerPackages))
+            ->filter(function ($item) use ($packageName) {
+                return $item['name'] == $packageName;
+            })
+            ->first();
+        if ($package) {
+            return $package['version'];
+        }
+        return "0.0.0";
+    }
+
+    static protected function getPluginComposerInfo(string $pluginName)
+    {
+        // composer
+        $composerFile = self::getFilePath($pluginName, 'composer.json');
+        if (!$composerFile) {
+            return null;
+        }
+        $contents = file_get_contents($composerFile);
+        return json_decode($contents, true);
+    }
+
+    static protected function loadComposerInfo(): void
+    {
+        if (self::$composerInfo !== null) {
+            return;
+        }
+
+        // composer
+        $composerFile = ROOT . DS . 'composer.json';
+        if (!$composerFile) {
+            return;
+        }
+        $contents = file_get_contents($composerFile);
+        static::$composerInfo = json_decode($contents, true);
+    }
+
+
+    static protected function loadInstalledComposerPackages(): void
+    {
+        if (self::$composerPackages !== null) {
+            return;
+        }
+
+        // installed
+        $installedFile = ROOT . DS . 'vendor' . DS . 'composer' . DS . 'installed.json';
+        if (!$installedFile) {
+            return;
+        }
+        $contents = file_get_contents($installedFile);
+        $data = json_decode($contents, true);
+        static::$composerPackages = $data['packages'] ?? [];
     }
 }
