@@ -65,7 +65,7 @@ class HealthManager
 
     /**
      * @param string $name Check name
-     * @param \Cupcake\Health\HealthCheckInterface|callable|array $check Check
+     * @param \Cupcake\Health\HealthCheckInterface|\Cupcake\Health\HealthCheckGeneratorInterface|callable|array $check Check
      * @return $this
      */
     public function addCheck(string $name, $check): static

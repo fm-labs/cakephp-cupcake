@@ -175,7 +175,7 @@ class Cupcake
      * @return array|mixed|null Filter result
      * @todo Use Hook class instead
      */
-    public static function doFilter(string $name, array $data, array $options = [])
+    public static function doFilter(string $name, array $data, array $options = []): mixed
     {
         // apply local filters
         if (isset(self::$_filters['filter:' . $name])) {
