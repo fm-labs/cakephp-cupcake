@@ -20,13 +20,24 @@ class PluginManager
         return Plugin::getCollection();
     }
 
+    public static function findLoadedPlugins()
+    {
+        $loadedPlugins = [];
+        foreach (\Cake\Core\Plugin::loaded() as $name) {
+            $loadedPlugins[$name] = [
+                'name' => $name,
+                'path' => Plugin::path($name),
+            ];
+        }
+        return $loadedPlugins;
+    }
+
     public static function findLocalPlugins(): array
     {
-        // find available plugins from known plugin folders
-        $localPlugins = [];
-        foreach (App::path('plugins') as $path) {
+        $plugins = [];
+        $pluginFinder = function ($path) use (&$plugins): void {
             if (!is_dir($path)) {
-                continue;
+                return;
             }
 
             $files = scandir($path);
@@ -35,14 +46,43 @@ class PluginManager
                 if ($f == '.' || $f == '..' || !is_dir($pluginPath)) {
                     continue;
                 }
-                $localPlugins[$f] = [
+
+                if (!file_exists($pluginPath . DS . 'composer.json')) {
+                    // Maybe it's a vendor plugin?
+                    // Let's check one more level
+                    $_files = scandir($pluginPath);
+                    foreach ($_files as $_f) {
+                        $_pluginPath = rtrim($pluginPath, '/') . '/' . $_f;
+                        if ($_f == '.' || $_f == '..' || !is_dir($_pluginPath)) {
+                            continue;
+                        }
+                        if (!file_exists($_pluginPath . DS . 'composer.json')) {
+                            continue;
+                        }
+
+                        $_pluginName = sprintf("%s/%s", $f, $_f);
+                        $plugins[$_pluginName] = [
+                            'name' => $_pluginName,
+                            'path' => $_pluginPath,
+                            'local' => 1,
+                        ];
+                    }
+                    continue;
+                }
+
+                $plugins[$f] = [
                     'name' => $f,
                     'path' => $pluginPath,
                     'local' => 1,
                 ];
             }
+        };
+
+        // find available plugins from known plugin folders
+        foreach (App::path('plugins') as $path) {
+            $pluginFinder($path);
         }
-        return $localPlugins;
+        return $plugins;
     }
 
     public static function findVendorPlugins(): array
