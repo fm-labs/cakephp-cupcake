@@ -294,8 +294,10 @@ class Application extends BaseApplication implements EventDispatcherInterface
      */
     public function middleware(\Cake\Http\MiddlewareQueue $middlewareQueue): \Cake\Http\MiddlewareQueue
     {
-        $routingCacheConfig = (bool)Configure::read('debug') || (bool)Configure::read('Routing.disabled') === true
-            ? null : Configure::read('Routing.cacheConfigName', '_cake_routes_');
+//        $routingCacheConfig = (bool)Configure::read('debug') || (bool)Configure::read('Routing.disabled') === true
+//            ? null : Configure::read('Routing.cacheConfigName', '_cake_routes_');
+//        $routingCacheConfig = '_cake_routes_';
+        $routingCacheConfig = null;
 
         $middlewareQueue
             // Catch any exceptions in the lower layers,
