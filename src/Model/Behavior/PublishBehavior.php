@@ -5,6 +5,7 @@ namespace Cupcake\Model\Behavior;
 
 use ArrayObject;
 use Cake\Event\EventInterface;
+use Cake\I18n\FrozenDate;
 use Cake\ORM\Behavior;
 use Cake\ORM\Query;
 
@@ -19,6 +20,8 @@ class PublishBehavior extends Behavior
      */
     protected $_defaultConfig = [
         'statusField' => 'is_published', // the field to store published flag
+        'startField' => false, // 'publish_start', // publish start date(time)
+        'endField' => false, // 'publish_end', // publish end date(time)
     ];
 
     /**
@@ -26,14 +29,32 @@ class PublishBehavior extends Behavior
      * @param array $options
      * @return \Cake\ORM\Query
      */
-    public function findPublished(Query $query, array $options)
+    public function findPublished(Query $query, array $options): Query
     {
         $statusField = $query->getRepository()->getAlias() . '.' . $this->getConfig('statusField');
+        $startField = $this->getConfig('startField')
+            ? $query->getRepository()->getAlias() . '.' . $this->getConfig('startField')
+            : false;
+        $endField = $this->getConfig('endField')
+            ? $query->getRepository()->getAlias() . '.' . $this->getConfig('endField')
+            : false;
+
         $options = array_merge([
             'published' => true,
         ], $options);
 
-        return $query->where([$statusField => $options['published']]);
+        $query = $query->where([$statusField => $options['published'] ?? true]);
+
+        if ($startField) {
+            $query->andWhere(['OR' => [$startField . ' IS NULL', $startField . ' <=' => new \DateTime('now')]]);
+        }
+        if ($endField) {
+            $query->andWhere(['OR' => [$endField . ' IS NULL', $endField . ' >=' => new FrozenDate('now')]]);
+        }
+
+        //debug($query->sql());
+
+        return $query;
     }
 
     /**
