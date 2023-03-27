@@ -25,8 +25,8 @@ class Bootstrapper
     protected static string $CONFIGURE_ERROR = 'error';
     protected static string $CONFIGURE_LOG = 'log';
     protected static string $CONFIGURE_SECURITY = 'security';
-    protected static string $CONFIGURE_EMAIL = 'mailer';
-    protected static string $CONFIGURE_EMAIL_TRANSPORT = 'mailer_transport';
+    protected static string $CONFIGURE_EMAIL = 'email';
+    protected static string $CONFIGURE_EMAIL_TRANSPORT = 'email_transport';
     protected static string $CONFIGURE_DETECTORS = 'detectors';
     
     /**
