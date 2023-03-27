@@ -17,6 +17,18 @@ use Cupcake\Configure\Engine\LocalPhpConfig;
 
 class Bootstrapper
 {
+    protected static string $CHECK_REQUIREMENTS = 'requirements';
+    protected static string $CONFIGURE_DEBUG = 'debug';
+    protected static string $CONFIGURE_CLI = 'cli';
+    protected static string $CONFIGURE_DATASOURCE = 'datasource';
+    protected static string $CONFIGURE_CACHE = 'cache';
+    protected static string $CONFIGURE_ERROR = 'error';
+    protected static string $CONFIGURE_LOG = 'log';
+    protected static string $CONFIGURE_SECURITY = 'security';
+    protected static string $CONFIGURE_EMAIL = 'mailer';
+    protected static string $CONFIGURE_EMAIL_TRANSPORT = 'mailer_transport';
+    protected static string $CONFIGURE_DETECTORS = 'detectors';
+    
     /**
      * @var array
      */
@@ -42,8 +54,9 @@ class Bootstrapper
         'error' => true,
         'log' => true,
         'security' => true,
-        'mailer' => true,
-        'mailer_transports' => true,
+        'email' => true,
+        'email_transport' => true,
+        'detectors' => true,
     ];
 
     public static function getInstance()
@@ -125,7 +138,7 @@ class Bootstrapper
         /**
          * Check system requirements
          */
-        if ($this->isEnabled('requirements')) {
+        if ($this->isEnabled(self::$CHECK_REQUIREMENTS)) {
             $this->_checkRequirements();
         }
 
@@ -162,14 +175,14 @@ class Bootstrapper
          * Debug mode.
          * Must be run before boostrap, to be able to patch configuration values before they get consumed.
          */
-        if ($this->isEnabled('debug')) {
+        if ($this->isEnabled(self::$CONFIGURE_DEBUG)) {
             $this->_debugMode(Configure::read('debug'));
         }
 
         /**
          * Cli
          */
-        if (php_sapi_name() === 'cli' && $this->isEnabled('cli')) {
+        if (php_sapi_name() === 'cli' && $this->isEnabled(self::$CONFIGURE_CLI)) {
             $this->_bootstrapCli();
         } else {
             // @todo Enable FactoryLocator
@@ -275,7 +288,7 @@ class Bootstrapper
          * The trap classes provide a more extensible and consistent error & exception handling framework.
          * To upgrade to the new system you can replace the usage of ErrorHandler and ConsoleErrorHandler
          */
-        if ($this->isEnabled('error')) {
+        if ($this->isEnabled(self::$CONFIGURE_ERROR)) {
 //        if ($isCli) {
 //            (new \Cake\Error\ConsoleErrorHandler(Configure::read('Error')))->register();
 //            //} elseif (class_exists('\Gourmet\Whoops\Error\WhoopsHandler')) {
@@ -323,29 +336,29 @@ class Bootstrapper
         unset($fullBaseUrl);
 
 
-        if ($this->isEnabled('cache')) {
+        if ($this->isEnabled(self::$CONFIGURE_CACHE)) {
             Cache::setConfig(Configure::consume('Cache'));
         }
-        if ($this->isEnabled('datasource')) {
+        if ($this->isEnabled(self::$CONFIGURE_DATASOURCE)) {
             ConnectionManager::setConfig(Configure::consume('Datasources'));
         }
-        if ($this->isEnabled('mailer')) {
+        if ($this->isEnabled(self::$CONFIGURE_EMAIL_TRANSPORT)) {
             TransportFactory::setConfig(Configure::consume('EmailTransport'));
         }
-        if ($this->isEnabled('mailer_transport')) {
+        if ($this->isEnabled(self::$CONFIGURE_EMAIL)) {
             Mailer::setConfig(Configure::consume('Email'));
         }
-        if ($this->isEnabled('log')) {
+        if ($this->isEnabled(self::$CONFIGURE_LOG)) {
             Log::setConfig(Configure::consume('Log'));
         }
-        if ($this->isEnabled('security')) {
+        if ($this->isEnabled(self::$CONFIGURE_SECURITY)) {
             Security::setSalt(Configure::consume('Security.salt'));
         }
         
         /**
          * Setup detectors for mobile and tablet.
          */
-        if ($this->isEnabled('detectors')) {
+        if ($this->isEnabled(self::$CONFIGURE_DETECTORS)) {
             ServerRequest::addDetector('mobile', function () {
                 $detector = new \Detection\MobileDetect();
                 return $detector->isMobile();
