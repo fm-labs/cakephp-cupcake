@@ -5,12 +5,17 @@ namespace Cupcake;
 
 use Cake\Cache\Cache;
 use Cake\Cache\Engine\FileEngine;
+use Cake\Core\Plugin;
 use Cake\Core\PluginApplicationInterface;
+use Cake\Core\PluginCollection;
+use Cake\Core\PluginInterface;
 use Cake\Event\Event;
 use Cake\Event\EventManager;
 use Cake\Log\Engine\FileLog;
 use Cake\Log\Log;
+use Cake\Mailer\Mailer;
 use DebugKit\Cache\Engine\DebugEngine;
+use Exception;
 
 /**
  * Class Cupcake
@@ -35,7 +40,7 @@ class Cupcake
     protected static array $_filters = [];
 
     /**
-     * @var PluginApplicationInterface|Application Application instance
+     * @var \Cake\Core\PluginApplicationInterface|\Cupcake\Application Application instance
      */
     private static PluginApplicationInterface|Application $_app;
 
@@ -44,7 +49,7 @@ class Cupcake
      *
      * @return \Cake\Mailer\Mailer
      */
-    public static function getMailer(): \Cake\Mailer\Mailer
+    public static function getMailer(): Mailer
     {
         return new self::$mailerClass();
     }
@@ -63,12 +68,16 @@ class Cupcake
         //    throw new \Exception('Cupcake::init: Already initialized');
         //}
         //self::$_instances[0] = new self($app);
-        deprecationWarning("Cupcake::init() is deprecated. Use getInstance() instead.");
+        deprecationWarning('Cupcake::init() is deprecated. Use getInstance() instead.');
         self::setApplication($app);
         self::getInstance();
     }
 
-    public static function setApplication(PluginApplicationInterface $app)
+    /**
+     * @param \Cake\Core\PluginApplicationInterface $app
+     * @return void
+     */
+    public static function setApplication(PluginApplicationInterface $app): void
     {
         static::$_app = $app;
     }
@@ -83,7 +92,7 @@ class Cupcake
     {
         if (!isset(self::$_instances[0])) {
             if (!static::$_app) {
-                throw new \Exception('Cupcake: No application set.');
+                throw new Exception('Cupcake: No application set.');
             }
             self::$_instances[0] = new self();
         }
@@ -96,7 +105,7 @@ class Cupcake
      *
      * @return \Cake\Core\PluginInterface
      */
-    public static function plugin(string $pluginName): \Cake\Core\PluginInterface
+    public static function plugin(string $pluginName): PluginInterface
     {
         return self::getInstance()->app()->getPlugins()->get($pluginName);
     }
@@ -110,7 +119,7 @@ class Cupcake
      */
     public static function pluginInfo(string $pluginName): array
     {
-        deprecationWarning("Cupcake::pluginInfo is deprecated. Use PluginManager::getPluginInfo() instead");
+        deprecationWarning('Cupcake::pluginInfo is deprecated. Use PluginManager::getPluginInfo() instead');
 
         return PluginManager::getPluginInfo($pluginName);
     }
@@ -127,7 +136,7 @@ class Cupcake
     /**
      * @return \Cake\Core\PluginCollection
      */
-    public function plugins()
+    public function plugins(): PluginCollection
     {
         return $this->app()->getPlugins();
     }
@@ -135,7 +144,7 @@ class Cupcake
     /**
      * @return \Cupcake\Application
      */
-    public function app(): \Cupcake\Application
+    public function app(): Application
     {
         return static::$_app;
     }
@@ -172,7 +181,7 @@ class Cupcake
      * @param string $name Filter name
      * @param array $data Filter data
      * @param array $options Filter options
-     * @return array|mixed|null Filter result
+     * @return mixed|array|null Filter result
      * @todo Use Hook class instead
      */
     public static function doFilter(string $name, array $data, array $options = []): mixed
@@ -217,7 +226,7 @@ class Cupcake
      */
     public static function getThemes(): array
     {
-        return array_filter(\Cake\Core\Plugin::loaded(), function ($pluginName) {
+        return array_filter(Plugin::loaded(), function ($pluginName) {
             return preg_match('/^Theme/', $pluginName) ? true : false;
         });
     }

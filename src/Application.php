@@ -10,13 +10,15 @@ use Cake\Core\PluginCollection;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Event\EventDispatcherInterface;
 use Cake\Event\EventDispatcherTrait;
+use Cake\Event\EventManagerInterface;
 use Cake\Http\BaseApplication;
+use Cake\Http\ControllerFactoryInterface;
 use Cake\Http\Middleware\BodyParserMiddleware;
+use Cake\Http\MiddlewareQueue;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
 use Cake\Routing\RouteBuilder;
-use Cake\Utility\Inflector;
-use Cupcake\Configure\Engine\LocalPhpConfig;
+use Exception;
 
 /**
  * Application setup class.
@@ -31,13 +33,20 @@ class Application extends BaseApplication implements EventDispatcherInterface
     /**
      * @param string $configDir Path to config directory
      */
-    public function __construct($configDir)
-    {
-        parent::__construct($configDir);
+    public function __construct(
+        string $configDir,
+        ?EventManagerInterface $eventManager = null,
+        ?ControllerFactoryInterface $controllerFactory = null
+    ) {
+        parent::__construct($configDir, $eventManager, $controllerFactory);
     }
 
     /**
      * Load all the application configuration and bootstrap logic.
+     * - include bootstrap file
+     * - bootstrap cakephp
+     * - load plugins
+     * - initialize cupcake
      *
      * Override this method to add additional bootstrap logic for your application.
      *
@@ -46,14 +55,6 @@ class Application extends BaseApplication implements EventDispatcherInterface
      */
     public function bootstrap(): void
     {
-        /**
-         * NOW: ENTERING RUNLEVEL 1 (BOOTSTRAPPING)
-         * - include user's bootstrap file
-         * - bootstrap cakephp
-         * - load plugins
-         * - initialize cupcake
-         */
-
         /**
          * Include app's bootstrap file
          */
@@ -76,9 +77,9 @@ class Application extends BaseApplication implements EventDispatcherInterface
          * - consume configurations: ConnectionManager, Cache, Email, Log, Security
          */
         try {
-            $bootstrapper = \Cupcake\Bootstrapper::init($this->configDir);
+            $bootstrapper = Bootstrapper::init($this->configDir);
             $bootstrapper->run();
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             echo $ex->getMessage();
             throw $ex;
         }
@@ -104,23 +105,23 @@ class Application extends BaseApplication implements EventDispatcherInterface
          * Register common cli plugins.
          * These optional plugins are automatically available if fm-labs/cakephp-devtools package is installed.
          */
-        if (PHP_SAPI == "cli") {
+        if (PHP_SAPI == 'cli') {
             $this->addOptionalPlugin('Bake');
             $this->addOptionalPlugin('Migrate');
             $this->addOptionalPlugin('Reply');
         }
 
         /*
-         * Init Cupcake
-         */
-        Cupcake::init($this);
-
-        /*
          * Add cupcake templates path as fallback template search path
          */
         $templatePaths = Configure::read('App.paths.templates', []);
-        $templatePaths[] = \Cake\Core\Plugin::templatePath('Cupcake');
+        $templatePaths[] = Plugin::templatePath('Cupcake');
         Configure::write('App.paths.templates', $templatePaths);
+
+        /*
+         * Init Cupcake
+         */
+        Cupcake::setApplication($this);
     }
 
     /**
@@ -133,17 +134,12 @@ class Application extends BaseApplication implements EventDispatcherInterface
     {
         //parent::pluginBootstrap();
         foreach ($this->plugins->with('bootstrap') as $plugin) {
-            //\Cupcake\Cupcake::doAction('plugin_bootstrap', compact('plugin'));
             try {
-                //Configure::load($plugin->getName() . '.' . Inflector::underscore($plugin->getName()));
-                //$this->loadPluginConfig($plugin->getName());
                 $plugin->bootstrap($this);
-            } catch (\Exception $ex) {
+            } catch (Exception $ex) {
                 debug($ex->getMessage());
             }
-            //\Cupcake\Cupcake::doAction('plugin_ready', compact('plugin'));
         }
-        //\Cupcake\Cupcake::doAction('app_ready', compact('plugin'));
     }
 
     /**
@@ -151,7 +147,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
      * The CakePHP Application enforces the presence of a routes.php file.
      * The Cupcake Application ignores the absence gracefully.
      *
-     * @param RouteBuilder $routes
+     * @param \Cake\Routing\RouteBuilder $routes
      * @return void
      */
     public function routes(RouteBuilder $routes): void
@@ -163,46 +159,8 @@ class Application extends BaseApplication implements EventDispatcherInterface
     }
 
     /**
-     * Autoload plugin configs from standard directories
-     *
-     * @param string $plugin Plugin name
-     * @throws \Exception
-     * @deprecated Use LocalPhpConfig instead.
-     */
-    public function loadPluginConfig(string $plugin): void
-    {
-        deprecationWarning("Application::loadPluginConfig() is deprecated. Do not use.");
-
-        $file = Inflector::underscore($plugin);
-
-        // first try to load the default plugin configuration from the plugin
-        $filePath = Plugin::configPath($plugin) . DS . $file . '.php';
-        if (file_exists($filePath)) {
-            if (!Configure::load($plugin . '.' . $file, 'default', true)) {
-                throw new \RuntimeException('Failed to load config file ' . $file);
-            }
-        }
-
-        foreach (['plugin', 'local/plugin'] as $dir) {
-            $filePath = $this->configDir . DS . $dir . DS . $file . '.php';
-            if (file_exists($filePath)) {
-                if (!Configure::load($dir . '/' . $file, 'default', true)) {
-                    throw new \RuntimeException('Failed to load config file ' . $file);
-                }
-            }
-        }
-
-        if (Configure::isConfigured('settings')) {
-            Configure::load($plugin, 'settings');
-        }
-    }
-
-    /**
-     * Dynamically load plugin
-     *
-     * @override
-     * @param \Cake\Core\PluginInterface|string|array $name Plugin name
-     * @param array $config Plugin config
+     * @param \Cake\Core\PluginInterface|string|array $name
+     * @param array $config
      * @return $this
      */
     public function addPlugin($name, array $config = []): Application
@@ -238,10 +196,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
     }
 
     /**
-     * @override
-     * @param \Cake\Core\PluginInterface|string|array $name Plugin name
-     * @param array $config Plugin config
-     * @return $this
+     * @inheritDoc
      */
     public function addOptionalPlugin($name, array $config = []): Application
     {
@@ -253,7 +208,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
 
         try {
             $this->addPlugin($name, $config);
-        } catch (MissingPluginException $ex) {
+        } catch (MissingPluginException) {
             // ignore missing plugin
         }
 
@@ -261,23 +216,24 @@ class Application extends BaseApplication implements EventDispatcherInterface
     }
 
     /**
-     * Get plugin info
+     * Get plugin info - DEPRECATED
      *
      * @param string $pluginName Plugin name
      * @return array
+     * @deprecated Use PluginManager::getPluginInfo() instead.
      */
     public function getPluginInfo(string $pluginName): array
     {
-        deprecationWarning("Application::getPluginInfo() is deprecated. Use PluginManager::getPluginInfo() instead.");
+        deprecationWarning('Application::getPluginInfo() is deprecated. Use PluginManager::getPluginInfo() instead.');
 
-        return \Cupcake\PluginManager::getPluginInfo($pluginName);
+        return PluginManager::getPluginInfo($pluginName);
     }
 
     /**
-     * Get plugin registry instance
+     * Get plugin registry instance - DEPRECATED
      *
-     * @deprecated Use getPlugins() instead. getPlugins() returns PluginCollection
      * @return \Cake\Core\PluginCollection
+     * @deprecated Use getPlugins() instead.
      */
     public function plugins(): PluginCollection
     {
@@ -292,7 +248,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
      * @param \Cake\Http\MiddlewareQueue $middlewareQueue The middleware queue to setup.
      * @return \Cake\Http\MiddlewareQueue The updated middleware queue.
      */
-    public function middleware(\Cake\Http\MiddlewareQueue $middlewareQueue): \Cake\Http\MiddlewareQueue
+    public function middleware(MiddlewareQueue $middlewareQueue): MiddlewareQueue
     {
 //        $routingCacheConfig = (bool)Configure::read('debug') || (bool)Configure::read('Routing.disabled') === true
 //            ? null : Configure::read('Routing.cacheConfigName', '_cake_routes_');
@@ -331,6 +287,40 @@ class Application extends BaseApplication implements EventDispatcherInterface
         return $middlewareQueue;
     }
 
+//    /**
+//     * Autoload plugin configs from standard directories
+//     *
+//     * @param string $plugin Plugin name
+//     * @throws \Exception
+//     * @deprecated Use LocalPhpConfig instead.
+//     */
+//    public function loadPluginConfig(string $plugin): void
+//    {
+//        deprecationWarning('Application::loadPluginConfig() is deprecated. Do not use.');
+//
+//        $file = Inflector::underscore($plugin);
+//
+//        // first try to load the default plugin configuration from the plugin
+//        $filePath = Plugin::configPath($plugin) . DS . $file . '.php';
+//        if (file_exists($filePath)) {
+//            if (!Configure::load($plugin . '.' . $file, 'default', true)) {
+//                throw new RuntimeException('Failed to load config file ' . $file);
+//            }
+//        }
+//
+//        foreach (['plugin', 'local/plugin'] as $dir) {
+//            $filePath = $this->configDir . DS . $dir . DS . $file . '.php';
+//            if (file_exists($filePath)) {
+//                if (!Configure::load($dir . '/' . $file, 'default', true)) {
+//                    throw new RuntimeException('Failed to load config file ' . $file);
+//                }
+//            }
+//        }
+//
+//        if (Configure::isConfigured('settings')) {
+//            Configure::load($plugin, 'settings');
+//        }
+//    }
 
 //    /**
 //     * Auto-load local configurations.
@@ -357,5 +347,4 @@ class Application extends BaseApplication implements EventDispatcherInterface
 //            }
 //        }
 //    }
-
 }
