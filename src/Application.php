@@ -108,7 +108,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
          */
         if (PHP_SAPI == 'cli') {
             $this->addOptionalPlugin('Bake');
-            $this->addOptionalPlugin('Migrate');
+            $this->addOptionalPlugin('Migrations');
             $this->addOptionalPlugin('Reply');
         }
 
