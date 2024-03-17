@@ -56,7 +56,7 @@ trait DisplayPageTrait
         }
         $controller->set(compact('page', 'subpage'));
         $controller->viewBuilder()->setTemplatePath('Pages');
-        $controller->viewBuilder()->setTheme('ThemeBanana');
+        //$controller->viewBuilder()->setTheme('ThemeBanana');
 
         try {
             $controller->render(implode('/', $path));
