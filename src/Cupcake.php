@@ -245,25 +245,33 @@ class Cupcake
 
         // cache dirs
         foreach (Cache::configured() as $name) {
-            $engine = Cache::pool($name);
-            if ($engine instanceof FileEngine) {
-                $path = $engine->getConfig('path');
-                $dirs[] = $path;
-            } elseif ($engine instanceof DebugEngine) {
-                if (!$engine->engine()) {
-                    $engine->init();
+            try {
+                $engine = Cache::pool($name);
+                if ($engine instanceof FileEngine) {
+                    $path = $engine->getConfig('path');
+                    $dirs[] = $path;
+                } elseif ($engine instanceof DebugEngine) {
+                    if (!$engine->engine()) {
+                        $engine->init();
+                    }
+                    $path = $engine->engine()->getConfig('path');
+                    $dirs[] = $path;
                 }
-                $path = $engine->engine()->getConfig('path');
-                $dirs[] = $path;
+            } catch (Exception $e) {
+                // ignore
             }
         }
 
         // log dirs
         $dirs[] = LOGS;
         foreach (Log::configured() as $name) {
-            $engine = Log::engine($name);
-            if ($engine instanceof FileLog) {
-                $dirs[] = $engine->getConfig('path');
+            try {
+                $engine = Log::engine($name);
+                if ($engine instanceof FileLog) {
+                    $dirs[] = $engine->getConfig('path');
+                }
+            } catch (Exception $e) {
+                // ignore
             }
         }
 
@@ -273,9 +281,7 @@ class Cupcake
         // cupcake specific
         $dirs[] = DATA_DIR;
 
-        // shop dirs
-        // payment dirs
-        // other custom dirs
+        // @todo other custom dirs / plugin custom dirs
 
         $dirs = array_unique($dirs);
 
