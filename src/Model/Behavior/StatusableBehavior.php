@@ -25,6 +25,7 @@ class StatusableBehavior extends Behavior
         'implementedMethods' => [
             'getStatusCodes' => 'getStatusCodes',
             'getStatusList' => 'getStatusList',
+            'getStatusSelectList' => 'getStatusSelectList',
         ]
     ];
 
@@ -162,10 +163,28 @@ class StatusableBehavior extends Behavior
 
     public function getStatusList(string $field) {
         $fieldStati = $this->_fieldConfig[$field] ?? null;
+        //var_dump($fieldStati);
+        if ($fieldStati === null) {
+            return [];
+        }
 
-        return array_map(function($status, $idx) {
+        return array_map(function($status) {
             /** @var \Cupcake\Lib\Status $status */
             return $status->getLabel();
         }, $fieldStati);
+    }
+
+    public function getStatusSelectList(string $field) {
+        $fieldStati = $this->_fieldConfig[$field] ?? null;
+        //var_dump($fieldStati);
+        if ($fieldStati === null) {
+            return [];
+        }
+
+        $selectList = [];
+        foreach ($fieldStati as $status) {
+            $selectList[$status->getStatus()] = $status->getLabel();
+        }
+        return $selectList;
     }
 }
