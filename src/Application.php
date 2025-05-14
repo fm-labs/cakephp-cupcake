@@ -138,7 +138,8 @@ class Application extends BaseApplication implements EventDispatcherInterface
             try {
                 $plugin->bootstrap($this);
             } catch (Exception $ex) {
-                debug($ex->getMessage());
+                //debug("Bootstrapping plugin {$plugin->getName()} failed: " . $ex->getMessage());
+                throw new Exception("Bootstrapping plugin {$plugin->getName()} failed: " . $ex->getMessage());
             }
         }
     }
