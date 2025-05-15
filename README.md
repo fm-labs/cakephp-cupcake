@@ -1,4 +1,4 @@
-# CupCake Core plugin
+# Cupcake Core plugin
 
 An extension for the awesome [CakePHP](http://cakephp.org) framework with some extra sugar added.
 
@@ -9,10 +9,11 @@ You can install this plugin into your CakePHP application using [composer](http:
 The recommended way to install composer packages is:
 
 ```
-composer fm-labs/cakephp-cupcake
-```
+composer require fm-labs/cakephp-cupcake
 
-## Usage
+# For CakePHP 4.x
+composer require fm-labs/cakephp-cupcake:^4
+```
 
 
 ## Docs
