@@ -20,7 +20,7 @@ class StatusableBehavior extends Behavior
      *
      * @var array
      */
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         'fields' => [],
         'implementedMethods' => [
             'getStatusCodes' => 'getStatusCodes',

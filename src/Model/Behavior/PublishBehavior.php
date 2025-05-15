@@ -18,7 +18,7 @@ class PublishBehavior extends Behavior
     /**
      * @var array
      */
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         'statusField' => 'is_published', // the field to store published flag
         'startField' => false, // 'publish_start', // publish start date(time)
         'endField' => false, // 'publish_end', // publish end date(time)
@@ -49,7 +49,7 @@ class PublishBehavior extends Behavior
             $query->andWhere(['OR' => [$startField . ' IS NULL', $startField . ' <=' => new \DateTime('now')]]);
         }
         if ($endField) {
-            $query->andWhere(['OR' => [$endField . ' IS NULL', $endField . ' >=' => new FrozenDate('now')]]);
+            $query->andWhere(['OR' => [$endField . ' IS NULL', $endField . ' >=' => new \Cake\I18n\Date('now')]]);
         }
 
         //debug($query->sql());

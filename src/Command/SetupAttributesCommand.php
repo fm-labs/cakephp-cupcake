@@ -12,6 +12,8 @@ use Cake\Datasource\EntityInterface;
 
 /**
  * SetupAttributes command.
+ *
+ * @deprecated
  */
 class SetupAttributesCommand extends Command
 {

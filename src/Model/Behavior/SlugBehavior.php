@@ -19,7 +19,7 @@ class SlugBehavior extends Behavior
     /**
      * @var array
      */
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         'field' => 'title', // the field to create the slug from
         'slug' => 'slug', // the slug field name
         'replacement' => '-', // the replacement string for non-standard characters

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Cupcake\Ui;
 
-use Cake\Utility\Inflector;
+use Cake\View\View;
 
 abstract class UiElement implements UiElementInterface
 {
@@ -12,28 +12,34 @@ abstract class UiElement implements UiElementInterface
     /**
      * Plugin name.
      *
-     * @var null|string
+     * @var string|null
      */
-    public $plugin = null;
+    public ?string $plugin = null;
 
     /**
      * View instance reference.
      *
      * @var \Cake\View\View
      */
-    protected $_View;
+    protected View $_View;
 
+    protected Ui $_Ui;
 
-    protected $_Ui;
-
-    public function __construct(\Cupcake\Ui\Ui $ui)
+    /**
+     * @param \Cupcake\Ui\Ui $ui
+     */
+    public function __construct(Ui $ui)
     {
         $this->_Ui = $ui;
         $this->_View = $this->_Ui->getView();
         $this->initialize();
     }
 
-    public function initialize(): void {
+    /**
+     * @return void
+     */
+    public function initialize(): void
+    {
         // override in subclasses
     }
 
@@ -48,15 +54,17 @@ abstract class UiElement implements UiElementInterface
     }
 
     /**
-     * @inheritDoc
+     * Render the element.
+     *
      * @return string
      */
     public function render(): string
     {
-        $html = "";
+        $html = '';
         if ($this->_View->elementExists($this->elementName())) {
             $html .= $this->_View->element($this->elementName(), $this->data());
         }
+
         return $html;
     }
 }

@@ -25,7 +25,7 @@ class AttributesBehavior extends Behavior
     /**
      * @var array
      */
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         'connectionName' => null,
         'tableClassName' => null,
         'tableName' => 'attributes',

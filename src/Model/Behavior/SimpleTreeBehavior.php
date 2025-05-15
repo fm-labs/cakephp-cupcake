@@ -22,7 +22,7 @@ class SimpleTreeBehavior extends Behavior
     /**
      * @var array
      */
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         'implementedFinders' => [
             'sorted' => 'findSorted',
         ],
@@ -89,7 +89,7 @@ class SimpleTreeBehavior extends Behavior
         $dir = $options['reverse'] ? 'desc' : 'asc';
         $order = array_combine($scope, array_fill(0, count($scope), $dir));
 
-        $query->order($order);
+        $query->orderBy($order);
 
         return $query;
     }
@@ -210,7 +210,7 @@ class SimpleTreeBehavior extends Behavior
         $list = $this->_table
             ->find('list')
             ->where($scope)
-            ->order([$options['field'] => $options['order']]);
+            ->orderBy([$options['field'] => $options['order']]);
 
         $this->_table->getConnection()->transactional(function () use ($list, $primaryKey) {
 

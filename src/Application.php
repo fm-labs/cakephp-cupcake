@@ -88,11 +88,11 @@ class Application extends BaseApplication implements EventDispatcherInterface
         /**
          * Load core plugins and user plugins
          */
-        if (file_exists(CONFIG . 'plugins.php')) {
-            Configure::load('plugins');
-        }
-        $this->addPlugin('Cupcake');
-        $this->addPlugin((array)Configure::read('Plugin')/*, ['bootstrap' => true, 'routes' => true]*/);
+//        if (file_exists(CONFIG . 'plugins.php')) {
+//            Configure::load('plugins');
+//        }
+//        $this->addPlugin('Cupcake');
+//        $this->addPlugin((array)Configure::read('Plugin')/*, ['bootstrap' => true, 'routes' => true]*/);
 
         /**
          * CakePHP DebugKit support
@@ -109,7 +109,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
         if (PHP_SAPI == 'cli') {
             $this->addOptionalPlugin('Bake');
             $this->addOptionalPlugin('Migrations');
-            $this->addOptionalPlugin('Reply');
+            $this->addOptionalPlugin('Repl');
         }
 
         /*
@@ -138,8 +138,8 @@ class Application extends BaseApplication implements EventDispatcherInterface
             try {
                 $plugin->bootstrap($this);
             } catch (Exception $ex) {
-                //debug("Bootstrapping plugin {$plugin->getName()} failed: " . $ex->getMessage());
-                throw new Exception("Bootstrapping plugin {$plugin->getName()} failed: " . $ex->getMessage());
+                debug("Bootstrapping plugin {$plugin->getName()} failed: " . $ex->getMessage());
+                //throw new Exception("Bootstrapping plugin {$plugin->getName()} failed: " . $ex->getMessage());
             }
         }
     }
@@ -188,9 +188,14 @@ class Application extends BaseApplication implements EventDispatcherInterface
             return $this;
         }
 
+        // @deprecated
         $bootstrap = $config['bootstrap'] ?? true;
-        if (!$bootstrap) {
+        if ($bootstrap === false) {
             //debug("Skipping disabled plugin: $name");
+            return $this;
+        }
+
+        if (Plugin::isLoaded($name)) {
             return $this;
         }
 

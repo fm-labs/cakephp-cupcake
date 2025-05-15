@@ -62,7 +62,7 @@ use Cake\View\Helper;
  */
 class MetaHelper extends Helper
 {
-    public $helpers = ['Html'];
+    public array $helpers = ['Html'];
 
     protected array $_data = [];
 

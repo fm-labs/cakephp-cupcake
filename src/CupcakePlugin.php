@@ -12,15 +12,15 @@ use Cake\Event\EventManager;
 
 class CupcakePlugin extends BasePlugin
 {
-    /**
-     * @var bool
-     */
-    public $routesEnabled = false;
-
-    /**
-     * @var bool
-     */
-    public $bootstrapEnabled = true;
+//    /**
+//     * @var bool
+//     */
+//    public $routesEnabled = false;
+//
+//    /**
+//     * @var bool
+//     */
+//    public $bootstrapEnabled = true;
 
     /**
      * @inheritDoc

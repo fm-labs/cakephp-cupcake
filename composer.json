@@ -4,6 +4,7 @@
     "type": "cakephp-plugin",
     "require": {
         "php": ">=8.2",
+        "ext-pdo": "*",
         "cakephp/cakephp": "^5"
     },
     "require-dev": {},

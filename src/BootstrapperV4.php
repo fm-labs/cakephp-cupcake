@@ -15,7 +15,7 @@ use Cake\Routing\Router;
 use Cake\Utility\Security;
 use Cupcake\Configure\Engine\LocalPhpConfig;
 
-class Bootstrapper
+class BootstrapperV4
 {
     protected static string $CHECK_REQUIREMENTS = 'requirements';
     protected static string $CONFIGURE_DEBUG = 'debug';
@@ -441,7 +441,6 @@ class Bootstrapper
      * Check system requirements.
      *
      * @return void
-     * @deprecated
      */
     protected function _checkRequirements(): void
     {
@@ -450,8 +449,8 @@ class Bootstrapper
             require_once $reqFilePath;
         }
 
-        if (version_compare(PHP_VERSION, '8.1.0') < 0) {
-            trigger_error('Your PHP version must be equal or higher than 8.1.0 to use CakePHP.', E_USER_ERROR);
+        if (version_compare(PHP_VERSION, '7.4.0') < 0) {
+            trigger_error('Your PHP version must be equal or higher than 7.4.0 to use CakePHP.', E_USER_ERROR);
         }
 
         if (!extension_loaded('mbstring')) {

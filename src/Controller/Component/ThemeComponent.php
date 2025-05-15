@@ -15,12 +15,12 @@ use Cake\Core\Plugin;
  */
 class ThemeComponent extends Component
 {
-    public $components = ['Flash'];
+    public array $components = ['Flash'];
 
     /**
      * @var array
      */
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         'viewClass' => null,
         'theme' => null,
         'layout' => null,

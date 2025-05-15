@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Cupcake\Database\Type;
 
-use Cake\Database\DriverInterface;
+use Cake\Database\Driver;
 use Cake\Database\Type\BaseType;
 use Cake\Database\Type\BatchCastingInterface;
 use PDO;
@@ -21,7 +21,7 @@ class JsonType extends BaseType implements BatchCastingInterface
     /**
      * {@inheritDoc}
      */
-    public function toPHP($value, DriverInterface $driver)
+    public function toPHP($value, Driver $driver)
     {
         if ($value === null) {
             return null;
@@ -45,7 +45,7 @@ class JsonType extends BaseType implements BatchCastingInterface
     /**
      * {@inheritDoc}
      */
-    public function toDatabase($value, DriverInterface $driver)
+    public function toDatabase($value, Driver $driver)
     {
         if ($value === null) {
             return null;
@@ -62,7 +62,7 @@ class JsonType extends BaseType implements BatchCastingInterface
     /**
      * {@inheritDoc}
      */
-    public function toStatement($value, DriverInterface $driver)
+    public function toStatement($value, Driver $driver)
     {
         if ($value === null) {
             return null;
@@ -77,10 +77,10 @@ class JsonType extends BaseType implements BatchCastingInterface
      *
      * @param array $values The original array of values containing the fields to be casted
      * @param string[] $fields The field keys to cast
-     * @param \Cake\Database\DriverInterface $driver Object from which database preferences and configuration will be extracted.
+     * @param \Cake\Database\Driver $driver Object from which database preferences and configuration will be extracted.
      * @return array
      */
-    public function manyToPHP(array $values, array $fields, DriverInterface $driver): array
+    public function manyToPHP(array $values, array $fields, Driver $driver): array
     {
         foreach ($fields as $field) {
             if (!isset($values[$field])) {

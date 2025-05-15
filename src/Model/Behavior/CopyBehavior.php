@@ -16,7 +16,7 @@ class CopyBehavior extends Behavior
     /**
      * @var array
      */
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         'fields' => [],
         'validator' => 'default',
         'implementedMethods' => [

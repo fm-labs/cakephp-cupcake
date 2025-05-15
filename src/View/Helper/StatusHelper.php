@@ -15,7 +15,7 @@ class StatusHelper extends Helper
 {
     use StringTemplateTrait;
 
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         'templates' => [
             'status_display' => '<span class="{{class}}">{{status}}</span>',
             'status_boolean_true' => '<i class="fa fa-check {{class}}"{{attrs}} />',

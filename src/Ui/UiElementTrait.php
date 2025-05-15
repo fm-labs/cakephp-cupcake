@@ -7,13 +7,12 @@ use Cake\Utility\Inflector;
 
 trait UiElementTrait
 {
-
     /**
      * @var string|null The view element name
      */
-    protected $elementName = '';
+    protected ?string $elementName = '';
 
-    protected $elementBase = 'ui/';
+    protected string $elementBase = 'ui/';
 
     /**
      * Get the title for the panel.
@@ -47,5 +46,4 @@ trait UiElementTrait
 
         return $elementName;
     }
-
 }

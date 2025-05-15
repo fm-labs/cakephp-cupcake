@@ -20,14 +20,14 @@ class MenuHelper extends Helper
     /**
      * @var array
      */
-    public $helpers = ['Html'];
+    public array $helpers = ['Html'];
 
     /**
      * Default config for this class
      *
      * @var array
      */
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         'templates' => [
             'menuList' => '<ul{{attrs}}>{{content}}</ul>',
             'menuListItem' => '<li{{attrs}}>{{content}}{{submenu}}</li>',
