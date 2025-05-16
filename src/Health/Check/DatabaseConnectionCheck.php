@@ -17,16 +17,12 @@ class DatabaseConnectionCheck implements HealthCheckGeneratorInterface
     public function getHealthStatus(): Generator
     {
         foreach (ConnectionManager::configured() as $name) {
-            //$config = ConnectionManager::getConfig($name);
-            $ok = false;
             try {
                 $connection = ConnectionManager::get($name);
-                $connection->connect();
-                $ok = true;
+                $connection->getDriver()->connect();
+                yield HealthStatus::ok(sprintf("Datasource '%s' connection is OK", $name));
             } catch (Exception $ex) {
-                yield HealthStatus::crit($ex->getMessage());
-            } finally {
-                yield HealthStatus::ok(sprintf("Connection '%s' OK", $name));
+                yield HealthStatus::crit(sprintf("Datasource '%s' connection FAILED: %s", $name, $ex->getMessage()));
             }
         }
     }
