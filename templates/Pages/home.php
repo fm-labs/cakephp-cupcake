@@ -22,7 +22,7 @@ use Cake\Error\Debugger;
 use Cake\Http\Exception\NotFoundException;
 use Cupcake\Cupcake;
 
-$this->disableAutoLayout();
+//$this->disableAutoLayout();
 
 $checkConnection = function (string $name) {
     $error = null;
