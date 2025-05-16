@@ -4,6 +4,7 @@
  * @var string $message
  * @var string $url
  */
+
 use Cake\Core\Configure;
 use Cake\Error\Debugger;
 
@@ -34,3 +35,4 @@ endif;
     <strong><?= __d('cake', 'Error') ?>: </strong>
     <?= h($message) ?>
 </p>
+&pi;

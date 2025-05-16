@@ -134,6 +134,14 @@ class Cupcake
     }
 
     /**
+     * @return string
+     */
+    public static function version(): string
+    {
+        return '5';
+    }
+
+    /**
      * @return \Cake\Core\PluginCollection
      */
     public function plugins(): PluginCollection

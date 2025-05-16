@@ -4,6 +4,7 @@
  * @var string $message
  * @var string $url
  */
+
 use Cake\Core\Configure;
 
 $this->layout = 'error';

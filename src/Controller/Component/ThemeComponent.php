@@ -41,6 +41,8 @@ class ThemeComponent extends Component
             $theme = null;
         }
 
+        debug("Theme: $theme");
+
         $this->getController()->viewBuilder()->setClassName($viewClass);
         $this->getController()->viewBuilder()->setLayout($layout);
         $this->getController()->viewBuilder()->setTheme($theme);

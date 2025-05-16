@@ -8,18 +8,20 @@ use Cake\Core\BasePlugin;
 use Cake\Core\Configure;
 use Cake\Core\Plugin;
 use Cake\Core\PluginApplicationInterface;
+use Cake\Routing\Route\DashedRoute;
+use Cake\Routing\RouteBuilder;
 
 class CupcakePlugin extends BasePlugin
 {
-//    /**
-//     * @var bool
-//     */
-//    public $routesEnabled = false;
-//
-//    /**
-//     * @var bool
-//     */
-//    public $bootstrapEnabled = true;
+    //    /**
+    //     * @var bool
+    //     */
+    //    public $routesEnabled = false;
+    //
+    //    /**
+    //     * @var bool
+    //     */
+    //    public $bootstrapEnabled = true;
 
     /**
      * @inheritDoc
@@ -29,11 +31,10 @@ class CupcakePlugin extends BasePlugin
         parent::bootstrap($app);
         $app->addOptionalPlugin('Settings');
 
+        // Set default DATA_DIR
         defined('DATA_DIR') || define('DATA_DIR', ROOT . DS . 'data' . DS);
 
-        /**
-         * Cache config
-         */
+        // Cache configuration
         if (!Cache::getConfig('cupcake')) {
             Cache::setConfig('cupcake', [
                 'className' => 'File',
@@ -43,9 +44,7 @@ class CupcakePlugin extends BasePlugin
             ]);
         }
 
-        /**
-         * DebugKit
-         */
+        // DebugKit integration
         if (Plugin::isLoaded('DebugKit')) {
             $panels = Configure::read('DebugKit.panels', []);
             //print_r($panels);
@@ -53,9 +52,7 @@ class CupcakePlugin extends BasePlugin
             Configure::write('DebugKit.panels', $panels);
         }
 
-        /**
-         * Load default content config
-         */
+        // Settings integration
         if (Plugin::isLoaded('Settings')) {
             Configure::load('Cupcake', 'settings');
         }
@@ -69,5 +66,20 @@ class CupcakePlugin extends BasePlugin
 //                $controller->viewBuilder()->enableAutoLayout(true);
 //            }
 //        });
+    }
+
+    public function routes(RouteBuilder $routes): void
+    {
+        // Set global default route class
+        // @todo: Make this configurable
+        $routes->setRouteClass(DashedRoute::class);
+
+        // Default cupcake routes
+        // @todo: Make this configurable
+        $routes->scope('/', function (RouteBuilder $builder): void {
+            $builder->connect('/', ['plugin' => 'cupcake', 'controller' => 'Pages', 'action' => 'display', 'home']);
+            $builder->connect('/pages/*', ['plugin' => 'cupcake', 'controller' => 'Pages', 'action' => 'display']);
+            $builder->fallbacks();
+        });
     }
 }

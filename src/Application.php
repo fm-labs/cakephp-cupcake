@@ -7,7 +7,6 @@ use Cake\Core\Configure;
 use Cake\Core\Exception\MissingPluginException;
 use Cake\Core\Plugin;
 use Cake\Core\PluginCollection;
-use Cake\Core\PluginInterface;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Event\EventDispatcherInterface;
 use Cake\Event\EventDispatcherTrait;
@@ -38,7 +37,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
     public function __construct(
         string $configDir,
         ?EventManagerInterface $eventManager = null,
-        ?ControllerFactoryInterface $controllerFactory = null
+        ?ControllerFactoryInterface $controllerFactory = null,
     ) {
         parent::__construct($configDir, $eventManager, $controllerFactory);
     }

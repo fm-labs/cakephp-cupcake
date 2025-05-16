@@ -166,6 +166,11 @@ class Bootstrapper
         require_once CORE_PATH . 'config' . DS . 'bootstrap.php';
 
         /**
+         * Load global functions for collections, translations, debugging etc.
+         */
+        require_once CAKE . 'functions.php';
+
+        /**
          * Setup default config engine and load core configs
          */
         $configEngine = new LocalPhpConfig($this->configDir);

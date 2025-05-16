@@ -13,12 +13,14 @@
  * @license   https://opensource.org/licenses/mit-license.php MIT License
  * @var \App\View\AppView $this
  */
+
 use Cake\Cache\Cache;
 use Cake\Core\Configure;
 use Cake\Core\Plugin;
 use Cake\Datasource\ConnectionManager;
 use Cake\Error\Debugger;
 use Cake\Http\Exception\NotFoundException;
+use Cupcake\Cupcake;
 
 $this->disableAutoLayout();
 
@@ -83,6 +85,9 @@ endif;
             <h1>
                 Welcome to CakePHP <?= h(Configure::version()) ?> Chiffon (🍰)
             </h1>
+            <h2>
+                Running with Cupcake <?= h(Cupcake::version()) ?>
+            </h2>
         </div>
     </header>
     <main class="main">
