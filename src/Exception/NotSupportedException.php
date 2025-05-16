@@ -3,16 +3,17 @@ declare(strict_types=1);
 
 namespace Cupcake\Exception;
 
-use Cake\Core\Exception\Exception as CakeCoreException;
+use Cake\Core\Exception\CakeException;
 
 /**
  * Class ClassNotFoundException
+ *
  * @package Cupcake\Exception
  */
-class NotSupportedException extends CakeCoreException
+class NotSupportedException extends CakeException
 {
     /**
      * @var string
      */
-    protected $_messageTemplate = 'Sry, %s is currently not supported';
+    protected string $_messageTemplate = 'Sry, %s is currently not supported';
 }

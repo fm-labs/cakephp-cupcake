@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Cupcake\Model;
 
+use Exception;
+
 /**
  * Class EntityTypeHandlerTrait
  *
@@ -20,13 +22,13 @@ trait EntityTypeHandlerTrait
     /**
      * @var \Cupcake\Model\EntityTypeInterface Type handler instance
      */
-    private $_typeHandler;
+    private EntityTypeInterface $_typeHandler;
 
     /**
      * @return \Cupcake\Model\EntityTypeInterface
      * @throws \Exception
      */
-    protected function handler()
+    protected function handler(): EntityTypeInterface
     {
         if ($this->_typeHandler === null) {
             $this->_typeHandler = $this->_createHandler();
@@ -46,7 +48,7 @@ trait EntityTypeHandlerTrait
         $iface = static::$_typeInterface ?? EntityTypeInterface::class;
         $type = $this->get($field) ?? 'default';
         if (!$type) {
-            throw new \Exception(sprintf(
+            throw new Exception(sprintf(
                 "Can not resolve handler for unknown type in class '%s'",
                 static::class
             ));
@@ -57,7 +59,7 @@ trait EntityTypeHandlerTrait
         });
 
         if ($iface && !($handler instanceof $iface)) {
-            throw new \Exception(sprintf(
+            throw new Exception(sprintf(
                 "Can not create handler for type '%s':'%s' : Must implement interface '%s'",
                 $ns,
                 $type,

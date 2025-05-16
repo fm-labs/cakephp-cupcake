@@ -36,10 +36,11 @@ class CopyBehavior extends Behavior
 
     /**
      * Copy entity.
+     *
      * @param \Cake\Datasource\EntityInterface $entity Entity to copy
      * @return \Cake\Datasource\EntityInterface
      */
-    public function copyEntity(EntityInterface $entity)
+    public function copyEntity(EntityInterface $entity): EntityInterface
     {
         $config = $this->getConfig();
 
@@ -58,11 +59,12 @@ class CopyBehavior extends Behavior
 
     /**
      * Copy entity object and insert as new row.
+     *
      * @param \Cake\Datasource\EntityInterface $entity The entity to copy
      * @param array $options Model save options
      * @return \Cake\Datasource\EntityInterface|false
      */
-    public function copy(EntityInterface $entity, array $options = [])
+    public function copy(EntityInterface $entity, array $options = []): EntityInterface|false
     {
         return $this->_table->save($this->copyEntity($entity), $options);
     }

@@ -18,17 +18,17 @@ class HealthStatus
     /**
      * @var int
      */
-    protected $_status;
+    protected int $_status;
 
     /**
      * @var string
      */
-    protected $_msg;
+    protected string $_msg;
 
     /**
      * @var array
      */
-    protected $_log = [];
+    protected array $_log = [];
 
     /**
      * HealthStatus constructor.

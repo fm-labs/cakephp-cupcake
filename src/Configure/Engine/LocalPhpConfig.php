@@ -17,9 +17,9 @@ class LocalPhpConfig extends PhpConfig
      */
     public function read(string $key): array
     {
-        if (isset($this->_read[$key])) {
-            deprecationWarning('Configuration ' . $key . ' has already been loaded');
-        }
+//        if (isset($this->_read[$key])) {
+//            debug('Configuration ' . $key . ' has already been loaded');
+//        }
 
         // read the original config
         $config = parent::read($key);
@@ -43,6 +43,7 @@ class LocalPhpConfig extends PhpConfig
         }
 
         $this->_read[$key] = true;
+
         return $config;
     }
 

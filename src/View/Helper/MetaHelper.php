@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Cupcake\View\Helper;
 
+use BadMethodCallException;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\I18n\I18n;
@@ -57,7 +58,6 @@ use Cake\View\Helper;
  * @method $this setLinkAppleTouchIcon(string $value)
  * @method $this setLinkAppleTouchStartupImage(string $value)
  * @method $this setLink(string $value)
- *
  * @link https://gist.github.com/lancejpollard/1978404 List of html meta tags
  */
 class MetaHelper extends Helper
@@ -126,7 +126,7 @@ class MetaHelper extends Helper
             return call_user_func([$this, $_method], $meta);
         }
 
-        if (substr($name, 0, 4) == "link") {
+        if (substr($name, 0, 4) == 'link') {
             $this->_setLink(substr($name, 4), $meta);
         } else {
             $this->_setMeta($name, $meta);
@@ -149,7 +149,7 @@ class MetaHelper extends Helper
             return $this->_setMeta($name, $content);
         }
 
-        throw new \BadMethodCallException();
+        throw new BadMethodCallException();
     }
 
     protected function _setMeta($name, $meta)
@@ -211,7 +211,7 @@ class MetaHelper extends Helper
         ]);
     }
 
-    public function injectTags()
+    public function injectTags(): void
     {
         foreach ($this->_meta as $name => $meta) {
             if (is_string($meta)) {
@@ -225,7 +225,7 @@ class MetaHelper extends Helper
         }
     }
 
-    public function beforeLayout(Event $event)
+    public function beforeLayout(Event $event): void
     {
         $this->injectTags();
     }

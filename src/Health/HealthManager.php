@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Cupcake\Health;
 
+use RuntimeException;
+
 /**
  * Class HealthManager
  *
@@ -68,17 +70,15 @@ class HealthManager
      * @param \Cupcake\Health\HealthCheckInterface|\Cupcake\Health\HealthCheckGeneratorInterface|callable|array $check Check
      * @return $this
      */
-    public function addCheck(string $name, $check): static
+    public function addCheck(string $name, HealthCheckInterface|HealthCheckGeneratorInterface|callable|array $check): static
     {
         if (is_array($check)) {
             if (isset($check['generator'])) {
                 $check = new HealthCheckGenerator($check['generator']);
-            }
-            elseif (isset($check['callback'])) {
+            } elseif (isset($check['callback'])) {
                 $check = new HealthCheck($check['callback']);
-            }
-            else {
-                throw new \RuntimeException("Invalid health check options");
+            } else {
+                throw new RuntimeException('Invalid health check options');
             }
         }
         if (is_callable($check)) {

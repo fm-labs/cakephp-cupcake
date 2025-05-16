@@ -1,10 +1,12 @@
 <?php
-
+declare(strict_types=1);
 
 namespace Cupcake\Model;
 
+use ArrayAccess;
+use ReturnTypeWillChange;
 
-class AttributesSchema implements \ArrayAccess
+class AttributesSchema implements ArrayAccess
 {
     protected $_schema = [];
 
@@ -56,7 +58,7 @@ class AttributesSchema implements \ArrayAccess
     /**
      * @inheritDoc
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return $this->hasAttribute($offset);
@@ -65,7 +67,7 @@ class AttributesSchema implements \ArrayAccess
     /**
      * @inheritDoc
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->getAttribute($offset);
@@ -74,7 +76,7 @@ class AttributesSchema implements \ArrayAccess
     /**
      * @inheritDoc
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         // TODO: Implement offsetSet() method.
@@ -83,7 +85,7 @@ class AttributesSchema implements \ArrayAccess
     /**
      * @inheritDoc
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         // TODO: Implement offsetUnset() method.

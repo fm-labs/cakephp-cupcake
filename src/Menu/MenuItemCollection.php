@@ -14,30 +14,30 @@ use Iterator;
 class MenuItemCollection implements Iterator, Countable
 {
     /**
-     * @var \Cupcake\Menu\MenuItem[]
+     * @var array<\Cupcake\Menu\MenuItem>
      */
-    protected $_items = [];
+    protected array $_items = [];
 
     /**
      * @var array Items keys cache. Used by iterator
      */
-    private $_it;
+    private array $_it;
 
     /**
      * @var int Current position in iterator array
      */
-    private $_itpos;
+    private int $_itpos;
 
     /**
      * @param array $items Initial item list
      */
-    public function __construct($items = [])
+    public function __construct(array $items = [])
     {
         $this->addItems($items);
     }
 
     /**
-     * @return \Cupcake\Menu\MenuItem[]
+     * @return array<\Cupcake\Menu\MenuItem>
      */
     public function getItems(): array
     {
@@ -45,13 +45,13 @@ class MenuItemCollection implements Iterator, Countable
     }
 
     /**
-     * @param string|array|\Cupcake\Menu\MenuItem $title A menu item array or object or title string
-     * @param null $url Item url
+     * @param \Cupcake\Menu\MenuItem|array|string $title A menu item array or object or title string
+     * @param string|null $url Item url
      * @param array $attr Item attributes
-     * @param array|\Cupcake\Menu\MenuItemCollection $children Item subitems
+     * @param \Cupcake\Menu\MenuItemCollection|array $children Item subitems
      * @return $this
      */
-    public function addItem($title, $url = null, $attr = [], $children = [])
+    public function addItem(string|array|MenuItem $title, ?string $url = null, array $attr = [], array|MenuItemCollection $children = [])
     {
         $item = $title instanceof MenuItem ? $title : new MenuItem($title, $url, $attr, $children);
         $hash = spl_object_hash($item);

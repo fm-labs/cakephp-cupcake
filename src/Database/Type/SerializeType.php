@@ -20,10 +20,10 @@ class SerializeType extends BaseType implements BatchCastingInterface
      * Convert a value data into a serialized string
      *
      * @param mixed $value The value to convert.
-     * @param \Cake\Database\DriverInterface $driver The driver instance to convert with.
+     * @param \Cake\Database\Driver $driver The driver instance to convert with.
      * @return string|null
      */
-    public function  toDatabase(mixed $value, Driver $driver): mixed
+    public function toDatabase(mixed $value, Driver $driver): mixed
     {
         if (is_resource($value)) {
             throw new InvalidArgumentException('Cannot serialize a resource value');
@@ -40,8 +40,8 @@ class SerializeType extends BaseType implements BatchCastingInterface
      * Convert string values to PHP arrays.
      *
      * @param mixed $value The value to convert.
-     * @param \Cake\Database\DriverInterface $driver The driver instance to convert with.
-     * @return string|null|array
+     * @param \Cake\Database\Driver $driver The driver instance to convert with.
+     * @return array|string|null
      */
     public function toPHP(mixed $value, Driver $driver): mixed
     {
@@ -56,7 +56,7 @@ class SerializeType extends BaseType implements BatchCastingInterface
      * Get the correct PDO binding type for string data.
      *
      * @param mixed $value The value being bound.
-     * @param Driver $driver The driver.
+     * @param \Cake\Database\Driver $driver The driver.
      * @return int
      */
     public function toStatement(mixed $value, Driver $driver): int
@@ -74,7 +74,7 @@ class SerializeType extends BaseType implements BatchCastingInterface
      * @param mixed $value The value to convert.
      * @return mixed Converted value.
      */
-    public function marshal($value): mixed
+    public function marshal(mixed $value): mixed
     {
         return $value;
     }
@@ -84,8 +84,8 @@ class SerializeType extends BaseType implements BatchCastingInterface
      * this type.
      *
      * @param array $values The original array of values containing the fields to be casted
-     * @param string[] $fields The field keys to cast
-     * @param \Cake\Database\DriverInterface $driver Object from which database preferences and configuration will be extracted.
+     * @param array<string> $fields The field keys to cast
+     * @param \Cake\Database\Driver $driver Object from which database preferences and configuration will be extracted.
      * @return array
      */
     public function manyToPHP(array $values, array $fields, Driver $driver): array

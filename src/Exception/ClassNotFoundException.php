@@ -15,5 +15,5 @@ class ClassNotFoundException extends CakeException
     /**
      * @var string
      */
-    protected $_messageTemplate = 'Class %s not found';
+    protected string $_messageTemplate = 'Class %s not found';
 }

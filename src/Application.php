@@ -7,6 +7,7 @@ use Cake\Core\Configure;
 use Cake\Core\Exception\MissingPluginException;
 use Cake\Core\Plugin;
 use Cake\Core\PluginCollection;
+use Cake\Core\PluginInterface;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Event\EventDispatcherInterface;
 use Cake\Event\EventDispatcherTrait;
@@ -85,14 +86,12 @@ class Application extends BaseApplication implements EventDispatcherInterface
             throw $ex;
         }
 
-        /**
-         * Load core plugins and user plugins
-         */
-//        if (file_exists(CONFIG . 'plugins.php')) {
-//            Configure::load('plugins');
-//        }
-//        $this->addPlugin('Cupcake');
-//        $this->addPlugin((array)Configure::read('Plugin')/*, ['bootstrap' => true, 'routes' => true]*/);
+        // Load core plugins and user plugins
+        //        if (file_exists(CONFIG . 'plugins.php')) {
+        //            Configure::load('plugins');
+        //        }
+        //        $this->addPlugin('Cupcake');
+        //        $this->addPlugin((array)Configure::read('Plugin')/*, ['bootstrap' => true, 'routes' => true]*/);
 
         /**
          * CakePHP DebugKit support
@@ -161,9 +160,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
     }
 
     /**
-     * @param \Cake\Core\PluginInterface|string|array $name
-     * @param array $config
-     * @return $this
+     * @inheritDoc
      */
     public function addPlugin($name, array $config = []): Application
     {
@@ -231,7 +228,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
      */
     public function getPluginInfo(string $pluginName): array
     {
-        deprecationWarning('Application::getPluginInfo() is deprecated. Use PluginManager::getPluginInfo() instead.');
+        deprecationWarning('4.0.1', 'Application::getPluginInfo() is deprecated. Use PluginManager::getPluginInfo() instead.');
 
         return PluginManager::getPluginInfo($pluginName);
     }
@@ -244,7 +241,7 @@ class Application extends BaseApplication implements EventDispatcherInterface
      */
     public function plugins(): PluginCollection
     {
-        deprecationWarning('Application::plugins() is deprecated. Use getPlugins() instead.');
+        deprecationWarning('4.0.1', 'Application::plugins() is deprecated. Use getPlugins() instead.');
 
         return $this->getPlugins();
     }

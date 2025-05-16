@@ -26,7 +26,7 @@ class StatusableBehavior extends Behavior
             'getStatusCodes' => 'getStatusCodes',
             'getStatusList' => 'getStatusList',
             'getStatusSelectList' => 'getStatusSelectList',
-        ]
+        ],
     ];
 
     /**

@@ -10,12 +10,12 @@ use DebugKit\DebugPanel;
  */
 class SystemPanel extends DebugPanel
 {
-    public $plugin = 'Cupcake';
+    public string $plugin = 'Cupcake';
 
     /**
      * @return string
      */
-    public function title()
+    public function title(): string
     {
         return "Cupcake";
     }
@@ -23,7 +23,7 @@ class SystemPanel extends DebugPanel
     /**
      * @return string
      */
-    public function elementName()
+    public function elementName(): string
     {
         return $this->plugin . '.debug_kit/system_panel';
     }

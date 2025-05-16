@@ -6,6 +6,7 @@ namespace Cupcake\Database\Type;
 use Cake\Database\Driver;
 use Cake\Database\Type\BaseType;
 use Cake\Database\Type\BatchCastingInterface;
+use InvalidArgumentException;
 use PDO;
 
 /**
@@ -19,9 +20,9 @@ use PDO;
 class JsonType extends BaseType implements BatchCastingInterface
 {
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function toPHP($value, Driver $driver)
+    public function toPHP($value, Driver $driver): mixed
     {
         if ($value === null) {
             return null;
@@ -31,9 +32,9 @@ class JsonType extends BaseType implements BatchCastingInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function marshal($value)
+    public function marshal($value): mixed
     {
         if (is_string($value) && preg_match('/^\{([\w\W\n]*)\}$/m', $value)) {
             return json_decode($value, true);
@@ -43,9 +44,9 @@ class JsonType extends BaseType implements BatchCastingInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function toDatabase($value, Driver $driver)
+    public function toDatabase($value, Driver $driver): mixed
     {
         if ($value === null) {
             return null;
@@ -53,19 +54,19 @@ class JsonType extends BaseType implements BatchCastingInterface
 
         $val = json_encode($value);
         if (json_last_error() > 0) {
-            throw new \InvalidArgumentException(json_last_error_msg());
+            throw new InvalidArgumentException(json_last_error_msg());
         }
 
         return $val;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function toStatement($value, Driver $driver)
+    public function toStatement($value, Driver $driver): int
     {
         if ($value === null) {
-            return null;
+            return PDO::PARAM_NULL;
         }
 
         return PDO::PARAM_STR;
@@ -76,7 +77,7 @@ class JsonType extends BaseType implements BatchCastingInterface
      * this type.
      *
      * @param array $values The original array of values containing the fields to be casted
-     * @param string[] $fields The field keys to cast
+     * @param array<string> $fields The field keys to cast
      * @param \Cake\Database\Driver $driver Object from which database preferences and configuration will be extracted.
      * @return array
      */

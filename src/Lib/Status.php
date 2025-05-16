@@ -1,48 +1,52 @@
 <?php
+declare(strict_types=1);
+
 namespace Cupcake\Lib;
+
+use JsonSerializable;
 
 /**
  * Class Status
  *
  * @package Banana\Lib
  */
-class Status implements \JsonSerializable
+class Status implements JsonSerializable
 {
     /**
      * @var int
      */
-    protected $_status;
+    protected int $_status;
 
     /**
      * @var string
      */
-    protected $_label;
+    protected string $_label;
 
     /**
      * @var string
      */
-    protected $_class;
+    protected string $_class;
 
     /**
      * @param int $status
-     * @param null|string $label
-     * @param null|string $class
+     * @param string|null $label
+     * @param string|null $class
      */
-    public function __construct($status, $label = null, $class = null)
+    public function __construct(int $status, ?string $label = null, ?string $class = null)
     {
         $this->_status = $status;
 
-        $label = ($label) ?: $status;
+        $label = $label ?: $status;
         $this->_label = $label;
 
-        $class = ($class) ?: 'default';
+        $class = $class ?: 'default';
         $this->_class = $class;
     }
 
     /**
      * @return int
      */
-    public function getStatus()
+    public function getStatus(): int
     {
         return $this->_status;
     }
@@ -50,15 +54,15 @@ class Status implements \JsonSerializable
     /**
      * @return string
      */
-    public function getClass()
+    public function getClass(): string
     {
         return $this->_class;
     }
 
     /**
-     * @return int|string
+     * @return string|int
      */
-    public function getLabel()
+    public function getLabel(): int|string
     {
         return $this->_label;
     }
@@ -66,9 +70,9 @@ class Status implements \JsonSerializable
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
-        return (string) $this->getStatus();
+        return (string)$this->getStatus();
     }
 
 //    /**
@@ -85,12 +89,13 @@ class Status implements \JsonSerializable
         return [
             'class' => $this->_class,
             'label' => $this->_label,
-            'status' => $this->_status
+            'status' => $this->_status,
         ];
     }
 
     /**
      * Specify data which should be serialized to JSON
+     *
      * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
      * @return array data which can be serialized by <b>json_encode</b>,
      * which is a value of any type other than a resource.

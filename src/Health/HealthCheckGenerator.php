@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace Cupcake\Health;
 
+use Closure;
+use Generator;
+
 /**
  * Class HealthCheck
  *
@@ -15,9 +18,9 @@ class HealthCheckGenerator implements HealthCheckGeneratorInterface
     /**
      * HealthCheck constructor.
      *
-     * @param callable|\Generator|\Closure $callback
+     * @param \Closure|\Generator|callable $callback
      */
-    public function __construct($callback)
+    public function __construct(callable|Generator|Closure $callback)
     {
         $this->callback = $callback;
     }
@@ -25,7 +28,7 @@ class HealthCheckGenerator implements HealthCheckGeneratorInterface
     /**
      * @inheritDoc
      */
-    public function getHealthStatus(): \Generator
+    public function getHealthStatus(): Generator
     {
         if (!$this->callback || !is_callable($this->callback)) {
             yield HealthStatus::crit('ERROR: HEALTH STATUS CHECK FAILED: Invalid callback');

@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Cupcake\Health;
 
+use Generator;
+
 /**
  * Interface HealthInterface
  *
@@ -13,5 +15,5 @@ interface HealthCheckGeneratorInterface
     /**
      * @return \Generator
      */
-    public function getHealthStatus(): \Generator;
+    public function getHealthStatus(): Generator;
 }

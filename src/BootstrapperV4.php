@@ -1,19 +1,23 @@
 <?php
+declare(strict_types=1);
 
 namespace Cupcake;
 
 use Cake\Cache\Cache;
 use Cake\Core\Configure;
+use Cake\Database\TypeFactory;
 use Cake\Datasource\ConnectionManager;
-use Cake\Datasource\FactoryLocator;
+use Cake\Error\ErrorTrap;
+use Cake\Error\ExceptionTrap;
 use Cake\Http\ServerRequest;
 use Cake\Log\Log;
 use Cake\Mailer\Mailer;
 use Cake\Mailer\TransportFactory;
-use Cake\ORM\Locator\TableLocator;
 use Cake\Routing\Router;
 use Cake\Utility\Security;
 use Cupcake\Configure\Engine\LocalPhpConfig;
+use Detection\MobileDetect;
+use RuntimeException;
 
 class BootstrapperV4
 {
@@ -44,7 +48,6 @@ class BootstrapperV4
      */
     protected string $configDir;
 
-
     protected array $enabled = [
         'requirements' => true,
         'debug' => true,
@@ -62,36 +65,38 @@ class BootstrapperV4
     public static function getInstance()
     {
         if (!isset(self::$instances[0])) {
-            throw new \RuntimeException("Bootstrapper not initialized yet");
+            throw new RuntimeException('Bootstrapper not initialized yet');
         }
+
         return self::$instances[0];
     }
 
     public static function init(string $configDir)
     {
         if (count(static::$instances) > 0) {
-            throw new \RuntimeException("Bootstrapper already initialized");
+            throw new RuntimeException('Bootstrapper already initialized');
         }
         $instance = new self($configDir);
+
         return static::$instances[] = $instance;
     }
 
-    public static function reset()
+    public static function reset(): void
     {
-        foreach(ConnectionManager::configured() as $name) {
+        foreach (ConnectionManager::configured() as $name) {
             ConnectionManager::drop($name);
         }
-        foreach(TransportFactory::configured() as $name) {
+        foreach (TransportFactory::configured() as $name) {
             TransportFactory::drop($name);
         }
-        foreach(Mailer::configured() as $name) {
+        foreach (Mailer::configured() as $name) {
             Mailer::drop($name);
         }
-        foreach(Log::configured() as $name) {
+        foreach (Log::configured() as $name) {
             Log::drop($name);
         }
         Cache::clearAll();
-        foreach(Cache::configured() as $name) {
+        foreach (Cache::configured() as $name) {
             Cache::drop($name);
         }
         Security::setSalt('');
@@ -114,6 +119,7 @@ class BootstrapperV4
     public function enable(string $name, bool $mode = true): static
     {
         $this->enabled[$name] = $mode;
+
         return $this;
     }
 
@@ -131,7 +137,8 @@ class BootstrapperV4
     public function run(): void
     {
         if (static::$isBootstrapped) {
-            debug("Already bootstrapped");
+            debug('Already bootstrapped');
+
             return;
         }
 
@@ -298,8 +305,8 @@ class BootstrapperV4
 //        } else {
 //            (new ErrorHandler(Configure::read('Error')))->register();
 //        }
-            (new \Cake\Error\ErrorTrap(Configure::read('Error')))->register();
-            (new \Cake\Error\ExceptionTrap(Configure::read('Error')))->register();
+            (new ErrorTrap(Configure::read('Error')))->register();
+            (new ExceptionTrap(Configure::read('Error')))->register();
         }
 
         /*
@@ -335,7 +342,6 @@ class BootstrapperV4
         }
         unset($fullBaseUrl);
 
-
         if ($this->isEnabled(self::$CONFIGURE_CACHE)) {
             Cache::setConfig(Configure::consume('Cache'));
         }
@@ -360,15 +366,16 @@ class BootstrapperV4
          */
         if ($this->isEnabled(self::$CONFIGURE_DETECTORS)) {
             ServerRequest::addDetector('mobile', function () {
-                $detector = new \Detection\MobileDetect();
+                $detector = new MobileDetect();
+
                 return $detector->isMobile();
             });
             ServerRequest::addDetector('tablet', function () {
-                $detector = new \Detection\MobileDetect();
+                $detector = new MobileDetect();
+
                 return $detector->isTablet();
             });
         }
-
 
         /**
          * Register database types
@@ -376,6 +383,7 @@ class BootstrapperV4
          * You can enable default locale format parsing by adding calls
          * to `useLocaleParser()`. This enables the automatic conversion of
          * locale specific date formats. For details see
+         *
          * @link https://book.cakephp.org/4/en/core-libraries/internationalization-and-localization.html#parsing-localized-datetime-data
          */
         // \Cake\Database\TypeFactory::build('time')
@@ -399,7 +407,7 @@ class BootstrapperV4
         //\Cake\Database\TypeFactory::map('time', StringType::class);
 
         //\Cake\Database\TypeFactory::map('json', 'Cupcake\Database\Type\JsonType'); // obsolete since CakePHP 3.3
-        \Cake\Database\TypeFactory::map('serialize', 'Cupcake\Database\Type\SerializeType');
+        TypeFactory::map('serialize', 'Cupcake\Database\Type\SerializeType');
 
         /**
          * Enable default locale format parsing.

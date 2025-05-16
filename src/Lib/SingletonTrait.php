@@ -13,12 +13,12 @@ trait SingletonTrait
     /**
      * @var array
      */
-    protected static $_instances = [];
+    protected static array $_instances = [];
 
     /**
      * @return object
      */
-    public static function getInstance()
+    public static function getInstance(): object
     {
         if (!isset(self::$_instances[0])) {
             self::$_instances[0] = new self();

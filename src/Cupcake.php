@@ -68,7 +68,7 @@ class Cupcake
         //    throw new \Exception('Cupcake::init: Already initialized');
         //}
         //self::$_instances[0] = new self($app);
-        deprecationWarning('Cupcake::init() is deprecated. Use getInstance() instead.');
+        deprecationWarning('4.0.1', 'Cupcake::init() is deprecated. Use getInstance() instead.');
         self::setApplication($app);
         self::getInstance();
     }
@@ -119,7 +119,7 @@ class Cupcake
      */
     public static function pluginInfo(string $pluginName): array
     {
-        deprecationWarning('Cupcake::pluginInfo is deprecated. Use PluginManager::getPluginInfo() instead');
+        deprecationWarning('4.0.1', 'Cupcake::pluginInfo is deprecated. Use PluginManager::getPluginInfo() instead');
 
         return PluginManager::getPluginInfo($pluginName);
     }

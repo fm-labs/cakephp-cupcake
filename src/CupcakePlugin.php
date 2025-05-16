@@ -6,9 +6,8 @@ namespace Cupcake;
 use Cake\Cache\Cache;
 use Cake\Core\BasePlugin;
 use Cake\Core\Configure;
+use Cake\Core\Plugin;
 use Cake\Core\PluginApplicationInterface;
-use Cake\Event\EventInterface;
-use Cake\Event\EventManager;
 
 class CupcakePlugin extends BasePlugin
 {
@@ -47,18 +46,17 @@ class CupcakePlugin extends BasePlugin
         /**
          * DebugKit
          */
-        if (\Cake\Core\Plugin::isLoaded('DebugKit')) {
+        if (Plugin::isLoaded('DebugKit')) {
             $panels = Configure::read('DebugKit.panels', []);
             //print_r($panels);
             $panels['Cupcake.System'] = true;
             Configure::write('DebugKit.panels', $panels);
         }
 
-
         /**
          * Load default content config
          */
-        if (\Cake\Core\Plugin::isLoaded('Settings')) {
+        if (Plugin::isLoaded('Settings')) {
             Configure::load('Cupcake', 'settings');
         }
 

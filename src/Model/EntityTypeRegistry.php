@@ -5,6 +5,7 @@ namespace Cupcake\Model;
 
 use Cake\Core\App;
 use Cake\Utility\Inflector;
+use RuntimeException;
 
 class EntityTypeRegistry
 {
@@ -32,11 +33,11 @@ class EntityTypeRegistry
         static::registerNs($ns);
 
         if (isset(self::$types[$ns][$alias])) {
-            throw new \RuntimeException(sprintf("Can not register type '%s':'%s': Already registered", $ns, $alias));
+            throw new RuntimeException(sprintf("Can not register type '%s':'%s': Already registered", $ns, $alias));
         }
 
         if (!isset($config['className'])) {
-            throw new \RuntimeException(sprintf("Can not register type '%s':'%s': No className defined", $ns, $alias));
+            throw new RuntimeException(sprintf("Can not register type '%s':'%s': No className defined", $ns, $alias));
         }
 
         if (!isset($config['title'])) {
@@ -78,7 +79,7 @@ class EntityTypeRegistry
     public static function createInstance(string $ns, string $alias, ?callable $factory = null): EntityTypeInterface
     {
         if (!isset(self::$types[$ns][$alias])) {
-            throw new \RuntimeException(sprintf("Can not create type '%s':'%s': Not registered", $ns, $alias));
+            throw new RuntimeException(sprintf("Can not create type '%s':'%s': Not registered", $ns, $alias));
         }
 
         [, $nsClass] = pluginSplit($ns);
@@ -96,10 +97,10 @@ class EntityTypeRegistry
         unset($config['className']);
 
         if (!$className) {
-            throw new \RuntimeException(sprintf("Can not create type '%s':'%s': Invalid className", $ns, $alias));
+            throw new RuntimeException(sprintf("Can not create type '%s':'%s': Invalid className", $ns, $alias));
         }
         if (!class_exists($className)) {
-            throw new \RuntimeException(sprintf("Can not create type '%s':'%s': Class not found", $ns, $alias));
+            throw new RuntimeException(sprintf("Can not create type '%s':'%s': Class not found", $ns, $alias));
         }
 
         if ($factory === null) {

@@ -11,7 +11,7 @@ class Hook
     /**
      * @var array Hook callback storage
      */
-    protected static $_hooks = [];
+    protected static array $_hooks = [];
 
     /**
      * Add FILTER hook.
@@ -33,7 +33,7 @@ class Hook
      * @param mixed ...$args Filter args
      * @return mixed
      */
-    public static function doFilter(string $name, $context, ...$args)
+    public static function doFilter(string $name, mixed $context, mixed ...$args): mixed
     {
         $callbacks = static::$_hooks[static::TYPE_FILTER][$name] ?? [];
         foreach ($callbacks as $callback) {
@@ -64,7 +64,7 @@ class Hook
      * @param mixed ...$args Action hook args.
      * @return void
      */
-    public static function doAction(string $name, ...$args): void
+    public static function doAction(string $name, mixed ...$args): void
     {
         $callbacks = static::$_hooks[static::TYPE_ACTION][$name] ?? [];
         foreach ($callbacks as $callback) {
@@ -83,7 +83,7 @@ class Hook
      * @param array $hooks List of callables.
      * @return void
      */
-    public static function set(string $type, $hooks = []): void
+    public static function set(string $type, array $hooks = []): void
     {
         static::$_hooks[$type] = $hooks;
     }

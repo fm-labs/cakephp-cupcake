@@ -1,16 +1,18 @@
 <?php
+declare(strict_types=1);
 
 namespace Cupcake\Health\Check;
 
 use Cupcake\Health\HealthCheckGeneratorInterface;
 use Cupcake\Health\HealthStatus;
+use Generator;
 
 class PhpExtensionCheck implements HealthCheckGeneratorInterface
 {
     /**
      * @inheritDoc
      */
-    public function getHealthStatus(): \Generator
+    public function getHealthStatus(): Generator
     {
         // intl
         if (!extension_loaded('intl')) {
@@ -23,7 +25,7 @@ class PhpExtensionCheck implements HealthCheckGeneratorInterface
 
         // required ext
         $requiredExt = ['mbstring', 'pdo'];
-        foreach($requiredExt as $ext) {
+        foreach ($requiredExt as $ext) {
             if (!extension_loaded($ext)) {
                 yield HealthStatus::crit(__d('admin', 'You must enable the {0} PHP extension to use CakePHP.', $ext));
             } else {
@@ -33,7 +35,7 @@ class PhpExtensionCheck implements HealthCheckGeneratorInterface
 
         // optional ext
         $optionalExt = ['json', 'soap', 'curl', 'gd', 'xdebug'];
-        foreach($optionalExt as $ext) {
+        foreach ($optionalExt as $ext) {
             if (!extension_loaded($ext)) {
                 yield HealthStatus::warn(__d('admin', 'The PHP extension {0} is not loaded.', $ext));
             } else {

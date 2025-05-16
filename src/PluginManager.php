@@ -1,11 +1,13 @@
 <?php
+declare(strict_types=1);
 
 namespace Cupcake;
 
 use Cake\Collection\Collection;
 use Cake\Core\App;
 use Cake\Core\Configure;
-use \Cake\Core\Plugin;
+use Cake\Core\Plugin;
+use Cake\Core\PluginCollection;
 
 /**
  * Wrapper around CakePHP's Plugin class
@@ -15,7 +17,7 @@ class PluginManager
     private static mixed $composerInfo = null;
     private static mixed $composerPackages = null;
 
-    static public function getCollection(): \Cake\Core\PluginCollection
+    public static function getCollection(): PluginCollection
     {
         return Plugin::getCollection();
     }
@@ -23,12 +25,13 @@ class PluginManager
     public static function findLoadedPlugins()
     {
         $loadedPlugins = [];
-        foreach (\Cake\Core\Plugin::loaded() as $name) {
+        foreach (Plugin::loaded() as $name) {
             $loadedPlugins[$name] = [
                 'name' => $name,
                 'path' => Plugin::path($name),
             ];
         }
+
         return $loadedPlugins;
     }
 
@@ -60,7 +63,7 @@ class PluginManager
                             continue;
                         }
 
-                        $_pluginName = sprintf("%s/%s", $f, $_f);
+                        $_pluginName = sprintf('%s/%s', $f, $_f);
                         $plugins[$_pluginName] = [
                             'name' => $_pluginName,
                             'path' => $_pluginPath,
@@ -82,6 +85,7 @@ class PluginManager
         foreach (App::path('plugins') as $path) {
             $pluginFinder($path);
         }
+
         return $plugins;
     }
 
@@ -95,6 +99,7 @@ class PluginManager
                 'path' => $pluginPath,
             ];
         }
+
         return $vendorPlugins;
     }
 
@@ -102,7 +107,7 @@ class PluginManager
      * @param string $pluginName
      * @return bool
      */
-    static public function isLoaded(string $pluginName): bool
+    public static function isLoaded(string $pluginName): bool
     {
         return Plugin::isLoaded($pluginName);
     }
@@ -113,7 +118,7 @@ class PluginManager
      * @param string $pluginName Plugin name
      * @return array
      */
-    static public function getPluginInfo(string $pluginName): array
+    public static function getPluginInfo(string $pluginName): array
     {
         $info = [];
         $info['name'] = $pluginName;
@@ -155,41 +160,43 @@ class PluginManager
         $files['package'] = self::getFilePath($pluginName, 'package.json');
         $info['files'] = $files;
 
-
         return $info;
     }
 
-    static public function getFilePath(string $pluginName, string $path): ?string
+    public static function getFilePath(string $pluginName, string $path): ?string
     {
         // @TODO Path security
         $filePath = dirname(Plugin::classPath($pluginName)) . DS . $path;
         if (is_file($filePath)) {
             return $filePath;
         }
+
         return null;
     }
 
-    static public function getSourceFilePath(string $pluginName, string $path): ?string
+    public static function getSourceFilePath(string $pluginName, string $path): ?string
     {
         // @TODO Path security
         $filePath = Plugin::classPath($pluginName) . $path;
         if (is_file($filePath)) {
             return $filePath;
         }
+
         return null;
     }
 
-    static public function getConfigFilePath(string $pluginName, string $path): ?string
+    public static function getConfigFilePath(string $pluginName, string $path): ?string
     {
         // @TODO Path security
         $filePath = Plugin::configPath($pluginName) . $path;
         if (is_file($filePath)) {
             return $filePath;
         }
+
         return null;
     }
 
-    static public function getReadme(string $pluginName): ?string
+    public static function getReadme(string $pluginName): ?string
     {
         $filePath = self::getFilePath($pluginName, 'README.md');
         if ($filePath && is_file($filePath)) {
@@ -201,6 +208,7 @@ class PluginManager
 //            return $converter->convertToHtml($content);
             return $content;
         }
+
         return null;
     }
 
@@ -210,13 +218,14 @@ class PluginManager
      * @param string $pluginName
      * @return string|null
      */
-    static public function getComposerPackageName(string $pluginName): ?string
+    public static function getComposerPackageName(string $pluginName): ?string
     {
         $data = self::getPluginComposerInfo($pluginName);
+
         return $data['name'] ?? null;
     }
 
-    static public function getInstalledComposerPackageVersion(string $pluginName): ?string
+    public static function getInstalledComposerPackageVersion(string $pluginName): ?string
     {
         self::loadInstalledComposerPackages();
         //debug(static::$composerPackages);
@@ -229,10 +238,11 @@ class PluginManager
         if ($package) {
             return $package['version'];
         }
-        return "0.0.0";
+
+        return '0.0.0';
     }
 
-    static protected function getPluginComposerInfo(string $pluginName)
+    protected static function getPluginComposerInfo(string $pluginName)
     {
         // composer
         $composerFile = self::getFilePath($pluginName, 'composer.json');
@@ -240,10 +250,11 @@ class PluginManager
             return null;
         }
         $contents = file_get_contents($composerFile);
+
         return json_decode($contents, true);
     }
 
-    static protected function loadComposerInfo(): void
+    protected static function loadComposerInfo(): void
     {
         if (self::$composerInfo !== null) {
             return;
@@ -258,8 +269,7 @@ class PluginManager
         static::$composerInfo = json_decode($contents, true);
     }
 
-
-    static protected function loadInstalledComposerPackages(): void
+    protected static function loadInstalledComposerPackages(): void
     {
         if (self::$composerPackages !== null) {
             return;

@@ -25,6 +25,9 @@ use Psy\Shell as PsyShell;
 
 /**
  * Simple console wrapper around Psy\Shell.
+ * This command provides a REPL that you can use to interact with.
+ *
+ * @deprecated Use cakephp/repl package instead.
  */
 class ConsoleCommand extends Command
 {

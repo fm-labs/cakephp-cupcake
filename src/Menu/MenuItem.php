@@ -3,6 +3,10 @@ declare(strict_types=1);
 
 namespace Cupcake\Menu;
 
+use ArrayAccess;
+use InvalidArgumentException;
+use RuntimeException;
+
 /**
  * Class MenuItem.
  *
@@ -12,27 +16,27 @@ namespace Cupcake\Menu;
  * @property array $attr Attributes
  * @property \Cupcake\Menu\MenuItemCollection $children Children
  */
-class MenuItem implements \ArrayAccess
+class MenuItem implements ArrayAccess
 {
     /**
      * @var string
      */
-    protected $_title;
+    protected string $_title;
 
     /**
-     * @var null|string|array
+     * @var array|string|null
      */
-    protected $_url;
+    protected string|array|null $_url = null;
 
     /**
      * @var array
      */
-    protected $_attr;
+    protected array $_attr;
 
     /**
      * @var \Cupcake\Menu\MenuItemCollection
      */
-    protected $_children;
+    protected MenuItemCollection $_children;
 
     /**
      * Constructor.
@@ -41,12 +45,12 @@ class MenuItem implements \ArrayAccess
      *   ['title' => TITLE, 'url' => URL, 'children' => CHILDREN, 'foo' =>'bar']
      *   ['title' => TITLE, 'url' => URL, 'children' => CHILDREN, 'attr' => ['foo' => 'bar']]
      *
-     * @param string|array $title Item title
-     * @param string|array|null $url Item url
+     * @param array|string $title Item title
+     * @param array|string|null $url Item url
      * @param array $attr Item attributes
-     * @param array|\Cupcake\Menu\MenuItemCollection $children List or collection of child items
+     * @param \Cupcake\Menu\MenuItemCollection|array $children List or collection of child items
      */
-    public function __construct($title, $url = null, array $attr = [], $children = [])
+    public function __construct(string|array $title, string|array|null $url = null, array $attr = [], array|MenuItemCollection $children = [])
     {
         if (is_array($title)) {
             $defaults = ['title' => null, 'url' => null, 'children' => null, 'attr' => null];
@@ -68,15 +72,15 @@ class MenuItem implements \ArrayAccess
     /**
      * @return array|string
      */
-    public function getTitle()
+    public function getTitle(): array|string
     {
         return $this->_title;
     }
 
     /**
-     * @return array|null|string
+     * @return array|string|null
      */
-    public function getUrl()
+    public function getUrl(): array|string|null
     {
         return $this->_url;
     }
@@ -84,7 +88,7 @@ class MenuItem implements \ArrayAccess
     /**
      * @return array
      */
-    public function getAttributes()
+    public function getAttributes(): array
     {
         return $this->_attr;
     }
@@ -92,7 +96,7 @@ class MenuItem implements \ArrayAccess
     /**
      * @return \Cupcake\Menu\MenuItemCollection
      */
-    public function getChildren()
+    public function getChildren(): MenuItemCollection
     {
         return $this->_children;
     }
@@ -101,7 +105,7 @@ class MenuItem implements \ArrayAccess
      * @param \Cupcake\Menu\MenuItemCollection|array $children Menu item children
      * @return $this
      */
-    public function setChildren($children)
+    public function setChildren(MenuItemCollection|array $children)
     {
         $this->_children = new MenuItemCollection();
 
@@ -110,7 +114,7 @@ class MenuItem implements \ArrayAccess
         } elseif (is_array($children)) {
             $this->_children->addItems($children);
         } else {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 "Invalid MenuItem children parameter. MUST be instance of \Cupcake\Menu\MenuItemCollection or array."
             );
         }
@@ -124,7 +128,7 @@ class MenuItem implements \ArrayAccess
      * @param \Cupcake\Menu\MenuItemCollection|array $children Menu item children
      * @return $this
      */
-    public function addChildren($children)
+    public function addChildren(MenuItemCollection|array $children)
     {
         if (!$this->_children) {
             $this->_children = new MenuItemCollection();
@@ -135,13 +139,13 @@ class MenuItem implements \ArrayAccess
     }
 
     /**
-     * @param string|array|MenuItem $title Child item title
-     * @param string|array|null $url Child item url
+     * @param \Cupcake\Menu\MenuItem|array|string $title Child item title
+     * @param array|string|null $url Child item url
      * @param array $attr Child item attributes
      * @param array $children Child item children
      * @return $this
      */
-    public function addChild($title, $url = null, $attr = [], $children = [])
+    public function addChild(string|array|MenuItem $title, string|array|null $url = null, array $attr = [], array $children = [])
     {
         $this->_children->addItem($title, $url, $attr, $children);
 
@@ -165,7 +169,7 @@ class MenuItem implements \ArrayAccess
      * @param string $key Property name
      * @return mixed
      */
-    public function __get($key): mixed
+    public function __get(string $key): mixed
     {
         return $this->offsetGet($key);
     }
@@ -183,7 +187,7 @@ class MenuItem implements \ArrayAccess
      * <p>
      * The return value will be casted to boolean if non-boolean was returned.
      */
-    public function offsetExists($offset): bool
+    public function offsetExists(mixed $offset): bool
     {
         return in_array($offset, ['title', 'url', 'attributes', 'attr', 'children']);
     }
@@ -198,7 +202,7 @@ class MenuItem implements \ArrayAccess
      * </p>
      * @return mixed Can return all value types.
      */
-    public function offsetGet($offset): mixed
+    public function offsetGet(mixed $offset): mixed
     {
         switch ($offset) {
             case 'title':
@@ -229,9 +233,9 @@ class MenuItem implements \ArrayAccess
      * @throws \RuntimeException
      * @return void
      */
-    public function offsetSet($offset, $value): void
+    public function offsetSet(mixed $offset, mixed $value): void
     {
-        throw new \RuntimeException('Can not set value for this object');
+        throw new RuntimeException('Can not set value for this object');
     }
 
     /**
@@ -245,8 +249,8 @@ class MenuItem implements \ArrayAccess
      * @throws \RuntimeException
      * @return void
      */
-    public function offsetUnset($offset): void
+    public function offsetUnset(mixed $offset): void
     {
-        throw new \RuntimeException('Can not unset value for this object');
+        throw new RuntimeException('Can not unset value for this object');
     }
 }

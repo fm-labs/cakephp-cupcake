@@ -1,11 +1,11 @@
 <?php
+declare(strict_types=1);
 
 namespace Cupcake\Health\Check;
 
-use Cake\Datasource\ConnectionManager;
 use Cupcake\Health\HealthCheckGeneratorInterface;
 use Cupcake\Health\HealthStatus;
-
+use Generator;
 
 /**
  * Class Health
@@ -25,16 +25,16 @@ class CakePhpHealthCheck implements HealthCheckGeneratorInterface
         $checks['core_permissions_write'] = function () {
             $dirs = [LOGS, CACHE, TMP];
             foreach ($dirs as $dir) {
-                yield [sprintf("Directory writeable: %s", $dir), is_writable($dir)];
+                yield [sprintf('Directory writeable: %s', $dir), is_writable($dir)];
             }
         };
         $checks['core_permissions_read'] = function () {
             $dirs = [CONFIG, WWW_ROOT];
             foreach ($dirs as $dir) {
-                yield [sprintf("Directory readable: %s", $dir), is_readable($dir)];
+                yield [sprintf('Directory readable: %s', $dir), is_readable($dir)];
             }
         };
-        $checks['db_connections'] = function () {
+        $checks['db_connections'] = function (): void {
         };
 
         $results = [];
@@ -50,23 +50,23 @@ class CakePhpHealthCheck implements HealthCheckGeneratorInterface
     /**
      * @inheritDoc
      */
-    public function getHealthStatus(): \Generator
+    public function getHealthStatus(): Generator
     {
         $dirs = [LOGS, CACHE, TMP];
         foreach ($dirs as $dir) {
             if (!is_writable($dir)) {
-                yield HealthStatus::warn(sprintf("Directory NOT writeable: %s", $dir));
+                yield HealthStatus::warn(sprintf('Directory NOT writeable: %s', $dir));
             } else {
-                yield HealthStatus::ok(sprintf("Directory writeable: %s", $dir));
+                yield HealthStatus::ok(sprintf('Directory writeable: %s', $dir));
             }
         }
 
         $dirs = [CONFIG, WWW_ROOT, DATA];
         foreach ($dirs as $dir) {
             if (!is_readable($dir)) {
-                yield HealthStatus::warn(sprintf("Directory NOT readable: %s", $dir));
+                yield HealthStatus::warn(sprintf('Directory NOT readable: %s', $dir));
             } else {
-                yield HealthStatus::ok(sprintf("Directory readable: %s", $dir));
+                yield HealthStatus::ok(sprintf('Directory readable: %s', $dir));
             }
         }
     }

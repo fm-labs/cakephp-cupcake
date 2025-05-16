@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Cupcake\Middleware;
 
 use Cake\Core\Configure;
-use Cake\Http\Exception\RedirectException;
 use Cake\Http\Response;
 use Cake\Log\Engine\FileLog;
 use Cake\Log\Log;
@@ -51,25 +50,26 @@ class RoutingErrorMiddleware implements MiddlewareInterface
 
             /** @var \Cake\Http\ServerRequest $request */
             $clientIp = $request->clientIp();
-            $message = sprintf("[%s] %s", $clientIp, $ex->getMessage());
+            $message = sprintf('[%s] %s', $clientIp, $ex->getMessage());
             if ($request->referer()) {
-                $message .= " Referer: " . $request->referer();
+                $message .= ' Referer: ' . $request->referer();
             }
             Log::write('error', $message, ['scope' => 'routing']);
 
             // Render error template
             $view = new View($request);
-            $view->setTemplatePath("Error");
-            $view->setTemplate("error404");
+            $view->setTemplatePath('Error');
+            $view->setTemplate('error404');
             //$view->setLayout("error");
             $view->set([
                 'message' => __('Page not found'),
-                'url' => (string)$request->getUri()
+                'url' => (string)$request->getUri(),
             ]);
 
             $response = (new Response())
-                ->withStatus(404, "Not Found")
+                ->withStatus(404, 'Not Found')
                 ->withStringBody($view->render());
+
             return $response;
         }
     }

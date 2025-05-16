@@ -32,7 +32,7 @@ trait DisplayPageTrait
     /**
      * Displays a view
      *
-     * @return void|\Cake\Http\Response
+     * @return \Cake\Http\Response|void
      * @throws \Cake\Http\Exception\NotFoundException When the view file could not
      *   be found or \Cake\View\Exception\MissingTemplateException in debug mode.
      */

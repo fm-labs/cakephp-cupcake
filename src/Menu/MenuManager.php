@@ -5,6 +5,8 @@ namespace Cupcake\Menu;
 
 use Cake\Core\App;
 use Cake\Core\StaticConfigTrait;
+use Closure;
+use RuntimeException;
 
 class MenuManager
 {
@@ -22,7 +24,7 @@ class MenuManager
 
         $config = static::getConfig($key);
         if (!$config) {
-            throw new \RuntimeException("Menu '{$key}' not found");
+            throw new RuntimeException("Menu '{$key}' not found");
         }
 
         return static::resolve($key, $config);
@@ -36,11 +38,11 @@ class MenuManager
     {
         $class = $config['className'] ?? null;
         if (!$class) {
-            throw new \RuntimeException('No menu provider class defined for menu ' . $key);
+            throw new RuntimeException('No menu provider class defined for menu ' . $key);
         }
         unset($config['className']);
 
-        if ($class instanceof \Closure) {
+        if ($class instanceof Closure) {
             $class = $class($config);
         }
         if (is_array($class)) {
@@ -54,7 +56,7 @@ class MenuManager
             $class = $class->getMenu($key);
         }
         if (!($class instanceof MenuItemCollection)) {
-            throw new \RuntimeException('Invalid menu provider');
+            throw new RuntimeException('Invalid menu provider');
         }
 
         return $class;
