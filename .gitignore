@@ -3,3 +3,4 @@ build/
 vendor/
 phpunit.xml
 *.cache
+composer.lock
