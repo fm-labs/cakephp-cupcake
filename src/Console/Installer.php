@@ -83,6 +83,12 @@ class Installer
     {
         $appLocalConfig = $dir . '/config/app_local.php';
         $appLocalConfigTemplate = $dir . '/config/app_local.example.php';
+        if (!file_exists($appLocalConfigTemplate)) {
+            $io->write('The `config/app_local.example.php` file is missing, cannot create `config/app_local.php` file');
+
+            return;
+        }
+
         if (!file_exists($appLocalConfig)) {
             copy($appLocalConfigTemplate, $appLocalConfig);
             $io->write('Created `config/app_local.php` file');
@@ -130,7 +136,7 @@ class Installer
                 '<info>Set Folder Permissions ? (Default to Y)</info> [<comment>Y,n</comment>]? ',
                 $validator,
                 10,
-                'Y'
+                'Y',
             );
 
             if (in_array($setFolderPermissions, ['n', 'N'])) {
