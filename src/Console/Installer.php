@@ -14,6 +14,7 @@ declare(strict_types=1);
  * @since     3.0.0
  * @license   https://opensource.org/licenses/mit-license.php MIT License
  */
+
 namespace Cupcake\Console;
 
 if (!defined('STDIN')) {
@@ -52,14 +53,15 @@ class Installer
      * Does some routine installation tasks so people don't have to.
      *
      * @param \Composer\Script\Event $event The composer event object.
-     * @throws \Exception Exception raised by validator.
      * @return void
+     * @throws \Exception Exception raised by validator.
      */
     public static function postInstall(Event $event): void
     {
         $io = $event->getIO();
 
-        $rootDir = dirname(__DIR__, 2);
+        $vendorDir = $event->getComposer()->getConfig()->get('vendor-dir');
+        $rootDir = dirname($vendorDir);
 
         static::createAppLocalConfig($rootDir, $io);
         static::createWritableDirectories($rootDir, $io);
@@ -83,13 +85,14 @@ class Installer
     {
         $appLocalConfig = $dir . '/config/app_local.php';
         $appLocalConfigTemplate = $dir . '/config/app_local.example.php';
-        if (!file_exists($appLocalConfigTemplate)) {
-            $io->write('The `config/app_local.example.php` file is missing, cannot create `config/app_local.php` file');
-
-            return;
-        }
 
         if (!file_exists($appLocalConfig)) {
+            if (!file_exists($appLocalConfigTemplate)) {
+                $io->write('The `config/app_local.example.php` file is missing, skip creating `config/app_local.php` file');
+
+                return;
+            }
+
             copy($appLocalConfigTemplate, $appLocalConfig);
             $io->write('Created `config/app_local.php` file');
         }
