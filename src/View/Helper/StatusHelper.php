@@ -54,7 +54,7 @@ class StatusHelper extends Helper
     {
         if (is_object($status) && $status instanceof Status) {
             //return $status->toHtml();
-            if (Plugin::isLoaded('Bootstrap')) {
+            if (\Cake\Core\Plugin::isLoaded('Bootstrap')) {
                 $BadgeHelper = $this->_View->loadHelper('Bootstrap.Badge');
 
                 return $BadgeHelper->create($status->getLabel(), ['class' => $status->getClass()]);
