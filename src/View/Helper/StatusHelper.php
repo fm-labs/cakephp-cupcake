@@ -5,6 +5,7 @@ namespace Cupcake\View\Helper;
 
 use Cake\View\Helper;
 use Cake\View\StringTemplateTrait;
+use Cupcake\Lib\Status;
 
 /**
  * Class StatusHelper
@@ -51,12 +52,14 @@ class StatusHelper extends Helper
      */
     public function display($status, array $options = []): string
     {
-        if (is_object($status) && $status instanceof \Cupcake\Lib\Status) {
+        if (is_object($status) && $status instanceof Status) {
             //return $status->toHtml();
-            if (\Cake\Core\Plugin::isLoaded('Bootstrap')) {
+            if (Plugin::isLoaded('Bootstrap')) {
                 $BadgeHelper = $this->_View->loadHelper('Bootstrap.Badge');
+
                 return $BadgeHelper->create($status->getLabel(), ['class' => $status->getClass()]);
             }
+
             return $status->getLabel();
         }
 
@@ -65,6 +68,7 @@ class StatusHelper extends Helper
             'status' => $status,
             'attrs' => $this->templater()->formatAttributes($options, ['class', 'label']),
         ]);
+
         return $out;
     }
 
@@ -72,9 +76,9 @@ class StatusHelper extends Helper
      * @param bool $status Status value
      * @param array $options Additional options
      * @param array $map Status map
-     * @return null|string
+     * @return string|null
      */
-    public function boolean($status, $options = [], $map = [])
+    public function boolean(bool $status, array $options = [], array $map = []): ?string
     {
         $options += ['label' => null, 'class' => null];
         $label = $class = null;
@@ -95,7 +99,7 @@ class StatusHelper extends Helper
             $class = 'default';
         }
         if (!$label) {
-            $label = ($status === true) ? __d('cupcake', "Yaps") : __d('cupcake', "Nope");
+            $label = $status === true ? __d('cupcake', 'Yaps') : __d('cupcake', 'Nope');
         }
 
         if (array_key_exists((int)$status, $map)) {
@@ -111,13 +115,12 @@ class StatusHelper extends Helper
         $options['title'] = $label;
         unset($options['label']);
 
-        $template = $status === true ? "status_boolean_true" : "status_boolean_false";
+        $template = $status === true ? 'status_boolean_true' : 'status_boolean_false';
+
         return $this->templater()->format($template, [
             'class' => $options['class'] ?? '',
             //'status' => $status,
             'attrs' => $this->templater()->formatAttributes($options, ['class', 'label']),
         ]);
     }
-
-
 }
