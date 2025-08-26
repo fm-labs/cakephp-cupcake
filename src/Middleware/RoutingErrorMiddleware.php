@@ -45,7 +45,7 @@ class RoutingErrorMiddleware implements MiddlewareInterface
             return $handler->handle($request);
         } catch (MissingRouteException $ex) {
             if (Configure::read('debug')) {
-                //throw $ex;
+                throw $ex;
             }
 
             /** @var \Cake\Http\ServerRequest $request */
